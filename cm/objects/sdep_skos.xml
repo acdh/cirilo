@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<foxml:digitalObject xmlns:foxml="info:fedora/fedora-system:def/foxml#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PID="sdep:SKOS" VERSION="1.1" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
+  <foxml:objectProperties>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Service Deployment Object"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2011-02-24T18:00:22.355Z"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2013-05-06T13:01:28.758Z"/>
+  </foxml:objectProperties> 
+  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-02-24T18:00:22.355Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" ID="DC1.0" LABEL="Dublin Core Record" MIMETYPE="text/xml" SIZE="406">
+      <foxml:xmlContent>
+        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Service Deployment Object</dc:title>
+          <dc:identifier>sdep:SKOS</dc:identifier>
+        </oai_dc:dc>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-02-24T18:00:22.355Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0" ID="RELS-EXT.1" LABEL="RDF Statements" MIMETYPE="application/rdf+xml" SIZE="628">
+      <foxml:xmlContent>
+        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:fedora-model="info:fedora/fedora-system:def/model#">
+          <rdf:Description rdf:about="info:fedora/sdep:SKOS">
+            <fedora-model:hasModel rdf:resource="info:fedora/fedora-system:ServiceDeployment-3.0"/>
+            <fedora-model:isDeploymentOf rdf:resource="info:fedora/sdef:SKOS"/>
+            <fedora-model:isContractorOf rdf:resource="info:fedora/cm:SKOS"/>
+          </rdf:Description>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="METHODMAP" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-02-24T18:00:22.355Z" FORMAT_URI="info:fedora/fedora-system:FedoraSDepMethodMap-1.1" ID="METHODMAP1.0" LABEL="Deployment Method Map" MIMETYPE="text/xml" SIZE="1662">
+      <foxml:xmlContent>
+        <fmm:MethodMap xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap" name="MethodMap">
+          <fmm:Method operationLabel="SPARQL Query" operationName="getSPARQL" wsdlMsgName="getSPARQLRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:UserInputParm defaultValue="" parmName="query" passBy="VALUE" required="true"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/xml"/>
+          </fmm:Method>          
+          <fmm:Method operationLabel="Get concept by URI" operationName="getConceptByURI" wsdlMsgName="getConceptByURIRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:UserInputParm defaultValue="" parmName="uri" passBy="VALUE" required="true"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/xml"/>
+          </fmm:Method>
+          <fmm:Method operationLabel="Get concept by prefLabel" operationName="getConceptByPrefLabel" wsdlMsgName="getConceptByPrefLabelRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:UserInputParm defaultValue="" parmName="preflabel" passBy="VALUE" required="true"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/xml"/>
+          </fmm:Method>
+          <fmm:Method operationLabel="Get concept by externalID" operationName="getConceptByExternalID" wsdlMsgName="getConceptByExternalIDRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:UserInputParm defaultValue="" parmName="externalid" passBy="VALUE" required="true"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/xml"/>
+          </fmm:Method>
+          <fmm:Method operationLabel="Get concept relatives" operationName="getConceptRelatives" wsdlMsgName="getConceptRelativesRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:UserInputParm defaultValue="" parmName="uri" passBy="VALUE" required="true"/>
+            <fmm:UserInputParm defaultValue="" parmName="relation" passBy="VALUE" required="true"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/xml"/>
+          </fmm:Method>
+           <fmm:Method operationLabel="HTML representation" operationName="get" wsdlMsgName="getRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:DatastreamInputParm label="" parmName="STYLESHEET" passBy="URL_REF" required="true"/>
+            <fmm:DatastreamInputParm label="" parmName="ONTOLOGY" passBy="URL_REF" required="true"/>
+            <fmm:UserInputParm defaultValue="de" parmName="locale" passBy="VALUE" required="false"/>
+            <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/html"/>
+          </fmm:Method>
+          <fmm:Method operationLabel="FO representation" operationName="getPDF" wsdlMsgName="getPDFRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:DatastreamInputParm label="" parmName="FO_STYLESHEET" passBy="URL_REF" required="true"/>
+            <fmm:DatastreamInputParm label="" parmName="ONTOLOGY" passBy="URL_REF" required="true"/>
+            <fmm:UserInputParm defaultValue="de" parmName="locale" passBy="VALUE" required="false"/>
+            <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="application/pdf"/>
+          </fmm:Method>
+        </fmm:MethodMap>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="DSINPUTSPEC" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-02-24T18:00:22.355Z" FORMAT_URI="info:fedora/fedora-system:FedoraDSInputSpec-1.1" ID="DSINPUTSPEC1.0" LABEL="Datastream Input Specification" MIMETYPE="text/xml" SIZE="1035">
+      <foxml:xmlContent>
+        <fbs:DSInputSpec xmlns:fbs="http://fedora.comm.nsdlib.org/service/bindspec" label="Datastream Input Specification">
+          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="STYLESHEET">
+            <fbs:DSInputLabel>STYLESHEET Binding</fbs:DSInputLabel>
+            <fbs:DSMIME>text/xml</fbs:DSMIME>
+            <fbs:DSInputInstruction/>
+          </fbs:DSInput>
+          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="FO_STYLESHEET">
+            <fbs:DSInputLabel>FO_STYLESHEET Binding</fbs:DSInputLabel>
+            <fbs:DSMIME>text/xml</fbs:DSMIME>
+            <fbs:DSInputInstruction/>
+          </fbs:DSInput>
+          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="ONTOLOGY">
+            <fbs:DSInputLabel>ONTOLOGY Binding</fbs:DSInputLabel>
+            <fbs:DSMIME>text/xml</fbs:DSMIME>
+            <fbs:DSInputInstruction/>
+          </fbs:DSInput>
+        </fbs:DSInputSpec>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="WSDL" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2011-02-24T18:00:22.355Z" FORMAT_URI="http://schemas.xmlsoap.org/wsdl/" ID="WSDL1.0" LABEL="WSDL Bindings" MIMETYPE="text/xml" SIZE="3761">
+      <foxml:xmlContent>
+        <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap" xmlns:soapenc="http://schemas.xmlsoap.org/wsdl/soap/encoding" xmlns:this="bmech" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Ontology" targetNamespace="bmech">
+          <wsdl:types>
+            <xsd:schema targetNamespace="bmech">
+              <xsd:simpleType name="STRING">
+                <xsd:restriction base="xsd:string"/>
+              </xsd:simpleType>
+            </xsd:schema>
+          </wsdl:types>
+          <wsdl:message name="getSPARQLRequest">
+            <wsdl:part name="query" type="this:STRING"/>
+          </wsdl:message>
+          <wsdl:message name="getConceptByURIRequest">
+            <wsdl:part name="uri" type="this:STRING"/>
+          </wsdl:message>
+          <wsdl:message name="getConceptByPrefLabelRequest">
+            <wsdl:part name="preflabel" type="this:STRING"/>
+          </wsdl:message>
+          <wsdl:message name="getConceptByExternalIDRequest">
+            <wsdl:part name="externalid" type="this:STRING"/>
+          </wsdl:message>
+          <wsdl:message name="getConceptRelativesRequest">
+            <wsdl:part name="uri" type="this:STRING"/>
+            <wsdl:part name="relation" type="this:STRING"/>
+          </wsdl:message>
+          <wsdl:message name="getRequest">
+            <wsdl:part name="STYLESHEET" type="this:STRING"/>
+            <wsdl:part name="ONTOLOGY" type="this:STRING"/>
+            <wsdl:part name="locale" type="this:STRING"/>
+            <wsdl:part name="mode" type="this:STRING"/>
+            <wsdl:part name="context" type="this:STRING"/>
+          </wsdl:message>
+          <wsdl:message name="getPDFRequest">
+            <wsdl:part name="FO_STYLESHEET" type="this:STRING"/>
+            <wsdl:part name="ONTOLOGY" type="this:STRING"/>
+            <wsdl:part name="locale" type="this:STRING"/>
+            <wsdl:part name="mode" type="this:STRING"/>
+          </wsdl:message>
+          <wsdl:message name="dissemResponse">
+            <wsdl:part name="dissem" type="xsd:base64Binary"/>
+          </wsdl:message>
+          <wsdl:portType name="OntologyPortType">
+            <wsdl:operation name="getSPARQL">
+              <wsdl:input message="this:getSPARQLRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="getConceptByURI">
+              <wsdl:input message="this:getConceptByURIRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="getConceptByPrefLabel">
+              <wsdl:input message="this:getConceptByPrefLabelRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="getConceptByExternalID">
+              <wsdl:input message="this:getConceptByExternalIDRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="getConceptRelatives">
+              <wsdl:input message="this:getConceptRelativesRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="get">
+              <wsdl:input message="this:getRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="getPDF">
+              <wsdl:input message="this:getPDFRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+          </wsdl:portType>
+          <wsdl:service name="Ontology">
+            <wsdl:port binding="this:Ontology_http" name="Ontology_port">
+              <http:address location="http://gams.uni-graz.at/cocoon/"/>
+            </wsdl:port>
+          </wsdl:service>
+          <wsdl:binding name="Ontology_http" type="this:OntologyPortType">
+            <http:binding verb="GET"/>
+            <wsdl:operation name="getSPARQL">
+              <http:operation location="getSPARQL?query=(query)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="text/xml"/>
+              </wsdl:output>
+            </wsdl:operation>
+            <wsdl:operation name="getConceptByURI">
+              <http:operation location="getConceptByURI?uri=(uri)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="text/xml"/>
+              </wsdl:output>
+            </wsdl:operation>
+            <wsdl:operation name="getConceptByPrefLabel">
+              <http:operation location="getConceptByPrefLabel?preflabel=(preflabel)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="text/xml"/>
+              </wsdl:output>
+            </wsdl:operation>
+            <wsdl:operation name="getConceptByExternalID">
+              <http:operation location="getConceptByExternalID?externalid=(externalid)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="text/xml"/>
+              </wsdl:output>
+            </wsdl:operation>
+            <wsdl:operation name="getConceptRelatives">
+              <http:operation location="getConceptRelatives?uri=(uri)&amp;relation=(relation)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="text/xml"/>
+              </wsdl:output>
+            </wsdl:operation>
+            <wsdl:operation name="get">
+              <http:operation location="toHTML?source=(ONTOLOGY)&amp;style=(STYLESHEET)&amp;locale=(locale)&amp;mode=(mode)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="text/html"/>
+              </wsdl:output>
+            </wsdl:operation>
+            <wsdl:operation name="getPDF">
+              <http:operation location="toPDF?source=(ONTOLOGY)&amp;style=(FO_STYLESHEET)&amp;locale=(locale)&amp;mode=(mode)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="application/pdf"/>
+              </wsdl:output>
+            </wsdl:operation>
+          </wsdl:binding>
+        </wsdl:definitions>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+</foxml:digitalObject>

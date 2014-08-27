@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<foxml:digitalObject xmlns:foxml="info:fedora/fedora-system:def/foxml#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PID="cirilo:Ontology" VERSION="1.1" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
+  <foxml:objectProperties>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Ontology Object"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="public"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2011-03-16T12:51:36.036Z"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2013-05-06T15:39:38.723Z"/>
+  </foxml:objectProperties>  
+  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" ID="DC1.0" LABEL="Dublin Core Record" MIMETYPE="text/xml" SIZE="373">
+      <foxml:xmlContent>
+        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Ontology Object</dc:title>
+          <dc:identifier>cirilo:Ontology</dc:identifier>
+        </oai_dc:dc>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="RELS-EXT.0" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="461">
+      <foxml:xmlContent>
+        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about="info:fedora/cirilo:Ontology">
+            <hasModel xmlns="info:fedora/fedora-system:def/model#" rdf:resource="info:fedora/cm:Ontology"/>
+            <isTemplateFor xmlns="http://ecm.sourceforge.net/relations/0/2/#" rdf:resource="info:fedora/cm:Ontology"/>
+          </rdf:Description>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="ONTOLOGY" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="ONTOLOGY1.0" LABEL="Ontology Source" MIMETYPE="text/xml" SIZE="847">
+      <foxml:xmlContent>
+        <rdf:RDF  xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+          <skos:ConceptScheme rdf:about="http://gams.uni-graz.at/thesaurus/">
+            <dc:title>SKOS Thesaurus</dc:title>
+          </skos:ConceptScheme>
+          <skos:Concept rdf:about="999">
+            <skos:inScheme rdf:resource="http://gams.uni-graz.at/thesaurus/"/>
+            <skos:prefLabel>Concept</skos:prefLabel>
+          </skos:Concept>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="M" ID="THUMBNAIL" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.115Z" ID="THUMBNAIL.1" LABEL="Thumbnail" MIMETYPE="image/jpeg" SIZE="1490">
+      <foxml:binaryContent> 
+              /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwg
+              JC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIy
+              MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABQAGQDASIAAhEBAxEB/8QA
+              HwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIh
+              MUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVW
+              V1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXG
+              x8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQF
+              BgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAV
+              YnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOE
+              hYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq
+              8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAqheXEsUoWNgBj0zV81mXw/fj6UARm9uf74/wC+aja/
+              ux0kX/vkUmKayZoAY+pXoHEqj/gAqkfEd7Zzg3O2SEnBwuCKtPH7Vk6xBm0c45AoA7S3uI7mFZYm3Iwz
+              Utc7oglh0a1uYssGT50rehmSeMOh4P6UAS0UlLQAUUUUAFVdQ1C20uxlvLuQRwxjLMf5fWrVeefFon+x
+              rEf9PH/spqoq7sOKu7Fo/FLQuyXf/fsf41UuPiVo0sm5Uuen/PMf41554cudNtdTzqmnm9gkTy1j37dr
+              Fhhvyz+ddtqmn+HE8ZWGgQaMsbeejSyeYcOhUnbjPrj8q2cIp2NHGKZY/wCFjaP/AHLn/v2P8aP+Fi6P
+              /cuf+/Y/xqHxNo2naZp1y3/CKCCPeI47oXQbGTwduc1y3jzTrPSvE8lrYwLDAIkYIpJGSOetKMIMFGLP
+              R9K1+x1qHzLVzwcFWGCPqKsX8Hm27KO4ry/wQ5TXGweseP1Fevqm6IZrOceWViJKzsefzRa9C/l2t7LH
+              EOijoK09E1jVtOulF63nRMcNxz9a6d7dP7oqnPaI3YVBJ1SMHRWHQjIp1Q2oxbRj0WpqACiiigArzz4t
+              f8gax/6+P/ZTXodU9T0231WxktLmMPFIMEH+dVF2dxxdnc+cIZBFPHIRkKwYj6Gupu/FltceOoPEAtpR
+              DGVJiJG44XH0rrn+F2nBvlkuMe7j/Com+GNiDjzJ/wDvsf4Vu6kGaucWYOr+KfDmo29wU0e7W6kO9ZHu
+              WKhs5zt3Y/SsPxXrkXiHXHv4YXiRkVdrkE8fSu5/4VlY/wDPSf8A76H+FJ/wrKx/56T/APfQ/wAKSnBA
+              pRRyPghS2uHA/wCWf9RXs0S/ul+lYeieE7bRlxED1yWbkn610W3AArKcuaVzOTu7kLR5qu8fPSrxFROu
+              agkvQ8RKPapKZF/q1+lPoAKKKKACiiigAqFvvmpqiI+c0ANxzRT8Um3NADKTFPxSYoAjIppFSkU0igCw
+              n3BTqan3BTqACiiigAooooAKjH3zUlRvGH9R9DQA7FJg0z7OP7zf99Gj7OP7zf8AfRoAfjnpSEexpv2c
+              f3m/76NH2cf3m/76oAUj2ppHB4pfs4/vN/31QIADnLfnQA+P7gp9IBiloAKKKKAP/9k=
+</foxml:binaryContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="M" ID="QUERY" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-07-18T13:50:44.591Z" ID="QUERY.1" LABEL="Mulgara Triplestore Query" MIMETYPE="text/plain" SIZE="688">
+      <foxml:binaryContent> 
+        c2VsZWN0ICogd2hlcmUgeyB7ICA8ZmVkb3JhOm9iajpzZWxmPiAgPGRjOnRpdGxlPiA/dGl0bGUgLgog
+        ICAgICAgICAgICAgICAgICAgIDxmZWRvcmE6b2JqOnNlbGY+ICA8ZmVkb3JhLW1vZGVsOmhhc01vZGVs
+        PiA/bW9kZWwgLgogICAgICAgICAgICAgICAgICAgIDxmZWRvcmE6b2JqOnNlbGY+ICA8ZmVkb3JhLW1v
+        ZGVsOm93bmVySWQ+ID9vd25lcklkIC4KICAgICAgICAgICAgICAgICAgICA8ZmVkb3JhOm9iajpzZWxm
+        PiAgPGZlZG9yYS1tb2RlbDpjcmVhdGVkRGF0ZT4gP2NyZWF0ZWREYXRlIC4KICAgICAgICAgICAgICAg
+        ICAgICA8ZmVkb3JhOm9iajpzZWxmPiAgPGZlZG9yYS12aWV3Omxhc3RNb2RpZmllZERhdGU+ID9sYXN0
+        TW9kaWZpZWREYXRlIC4gCiAgICAgICAgICAgICAgICAgICAgPGZlZG9yYTpvYmo6c2VsZj4gIDxkYzpp
+        ZGVudGlmaWVyPiA/aWRlbnRpZmllciAKICAgICAgICAgICAgICAgICAgICBmaWx0ZXIgcmVnZXgoc3Ry
+        KD9tb2RlbCksICJeaW5mbzpmZWRvcmEvY2lyaWxvOiIpIAogICAgICAgICAgICAgICAgIH0gdW5pb24g
+        eyAKICAgICAgICAgICAgICAgICAgICA8ZmVkb3JhOm9iajpzZWxmL1RFSV9TT1VSQ0U+IDxodHRwOi8v
+        Z2Ftcy51bmktZ3Jhei5hdCNoYXNQYXJ0PiA/cmVmIC4gP3JlZiA/cHJlZGljYXRlID9vYmplY3QgCiAg
+        ICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgfQo=
+      </foxml:binaryContent>      
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="FO_STYLESHEET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2013-05-06T14:02:20.477Z" ID="FO_STYLESHEET.2" LABEL="OntologytoFO Stylesheet" MIMETYPE="text/xml">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/ONTOLOGYtoFO/content" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="E" ID="PID" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2013-05-06T14:15:12.081Z" ID="PID.4" LABEL="Persistent Identifier" MIMETYPE="text/html">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Ontology/methods/sdef:Ontology/get" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="STYLESHEET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2013-05-06T14:15:20.582Z" ID="STYLESHEET.4" LABEL="OntologytoHTML Stylesheet" MIMETYPE="text/xml">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/ONTOLOGYtoHTML/content" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="METADATA" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METADATA.1" LABEL="Mulgara Triplestore Metadata" MIMETYPE="text/xml">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Ontology/methods/sdef:Object/getMetadata" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="METHODS" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METHODS.1" LABEL="Dissemination Methods" MIMETYPE="text/xml">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Ontology/methods?format=xml" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+</foxml:digitalObject>

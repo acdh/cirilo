@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<foxml:digitalObject PID="cirilo:Environment" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
+  <foxml:objectProperties>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Initializer Object"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="yoda"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2011-03-16T12:51:36.036Z"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2014-04-03T15:16:12.443Z"/>
+  </foxml:objectProperties>
+  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
+      ID="DC1.0" LABEL="Dublin Core Record" MIMETYPE="text/xml" SIZE="389">
+      <foxml:xmlContent>
+        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Initializer Object</dc:title>
+          <dc:identifier>cirilo:Environment</dc:identifier>
+        </oai_dc:dc>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2012-09-28T07:17:02.490Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
+      ID="RELS-EXT.0" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="476">
+      <foxml:xmlContent>
+        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about="info:fedora/cirilo:Environment">
+            <hasModel rdf:resource="info:fedora/cirilo:DefaultContentModel-1.0" xmlns="info:fedora/fedora-system:def/model#"/>
+            <isTemplateFor rdf:resource="info:fedora/cirilo:DefaultContentModel-1.0" xmlns="http://ecm.sourceforge.net/relations/0/2/#"/>
+          </rdf:Description>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="DC_MAPPING" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2013-03-05T09:22:03.295Z" ID="DC_MAPPING.0" LABEL="TEI to DC mapping rules"
+      MIMETYPE="text/xml" SIZE="878">
+      <foxml:xmlContent>
+        <mm:metadata-mapping xmlns:mm="http://mml.uni-graz.at/v1.0">
+          <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:t="http://www.tei-c.org/ns/1.0">
+            <dc:title>
+              <mm:map delimiter=": " select="//t:title"/>
+            </dc:title>
+            <dc:creator>
+              <mm:map select="//t:author"/>
+            </dc:creator>
+            <dc:publisher>
+              <mm:map select="//t:publisher"/>
+            </dc:publisher>
+            <dc:language>
+              <mm:map select="//t:langUsage/t:language/@ident"/>
+            </dc:language>
+            <dc:date>
+              <mm:map select="//t:date"/>
+            </dc:date>
+            <dc:identifier>this:PID</dc:identifier>
+          </oai_dc:dc>
+        </mm:metadata-mapping>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="RDF_MAPPING" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2013-04-25T07:38:21.514Z" ID="RDF_MAPPING.0" LABEL="TEI to RDF Mapping rules"
+      MIMETYPE="text/xml" SIZE="1350">
+      <foxml:xmlContent>
+        <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/"
+          xmlns:frbr="http://www.cidoc-crm.org/frbr/" xmlns:g2o="http://gams.uni-graz.at/ontology#"
+          xmlns:mm="http://mml.uni-graz.at/v1.0" xmlns:mws="info:fedora/o:mws.catalogue/TEI_SOURCE#"
+          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:t="http://www.tei-c.org/ns/1.0">
+          <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/"
+            xmlns:frbr="http://www.cidoc-crm.org/frbr/" xmlns:g2o="http://gams.uni-graz.at/ontology#"
+            xmlns:mm="http://mml.uni-graz.at/v1.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:t="http://www.tei-c.org/ns/1.0">
+            <rdf:Description rdf:about="t:placeName[ancestor::t:text and not(ancestor::t:placeName)]">
+              <g2o:referenceType rdf:resource="'t:placeName'"/>
+              <g2o:onPage>
+                <mm:map select="./preceding::t:pb[1]/@n"/>
+              </g2o:onPage>
+              <g2o:regName>
+                <mm:map select="//t:place[@xml:id=substring(./@corresp,2)]/t:placeName/t:name"/>
+              </g2o:regName>
+              <g2o:origName>
+                <mm:map select="./."/>
+              </g2o:origName>
+            </rdf:Description>
+          </rdf:RDF>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="TORDF" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" 
+      ID="TORDF1.0" LABEL="XSLT Stylesheet to create RDF-Triples from TEI_SOURCE" MIMETYPE="text/xml" SIZE="386">
+      <foxml:xmlContent>
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" />
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>  
+  <foxml:datastream CONTROL_GROUP="X" ID="TOTEI" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" 
+      ID="TOTEI1.0" LABEL="XSLT Stylesheet to customize TEI_SOURCEs" MIMETYPE="text/xml" SIZE="386">
+      <foxml:xmlContent>
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" />
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="REPLACEMENT_RULESET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="REPLACEMENT_RULESET.0"
+      LABEL="Set of REGEX replacements" MIMETYPE="text/xml" SIZE="67">
+      <foxml:xmlContent>
+        <rs:ruleset xmlns:rs="http://rsml.uni-graz.at/v1.0"/>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="FO_STYLESHEET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="FO_STYLESHEET1.0"
+      LABEL="TEI resp. BibTeX to FO Stylesheet" MIMETYPE="text/xml" SIZE="1961">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:bibtex="http://bibtexml.sf.net/"
+          xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:t="http://www.tei-c.org/ns/1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:param name="locale"/>
+          <xsl:param name="model"/>
+          <xsl:template match="/">
+            <fo:root>
+              <fo:layout-master-set>
+                <fo:simple-page-master margin-left="2cm" margin-top="2cm" master-name="A4" page-height="29.7cm" page-width="21cm">
+                  <fo:region-body/>
+                </fo:simple-page-master>
+              </fo:layout-master-set>
+              <fo:page-sequence master-reference="A4">
+                <fo:flow flow-name="xsl-region-body">
+                  <xsl:choose>
+                    <xsl:when test="$model='BibTeX'">
+                      <xsl:apply-templates select="bibtex:file"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:apply-templates select="t:TEI"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </fo:flow>
+              </fo:page-sequence>
+            </fo:root>
+          </xsl:template>
+          <xsl:template match="t:TEI">
+            <fo:block font-size="10pt">
+              <xsl:value-of select="//t:title"/>
+            </fo:block>
+            <fo:block font-size="10pt">
+              <xsl:value-of select="//t:authority"/>
+            </fo:block>
+          </xsl:template>
+          <xsl:template match="bibtex:file">
+            <fo:block font-size="10pt">
+              <xsl:value-of select="//bibtex:title"/>
+            </fo:block>
+            <fo:block font-size="10pt">
+              <xsl:value-of select="//bibtex:publisher"/>
+            </fo:block>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="STYLESHEET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="STYLESHEET1.0"
+      LABEL="TEI resp. BibTeX to HTML Stylesheet" MIMETYPE="text/xml" SIZE="1441">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:bibtex="http://bibtexml.sf.net/" xmlns:t="http://www.tei-c.org/ns/1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:param name="locale"/>
+          <xsl:param name="model"/>
+          <xsl:template match="/">
+            <html xmlns="http://www.w3.org/1999/xhtml">
+              <body>
+                <xsl:choose>
+                  <xsl:when test="$model='BibTeX'">
+                    <xsl:apply-templates select="bibtex:file"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates select="t:TEI"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </body>
+            </html>
+          </xsl:template>
+          <xsl:template match="t:TEI">
+            <p>
+              <b>
+                <xsl:value-of select="//t:title"/>
+              </b>
+              <br/>
+              <xsl:value-of select="//t:authority"/>
+            </p>
+          </xsl:template>
+          <xsl:template match="bibtex:file">
+            <p>
+              <b>
+                <xsl:value-of select="//bibtex:title"/>
+              </b>
+              <br/>
+              <xsl:value-of select="//bibtex:publisher"/>
+            </p>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="CONTEXTtoHTML" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="CONTEXTtoHTML1.0" LABEL="Context to HTML Stylesheet"
+      MIMETYPE="text/xml" SIZE="4584">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:bibtex="http://bibtexml.sf.net/"
+          xmlns:o="http://www.fedora.info/definitions/1/0/access/"
+          xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:param name="locale"/>
+          <xsl:param name="model"/>
+          <xsl:variable name="hostname" select="concat('http://gams.uni-graz.at/')"/>
+          <xsl:variable name="instance" select="'archive'"/>
+          <xsl:template match="/">
+            <html xmlns="http://www.w3.org/1999/xhtml">
+              <body>
+                <xsl:choose>
+                  <xsl:when test="$model='BibTeX'">
+                    <xsl:apply-templates select="bibtex:file"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates select="s:sparql"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </body>
+            </html>
+          </xsl:template>
+          <xsl:template match="s:sparql">
+            <xsl:variable name="context" select="s:results/s:result/s:context"/>
+            <html>
+              <head/>
+              <body>
+                <h2>
+                  <xsl:value-of select="$context"/>
+                </h2>
+                <hr size="1"/>
+                <table border="0" cellpadding="5">
+                  <xsl:for-each select="s:results/s:result">
+                    <xsl:variable name="pid" select="substring-after(s:pid/@uri, '/')"/>
+                    <tr>
+                      <td>
+                        <img height="36px">
+                          <xsl:attribute name="src">
+                            <xsl:text>/</xsl:text>
+                            <xsl:value-of select="$instance"/>
+                            <xsl:text>/objects/</xsl:text>
+                            <xsl:value-of select="$pid"/>
+                            <xsl:text>/datastreams/THUMBNAIL/content</xsl:text>
+                          </xsl:attribute>
+                        </img>
+                      </td>
+                      <td>
+                        <a>
+                          <xsl:attribute name="href">
+                            <xsl:text>/</xsl:text>
+                            <xsl:value-of select="$pid"/>
+                          </xsl:attribute>
+                          <xsl:value-of select="$pid"/>
+                        </a>
+                      </td>
+                      <td>
+                        <xsl:value-of select="s:title"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td/>
+                      <td>
+                        <xsl:variable name="url" select="concat($hostname,$instance,'/objects/',$pid,'/methods/sdef:Object/getMethods')"/>
+                        <xsl:for-each select="document($url)//o:sDef">
+                          <xsl:call-template name="method">
+                            <xsl:with-param name="oid" select="$pid"/>
+                          </xsl:call-template>
+                        </xsl:for-each>
+                      </td>
+                    </tr>
+                  </xsl:for-each>
+                </table>
+              </body>
+            </html>
+          </xsl:template>
+          <xsl:template name="method">
+            <xsl:param name="oid"/>
+            <xsl:variable name="pid" select="@pid"/>
+            <xsl:for-each select="o:method">
+              <a>
+                <xsl:attribute name="href">
+                  <xsl:value-of select="concat($hostname,$instance,'/objects/',$oid,'/methods/',$pid,'/',@name)"/>
+                </xsl:attribute>
+                <xsl:value-of select="concat($pid,'/',@name)"/>
+              </a>
+              <br/>
+            </xsl:for-each>
+          </xsl:template>
+          <xsl:template match="bibtex:file">
+            <p>
+              <b>
+                <xsl:value-of select="//bibtex:title"/>
+              </b>
+              <br/>
+              <xsl:value-of select="//bibtex:publisher"/>
+            </p>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="KML_TEMPLATE" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2013-07-09T11:15:54.676Z" ID="KML_TEMPLATE.44" LABEL="KML Template"
+      MIMETYPE="text/xml" SIZE="1320">
+      <foxml:xmlContent>
+        <k:kml xmlns:k="http://earth.google.com/kml/2.0">
+          <k:Document>
+            <k:Folder>
+              <k:name/>
+              <mm:metadata-mapping xmlns:mm="http://mml.uni-graz.at/v1.0">
+                <k:Placemark id="http://gams.uni-graz.at/this:PID" xmlns:k="http://earth.google.com/kml/2.0" xmlns:t="http://www.tei-c.org/ns/1.0">
+                  <k:name>
+                    <mm:map select="concat(//t:placeName/t:ref,': ',//t:title)"/>
+                  </k:name>
+                  <k:description>
+                    <a href="http://gams.uni-graz.at/this:PID">
+                      <img src="http://gams.uni-graz.at/archive/objects/this:PID/datastreams/THUMBNAIL/content"/>
+                    </a>
+                    <p>
+                      <mm:map select="//t:ab[@type='lido:objectDescriptionSet' and not(@subtype)]"/>
+                    </p>
+                  </k:description>
+                  <k:Point>
+                    <k:coordinates>
+                      <mm:map select="//t:placeName[contains(@key,'geo:')]/@key"/>
+                    </k:coordinates>
+                  </k:Point>
+                </k:Placemark>
+              </mm:metadata-mapping>
+            </k:Folder>
+          </k:Document>
+        </k:kml>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="CONTEXTtoFO" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="CONTEXTtoFO1.0" LABEL="BibTeX to FO Stylesheet"
+      MIMETYPE="text/xml" SIZE="1128">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:bibtex="http://bibtexml.sf.net/"
+          xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:param name="locale"/>
+          <xsl:template match="bibtex:file">
+            <fo:root>
+              <fo:layout-master-set>
+                <fo:simple-page-master margin-left="2cm" margin-top="2cm" master-name="A4" page-height="29.7cm" page-width="21cm">
+                  <fo:region-body/>
+                </fo:simple-page-master>
+              </fo:layout-master-set>
+              <fo:page-sequence master-reference="A4">
+                <fo:flow flow-name="xsl-region-body">
+                  <fo:block font-size="10pt">
+                    <xsl:value-of select="//bibtex:title"/>
+                  </fo:block>
+                  <fo:block font-size="10pt">
+                    <xsl:value-of select="//bibtex:publisher"/>
+                  </fo:block>
+                </fo:flow>
+              </fo:page-sequence>
+            </fo:root>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="TOMETS" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2014-04-03T15:16:12.443Z" ID="TOMETS.6"
+      LABEL="Transformation to DFG Viewer METS Format" MIMETYPE="text/xml" SIZE="5377">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:mets="http://www.loc.gov/METS/" xmlns:vi="http://gams.uni-graz.at/viewer"
+          xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:template match="vi:book">
+            <mets:mets>
+              <mets:dmdSec ID="DMD.1">
+                <mets:mdWrap MDTYPE="MODS" MIMETYPE="text/xml">
+                  <mets:xmlData>
+                    <mods:mods xmlns:mods="http://www.loc.gov/mods/v3">
+                      <mods:titleInfo>
+                        <mods:title>
+                          <xsl:value-of select="vi:title"/>
+                        </mods:title>
+                        <xsl:if test="vi:subtitle">
+                          <mods:subTitle>
+                            <xsl:value-of select="vi:subtitle"/>
+                          </mods:subTitle>
+                        </xsl:if>
+                      </mods:titleInfo>
+                      <mods:name type="personal">
+                        <mods:displayForm>
+                          <xsl:value-of select="vi:author"/>
+                        </mods:displayForm>
+                        <mods:role>
+                          <mods:roleTerm type="text">author</mods:roleTerm>
+                        </mods:role>
+                      </mods:name>
+                      <mods:originInfo>
+                        <mods:place>
+                          <mods:placeTerm type="text">
+                            <xsl:value-of select="vi:place"/>
+                          </mods:placeTerm>
+                        </mods:place>
+                        <mods:dateIssued>
+                          <xsl:value-of select="vi:date"/>
+                        </mods:dateIssued>
+                        <mods:issuance>
+                          <xsl:value-of select="vi:issuance"/>
+                        </mods:issuance>
+                      </mods:originInfo>
+                    </mods:mods>
+                  </mets:xmlData>
+                </mets:mdWrap>
+              </mets:dmdSec>
+              <mets:amdSec ID="AMD.1">
+                <mets:rightsMD ID="RMD.1">
+                  <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVRIGHTS">
+                    <mets:xmlData>
+                      <dv:rights xmlns:dv="http://dfg-viewer.de/">
+                        <dv:owner>
+                          <xsl:value-of select="vi:owner/vi:name"/>
+                        </dv:owner>
+                        <dv:ownerContact/>
+                        <dv:ownerLogo/>
+                        <dv:ownerSiteURL>
+                          <xsl:value-of select="vi:owner/vi:site"/>
+                        </dv:ownerSiteURL>
+                      </dv:rights>
+                    </mets:xmlData>
+                  </mets:mdWrap>
+                </mets:rightsMD>
+                <mets:digiprovMD ID="PMD.1">
+                  <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVLINKS">
+                    <mets:xmlData>
+                      <dv:links xmlns:dv="http://dfg-viewer.de/">
+                        <dv:reference/>
+                        <dv:presentation/>
+                      </dv:links>
+                    </mets:xmlData>
+                  </mets:mdWrap>
+                </mets:digiprovMD>
+              </mets:amdSec>
+              <mets:fileSec>
+                <mets:fileGrp USE="DEFAULT">
+                  <xsl:for-each select="//vi:page">
+                    <mets:file ID="{concat('IMG.', position())}" MIMETYPE="image/jpeg">
+                      <mets:FLocat LOCTYPE="URL" xlink:href="{@xlink:href}"/>
+                    </mets:file>
+                  </xsl:for-each>
+                </mets:fileGrp>
+              </mets:fileSec>
+              <mets:structMap TYPE="PHYSICAL">
+                <mets:div ID="PHY.1" TYPE="physSequence">
+                  <xsl:for-each select="//vi:page">
+                    <mets:div ID="{concat('DIV.', position())}" ORDER="{position()}" TYPE="page">
+                      <mets:fptr FILEID="{concat('IMG.', position())}"/>
+                    </mets:div>
+                  </xsl:for-each>
+                </mets:div>
+              </mets:structMap>
+              <mets:structMap TYPE="LOGICAL">
+                <mets:div ADMID="AMD.1" DMDID="DMD.1" ID="LOG.1" TYPE="monograph">
+                  <xsl:for-each select="vi:structure/vi:div">
+                    <mets:div ID="{concat('U.', position())}">
+                      <xsl:choose>
+                        <xsl:when test="@label">
+                          <xsl:attribute name="LABEL">
+                            <xsl:value-of select="@label"/>
+                          </xsl:attribute>
+                        </xsl:when>
+                        <xsl:when test="@type">
+                          <xsl:attribute name="TYPE">
+                            <xsl:value-of select="@type"/>
+                          </xsl:attribute>
+                        </xsl:when>
+                      </xsl:choose>
+                    </mets:div>
+                  </xsl:for-each>
+                </mets:div>
+              </mets:structMap>
+              <mets:structLink>
+                <xsl:for-each select="vi:structure/vi:div">
+                  <xsl:variable name="unit" select="position()"/>
+                  <xsl:for-each select="vi:page">
+                    <xsl:call-template name="smLink">
+                      <xsl:with-param name="unit" select="$unit"/>
+                    </xsl:call-template>
+                  </xsl:for-each>
+                </xsl:for-each>
+              </mets:structLink>
+            </mets:mets>
+          </xsl:template>
+          <xsl:template name="smLink">
+            <xsl:param name="unit"/>
+            <xsl:variable name="page">
+              <xsl:number count="vi:page" level="any"/>
+            </xsl:variable>
+            <mets:smLink xlink:from="{concat('U.',$unit)}" xlink:to="{concat('DIV.',$page)}"/>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+</foxml:digitalObject>

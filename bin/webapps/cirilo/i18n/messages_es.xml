@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<catalogue xml:lang="es">
+    
+    !-- 
+    #######
+    Fehlermeldungen Suche Allgemein
+    #######
+    -->
+    <message key="InternalError">Un error interno ha ocurrido.</message>
+    <message key="StartsWithWildcard">Un término de búsqueda no puede empezar por * o ?.</message>
+    <message key="QueryTooShort">El término de búsqueda es muy corto (mínimo 3 caracteres)</message>
+    <message key="MissingQuery">Falta término de búsqueda: Por favor, introduzca un término.</message>
+    <message key="lucene">Un error ha ocurrido. Por favor, verifique la información solicitada.</message>
+    
+    
+    <!-- 
+   #######   
+      Moralische Wochenschriften
+   #######
+   -->
+    
+    <!-- Themen -->
+    <message key="nature">Naturaleza</message>
+    <message key="religion">Religión</message>
+    <message key="theatre">Teatro Literatura Arte</message>
+    <message key="autopoetical">Reflexión Autopoética</message>
+    <message key="imagef">Imagen de Mujeres</message>
+    <message key="friendship">Amistad</message>
+    <message key="imagem">Imagen de Hombres</message>
+    <message key="superstition">Superstición</message>
+    <message key="critics">Crítica de la Nobleza</message>
+    <message key="apologetic">Apología de España</message>
+    <message key="societies">Sociedades Extranjeras</message>
+    <message key="structuresoc">Estructura de la Sociedad</message>
+    <message key="law">Derecho</message>
+    <message key="politics">Política</message>
+    <message key="education">Educación y Formación</message>
+    <message key="philosophy">Filosofía</message>
+    <message key="economy">Economía</message>
+    <message key="customs">Costumbres</message>
+    <message key="idea">Imagen de los Hombres</message>
+    <message key="culture">Cultura de la Conversación</message>
+    <message key="fashion">Moda</message>
+    <message key="morale">Moral</message>
+    <message key="reason">Razón</message>
+    <message key="passion">Pasión</message>
+    <message key="happiness">Fortuna</message>
+    <message key="charity">Caridad</message>
+    <message key="france">Francia</message>
+    <message key="spain">España</message>
+    <message key="italy">Italia</message>
+    <message key="germany">Alemania</message>
+    <message key="austria">Austria</message>
+    <message key="england">Inglaterra</message>
+    <message key="othercountries">Otros Países</message>
+    <message key="america">América (India)</message>
+    <message key="love">Amor</message>
+    <message key="edtext">Textos editados</message>
+    <message key="links">Enlaces</message>
+    <message key="search">Busca</message>
+    <message key="language">Lengua</message>
+    <message key="german">Alemán</message>
+    <message key="english">Inglés</message>
+    <message key="french">Francés</message>
+    <message key="dutch">Holandés</message>
+    <message key="italian">Italiano</message>
+    <message key="portuguese">Portugués</message>
+    <message key="spanish">Español</message>
+    <message key="hungarian">Húngaro</message>
+    <message key="country">País</message>
+    <message key="netherlands">Países Bajos</message>
+    <message key="switzerland">Suiza</message>
+    <message key="subjects">Sujeto</message>
+    <message key="dates">Datación</message>
+    <message key="-- dates --">-- Datación --</message>
+    <message key="Datierung">Datación</message>
+    <message key="keyword">Palabra-clave</message>
+    <message key="-- keyword --">-- Palabra-clave --</message>
+    <message key="Suchbegriff">Palabra-clave</message>
+    <message key="entries">En esta rúbrica no hay entrada.</message>
+    <message key="completelist">Lista completa</message>
+    <message key="linksspect">Enlaces : Espectadores</message>
+    <message key="spanspect">Espectadores españoles</message>
+    <message key="itspect">Espectadores italianos</message>
+    <message key="frspect">Espectadores franceses</message>
+    <message key="science">Ciencia</message>
+    <message key="family">Familia</message>
+    
+    <!-- Projekttitel und Navigation -->
+    <message key="Gesamtverzeichnis">Lista completa</message>
+    <message key="Links zu Wochenschriften">Enlaces : Espectadores</message>
+    <message key="Spanische Wochenschriften">Espectadores españoles</message>
+    <message key="Italienische Wochenschriften">Espectadores italianos</message>
+    <message key="Französische Wochenschriften">Espectadores franceses</message>
+    <message key="editedby">Editado por</message>
+    <message key="financing">Financiación</message>
+    <message key="origpag">Paginación original</message>
+    <message key="repandnarr">Niveles de representación y formas narrativas</message>
+    <message key="visofanalysis">Visualización del análisis</message>
+    <message key="back">anterior</message>
+    <message key="origaspect">Visualización original</message>
+    <message key="visalltexts">visualizar/tapar el texto integral</message>
+    <message key="level">Nivel</message>
+    <!-- bei den folgenden beiden Einträgen deutscher Key, weil im Stylesheet nach @type mit diesen Kategorien gefragt wird -->
+    <message key="Narrative Darstellungsebenen">Niveles de representación narrativos</message>
+    <message key="Narrative Darstellungsformen">Formas de representación narrativas</message>
+    <message key="genres">Formas narrativas</message>
+    <message key="allegory">Alegoría</message>
+    
+    <!-- Übersetzung zusätzlich mit deutschem Key -->
+    <message key="Allgemeine Erzählung">Relato general</message>
+    <message key="Dialog">Diálogo</message>
+    <message key="Fremdportrait">Retrato ajeno</message>
+    <message key="Leserbrief">Carta/Carta al director</message>
+    <message key="Metatextualität">Metatextualidad</message>
+    <message key="Selbstportrait">Autorretrato</message>
+    <message key="Utopie">Utopía</message>
+    <message key="Zitat/Motto">Cita/Lema</message>
+    <message key="Ebene 1">Nivel 1</message>
+    <message key="Ebene 2">Nivel 2</message>
+    <message key="Ebene 3">Nivel 3</message>
+    <message key="Ebene 4">Nivel 4</message>
+    <message key="Ebene 5">Nivel 5</message>
+    <message key="Ebene 6">Nivel 6</message>
+    
+    <message key="generalacc">Relato general</message>
+    <message key="dialogue">Diálogo</message>
+    <message key="example">Ejemplo</message>
+    <message key="fable">Fábula</message>
+    <message key="hetportrait">Retrato ajeno</message>
+    <message key="lettertoeditor">Carta/Carta al director</message>
+    <message key="metatextuality">Metatextualidad</message>
+    <message key="satire">Sátira</message>
+    <message key="selfportrait">Autorretrato</message>
+    <message key="dream">Sueño</message>
+    <message key="utopia">Utopía</message>
+    <message key="citation">Cita/Lema</message>
+    <message key="forward">siguiente</message>
+    <message key="allresults">Todos los resultados</message>
+    <message key="numberoftextsfound">Número de textos encontrados</message>
+    <message key="hits">Números</message>
+    <message key="home">Página principal</message>
+    <message key="about">Tema</message>
+    <message key="imprint">Información editorial</message>
+    <message key="Click to select a country">Haga clic para elegir un país</message>
+    <message key="Project description">Descripción del proyecto</message>
+    <message key="Index">Índice</message>
+    <message key="Advanced search">Búsqueda ampliada</message>
+    <message key="Help">Ayuda</message>
+    <message key="People">Personas</message>
+    <message key="Writings">Obras</message>
+    <message key="Places">Lugares</message>
+    <message key="back to context">Volver al índice</message>
+    <message key="Print version (original view)">Versión para imprimir (Visualización original)</message>
+    <message key="Print version (analytical view)">Versión para imprimir (Visualización del análisis)</message>
+    <message key="Results for">Resultados para la búsqueda</message>
+    
+    <!-- #### Übersetzungen bitte hier eintragen ####
+    
+    <message key="Click to select a country"></message>
+ 	<message key="Project description"></message>
+ 	<message key="Index"></message>
+ 	<message key="Advanced search"></message>
+ 	<message key="Help"></message>
+ 	<message key="People"></message>
+ 	<message key="Writings"></message>
+ 	<message key="Places"></message>
+ 	<message key="back to context"></message>
+ 	<message key="Print version (original view)"></message>
+ 	<message key="Print version (analytical view)"></message>
+ 	<message key="Results for"></message>
+    <message key="Results for"></message> 
+    
+    -->
+    
+    <!-- Bibliografía -->
+    <message key="bibliography">Bibliografía</message>
+    <message key="Bibliographie">Bibliografía</message>
+    <message key="Primärliteratur">Literatura Primaria</message>
+    <message key="Sekundärliteratur">Literatura Secundaria</message>
+    <message key="In">En</message>
+    
+</catalogue>

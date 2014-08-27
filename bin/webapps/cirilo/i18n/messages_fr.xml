@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<catalogue xml:lang="fr">
+    
+    <!-- 
+    #######
+    Fehlermeldungen Suche Allgemein
+    #######
+    -->
+    <message key="InternalError">Une erreur interne (est apparue).</message>
+    <message key="StartsWithWildcard">Le mot de recherche ne doit pas commencer par une * ou un ?.</message>
+    <message key="QueryTooShort">Le mot de recherche est trop court (minimum 3 caractères)</message>
+    <message key="MissingQuery">(pas de contenu): Il faut indiquer un mot de recherche.</message>
+    <message key="lucene">Une erreur est apparue. Veuillez vérifier votre mot de recherche.</message>
+    
+    
+    <!-- 
+        ######
+        Suche allgemein
+        ######
+    -->
+    <message key="Results for">Résultats de recherche pour</message>
+    
+    <!-- 
+   #######   
+      Moralische Wochenschriften
+   #######
+   -->
+    
+    <!-- Themen -->
+    <message key="nature">Nature</message>
+    <message key="religion">Religion</message>
+    <message key="theatre">Théâtre Littérature Art</message>
+    <message key="autopoetical">Réflexion autopoétique</message>
+    <message key="imagef">Image de la femme</message>
+    <message key="friendship">Amitié</message>
+    <message key="imagem">Image de l'homme</message>
+    <message key="superstition">Superstition</message>
+    <message key="critics">Critique de la noblesse</message>
+    <message key="apologetic">(Apologie de l'Espagne)</message>
+    <message key="societies">Sociétés etrangères</message>
+    <message key="structuresoc">Structure de la société</message>
+    <message key="law">Droit</message>
+    <message key="politics">Politique</message>
+    <message key="education">Éducation et formation</message>
+    <message key="philosophy">Philosophie</message>
+    <message key="economy">Économie</message>
+    <message key="customs">Mœurs et coutumes</message>
+    <message key="idea">Image de l’humanité</message>
+    <message key="culture">Culture de la conversation</message>
+    <message key="fashion">Mode</message>
+    <message key="morale">Morale</message>
+    <message key="reason">Raison</message>
+    <message key="passion">Passion</message>
+    <message key="happiness">Bonheur</message>
+    <message key="charity">Bienfaisance</message>
+    <message key="france">France</message>
+    <message key="spain">Espagne</message>
+    <message key="italy">Italie</message>
+    <message key="germany">Allemagne</message>
+    <message key="austria">Autriche</message>
+    <message key="england">Angleterre</message>
+    <message key="othercountries">Autres Pays</message>
+    <message key="america">Amérique (Indes Orientales)</message>
+    <message key="love">Amour</message>
+    <message key="edtext">Textes édités</message>
+    <message key="links">Onglets</message>
+    <message key="search">Recherche</message>
+    <message key="language">Langue</message>
+    <message key="german">Allemand</message>
+    <message key="english">Anglais</message>
+    <message key="french">Français</message>
+    <message key="dutch">Hollandais</message>
+    <message key="italian">Italien</message>
+    <message key="portuguese">Portugais</message>
+    <message key="spanish">Espagnol</message>
+    <message key="hungarian">Hongrois</message>
+    <message key="country">Pays</message>
+    <message key="netherlands">Pays-Bas</message>
+    <message key="switzerland">Suisse</message>
+    <message key="subjects">Sujets</message>
+    <message key="dates">Date</message>
+    <message key="-- dates --">-- Date --</message>
+    <message key="Datierung">Date</message>
+    <message key="keyword">Mot-clé</message>
+    <message key="-- keyword --">-- Mot-clé --</message>
+    <message key="Suchbegriff">Mot-clé</message>
+    <message key="entries">Dans cette rubrique il n’y a aucune entrée.</message>
+    <message key="completelist">Liste complète</message>
+    <message key="linksspect">Liens: Spectateurs</message>
+    <message key="spanspect">Spectateurs espagnols</message>
+    <message key="itspect">Spectateurs italiens</message>
+    <message key="frspect">Spectateurs français</message>
+    <message key="science">Sience</message>
+    <message key="family">Famille</message>
+    
+    <!-- Projekttitel und Navigation -->
+    <message key="Gesamtverzeichnis">Liste complète</message>
+    <message key="Links zu Wochenschriften">Liens: Spectateurs</message>
+    <message key="Spanische Wochenschriften">Spectateurs espagnols</message>
+    <message key="Italienische Wochenschriften">Spectateurs italiens</message>
+    <message key="Französische Wochenschriften">Spectateurs français</message>
+    <message key="editedby">Édité par</message>
+    <message key="financing">Financement</message>
+    <message key="origpag">Pagination originale</message>
+    <message key="repandnarr">Niveaux de représentation et formes narratives</message>
+    <message key="visofanalysis">Visualisation de l´analyse</message>
+    <message key="back">antérieur</message>
+    <message key="origaspect">Visualisation originale</message>
+    <message key="visalltexts">afficher/masquer le texte intégral</message>
+    <message key="level">Niveau</message>
+    <!-- bei den folgenden beiden Einträgen deutscher Key, weil im Stylesheet nach @type mit diesen Kategorien gefragt wird -->
+    <message key="Narrative Darstellungsebenen">Niveaux de représentation narratifs</message>
+    <message key="Narrative Darstellungsformen">Formes de représentation narratives</message>
+    <message key="genres">Formes narratives</message>
+    <message key="allegory">Allégorie</message>
+    
+    <!-- Übersetzung zusätzlich mit deutschem Key -->
+    <message key="Allgemeine Erzählung">Récit général</message>
+    <message key="Dialog">Dialogue</message>
+    <message key="Fremdportrait">Hétéroportrait</message>
+    <message key="Leserbrief">Lettre/Lettre au directeur</message>
+    <message key="Metatextualität">Metatextualité</message>
+    <message key="Selbstportrait">Autoportrait</message>
+    <message key="Utopie">Utopie</message>
+    <message key="Zitat/Motto">Citation/Devise</message>
+    <message key="Ebene 1">Niveau 1</message>
+    <message key="Ebene 2">Niveau 2</message>
+    <message key="Ebene 3">Niveau 3</message>
+    <message key="Ebene 4">Niveau 4</message>
+    <message key="Ebene 5">Niveau 5</message>
+    <message key="Ebene 6">Niveau 6</message>
+    
+    <message key="generalacc">Récit général</message>
+    <message key="dialogue">Dialogue</message>
+    <message key="example">Exemple</message>
+    <message key="fable">Fable</message>
+    <message key="hetportrait">Hétéroportrait </message>
+    <message key="lettertoeditor">Lettre/Lettre au directeur</message>
+    <message key="metatextuality">Metatextualité</message>
+    <message key="satire">Satire</message>
+    <message key="selfportrait">Autoportrait</message>
+    <message key="dream">Rêve</message>
+    <message key="utopia">Utopie</message>
+    <message key="citation">Citation/Devise</message>
+    <message key="forward">suivant</message>
+    <message key="allresults">Tous résultats</message>
+    <message key="numberoftextsfound">Numéro des textes trouvés</message>
+    <message key="hits">Numéros</message>
+    <message key="home">Page principale</message>
+    <message key="about">Thème</message>
+    <message key="imprint">Information éditoriale</message>
+    <message key="Click to select a country">Cliquez pour choisir un pays</message>
+    <message key="Project description">Description du projet</message>
+    <message key="Index">Registre</message>
+    <message key="Advanced search">Recherche élargie</message>
+    <message key="Help">Aide</message>
+    <message key="People">Personnages</message>
+    <message key="Writings">Œuvres</message>
+    <message key="Places">Lieux</message>
+    <message key="back to context">retour à l‘aperçu</message>
+    <message key="Print version (original view)">Version imprimée (Visualisation originale)</message>
+    <message key="Print version (analytical view)">Version imprimée (Visualisation de l'analyse)</message>
+    
+    
+    <!-- Bibliographie -->
+    <message key="bibliography">Bibliographie</message>
+    <message key="Bibliographie">Bibliographie</message>
+    <message key="Primärliteratur">Litterature Primaire</message>
+    <message key="Sekundärliteratur">Litterature Secondaire</message>
+    <message key="In">En</message>
+   
+</catalogue>

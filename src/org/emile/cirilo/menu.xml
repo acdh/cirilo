@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<MenuBar class="JMenuBar" name="mMenuRoot">
+	<Menu class="JMenu" text="File" mnemonic="F" name="File">
+		<MenuItem class="JMenuItem" text="file.edit" mnemonic="B" enabled="true" name="Edit"/>
+		<MenuItem class="JMenuItem" text="file.ingest" mnemonic="I" enabled="true" name="Ingest"/>
+		<MenuItem class="JSeparator"/>
+		<MenuItem class="JMenuItem" text="file.import" mnemonic="M" enabled="true" name="Import"/>
+		<MenuItem class="JSeparator"/>		
+		<MenuItem class="JMenuItem" text="changeuser" mnemonic="W" enabled="true" name="Login"/>
+		<MenuItem class="JSeparator"/>
+		<MenuItem class="JMenuItem" text="exit" mnemonic="x" enabled="true" name="Exit"/>
+	</Menu>
+	<Menu class="JMenu" text="Extras" mnemonic="E" name="Extras">
+    	<MenuItem class="JMenuItem" text="resetdeskt" mnemonic="R" enabled="true" name="Reset"/>
+		<MenuItem class="JSeparator"/>
+		<MenuItem class="JMenuItem" text="extras.harvest" mnemonic="X" enabled="true" name="Harvest"/>
+		<MenuItem class="JMenuItem" text="extras.templater" mnemonic="T" enabled="true" name="Templater"/>
+		<MenuItem class="JSeparator"/>
+		<MenuItem class="JMenuItem" text="extras.createenvironment" mnemonic="C" enabled="true" name="Create"/>
+		<MenuItem class="JSeparator"/>
+		<MenuItem class="JMenuItem" text="extras.preferences" mnemonic="P" enabled="true" name="Options"/>
+	</Menu>
+	<Menu class="JMenu" text="Infos" mnemonic="I" name="Infos">
+		<MenuItem class="JMenuItem" text="about" mnemonic="A" enabled="true" name="About"/>
+	</Menu>
+</MenuBar>

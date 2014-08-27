@@ -1,0 +1,91 @@
+body {
+	background-color: #ffffff;
+	font-family: arial, verdana, helvetica, sans-serif;
+}
+
+div.header {
+    width: 400px;
+    text-align: right;
+    padding-bottom: 0.5em;
+}
+
+div.header img {
+    text-align: right;
+    padding-bottom: 0.5em;
+}
+
+div.header span {
+    font-size: 0.7em; 
+    color: #4e626d;
+}
+
+div.header span.center {
+    border-top: 1px solid #4e626d;
+}
+
+
+div.content {
+    width: 400px;
+    border: 1px solid #4e626d;
+    
+}
+
+div.title {
+    border-bottom: 1px solid #dddddd;
+    overflow: hidden;
+}
+
+div.content h1 {
+    font-size: 1em;
+    padding-left: 12px;
+    color: #4e626d; 
+    font-weight: bold;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    
+}
+
+
+
+div.close {
+    text-align: right;
+}
+
+div.close span {
+    padding-left: 0.5em; 
+    padding-right: 0.5em; 
+    background-color: #4e626d; 
+    color: #ffffff;
+    font-size: 0.7em;
+}
+
+a {
+    text-decoration: none;
+}
+
+div.close span:before
+{
+    content: " x ";
+} 
+
+
+
+table {
+	font-family: arial, verdana, helvetica, sans-serif;
+}
+
+table th {
+    text-align: left;
+    padding-left: 10px; 
+    padding-right: 10px;
+    width: 110px;
+    font-size: 0.70em;
+    vertical-align: top;
+    line-height: 1.6em;
+}
+
+table td {
+    line-height: 1.6em;
+    font-size: 0.70em;
+    padding-right: 10px;
+}

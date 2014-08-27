@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<catalogue xml:lang="de">
+
+ <!-- 
+   #######
+       Fehlermeldungen Suche Allgemein
+   #######
+   -->
+ <message key="InternalError">Bei der Suche ist ein Problem aufgetreten.</message>
+ <message key="StartsWithWildcard">Der Suchbegriff darf nicht mit * oder ? beginnen.</message>
+ <message key="QueryTooShort">Der Suchbegriff ist zu kurz (mindestens 3 Zeichen)</message>
+ <message key="MissingQuery">Fehlender Wert: Es muss ein Suchbegriff angegeben werden!</message>
+ <message key="lucene">Es ist ein Fehler bei der Suche aufgetreten. Bitte überprüfen Sie Ihre Eingabe.</message>
+
+
+ <!--
+   #######
+      Onlineportal Alte Geschichte und Altertumskunde
+   #######
+   -->
+ 
+ <!-- general -->
+ <message key="Online portal Ancient History and Classical Antiquities">Onlineportal Alte Geschichte und Altertumskunde</message>
+ <message key="Keyword Search">Stichwortsuche</message>
+ <message key="more">mehr</message>
+ <message key="close">schließen</message>
+ <message key="View the Content">Textstellenanzeige über Kategorien</message>
+ <message key="categories">Eine Auswahl treffen Sie durch Anklicken der entsprechenden Kategorie.</message>
+
+ <!-- navigation -->
+ <message key="English">Englisch</message>
+ <message key="German">Deutsch</message>
+ <message key="Home">Home</message>
+ <message key="Imprint">Impressum</message>
+ <message key="Department of Ancient History and Archaeology">Institut für Alte Geschichte und Altertumskunde</message>
+
+ <!-- search / results-->
+ <message key="Pagesize">Anzeigeumfang</message>
+ <message key="Results">Suchergebnisse</message>
+ <message key="Results for">Suchergebnisse für</message>
+ <message key="Search options">Suchoptionen</message>
+ <message key="Simple search">Einfache Suche</message>
+ <message key="Submit">Übermitteln</message>
+ <message key="No matches found">Es konnten keine Einträge gefunden werden</message>
+ <message key="Advanced search">Erweiterte Suche</message>
+ <message key="Previous page">Vorige Seite</message>
+ <message key="Next page">Nächste Seite</message>
+ <message key="Entry/Entries">Fundstelle(n)</message>
+ <message key="Search term(s)">Suchbegriff(e)</message>
+ <message key="Hit(s)">Treffer</message>
+ <message key="Number of entries">Anzahl der gefundenen Einträge</message>
+ <message key="next">weiter</message>
+ <message key="back">zurück</message>
+ <message key="to">bis</message>
+ <message key="Search">Suche starten</message>
+ <message key="Help on Search">Hilfe zur Suche</message>
+
+ <!-- search help -->
+ <message key="simple search criteria">Einfache Suchkriterien</message>
+ <message key="case-sensitive">Groß-/Kleinschreibung spielt bei der Suche keine Rolle.</message>
+ <message key="3 characters">Es müssen mindestens 3 Zeichen in das Suchfeld eingegeben werden.</message>
+ <message key="logical AND">Werden mehrere Stichwörter eingegeben, sind diese mit Leerzeichen zu trennen. Alle eingegeben Stichwörter werden (logisch) mit UND verknüpft.</message>
+ <message key="ordered by frequency">Die Reihung der Suchergebnisse erfolgt nach der Häufigkeit des Vorkommens der Suchbegriffe im Dokument.</message>
+ <message key="combination">Die im Folgenden beschriebenen Suchmöglichkeiten können miteinander kombiniert werden. Die Fuzzy-Suche und die Suche im Dublin Core können nur in der Stichwortsuche
+  eingesetzt werden, die Trunkierung und die Verwendung von Boolschen Operatoren ist sowohl in der <em>Stichwortsuche</em> als auch in der <em>Erweiterten Suche</em> möglich.</message>
+ <message key="truncation">Trunkierung</message>
+ <message key="truncation description">Es besteht die Möglichkeit der Trunkierung mit den Zeichen "*" und "?". Das Stern-Symbol dient als Platzhalter für eine beliebige Anzahl von Zeichen, das
+  Fragezeichen-Symbol für genau ein Zeichen. Diese Symbole dürfen jedoch nicht am Wortanfang auftreten. Auch Kombinationen der beiden Trunkierungssymbole sind möglich.</message>
+ <message key="examples">Beispiele:</message>
+ <message key="truncation example">Eine Abfrage nach <em>stamm*</em> ergibt alle Einträge, in denen Stamm mit allen möglichen Endungsvarianten (z.B. Stammherr, Stammvater, Stammheros, Stammesverband,
+  stammt, stammend,...) vorkommt, während der Suchbegriff <em>sta?t</em> alle aus fünf Zeichen bestehenden Zeichenketten auflistet, die mit <em>sta</em> beginnen und auf <em>t</em> enden (z.B. Stadt,
+  Staat, Start,...).</message>
+ <message key="boolean operators">Boolsche Operatoren</message>
+ <message key="boolean description">Bei der Suche können die logischen Operatoren "AND", "OR" und "NOT" verwendet werden, um die Abfrage zu verfeinern.</message>
+ <message key="boolean example">Der Suchbegriff <em>Thukydides</em> OR <em>Xenophon</em> erbringt als Ergebnis jene Objekte, in denen die Begriffe Thukydides oder Xenophon vorkommen; <em>Krieg AND
+   Kampfhandlungen</em> liefert die Dokumente, in denen diese beiden Begriffe auftreten; <em>Verbrechen NOT Privat</em> ergibt alle Ergebnisse, in denen der Begriff Verbrechen, nicht aber der Begriff
+  Privat vorkommt.</message>
+ <message key="fuzzy search">Fuzzy-Suche</message>
+ <message key="fuzzy description">Bei der Fuzzy-Suche (undeutliche Suche) benutzt man das Tilde-Symbol "~" am Ende eines einzelnen Wortes. Für den Grad der Ähnlichkeit (zwischen 0 und 1) kann ein
+  Parameter angegeben werden. Wird dieser nicht angegeben, wird ein Standardwert von 0.5 verwendet. </message>
+ <message key="fuzzy example">Die Eingabe <em>Aioler~0.6</em> liefert jene Dokumente, welche die Worte "Aitoler", "Äoler", usw. beinhalten. </message>
+ <message key="dublin core search">Suche im Dublin Core</message>
+ <message key="dublin core description">Es kann spezifiziert werden in welchem Dublin Core-Feld gesucht wird.</message>
+ <message key="dublin core example">Der Suchbegriff <em>dc.date:2008</em> listet all jene Objekte auf, bei denen ausschließlich das Jahr 2008 im Dublin Core-Feld dc.date eingetragen ist.</message>
+
+ <!-- imprint -->
+ <message key="Phone">Tel.</message>
+ <message key="Mail">E-Mail</message>
+
+ <!-- 
+  #######
+     project specific translations 
+  #######
+ -->
+ 
+ <!-- 
+  #######
+     VIA und ETHNOS
+  #######
+  -->
+ 
+ <!-- suche -->
+ <message key="1.">1. Jh.</message>
+ <message key="2.">2. Jh.</message>
+ <message key="3.">3. Jh.</message>
+ <message key="4.">4. Jh.</message>
+ <message key="5.">5. Jh.</message>
+ <message key="6.">6. Jh.</message>
+ <message key="7.">7. Jh.</message>
+ <message key="8.">8. Jh.</message>
+ <message key="9.">9. Jh.</message>
+ <message key="10.">10. Jh.</message>
+ <message key="v.Chr.">v.Chr.</message>
+ <message key="n.Chr.">n.Chr.</message>
+ <message key="historisch">historisch</message>
+ <message key="mythisch">mythisch</message>
+
+ <!-- via und ethnos: Ausgabe der Einzelobjekte -->
+ <message key="Zitat">Zitat</message>
+ <message key="Titel">Titel</message>
+ <message key="Autor">Autor</message>
+ <message key="Werk">Titel</message>
+ <message key="Zeitangabe">Zeitangabe</message>
+ <message key="Originaltext">Originaltext</message>
+ <message key="Quelle">Quelle</message>
+ <message key="Übersetzung">Übersetzung</message>
+ <message key="Quelle der Übersetzung">Quelle der Übersetzung</message>
+ <message key="Beschreibung">Beschreibung</message>
+ <message key="Belegstellen">Belegstellen</message>
+ <message key="Kategorie">Kategorie</message>
+ <message key="Typ des Zitates">Typ des Zitates</message>
+ <message key="Stichworte">Stichworte</message>
+ <message key="Stichwort">Stichwort</message>
+ <message key="Schlagwort">Schlagwort</message>
+ <message key="BearbeiterIn">BearbeiterIn</message>
+ <message key="HerausgeberIn">HerausgeberIn</message>
+ <message key="Publikationsjahr">Publikationsjahr</message>
+ <message key="URL">URL</message>
+ <message key="Geografische Zuordnung">Geografische Zuordnung</message>
+ <message key="Kommentar">Kommentar</message>
+ 
+ 
+ <!-- 
+   #######   
+      Gewalt in antiken Gesellschaften - VIA 
+   #######
+   -->
+ <!-- Container -->
+ <message key="Violence in Antiquity">Gewalt in antiken Gesellschaften</message>
+ <message key="Type of Description">Art der Beschreibung</message>
+ <message key="Authors">Autoren</message>
+ <message key="Category">Kategorie</message>
+ <message key="Quality">Qualität</message>
+ <message key="Detailliert">Detailliert</message>
+ <message key="Summarisch">Summarisch</message>
+ <message key="Thukydides">Thukydides</message>
+ <message key="Abseits des Kriegs">Abseits des Kriegs</message>
+ <message key="Krieg">Krieg</message>
+ <message key="Historisch">Historisch</message>
+ <message key="Mythisch">Mythisch</message>
+ <message key="Privat">Privat</message>
+ <message key="Öffentlich">Öffentlich</message>
+ <message key="Strafe">Strafe</message>
+ <message key="Verbrechen">Verbrechen</message>
+ <message key="Abseits der Kampfhandlungen">Abseits der Kampfhandlungen</message>
+ <message key="Kampfhandlungen">Kampfhandlungen</message>
+
+
+ <!-- 
+   #######   
+      Zwischen Hellenenbewusstsein und Poliszugehörigkeit - ETHNOS
+   #######
+   -->
+ 
+ <!-- Container -->
+ <message key="Zwischen Hellenenbewußtsein und Poliszugehörigkeit">Zwischen Hellenenbewußtsein und Poliszugehörigkeit</message>
+ <message key="Autoren">Autoren</message>
+ <message key="Ethnische Gruppen">Ethnische Gruppen</message>
+ <message key="Geographische Zuordnung">Geographische Zuordnung</message>
+ <message key="Qualität">Qualität</message>
+
+ <message key="Anaximenes">Anaximenes</message>
+ <message key="Apollodoros">Apollodoros</message>
+ <message key="Aristoteles">Aristoteles</message>
+ <message key="Athenaios">Athenaios</message>
+ <message key="Cornelius Nepos">Cornelius Nepos</message>
+ <message key="Diodorus Siculus">Diodorus Siculus</message>
+ <message key="Herakleides Lembos">Herakleides Lembos</message>
+ <message key="Herodot">Herodot</message>
+ <message key="Hesiod">Hesiod</message>
+ <message key="Homer">Homer</message>
+ <message key="Isokrates">Isokrates</message>
+ <message key="Platon">Platon</message>
+ <message key="Strabon">Strabon</message>
+ <message key="Thukydides">Thukydides</message>
+ <message key="Xenophon">Xenophon</message>
+ <message key="Abanter">Abanter</message>
+ <message key="Achaier">Achaier</message>
+ <message key="Aigialier">Aigialier</message>
+ <message key="Ainianen">Ainianen</message>
+ <message key="Aioler">Aioler</message>
+ <message key="Aitoler">Aitoler</message>
+ <message key="Akarnanen">Akarnanen</message>
+ <message key="Arkader">Arkader</message>
+ <message key="Athamanen">Athamanen</message>
+ <message key="Boioter">Boioter</message>
+ <message key="Chalkidier">Chalkidier</message>
+ <message key="Chier">Chier</message>
+ <message key="Doloper">Doloper</message>
+ <message key="Dorer">Dorer</message>
+ <message key="Dryoper">Dryoper</message>
+ <message key="Dytochthonen">Dytochthonen</message>
+ <message key="Eleier">Eleier</message>
+ <message key="Eniener">Eniener</message>
+ <message key="Epeier">Epeier</message>
+ <message key="Epiroten">Epiroten</message>
+ <message key="Eteokreter">Eteokreter</message>
+ <message key="Euboier">Euboier</message>
+ <message key="Eurytanen">Eurytanen</message>
+ <message key="Gephyraier">Gephyraier</message>
+ <message key="Gerener">Gerener</message>
+ <message key="Illyrer">Illyrer</message>
+ <message key="Ionier">Ionier</message>
+ <message key="Karer">Karer</message>
+ <message key="Kaukonen">Kaukonen</message>
+ <message key="Kephallener">Kephallener</message>
+ <message key="Kreter">Kreter</message>
+ <message key="Kydonen">Kydonen</message>
+ <message key="Lapithen">Lapithen</message>
+ <message key="Leleger">Leleger</message>
+ <message key="Lokrer">Lokrer</message>
+ <message key="Magneten">Magneten</message>
+ <message key="Malier">Malier</message>
+ <message key="Minyer">Minyer</message>
+ <message key="Myrmidonen">Myrmidonen</message>
+ <message key="Ozolische Lokrer">Ozolische Lokrer</message>
+ <message key="Pelasger">Pelasger</message>
+ <message key="Perrhaiber">Perrhaiber</message>
+ <message key="Phlegyer">Phlegyer</message>
+ <message key="Phoker">Phoker</message>
+ <message key="Phthier">Phthier</message>
+ <message key="Phtiothische Achaier">Phtiothische Achaier</message>
+ <message key="Samier">Samier</message>
+ <message key="Sparten">Sparten</message>
+ <message key="Taphier">Taphier</message>
+ <message key="Teleboer">Teleboer</message>
+ <message key="Thesproter">Thesproter</message>
+ <message key="Thessaler">Thessaler</message>
+ <message key="Thraker">Thraker</message>
+ <message key="Triphylier">Triphylier</message>
+
+ <message key="Achaia">Achaia</message>
+ <message key="Ägäis">Ägäis</message>
+ <message key="Aigai">Aigai</message>
+ <message key="Aigina">Aigina</message>
+ <message key="Aiolis">Aiolis</message>
+ <message key="Aitolien">Aitolien</message>
+ <message key="Akarnanien">Akarnanien</message>
+ <message key="Ambrakia">Ambrakia</message>
+ <message key="Argolis">Argolis</message>
+ <message key="Argos">Argos</message>
+ <message key="Argos.Achaia">Argos (Achaia)</message>
+ <message key="Arkadien">Arkadien</message>
+ <message key="Armenien">Armenien</message>
+ <message key="Asine">Asine</message>
+ <message key="Athen">Athen</message>
+ <message key="Attika">Attika</message>
+ <message key="Bernsteininseln">Bernsteininseln</message>
+ <message key="Boiotien">Boiotien</message>
+ <message key="Buprasis">Buprasis</message>
+ <message key="Caere">Caere</message>
+ <message key="Chaironeia">Chaironeia</message>
+ <message key="Chalkidike">Chalkidike</message>
+ <message key="Chalkis">Chalkis</message>
+ <message key="Chios">Chios</message>
+ <message key="Delos">Delos</message>
+ <message key="Delphi">Delphi</message>
+ <message key="Dodekapolis">Dodekapolis</message>
+ <message key="Dodona">Dodona</message>
+ <message key="Doris">Doris</message>
+ <message key="Dryopis">Dryopis</message>
+ <message key="Dyme">Dyme</message>
+ <message key="Elis">Elis</message>
+ <message key="Epidauros">Epidauros</message>
+ <message key="Epirus">Epirus</message>
+ <message key="Euboia">Euboia</message>
+ <message key="Helike">Helike</message>
+ <message key="Hellespont">Hellespont</message>
+ <message key="Herakleia Trachinia">Herakleia Trachinia</message>
+ <message key="Hermione">Hermione</message>
+ <message key="Hestiaiotis">Hestiaiotis</message>
+ <message key="Himera">Himera</message>
+ <message key="Ionien">Ionien</message>
+ <message key="Italien">Italien</message>
+ <message key="Kalydna">Kalydna</message>
+ <message key="Keos">Keos</message>
+ <message key="Kephallenia">Kephallenia</message>
+ <message key="Kleinasien">Kleinasien</message>
+ <message key="Knidos">Knidos</message>
+ <message key="Kolchis">Kolchis</message>
+ <message key="Korinth">Korinth</message>
+ <message key="Kreta">Kreta</message>
+ <message key="Krisa">Krisa</message>
+ <message key="Kythnos">Kythnos</message>
+ <message key="Leontinoi">Leontinoi</message>
+ <message key="Lesbos">Lesbos</message>
+ <message key="Leukas">Leukas</message>
+ <message key="Lokris">Lokris</message>
+ <message key="Makednon">Makednon</message>
+ <message key="Malis">Malis</message>
+ <message key="Sammelzitate Megara">Megara</message>
+ <message key="Melos">Melos</message>
+ <message key="Messenien">Messenien</message>
+ <message key="Methymna">Methymna</message>
+ <message key="Sammelzitate Milet">Milet</message>
+ <message key="Mittelgriechenland">Mittelgriechenland</message>
+ <message key="Naxos">Naxos</message>
+ <message key="Nisyros">Nisyros</message>
+ <message key="Olpai">Olpai</message>
+ <message key="Orchomenos">Orchomenos</message>
+ <message key="Paphlagonien">Paphlagonien</message>
+ <message key="Parnass">Parnass</message>
+ <message key="Paros">Paros</message>
+ <message key="Peloponnes">Peloponnes</message>
+ <message key="Pentapolis.Kleinasien">Pentapolis (Kleinasien)</message>
+ <message key="Phokis">Phokis</message>
+ <message key="Phrygien">Phrygien</message>
+ <message key="Phthiotis">Phthiotis</message>
+ <message key="Plataiai">Plataiai</message>
+ <message key="Rhegion">Rhegion</message>
+ <message key="Rhodos">Rhodos</message>
+ <message key="Samos">Samos</message>
+ <message key="Seriphos">Seriphos</message>
+ <message key="Sammelzitate Sikyon">Sikyon</message>
+ <message key="Siphnos">Siphnos</message>
+ <message key="Sizilien">Sizilien</message>
+ <message key="Skione">Skione</message>
+ <message key="Skyros">Skyros</message>
+ <message key="Smyrna">Smyrna</message>
+ <message key="Sparta">Sparta</message>
+ <message key="Taphos">Taphos</message>
+ <message key="Tetrapolis.Attika">Tetrapolis (Attika)</message>
+ <message key="Theben">Theben</message>
+ <message key="Thera">Thera</message>
+ <message key="Thesprotia">Thesprotia</message>
+ <message key="Thessalien">Thessalien</message>
+ <message key="Thessaliotis">Thessaliotis</message>
+ <message key="Thrakien">Thrakien</message>
+ <message key="Thurioi">Thurioi</message>
+ <message key="Trachis">Trachis</message>
+ <message key="Triphylien">Triphylien</message>
+ <message key="Troas">Troas</message>
+ <message key="Troizen">Troizen</message>
+ 
+ <message key="Historisch">Historisch</message>
+ <message key="Mythisch">Mythisch</message>
+
+
+ <!-- 
+   #######   
+      Epigraphische Sammlung Graz - EpSG 
+   #######
+   -->
+ <message key="Squeeze Collection">Abklatschsammlung</message>
+
+
+ <!-- 
+   #######
+      Materialiensammlung 
+   #######
+   -->
+ <message key="General Collection">Materialiensammlung</message>
+
+
+ <!--
+   #######
+      Numismatische Sammlung - NUMIS
+   #######
+   -->
+ <message key="Coin Collection">Numismatische Sammlung</message>
+ <message key="Numismatische Sammlung">Numismatische Sammlung</message>
+ <message key="View objects">Objekte anzeigen</message>
+
+
+ <!-- 
+   #######   
+      Moralische Wochenschriften
+   #######
+   -->
+
+ <!-- Themen -->
+ <message key="nature">Natur</message>
+ <message key="religion">Religion</message>
+ <message key="theatre">Theater Literatur Kunst</message>
+ <message key="autopoetical">Autopoetische Reflexion</message>
+ <message key="imagef">Frauenbild</message>
+ <message key="friendship">Freundschaft</message>
+ <message key="imagem">Männerbild</message>
+ <message key="superstition">Aberglaube</message>
+ <message key="critics">Adelskritik</message>
+ <message key="apologetic">Apologetik Spaniens</message>
+ <message key="societies">Fremde Gesellschaften</message>
+ <message key="structuresoc">Gesellschaftsstruktur</message>
+ <message key="law">Recht</message>
+ <message key="politics">Politik</message>
+ <message key="education">Erziehung und Bildung</message>
+ <message key="philosophy">Philosophie</message>
+ <message key="economy">Wirtschaft</message>
+ <message key="customs">Sitten und Bräuche</message>
+ <message key="idea">Menschenbild</message>
+ <message key="culture">Gesprächskultur</message>
+ <message key="fashion">Mode</message>
+ <message key="morale">Moral</message>
+ <message key="reason">Vernunft</message>
+ <message key="passion">Leidenschaft</message>
+ <message key="happiness">Glück</message>
+ <message key="charity">Wohltätigkeit</message>
+ <message key="france">Frankreich</message>
+ <message key="spain">Spanien</message>
+ <message key="italy">Italien</message>
+ <message key="germany">Deutschland</message>
+ <message key="austria">Österreich</message>
+ <message key="england">England</message>
+ <message key="othercountries">Andere Länder</message>
+ <message key="america">Amerika (West Indien)</message>
+ <message key="love">Liebe</message>
+ <message key="edtext">Editierte Texte</message>
+ <message key="links">Links</message>
+ <message key="search">Suche</message>
+ <message key="language">Sprache</message>
+ <message key="german">Deutsch</message>
+ <message key="english">Englisch</message>
+ <message key="french">Französisch</message>
+ <message key="dutch">Holländisch</message>
+ <message key="italian">Italienisch</message>
+ <message key="portuguese">Portugiesisch</message>
+ <message key="spanish">Spanisch</message>
+ <message key="hungarian">Ungarisch</message>
+ <message key="country">Land</message>
+ <message key="netherlands">Niederlande</message>
+ <message key="switzerland">Schweiz</message>
+ <message key="subjects">Themen</message>
+ <message key="dates">Datierung</message>
+ <message key="-- dates --">-- Datierung --</message>
+ <message key="Datierung">Datierung</message>
+ <message key="keyword">Suchbegriff</message>
+ <message key="-- keyword --">-- Suchbegriff --</message>
+ <message key="Suchbegriff">Suchbegriff</message>
+ <message key="entries">In dieser Rubrik sind derzeit keine Einträge vorhanden.</message>
+ <message key="completelist">Gesamtverzeichnis</message>
+ <message key="linksspect">Links zu Wochenschriften</message>
+ <message key="spanspect">Spanische Wochenschriften</message>
+ <message key="itspect">Italienische Wochenschriften</message>
+ <message key="frspect">Französische Wochenschriften</message>
+ <message key="science">Wissenschaft</message>
+ <message key="family">Familie</message>
+
+ <!-- Projekttitel und Navigation -->
+ <message key="Gesamtverzeichnis">Gesamtverzeichnis</message>
+ <message key="Links zu Wochenschriften">Links zu Wochenschriften</message>
+ <message key="Spanische Wochenschriften">Spanische Wochenschriften</message>
+ <message key="Italienische Wochenschriften">Italienische Wochenschriften</message>
+ <message key="Französische Wochenschriften">Französische Wochenschriften</message>
+ <message key="editedby">Herausgegeben von</message>
+ <message key="financing">Finanzierung</message>
+ <message key="origpag">Originalseitenumbrüche</message>
+ <message key="repandnarr">Darstellungsebenen und Erzählformen</message>
+ <message key="visofanalysis">Analyseansicht</message>
+ <message key="back">zurück</message>
+ <message key="origaspect">Originalansicht</message>
+ <message key="visalltexts">alles ein-/ausblenden</message>
+ <message key="level">Ebene</message>
+ <!-- bei den folgenden beiden Einträgen deutscher Key, weil im Stylesheet nach @type mit diesen Kategorien gefragt wird -->
+ <message key="Narrative Darstellungsebenen">Darstellungsebenen</message><!-- Narrative Darstellungsebenen -->
+ <message key="Narrative Darstellungsformen">Erzählformen</message><!--Narrative Darstellungformen -->
+ <message key="genres">Erzählformen</message>
+ <message key="allegory">Allegorie</message>
+
+ <!-- Übersetzung zusätzlich mit deutschem Key -->
+ <message key="Allgemeine Erzählung">Allgemeine Erzählung</message>
+ <message key="Dialog">Dialog</message>
+ <message key="Fremdportrait">Fremdportrait</message>
+ <message key="Leserbrief">Brief/Leserbrief</message>
+ <message key="Metatextualität">Metatextualität</message>
+ <message key="Selbstportrait">Selbstportrait</message>
+ <message key="Utopie">Utopie</message>
+ <message key="Zitat/Motto">Zitat/Motto</message>
+ <message key="Ebene 1">Ebene 1</message>
+ <message key="Ebene 2">Ebene 2</message>
+ <message key="Ebene 3">Ebene 3</message>
+ <message key="Ebene 4">Ebene 4</message>
+ <message key="Ebene 5">Ebene 5</message>
+ <message key="Ebene 6">Ebene 6</message>
+
+ <message key="generalacc">Allgemeine Erzählung</message>
+ <message key="dialogue">Dialog</message>
+ <message key="example">Exemplum</message>
+ <message key="fable">Fabel</message>
+ <message key="hetportrait">Fremdportrait</message>
+ <message key="lettertoeditor">Brief/Leserbrief</message>
+ <message key="metatextuality">Metatextualität</message>
+ <message key="satire">Satire</message>
+ <message key="selfportrait">Selbstportrait</message>
+ <message key="dream">Traum</message>
+ <message key="utopia">Utopie</message>
+ <message key="citation">Zitat/Motto</message>
+ <message key="forward">weiter</message>
+ <message key="allresults">Alle Suchergebnisse</message>
+ <message key="numberoftextsfound">Anzahl der gefundenen Einträge</message>
+ <message key="hits">Treffer</message>
+ <message key="home">Home</message>
+ <message key="about">About</message>
+ <message key="imprint">Impressum</message>
+ <message key="Click to select a country">Klicken Sie um ein Land auszuwählen</message>
+ <message key="Project description">Projektbeschreibung</message>
+ <message key="Index">Register</message>
+ <message key="Advanced search">Erweiterte Suche</message>
+ <message key="Help">Hilfe</message>
+ <message key="People">Personen</message>
+ <message key="Writings">Werke</message>
+ <message key="Places">Orte</message>
+ <message key="back to context">zurück zur Übersicht</message>
+ <message key="Print version (original view)">Druckversion (Originalansicht)</message>
+ <message key="Print version (analytical view)">Druckversion (Analyseansicht)</message>
+   
+   
+ <!-- Bibliografie -->
+ <message key="bibliography">Bibliographie</message>
+ <message key="Bibliographie">Bibliographie</message>
+ <message key="Primärliteratur">Primärliteratur</message>
+ <message key="Sekundärliteratur">Sekundärliteratur</message>
+ <message key="In">In</message>
+   
+   <!-- 
+      #######   
+      Edition Ludwig Gumplowicz
+      #######
+   -->
+   <message key="Edition">Edition</message>
+   <message key="Ludwig">Ludwig</message>
+   <message key="contents">Inhaltsverzeichnis</message>
+   <message key="library">Webedition</message>
+   <message key="Webedition">Webedition</message>
+   <message key="index of names">Personenindex</message>
+   <message key="biography">Biographie</message>
+   <message key="bibliography lge">Bibliographie</message>
+   <message key="pictures">Bilddokumente</message>
+   <message key="archive">Archivmaterialien</message>
+   <message key="feedback">Feedback</message>
+   <message key="cooperations">Kooperationen</message>
+   <message key="imprint lge">Impressum</message>
+   <message key="search lge">Suche</message>
+   <message key="newpub">Neue Publikationen</message>
+   <message key="edition statement">Editionsbeschreibung</message>
+   <message key="Archive for the History of Sociology in Austria">Archiv für die Geschichte der
+      Soziologie in Österreich</message>
+   <message key="list of all the works">Gesamtverzeichnis</message>
+   <message key="alltexttypes">Alle Texttypen</message>
+   <message key="book contents">Buch-Inhaltsverzeichnis</message>
+   <message key="books">Bücher</message>
+   <message key="Bücher">Bücher</message>
+   <message key="articles">Aufsätze</message>
+   <message key="Aufsätze">Aufsätze</message>
+   <message key="obituaries">Nachrufe</message>
+   <message key="Nachrufe">Nachrufe</message>
+   <message key="reviews">Rezensionen</message>
+   <message key="Rezensionen">Rezensionen</message>
+   <message key="secondary literature">Sekundärliteratur</message>
+   <message key="back to contents">Zurück zum Inhaltsverzeichnis</message>
+   <message key="back to library">Zurück zur Bibliothek</message>
+   <message key="pdf-format">PDF-Format</message>
+   <message key="view without separate pages">ohne getrennte Seiten anzeigen</message>
+   <message key="view with separate pages">mit getrennten Seiten anzeigen</message>
+   <message key="seb">selbständig erschienene Publikationen und Übersetzungen</message>
+   <message key="in">in</message>
+   <message key="vol">Band</message>
+   <message key="nr">Nr. </message>
+   <message key="p">S</message>
+   <message key="issue">H.</message>
+   <message key="publications in">Publikationen in</message>
+   <message key="view">einsehen</message>
+   <!-- to -->
+   <message key="searchstring">Suchbegriff</message>
+   <message key="startnewsearch">Eine neue Suche starten</message>
+   <message key="allsearchresults">Alle Suchergebnisse</message>
+   <message key="searchresultsfor">Suchergebnis für:</message>
+   <message key="nroftexts">Anzahl der gefundenen Einträge: </message>
+   <!-- hits -->
+   <!-- back -->
+   <!-- forward -->
+   <message key="alllang">Alle Sprachen</message>
+   <message key="germanSmall">deutsch</message>
+   <message key="polishSmall">polnisch</message>
+   <message key="englishSmall">englisch</message>
+   <message key="italianSmall">italienisch</message>
+   <message key="frenchSmall">französisch</message>
+   <message key="other languages">anderen Sprachen</message>
+   <message key="view abbreviations">Abkürzungen einsehen</message>
+   <message key="view articles">Aufsätze, Nachrufe und Rezensionen anzeigen</message>
+   <message key="follow-up of">Nachfolge von</message>
+   <message key="abbreviations-h2">Abkürzungen in der Bibliographie (Publikationen in ...)</message>
+   <message key="other journals">andere Zeitschriften</message>
+   <message key="bib-info">In der Webedition sind nur jene Texte verfügbar, die den Link "einsehen"
+      aufweisen.</message>
+   <message key="books-info">Weitere Bücher folgen Ende 2012.</message>
+   <message key="names-info">In den mit den Personen verlinkten Verzeichnisen sind jene bereits
+      editierten Texte angeführt, in denen die jeweilige Person erwähnt wird.</message>
+   <message key="Habilitation">Der Hablilitationsakt (Graz 1876) von Ludwig Gumplowicz wird hier
+   mit freundlicher Genehmigung des Universitätsarchivs Graz veröffentlicht.</message>
+   <message key="correspondence">Korrespondenzen</message>
+</catalogue>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsp:page language="java" 
+       xmlns:xsp="http://apache.org/xsp" 
+       xmlns:xsp-request="http://apache.org/xsp/request/2.0" 
+       xmlns:util="http://apache.org/xsp/util/2.0"
+       >
+    
+    <xsp:structure>
+        <xsp:include>java.io.*</xsp:include>
+        <xsp:include>java.net.*</xsp:include>
+        <xsp:include>java.util.regex.*</xsp:include>
+    </xsp:structure>
+   
+   <content>
+        <xsp:logic>
+
+            String pid = null;
+			String host = null;
+		
+            try {
+                pid = parameters.getParameter("pid");
+
+				Pattern p = Pattern.compile(".*/(o:|container:|context:)(.*)/sdef.*");
+                Matcher m = p.matcher(pid);
+                if (m.find()) pid = m.group(1)+m.group(2);
+		
+                final String url = "http://gams.uni-graz.at/archive/get/"+pid+"/DC";                
+                <xsp:content>
+    	                <util:include-uri>
+        	            <util:href>
+            	                <xsp:expr>url</xsp:expr> 
+    	        	    </util:href>
+	                </util:include-uri>        
+    	            </xsp:content>
+			} catch (Exception e) {
+				<xsp:content>
+    	            <error>401: <xsp:expr>pid</xsp:expr></error>
+				</xsp:content>
+          }                     
+        </xsp:logic>
+    </content>
+</xsp:page>    

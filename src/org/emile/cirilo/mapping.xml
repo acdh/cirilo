@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mm:metadata-mapping xmlns:mm="http://mml.uni-graz.at/v1.0" xmlns:mods="http://www.loc.gov/mods/v3" >
+    <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <dc:title><mm:map select="//mods:titleInfo/mods:title" delimiter='.'/></dc:title>
+        <dc:creator><mm:map select="//mods:name[@type='personal']/mods:displayForm"/></dc:creator>
+        <dc:contributor><mm:map select="//mods:name[@type='corporate']/mods:affiliation"/></dc:contributor>
+        <dc:publisher><mm:map select="//mods:originInfo/mods:publisher"/></dc:publisher>
+        <dc:type><mm:map select="//mods:originInfo/mods:issuance"/></dc:type>
+        <dc:date><mm:map select="//mods:originInfo/mods:dateIssued"/></dc:date>
+        <dc:language><mm:map select="'de'"/></dc:language>
+    </oai_dc:dc>
+</mm:metadata-mapping>
+

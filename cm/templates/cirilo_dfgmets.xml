@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<foxml:digitalObject PID="cirilo:dfgMETS" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
+  <foxml:objectProperties>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="dfgMETS Object"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="yoda"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2011-03-16T12:51:36.036Z"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2012-02-09T10:48:18.683Z"/>
+  </foxml:objectProperties> 
+  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
+      ID="DC1.0" LABEL="Dublin Core Record" MIMETYPE="text/xml" SIZE="378">
+      <foxml:xmlContent>
+        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>dfgMETS Object</dc:title>
+          <dc:identifier>cirilo:dfgMETS</dc:identifier>
+        </oai_dc:dc>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
+      ID="RELS-EXT.0" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="403">
+      <foxml:xmlContent>
+        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about="info:fedora/cirilo:dfgMETS">
+            <hasModel rdf:resource="info:fedora/cm:dfgMETS" xmlns="info:fedora/fedora-system:def/model#"/>
+            <isTemplateFor rdf:resource="info:fedora/cm:dfgMETS" xmlns="http://ecm.sourceforge.net/relations/0/2/#"/>
+          </rdf:Description>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="METS_SOURCE" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="METS_SOURCE1.0" LABEL="METS Source"
+      MIMETYPE="text/xml" SIZE="3249">
+      <foxml:xmlContent>
+        <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd">
+          <mets:dmdSec ID="DMD.1">
+            <mets:mdWrap MDTYPE="MODS" MIMETYPE="text/xml">
+              <mets:xmlData>
+                <mods:mods version="3.0" xmlns:mods="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-0.xsd">
+                  <mods:titleInfo>
+                    <mods:title>METS based eBOOK for DFG Viewer</mods:title>
+                  </mods:titleInfo>
+                  <mods:originInfo>
+                    <mods:place>
+                      <mods:placeTerm type="text">Graz</mods:placeTerm>
+                    </mods:place>
+                    <mods:dateIssued>[2014]</mods:dateIssued>
+                  </mods:originInfo>
+                </mods:mods>
+              </mets:xmlData>
+            </mets:mdWrap>
+          </mets:dmdSec>
+          <mets:amdSec ID="AMD.1">
+            <mets:rightsMD ID="RMD.1">
+              <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVRIGHTS">
+                <mets:xmlData>
+                  <dv:rights xmlns:dv="http://dfg-viewer.de/">
+                    <dv:owner>Center for Information Modeling - Austrian Centre for Digital Humanities</dv:owner>
+                    <dv:ownerContact/>
+                    <dv:ownerLogo/>
+                    <dv:ownerSiteURL>http://gams.uni-graz.at</dv:ownerSiteURL>
+                  </dv:rights>
+                </mets:xmlData>
+              </mets:mdWrap>
+            </mets:rightsMD>
+            <mets:digiprovMD ID="PMD.1">
+              <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVLINKS">
+                <mets:xmlData>
+                  <dv:links xmlns:dv="http://dfg-viewer.de/">
+                    <dv:reference/>
+                    <dv:presentation/>
+                  </dv:links>
+                </mets:xmlData>
+              </mets:mdWrap>
+            </mets:digiprovMD>
+          </mets:amdSec>
+          <mets:fileSec>
+            <mets:fileGrp USE="DEFAULT">
+              <mets:file ID="IMG.1" MIMETYPE="image/jpeg">
+                <mets:FLocat LOCTYPE="URL" xlink:href="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/PAGE-1/content"/>
+              </mets:file>
+              <mets:file ID="IMG.2" MIMETYPE="image/jpeg">
+                <mets:FLocat LOCTYPE="URL" xlink:href="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/PAGE-2/content"/>
+              </mets:file>
+            </mets:fileGrp>
+          </mets:fileSec>
+          <mets:structMap TYPE="PHYSICAL">
+            <mets:div ID="PHY.1" TYPE="physSequence">
+              <mets:div ID="DIV.1" ORDER="1" TYPE="page">
+                <mets:fptr FILEID="IMG.1"/>
+              </mets:div>
+              <mets:div ID="DIV.2" ORDER="2" TYPE="page">
+                <mets:fptr FILEID="IMG.2"/>
+              </mets:div>
+            </mets:div>
+          </mets:structMap>
+          <mets:structMap TYPE="LOGICAL">
+            <mets:div ADMID="AMD.1" DMDID="DMD.1" ID="LOG.1" TYPE="monograph">
+              <mets:div ID="L.1" LABEL="Titelblatt" TYPE="TitlePage"/>
+              <mets:div ID="L.2" LABEL="Kapitel 1" TYPE="Chapter"/>
+            </mets:div>
+          </mets:structMap>
+          <mets:structLink>
+            <mets:smLink xlink:from="L.1" xlink:to="DIV.1"/>
+            <mets:smLink xlink:from="L.2" xlink:to="DIV.2"/>
+          </mets:structLink>
+        </mets:mets>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="BIBTEX" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="BIBTEX1.0" LABEL="BIBTEX Source" MIMETYPE="text/xml" SIZE="322">
+      <foxml:xmlContent>
+        <file xmlns="http://bibtexml.sf.net/">
+          <entry id="o:1">
+            <book>
+              <title>BibTeX stream automatically generated by GAMS</title>
+              <publisher>operated by the Center for Information Modelling - Austrian Centre for Digital Humanities, University Graz</publisher>
+              <year>2011</year>
+            </book>
+          </entry>
+        </file>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="STYLESHEET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="STYLESHEET.1" LABEL="BibTeX to HTML Stylesheet" MIMETYPE="text/xml">
+      <foxml:contentLocation
+        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/BIBTEXtoHTML/content" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="FO_STYLESHEET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="FO_STYLESHEET.1" LABEL="BibTeX to FO Stylesheet" MIMETYPE="text/xml">
+      <foxml:contentLocation
+        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/BIBTEXtoFO/content" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="DC_MAPPING" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="DC_MAPPING.1" LABEL="MODS to DC mapping rules" MIMETYPE="text/xml">
+      <foxml:contentLocation
+        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/MODStoDC_MAPPING/content" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="BIBTEX_MAPPING" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="BIBTEX_MAPPING.1"
+      LABEL="MODS to BIBTEX mapping rules" MIMETYPE="text/xml">
+      <foxml:contentLocation
+        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/MODStoBIBTEX_MAPPING/content" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="E" ID="METADATA" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METADATA.1" LABEL="Mulgara Triplestore Metadata" MIMETYPE="text/xml">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:dfgMETS/methods/sdef:Object/getMetadata" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="E" ID="METHODS" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METHODS.1" LABEL="Dissemination Methods" MIMETYPE="text/xml">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:dfgMETS/methods?format=xml" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="E" ID="METS_REF" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METS_REF.1" LABEL="Reference to METS_SOURCE" MIMETYPE="text/html">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/get/cirilo:dfgMETS/METS_SOURCE" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="R" ID="PID" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="PID.1" LABEL="Persistent Identifier" MIMETYPE="text/html">
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:dfgMETS/methods/sdef:dfgMETS/get" TYPE="URL"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="M" ID="THUMBNAIL" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.115Z" ID="THUMBNAIL.1" LABEL="Thumbnail" MIMETYPE="image/jpeg" SIZE="1447">
+      <foxml:binaryContent> 
+              /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwg
+              JC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIy
+              MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABQAGQDASIAAhEBAxEB/8QA
+              HwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIh
+              MUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVW
+              V1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXG
+              x8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQF
+              BgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAV
+              YnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOE
+              hYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq
+              8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAqheXEsUoWNgBj0zV81mXw/fj6UARm9uf74/wC+aja/
+              ux0kX/vkUmKayZoAY+pXoHEqj/gAqkfEd7Zzg3O2SEnBwuCKtPH7Vk6xBm0c45AoA7S3uI7mFZYm3Iwz
+              Utc7oglh0a1uYssGT50rehmSeMOh4P6UAS0UlLQAUUUUAFFFFACGqF4MzfhV81TuRmSgCrt4pNtS7aNt
+              AEDJkVQv4DJAygdRWrtqN4wRQB57NFr0L+Xa3sscQ6KOgrT0TWNW066UXredExw3HP1rp3t0/uiqc9oj
+              dhQB1SMHRWHQjIp1Q2oxbRj0WpqACiiigAooooAKrTDL1YNRP96gCArgZPAqlcalaW4+aVSfRTmuT+LF
+              1eWnhhGtZXjVpQHZDg4rgvh9rzX8Eum3Mha4gOVLHlhXBmeIrYbDOtSV7f1c6cLShVqck3Y9RufELHIt
+              4wB6tVjTtW+0ERy8P3965zY3pT4y8UiyL1XmvlcFnlf6ypV5Xi9PTzPVr4Gk6TVNao7cpkZqu8fPSjTr
+              pbm3BzzirLrmvuU76o8EvQ8RKPapKZF/q1+lPoAKKKKACiiigAqFvvmpqiI+c0AYXi7SV1rw1e2ZHzNG
+              SvsRXylb6tP4c8RQ3ygh4JNsqeozyK+yioIIPQ18s/Evwo1r8RJLKP5I7474cD7zHsKUoxnBwlqmNNxa
+              aPaLC4g1LT4L22YPDMgdSO4NWPsrH+E/T1qn8OvBOpeGvDS2er3iPhi6AfwKe2a6W51XR9MypmV5B2Xk
+              18ZDh1QqP29TljfTu0er9dk1+7jdmbpzyWuoGBhjIBxXTAZGa5aG+TUtXW4ghdFxglh1rrFHyD6V9bho
+              xhSUYXstFfc8yo25Ny3LKfcFOpqfcFOrcgKKKKACiiigAqMffNSVG8Yf1H0NADsVwnxA8FXPiK70rUtO
+              mjgvtPm8xXdcgiu3+zj+83/fRoNuD/E350Aef2Xh3XpQ41LV7m6Z2yScAD2GB0rcs/ClvDgsmT6nmujF
+              qo7t+dL9nH95v++qhU4KTklqynOTVm9CrBp0NuBtT9Ks4wOlL9nH95v++qBAAc5b86skfH9wU+kAxS0A
+              FFFFAH//2Q==
+</foxml:binaryContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="M" ID="QUERY" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-07-18T13:50:44.591Z" ID="QUERY.1" LABEL="Mulgara Triplestore Query"
+      MIMETYPE="text/plain" SIZE="513">
+      <foxml:binaryContent> 
+              IHNlbGVjdCAqIHdoZXJlIHsgPGZlZG9yYTp0Y206c2VsZj4gIDxkYzp0aXRsZT4gP3RpdGxlIC4KICAg
+              ICAgICAgICAgICAgICAgPGZlZG9yYTp0Y206c2VsZj4gIDxmZWRvcmEtbW9kZWw6aGFzTW9kZWw+ID9t
+              b2RlbCAuCiAgICAgICAgICAgICAgICAgIDxmZWRvcmE6dGNtOnNlbGY+ICA8ZmVkb3JhLW1vZGVsOm93
+              bmVySWQ+ID9vd25lcklkIC4KICAgICAgICAgICAgICAgICAgPGZlZG9yYTp0Y206c2VsZj4gIDxmZWRv
+              cmEtbW9kZWw6Y3JlYXRlZERhdGU+ID9jcmVhdGVkRGF0ZSAuCiAgICAgICAgICAgICAgICAgIDxmZWRv
+              cmE6dGNtOnNlbGY+ICA8ZmVkb3JhLXZpZXc6bGFzdE1vZGlmaWVkRGF0ZT4gP2xhc3RNb2RpZmllZERh
+              dGUgLiAKICAgICAgICAgICAgICAgICAgPGZlZG9yYTp0Y206c2VsZj4gIDxkYzppZGVudGlmaWVyPiA/
+              aWRlbnRpZmllciAuCiAgICAgICAgICAgICAgICAgIGZpbHRlciByZWdleChzdHIoP21vZGVsKSwgIl5p
+              bmZvOmZlZG9yYS9jbToiKSAKICAgICAgICAgICAgIH0K
+</foxml:binaryContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+</foxml:digitalObject>
