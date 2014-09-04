@@ -6735,8 +6735,7 @@
           xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
           <xsl:param name="locale"/>
           <xsl:param name="model"/>
-          <xsl:variable name="hostname" select="concat('http://gams.uni-graz.at/')"/>
-          <xsl:variable name="instance" select="'archive'"/>
+          <xsl:variable name="hostname" select="'http://gams.uni-graz.at/archive'"/>
           <xsl:template match="/">
             <html xmlns="http://www.w3.org/1999/xhtml">
               <body>
@@ -6767,8 +6766,7 @@
                       <td>
                         <img height="36px">
                           <xsl:attribute name="src">
-                            <xsl:text>/</xsl:text>
-                            <xsl:value-of select="$instance"/>
+                            <xsl:value-of select="$hostname"/>
                             <xsl:text>/objects/</xsl:text>
                             <xsl:value-of select="$pid"/>
                             <xsl:text>/datastreams/THUMBNAIL/content</xsl:text>
@@ -6791,7 +6789,7 @@
                     <tr>
                       <td/>
                       <td>
-                        <xsl:variable name="url" select="concat($hostname,$instance,'/objects/',$pid,'/methods/sdef:Object/getMethods')"/>
+                        <xsl:variable name="url" select="concat($hostname,'/objects/',$pid,'/methods/sdef:Object/getMethods')"/>
                         <xsl:for-each select="document($url)//o:sDef">
                           <xsl:call-template name="method">
                             <xsl:with-param name="oid" select="$pid"/>
@@ -6810,7 +6808,7 @@
             <xsl:for-each select="o:method">
               <a>
                 <xsl:attribute name="href">
-                  <xsl:value-of select="concat($hostname,$instance,'/objects/',$oid,'/methods/',$pid,'/',@name)"/>
+                  <xsl:value-of select="concat($hostname,'/objects/',$oid,'/methods/',$pid,'/',@name)"/>
                 </xsl:attribute>
                 <xsl:value-of select="concat($pid,'/',@name)"/>
               </a>

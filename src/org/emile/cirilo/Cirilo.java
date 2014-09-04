@@ -29,6 +29,7 @@ import org.emile.cirilo.ecm.templates.TemplateSubsystem;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.business.*;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -55,6 +56,12 @@ import org.apache.commons.logging.LogFactory;
 import java.applet.*;
 
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import java.net.URL;
 import java.awt.*;
@@ -71,6 +78,11 @@ import org.openrdf.sail.memory.config.MemoryStoreConfig;
 import org.openrdf.repository.config.RepositoryImplConfig;
 import org.openrdf.repository.sail.config.SailRepositoryConfig;
 import org.openrdf.sail.inferencer.fc.config.ForwardChainingRDFSInferencerConfig;
+import org.openrdf.sail.nativerdf.*;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+;
+
 
 /**
  * Description of the Class
@@ -167,6 +179,8 @@ class CiriloWindow extends JPanel {
 	 */
 	public class CiriloApp extends CApplication {
 
+		private ArrayList<String> files;
+
 		/**
 		 *Constructor for the CiriloApp object
 		 */
@@ -181,32 +195,7 @@ class CiriloWindow extends JPanel {
 		public void begin() {
 
 			try {
-				
-			
-/*
-				
-		 	    WebService.setUserName("zim");
-		 	    ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
-		 	    searchCriteria.setQ("Kūh-e Alborz");
-    			ToponymSearchResult searchResult = WebService.search(searchCriteria);
-    			for (Toponym t : searchResult.getToponyms()) {
-	                 System.out.println(t.getName()+" "+t.getFeatureCode());
-    			}
-    			
-*/
-				
-
-/*			    
-				org.openrdf.repository.manager.RemoteRepositoryManager man = new org.openrdf.repository.manager.RemoteRepositoryManager(sesameServer);
-				man.initialize();
-				String repositoryId = "test";
-				Boolean persistent = true;
-				SailImplConfig backendConfig = new MemoryStoreConfig(persistent);				 
-				backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);
-				SailRepositoryConfig repositoryTypeSpec = new SailRepositoryConfig(backendConfig);				
-				org.openrdf.repository.config.RepositoryConfig repConfig = new org.openrdf.repository.config.RepositoryConfig(repositoryId, repositoryTypeSpec);
-				man.addRepositoryConfig(repConfig);
-*/				
+													
 
 /*				
 				ImagePHash ph = new ImagePHash();
@@ -226,24 +215,8 @@ class CiriloWindow extends JPanel {
 				String xmpXml = Sanselan.getXmpXml(new File("c:/temp/image.tif"));
 				System.out.println(xmpXml);
 */				
-		 		   				
-				
-/*				
-				try  { 
-						RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager("http://gams.uni-graz.at/openrdf-sesame");
-			        	repositoryManager.setUsernameAndPassword("yoda", "xion61gnu");
-			        	repositoryManager.initialize();	 				           	
-			        	org.openrdf.repository.Repository repo = repositoryManager.getRepository("glossa.uni-graz.at.archive"); 	
-			        	repo.initialize(); 				    			
-			        	org.openrdf.repository.RepositoryConnection con = repo.getConnection();	 				    			
-			        	con.clear(new org.openrdf.model.impl.URIImpl("http://gams.uni-graz.at/rem_test")); 							 							  				
-
-		         //  		con.add(new File("c:\\usr\\skos.xml"), null, org.openrdf.rio.RDFFormat.RDFXML, new org.openrdf.model.impl.URIImpl("o:context1"));
-				} catch (Exception q) {
-					q.printStackTrace();
-				}
-*/				
-               
+		 		   								
+				               
                 
 				Properties p = new Properties();
 				p.load(Cirilo.class.getResourceAsStream("cirilo.ini"));
@@ -322,6 +295,8 @@ class CiriloWindow extends JPanel {
 				
 				// finish
 
+				User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
+
 				JFrame loFrame = (JFrame) CServiceProvider.getService(ServiceNames.FRAME_WINDOW);
 				loFrame.setVisible(true);
 				loFrame.toFront();				
@@ -329,6 +304,54 @@ class CiriloWindow extends JPanel {
 
 				CEventListener.setBlocked(false);
 
+				try {
+		 			String ses = (String) props.getProperty("user", "sesame.server");
+		        	RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
+		        	repositoryManager.initialize();
+					SailImplConfig backendConfig = new MemoryStoreConfig(true);				 
+					backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);
+					SailRepositoryConfig repositoryTypeSpec = new SailRepositoryConfig(backendConfig);
+					org.openrdf.repository.config.RepositoryConfig repConfig = new org.openrdf.repository.config.RepositoryConfig(user.getUrl().substring(7).replace("/","."), repositoryTypeSpec);
+					repositoryManager.addRepositoryConfig(repConfig);					
+				} catch (Exception s) {
+				}
+
+				try {
+					if (!Repository.exist("sdef:TEI")) {
+						DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+						DocumentBuilder builder = factory.newDocumentBuilder();
+						String format = FedoraClient.FOXML1_1.uri;
+						String fedora = user.getUrl();						
+						String host = fedora.substring(0,fedora.lastIndexOf("/"));
+						String cocoon = host+"/cocoon";
+				    	files = new ArrayList<String>();
+	                    File fp = new File ("bundle/cm");
+				    	treeWalk(fp);
+						for (int i = 0; i<files.size(); i++) {
+						  try {
+					    	Document doc = builder.parse((String) files.get(i));
+							DOMSource domSource = new DOMSource(doc);
+							StringWriter writer = new StringWriter();
+							StreamResult result = new StreamResult(writer);
+							TransformerFactory tf = TransformerFactory.newInstance();
+							Transformer transformer = tf.newTransformer();
+							transformer.transform(domSource, result);
+							InputSource is = new InputSource();
+							is.setCharacterStream(new StringReader(writer.toString()
+							.replaceAll("http://gams.uni-graz.at/archive", fedora)
+							.replaceAll("http://gams.uni-graz.at/cocoon", cocoon)
+							.replaceAll("http://gams.uni-graz.at", host)
+							.replaceAll(host+"#", "http://gams.uni-graz.at#")
+							.replaceAll(host+"/ontology#","http://gams.uni-graz.at/ontology#")));
+							doc = builder.parse(is);
+							Repository.ingestDocument(doc,  format, "Object ingested by Cirilo");
+						  } catch (Exception eq) {
+							  eq.printStackTrace();
+						  }	
+						}		
+					}
+				} catch (Exception s) {
+				}
 				
 				CServiceProvider.addService(new Session(), ServiceNames.SESSIONCLASS);				
 				Session se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
@@ -354,6 +377,19 @@ class CiriloWindow extends JPanel {
 			}
 
 		}
+
+		private void treeWalk(File file) {
+			  try {
+		 		if (file.isDirectory()) {
+			 		File[] children = file.listFiles();
+			 		for (int i = 0; i < children.length; i++) {
+			 			treeWalk(children[i]);
+			 		}
+		     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml")) {
+		     		files.add(file.getAbsolutePath());
+		     	}
+			  } catch (Exception e) {e.printStackTrace();}	
+		}	
 
 		/**
 		 * Description of the Method

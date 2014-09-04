@@ -120,15 +120,6 @@ public class TemplateSubsystem {
                                               "' does not exist");
         }
 
-        if (!Repository.isContentModel(cmpid)){
-            throw new ObjectIsWrongTypeException("The content model '"+cmpid+
-                                                 "' is not a content model");
-        }
-        if (!Repository.isDataObject(objpid)){
-            throw new ObjectIsWrongTypeException("The data object '"+objpid+
-                                                 "' is not a data object");
-        }
-
 
         boolean added = Repository.addRelation(objpid, Constants.TEMPLATE_REL, cmpid);
         LOG.info("Marked object '"+objpid+"' as template for '"+cmpid+"'");
@@ -190,11 +181,11 @@ public class TemplateSubsystem {
     }
 
 
-    public void makeTemplate(String templatepid, String ownerid, String newPid, String dctitle) {
+    public void makeTemplate(String templatepid, String ownerid, String newPid, String dctitle, String cm) {
     	try {
     		cloneInternalTemplate(templatepid, ownerid, newPid, (String) null, false);
 			while (!Repository.exist(newPid.substring(1)));
-    		markObjectAsTemplate(newPid.substring(1), "info:fedora/cirilo:DefaultContentModel");    		
+    		markObjectAsTemplate(newPid.substring(1), cm);    		
     	} catch (Exception e) {e.printStackTrace();}
     	
     	return;    	    	

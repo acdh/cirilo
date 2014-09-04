@@ -184,8 +184,7 @@ public class ImportDialog extends CDialog {
 						JFileChooser chooser = new JFileChooser(props.getProperty("user", "ingest.import.path"));
 						
 						DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				    	DocumentBuilder builder = null;
-				    	builder = factory.newDocumentBuilder();
+				    	DocumentBuilder builder = factory.newDocumentBuilder();
 
 				    	files = new ArrayList<String>();
 
@@ -274,8 +273,8 @@ public class ImportDialog extends CDialog {
 										.replaceAll("http://glossa.uni-graz.at/cocoon", cocoon)
 										.replaceAll("http://gams.uni-graz.at", host)
 										.replaceAll("http://glossa.uni-graz.at", host)
-										.replaceAll("http://glossa.uni-graz.at#", "http://gams.uni-graz.at#")
-										.replaceAll("http://glossa.uni-graz.at/ontology#","http://gams.uni-graz.at/ontology#")));
+										.replaceAll(host+"#", "http://gams.uni-graz.at#")
+										.replaceAll(host+"/ontology#","http://gams.uni-graz.at/ontology#")));
 										doc = builder.parse(is);
 										
 										logger.write("\n " + new java.util.Date() + ". "+ msgFmt0.format(arg0));

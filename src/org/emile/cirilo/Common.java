@@ -97,10 +97,10 @@ public class Common {
     public final static Namespace xmlns_grel= Namespace.getNamespace( "rel", "http://gams.uni-graz.at#");
 
     public final static Namespace xmlns_viewer= Namespace.getNamespace( "", "http://gams.uni-graz.at/viewer");
-    	
-    public final static String SESAME_SERVER = "http://gams.uni-graz.at/openrdf-sesame";
-    
+    	    
     public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
+    
+    public final static String SESAME_SERVER = "http://localhost:8080/openrdf-sesame";
   	
     public final static String[] LANGUAGES ={"en", "de"};
     

@@ -171,7 +171,7 @@
               </wsdl:output>
             </wsdl:operation>
             <wsdl:operation name="getDC">
-              <http:operation location="http://gams.uni-graz.at/cocoon/getDC?pid=http://glossa.uni-graz.at/archive/get/(PID)/DC"/>
+              <http:operation location="http://gams.uni-graz.at/cocoon/getDC?pid=http://gams.uni-graz.at/archive/get/(PID)/DC"/>
               <wsdl:input>
                 <http:urlReplacement/>
               </wsdl:input>
@@ -180,7 +180,7 @@
               </wsdl:output>
             </wsdl:operation>
             <wsdl:operation name="getMetadata">
-              <http:operation location="http://glossa.uni-graz.at/archive/risearch?type=(TYPE)&amp;lang=(LANG)&amp;format=(FORMAT)&amp;query=(QUERY)"/>
+              <http:operation location="http://gams.uni-graz.at/archive/risearch?type=(TYPE)&amp;lang=(LANG)&amp;format=(FORMAT)&amp;query=(QUERY)"/>
               <wsdl:input>
                 <http:urlReplacement/>
               </wsdl:input>

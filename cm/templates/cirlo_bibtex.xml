@@ -49,7 +49,7 @@
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="FO_STYLESHEET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="FO_STYLESHEET.1" LABEL="BibTeX to FO Stylesheet" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/ini:Datasteams/datastreams/BIBTEXtoFO/content" TYPE="URL"/>
+      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/BIBTEXtoFO/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="THUMBNAIL" STATE="A" VERSIONABLE="false">
@@ -97,16 +97,16 @@
     <foxml:datastreamVersion CREATED="2011-07-18T13:50:44.591Z" ID="QUERY.1" LABEL="Mulgara Triplestore Query"
       MIMETYPE="text/plain" SIZE="513">
       <foxml:binaryContent> 
-              IHNlbGVjdCAqIHdoZXJlIHsgPGZlZG9yYTp0Y206c2VsZj4gIDxkYzp0aXRsZT4gP3RpdGxlIC4KICAg
-              ICAgICAgICAgICAgICAgPGZlZG9yYTp0Y206c2VsZj4gIDxmZWRvcmEtbW9kZWw6aGFzTW9kZWw+ID9t
-              b2RlbCAuCiAgICAgICAgICAgICAgICAgIDxmZWRvcmE6dGNtOnNlbGY+ICA8ZmVkb3JhLW1vZGVsOm93
-              bmVySWQ+ID9vd25lcklkIC4KICAgICAgICAgICAgICAgICAgPGZlZG9yYTp0Y206c2VsZj4gIDxmZWRv
-              cmEtbW9kZWw6Y3JlYXRlZERhdGU+ID9jcmVhdGVkRGF0ZSAuCiAgICAgICAgICAgICAgICAgIDxmZWRv
-              cmE6dGNtOnNlbGY+ICA8ZmVkb3JhLXZpZXc6bGFzdE1vZGlmaWVkRGF0ZT4gP2xhc3RNb2RpZmllZERh
-              dGUgLiAKICAgICAgICAgICAgICAgICAgPGZlZG9yYTp0Y206c2VsZj4gIDxkYzppZGVudGlmaWVyPiA/
-              aWRlbnRpZmllciAuCiAgICAgICAgICAgICAgICAgIGZpbHRlciByZWdleChzdHIoP21vZGVsKSwgIl5p
-              bmZvOmZlZG9yYS9jbToiKSAKICAgICAgICAgICAgIH0K
-</foxml:binaryContent>
+        c2VsZWN0ICogd2hlcmUgeyB7ICA8ZmVkb3JhOm9iajpzZWxmPiAgPGRjOnRpdGxlPiA/dGl0bGUgLgog
+        ICAgICAgICAgICAgICAgICAgIDxmZWRvcmE6b2JqOnNlbGY+ICA8ZmVkb3JhLW1vZGVsOmhhc01vZGVs
+        PiA/bW9kZWwgLgogICAgICAgICAgICAgICAgICAgIDxmZWRvcmE6b2JqOnNlbGY+ICA8ZmVkb3JhLW1v
+        ZGVsOm93bmVySWQ+ID9vd25lcklkIC4KICAgICAgICAgICAgICAgICAgICA8ZmVkb3JhOm9iajpzZWxm
+        PiAgPGZlZG9yYS1tb2RlbDpjcmVhdGVkRGF0ZT4gP2NyZWF0ZWREYXRlIC4KICAgICAgICAgICAgICAg
+        ICAgICA8ZmVkb3JhOm9iajpzZWxmPiAgPGZlZG9yYS12aWV3Omxhc3RNb2RpZmllZERhdGU+ID9sYXN0
+        TW9kaWZpZWREYXRlIC4gCiAgICAgICAgICAgICAgICAgICAgPGZlZG9yYTpvYmo6c2VsZj4gIDxkYzpp
+        ZGVudGlmaWVyPiA/aWRlbnRpZmllciAKICAgICAgICAgICAgICAgICAgICBmaWx0ZXIgcmVnZXgoc3Ry
+        KD9tb2RlbCksICJeaW5mbzpmZWRvcmEvY206IikgCiAgICAgICAgICAgfQp9
+      </foxml:binaryContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="false">

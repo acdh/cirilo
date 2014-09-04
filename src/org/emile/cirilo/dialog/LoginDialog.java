@@ -169,7 +169,7 @@ public class LoginDialog extends CDialog {
             groups.add("administrator");           
             groups.add("editor");
             
-            if (user.equals("fedoraAdmin") || user.equals("yoda")) {
+            if (user.equals("fedoraAdmin") || user.equals("yoda") || user.equals("admin")) {
                 member.add("administrator");			            	
             } else {
                 member.add("editor");			            	
