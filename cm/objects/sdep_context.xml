@@ -122,7 +122,7 @@
           </wsdl:portType>
           <wsdl:service name="Context">
             <wsdl:port binding="this:Context_http" name="Context_port">
-              <http:address location="http://gams.uni-graz.at/cocoon/"/>
+              <http:address location="http://fedora.host/cocoon/"/>
             </wsdl:port>
           </wsdl:service>
           <wsdl:binding name="Context_http" type="this:ContextPortType">
@@ -137,7 +137,7 @@
               </wsdl:output>
             </wsdl:operation>
             <wsdl:operation name="getNeighbours">
-              <http:operation location="toXML?source=(METADATA)&amp;style=http://gams.uni-graz.at/cocoon/context-neighbours.xsl&amp;identifier=(identifier)"/>
+              <http:operation location="toXML?source=(METADATA)&amp;style=http://fedora.host/cocoon/context-neighbours.xsl&amp;identifier=(identifier)"/>
               <wsdl:input>
                 <http:urlReplacement/>
               </wsdl:input>

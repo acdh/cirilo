@@ -338,9 +338,9 @@ class CiriloWindow extends JPanel {
 							transformer.transform(domSource, result);
 							InputSource is = new InputSource();
 							is.setCharacterStream(new StringReader(writer.toString()
-							.replaceAll("http://gams.uni-graz.at/archive", fedora)
-							.replaceAll("http://gams.uni-graz.at/cocoon", cocoon)
-							.replaceAll("http://gams.uni-graz.at", host)
+						    .replaceAll("http://fedora.host/fedora", fedora)
+							.replaceAll("http://fedora.host/cocoon", cocoon)
+							.replaceAll("http://fedora.host", host)
 							.replaceAll(host+"#", "http://gams.uni-graz.at#")
 							.replaceAll(host+"/ontology#","http://gams.uni-graz.at/ontology#")));
 							doc = builder.parse(is);

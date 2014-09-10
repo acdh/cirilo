@@ -93,43 +93,43 @@
    <foxml:datastream CONTROL_GROUP="R" ID="TORDF" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="TORDF.1"
       LABEL="XSLT Stylesheet to create RDF-Triples from TEI_SOURCE" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/TORDF/content" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TORDF/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
    <foxml:datastream CONTROL_GROUP="E" ID="PID" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="PID.1" LABEL="Persistent Identifier" MIMETYPE="text/html">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:TEI/methods/sdef:TEI/get" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:TEI/methods/sdef:TEI/get" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream> 
   <foxml:datastream CONTROL_GROUP="R" ID="STYLESHEET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="STYLESHEET.1"
       LABEL="TEI resp. BibTeX to HTML Stylesheet" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/TEItoHTML/content" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TEItoHTML/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="RDF_MAPPING" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="RDF_MAPPING.1"
       LABEL="Reference to RDF Template for generating RELS-INT" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/RDF_MAPPING/content" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/RDF_MAPPING/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="DC_MAPPING" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="DC_MAPPING.1" LABEL="TEI to DC mapping rules" MIMETYPE="text/xml">
       <foxml:contentLocation
-        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/TEItoDC_MAPPING/content" TYPE="URL"/>
+        REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TEItoDC_MAPPING/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="REPLACEMENT_RULESET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="REPLACEMENT_RULESET.1"
       LABEL="Set of REGEX replacements" MIMETYPE="text/xml">
       <foxml:contentLocation
-        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/REPLACEMENT_RULESET/content" TYPE="URL"/>
+        REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/REPLACEMENT_RULESET/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="FO_STYLESHEET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="FO_STYLESHEET.1"
       LABEL="TEI resp. BibTeX to FO Stylesheet" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/TEItoFO/content" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TEItoFO/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="THUMBNAIL" STATE="A" VERSIONABLE="false">
@@ -166,17 +166,17 @@
   <foxml:datastream CONTROL_GROUP="R" ID="VOYANT" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-07-12T07:47:20.013Z" ID="URL.1" LABEL="Reference to Voyant Tools" MIMETYPE="text/html">
       <foxml:contentLocation
-        REF="http://voyant-tools.org?input=http://gams.uni-graz.at/archive/objects/cirilo:TEI/datastreams/TEI_SOURCE/content" TYPE="URL"/>
+        REF="http://voyant-tools.org?input=http://fedora.host/fedora/objects/cirilo:TEI/datastreams/TEI_SOURCE/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="E" ID="METADATA" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METADATA.1" LABEL="Mulgara Triplestore Metadata" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/cirilo:TEI/methods/sdef:Object/getMetadata" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/cirilo:TEI/methods/sdef:Object/getMetadata" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="E" ID="METHODS" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METHODS.1" LABEL="Dissemination Methods" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:TEI/methods?format=xml" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:TEI/methods?format=xml" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="QUERY" STATE="A" VERSIONABLE="false">

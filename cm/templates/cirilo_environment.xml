@@ -214,7 +214,7 @@
           xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
           <xsl:param name="locale"/>
           <xsl:param name="model"/>
-          <xsl:variable name="hostname" select="'http://gams.uni-graz.at/archive'"/>
+          <xsl:variable name="hostname" select="'http://fedora.host/fedora'"/>
           <xsl:template match="/">
             <html xmlns="http://www.w3.org/1999/xhtml">
               <body>
@@ -316,13 +316,13 @@
             <k:Folder>
               <k:name/>
               <mm:metadata-mapping xmlns:mm="http://mml.uni-graz.at/v1.0">
-                <k:Placemark id="http://gams.uni-graz.at/this:PID" xmlns:k="http://earth.google.com/kml/2.0" xmlns:t="http://www.tei-c.org/ns/1.0">
+                <k:Placemark id="http://fedora.host/this:PID" xmlns:k="http://earth.google.com/kml/2.0" xmlns:t="http://www.tei-c.org/ns/1.0">
                   <k:name>
                     <mm:map select="concat(//t:placeName/t:ref,': ',//t:title)"/>
                   </k:name>
                   <k:description>
-                    <a href="http://gams.uni-graz.at/this:PID">
-                      <img src="http://gams.uni-graz.at/archive/objects/this:PID/datastreams/THUMBNAIL/content"/>
+                    <a href="http://fedora.host/this:PID">
+                      <img src="http://fedora.host/fedora/objects/this:PID/datastreams/THUMBNAIL/content"/>
                     </a>
                     <p>
                       <mm:map select="//t:ab[@type='lido:objectDescriptionSet' and not(@subtype)]"/>

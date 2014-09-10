@@ -61,26 +61,26 @@
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="E" ID="PID" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="PID.1" LABEL="Persistent Identifier" MIMETYPE="text/html">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Context/methods/sdef:Context/get" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Context/methods/sdef:Context/get" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="KML_TEMPLATE" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="KML_TEMPLATE.1" LABEL="KML Template" MIMETYPE="text/xml">
       <foxml:contentLocation
-        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/KML_TEMPLATE/content" TYPE="URL"/>
+        REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/KML_TEMPLATE/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="STYLESHEET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="STYLESHEET.1"
       LABEL="Context resp. BibTeX to HTML Stylesheet" MIMETYPE="text/xml">
       <foxml:contentLocation
-        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/CONTEXTtoHTML/content" TYPE="URL"/>
+        REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/CONTEXTtoHTML/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="FO_STYLESHEET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="FO_STYLESHEET.1" LABEL="BibTeX to FO Stylesheet" MIMETYPE="text/xml">
       <foxml:contentLocation
-        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/BIBTEXtoFO/content" TYPE="URL"/>
+        REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/BIBTEXtoFO/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="THUMBNAIL" STATE="A" VERSIONABLE="false">
@@ -122,17 +122,17 @@
   <foxml:datastream CONTROL_GROUP="R" ID="URL" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-07-12T07:47:20.013Z" ID="URL.1" LABEL="Reference to Google Maps Viewer" MIMETYPE="text/html">
       <foxml:contentLocation
-        REF="http://maps.google.com?q=http://gams.uni-graz.at/archive/objects/cirilo:Context/datastreams/KML/content" TYPE="URL"/>
+        REF="http://maps.google.com?q=http://fedora.host/fedora/objects/cirilo:Context/datastreams/KML/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="METADATA" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METADATA.1" LABEL="Mulgara Triplestore Metadata" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Context/methods/sdef:Object/getMetadata" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Context/methods/sdef:Object/getMetadata" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="METHODS" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METHODS.1" LABEL="Dissemination Methods" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Context/methods?format=xml" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Context/methods?format=xml" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="QUERY" STATE="A" VERSIONABLE="false">

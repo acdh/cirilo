@@ -122,7 +122,7 @@
           <wsdl:binding name="Episode_http" type="this:EpisodePortType">
             <http:binding verb="GET"/>
             <wsdl:operation name="get">
-              <http:operation location="http://gams.uni-graz.at/cocoon/toHTML?source=(XML_SOURCE)&amp;style=(STYLESHEET)&amp;locale=(locale)"/>
+              <http:operation location="http://fedora.host/cocoon/toHTML?source=(XML_SOURCE)&amp;style=(STYLESHEET)&amp;locale=(locale)"/>
               <wsdl:input>
                 <http:urlReplacement/>
               </wsdl:input>

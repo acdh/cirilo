@@ -38,7 +38,7 @@
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="STYLESHEET.1"
       LABEL="Query resp. BibTeX to HTML Stylesheet" MIMETYPE="text/xml">
       <foxml:contentLocation
-        REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/QUERYtoHTML/content" TYPE="URL"/>
+        REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/QUERYtoHTML/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="M" ID="THUMBNAIL" STATE="A" VERSIONABLE="false">

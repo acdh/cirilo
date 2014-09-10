@@ -35,12 +35,12 @@
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="ONTOLOGY1.0" LABEL="Ontology Source" MIMETYPE="text/xml" SIZE="847">
       <foxml:xmlContent>
         <rdf:RDF  xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
-          <skos:ConceptScheme rdf:about="http://gams.uni-graz.at/thesaurus/">
+          <skos:ConceptScheme rdf:about="http://fedora.host/thesaurus/">
             <dc:title>SKOS Thesaurus</dc:title>
-            <skos:hasTopConcept rdf:resource="http://gams.uni-graz.at/thesaurus/999"/>            
+            <skos:hasTopConcept rdf:resource="http://fedora.host/thesaurus/999"/>            
           </skos:ConceptScheme>
-          <skos:Concept rdf:about="http://gams.uni-graz.at/thesaurus/999">
-            <skos:inScheme rdf:resource="http://gams.uni-graz.at/thesaurus/"/>
+          <skos:Concept rdf:about="http://fedora.host/thesaurus/999">
+            <skos:inScheme rdf:resource="http://fedora.host/thesaurus/"/>
             <skos:prefLabel>Concept</skos:prefLabel>
           </skos:Concept>
         </rdf:RDF>
@@ -95,27 +95,27 @@
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="FO_STYLESHEET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2013-05-06T14:02:20.477Z" ID="FO_STYLESHEET.2" LABEL="OntologytoFO Stylesheet" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/SKOStoFO/content" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/SKOStoFO/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="E" ID="PID" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2013-05-06T14:15:12.081Z" ID="PID.4" LABEL="Persistent Identifier" MIMETYPE="text/html">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:SKOS/methods/sdef:SKOS/get" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:SKOS/methods/sdef:SKOS/get" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="STYLESHEET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2013-05-06T14:15:20.582Z" ID="STYLESHEET.4" LABEL="OntologytoHTML Stylesheet" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:Backbone/datastreams/SKOStoHTML/content" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/SKOStoHTML/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="METADATA" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METADATA.1" LABEL="Mulgara Triplestore Metadata" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:SKOS/methods/sdef:Object/getMetadata" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:SKOS/methods/sdef:Object/getMetadata" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="METHODS" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METHODS.1" LABEL="Dissemination Methods" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://gams.uni-graz.at/archive/objects/cirilo:SKOS/methods?format=xml" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:SKOS/methods?format=xml" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
 </foxml:digitalObject>

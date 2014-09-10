@@ -135,7 +135,7 @@
           </wsdl:portType>
           <wsdl:service name="TEI">
             <wsdl:port binding="this:TEI_http" name="TEI_port">
-              <http:address location="http://gams.uni-graz.at/cocoon/"/>
+              <http:address location="http://fedora.host/cocoon/"/>
             </wsdl:port>
           </wsdl:service>
           <wsdl:binding name="TEI_http" type="this:TEIPortType">

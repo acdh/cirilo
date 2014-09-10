@@ -119,7 +119,7 @@
           </wsdl:portType>
           <wsdl:service name="Query">
             <wsdl:port binding="this:Query_http" name="Query_port">
-              <http:address location="http://gams.uni-graz.at/cocoon/"/>
+              <http:address location="http://fedora.host/cocoon/"/>
             </wsdl:port>
           </wsdl:service>
           <wsdl:binding name="Query_http" type="this:QueryPortType">

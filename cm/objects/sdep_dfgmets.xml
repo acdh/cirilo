@@ -116,7 +116,7 @@
           <wsdl:binding name="METS_http" type="this:METSPortType">
             <http:binding verb="GET"/>
             <wsdl:operation name="get">
-              <http:operation location="http://gams.uni-graz.at/cocoon/dfgviewer?mets=(METS_REF)"/>
+              <http:operation location="http://fedora.host/cocoon/dfgviewer?mets=(METS_REF)"/>
               <wsdl:input>
                 <http:urlReplacement/>
               </wsdl:input>
@@ -125,7 +125,7 @@
               </wsdl:output>
             </wsdl:operation>
             <wsdl:operation name="vget">
-              <http:operation location="http://gams.uni-graz.at/cocoon/viewer?mets=(METS_REF)"/>
+              <http:operation location="http://fedora.host/cocoon/viewer?mets=(METS_REF)"/>
               <wsdl:input>
                 <http:urlReplacement/>
               </wsdl:input>

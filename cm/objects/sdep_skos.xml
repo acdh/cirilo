@@ -173,7 +173,7 @@
           </wsdl:portType>
           <wsdl:service name="Ontology">
             <wsdl:port binding="this:Ontology_http" name="Ontology_port">
-              <http:address location="http://gams.uni-graz.at/cocoon/"/>
+              <http:address location="http://fedora.host/cocoon/"/>
             </wsdl:port>
           </wsdl:service>
           <wsdl:binding name="Ontology_http" type="this:OntologyPortType">

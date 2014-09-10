@@ -30,6 +30,7 @@ import voodoosoft.jroots.exception.CException;
 
 
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.Common;
@@ -562,6 +563,11 @@ public class EditObjectDialog extends CDialog {
 					  props.saveProperties("user");
 					  File fp = chooser.getSelectedFile();
 	    	  
+					  String fedora = user.getUrl();						
+					  String host = fedora.substring(0,fedora.lastIndexOf("/"));
+					  String cocoon = host+"/cocoon";
+			
+					  
 			    	  for (int i=0; i<selected.length; i++) {
 			    		  if(pd.isCanceled()) {break;}		
 			    		  String pid =(String)loTable.getValueAt(selected[i],0);	
@@ -569,7 +575,13 @@ public class EditObjectDialog extends CDialog {
 			    	          FileOutputStream fos = new FileOutputStream(fp.getAbsolutePath()+System.getProperty( "file.separator" )+pid.replace(":",".")+".xml" );
 							  BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
 
-							  out.write(Repository.get2ObjectXml(pid));
+							  String buf = Repository.get2ObjectXml(pid);
+							  
+							  out.write(buf.replaceAll(fedora, "http://fedora.host/fedora")
+							           .replaceAll(cocoon, "http://fedora.host/cocoon")
+							           .replaceAll(host, "http://fedora.host")
+										.replaceAll("http://fedora.host#", "http://gams.uni-graz.at#")
+										.replaceAll("http://fedora.host/ontology#","http://gams.uni-graz.at/ontology#"));
 							  out.close();
 			    			  
 			    			  exported++;

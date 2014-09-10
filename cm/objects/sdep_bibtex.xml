@@ -175,7 +175,7 @@
           </wsdl:portType>
           <wsdl:service name="BibTeX">
             <wsdl:port binding="this:BibTeX_http" name="BibTeX_port">
-              <http:address location="http://gams.uni-graz.at/cocoon/"/>
+              <http:address location="http://fedora.host/cocoon/"/>
             </wsdl:port>
           </wsdl:service>
           <wsdl:binding name="BibTeX_http" type="this:BibTeXPortType">
@@ -305,7 +305,7 @@
           </wsdl:portType>
           <wsdl:service name="BibTeX">
             <wsdl:port binding="this:BibTeX_http" name="BibTeX_port">
-              <http:address location="http://gams.uni-graz.at/cocoon/"/>
+              <http:address location="http://fedora.host/cocoon/"/>
             </wsdl:port>
           </wsdl:service>
           <wsdl:binding name="BibTeX_http" type="this:BibTeXPortType">
