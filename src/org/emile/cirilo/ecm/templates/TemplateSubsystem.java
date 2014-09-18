@@ -28,7 +28,6 @@ import org.emile.cirilo.ecm.repository.PidList;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.utils.Constants;
 import org.emile.cirilo.ecm.utils.XpathUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -40,18 +39,22 @@ import org.w3c.dom.NodeList;
 import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
 
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactoryConfigurationException;
+import javax.xml.xpath.XPathFactoryConfigurationException;
+
 import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.*;
-
 
 import org.jdom.input.DOMBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import java.io.*;
+
 import javax.xml.parsers.*;
+
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
@@ -197,7 +200,7 @@ public class TemplateSubsystem {
         throws FedoraIllegalContentException,
         FedoraConnectionException, PIDGeneratorException,
         ObjectNotFoundException,
-        ObjectIsWrongTypeException {
+        ObjectIsWrongTypeException, XPathFactoryConfigurationException {
     	return cloneInternalTemplate( templatepid,  ownerid,  newPid,  dctitle, true);
     }
     
@@ -205,7 +208,7 @@ public class TemplateSubsystem {
             throws FedoraIllegalContentException,
                    FedoraConnectionException, PIDGeneratorException,
                    ObjectNotFoundException,
-                   ObjectIsWrongTypeException {
+                   ObjectIsWrongTypeException, XPathFactoryConfigurationException {
 
         //working
         templatepid = Repository.ensurePID(templatepid);
@@ -330,7 +333,7 @@ public class TemplateSubsystem {
     throws FedoraIllegalContentException,
            FedoraConnectionException, PIDGeneratorException,
            ObjectNotFoundException,
-           ObjectIsWrongTypeException {
+           ObjectIsWrongTypeException, XPathFactoryConfigurationException {
 
     	//working
     	templatepid = Repository.ensurePID(templatepid);
@@ -441,7 +444,7 @@ public class TemplateSubsystem {
      * @throws javax.xml.xpath.XPathExpressionException if there was 
      */
     private void replacePid(Document doc, String oldpid, String newpid)
-            throws FedoraIllegalContentException, XPathExpressionException {
+            throws FedoraIllegalContentException, XPathExpressionException, XPathFactoryConfigurationException {
 
         LOG.trace("Entering replacepid");
         substituteAttribute(doc, FOXML_DIGITAL_OBJECT_PID,
@@ -457,7 +460,7 @@ public class TemplateSubsystem {
 
     //** AAR Ext 1.0 **/
     private void replaceOwner (Document doc, String ownerid)
-    throws FedoraIllegalContentException, XPathExpressionException {
+    throws FedoraIllegalContentException, XPathExpressionException, XPathFactoryConfigurationException {
 
     	substituteAttribute(doc, OBJECTPROPERTIES_OWNERID, ownerid);
     }
@@ -471,7 +474,7 @@ public class TemplateSubsystem {
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeExpathList(Document doc, String query)
-    throws XPathExpressionException {
+    throws XPathExpressionException, XPathFactoryConfigurationException {
 NodeList nodes = XpathUtils.
         xpathQuery(doc,
                    query);
@@ -484,7 +487,7 @@ for (int i=0;i<nodes.getLength();i++){
 }
 
     private void removeOlderVersions(Document doc)
-    throws XPathExpressionException {
+    throws XPathExpressionException, XPathFactoryConfigurationException {
     		NodeList nodes = XpathUtils.
     					xpathQuery(doc,"/foxml:digitalObject/foxml:datastream");
 
@@ -501,7 +504,7 @@ for (int i=0;i<nodes.getLength();i++){
     }
     
     private void setExpathList(Document doc, String query, String text)
-    throws XPathExpressionException {
+    throws XPathExpressionException, XPathFactoryConfigurationException {
 NodeList nodes = XpathUtils.
         xpathQuery(doc,
                    query);
@@ -521,7 +524,7 @@ NodeList nodes = XpathUtils.
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void substituteAttribute(Document doc, String query, String value)
-            throws XPathExpressionException {
+            throws XPathExpressionException, XPathFactoryConfigurationException {
         NodeList nodes = XpathUtils.
                 xpathQuery(doc,
                            query);
@@ -533,7 +536,7 @@ NodeList nodes = XpathUtils.
     
     //** AAR Ext .0 **/
     private void replaceAttribute(Document doc, String oldpid, String newpid)
-    	throws XPathExpressionException {
+    	throws XPathExpressionException, XPathFactoryConfigurationException {
 		NodeList nodes = XpathUtils.xpathQuery(doc, DATASTREAM_CONTENTLOCATION);
 		for (int i=0;i<nodes.getLength();i++){
 			Node node = nodes.item(i);
@@ -564,7 +567,7 @@ NodeList nodes = XpathUtils.
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeAttribute(Document doc, String query, String attribute)
-            throws XPathExpressionException {
+            throws XPathExpressionException, XPathFactoryConfigurationException {
         NodeList nodes;
 
         nodes = XpathUtils.xpathQuery(
@@ -589,12 +592,12 @@ NodeList nodes = XpathUtils.
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeDCidentifier(Document doc)
-    	throws  XPathExpressionException {
+    	throws  XPathExpressionException, XPathFactoryConfigurationException {
     	//Then remove the pid in dc identifier
     	removeExpathList(doc, DCIDENTIFIER);
     }
     private void removeDCtitle(Document doc)
-    	throws  XPathExpressionException {
+    	throws  XPathExpressionException, XPathFactoryConfigurationException {
     	//Then remove the pid in dc identifier
     	removeExpathList(doc, DCTITLE);
     }
@@ -607,7 +610,7 @@ NodeList nodes = XpathUtils.
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeTemplateRelation(Document doc) throws
-                                                      XPathExpressionException {
+                                                      XPathExpressionException, XPathFactoryConfigurationException {
         // Remove template relation
 
         //TODO Constant for template relation
@@ -621,7 +624,7 @@ NodeList nodes = XpathUtils.
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeAudit(Document doc) throws
-                                           XPathExpressionException {
+                                           XPathExpressionException, XPathFactoryConfigurationException {
 
         removeExpathList(doc, DATASTREAM_AUDIT);
 
@@ -633,7 +636,7 @@ NodeList nodes = XpathUtils.
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeDatastreamVersions(Document doc) throws
-                                                        XPathExpressionException {
+                                                        XPathExpressionException, XPathFactoryConfigurationException {
         NodeList relationNodes;
 
         relationNodes = XpathUtils.xpathQuery(
@@ -658,7 +661,7 @@ NodeList nodes = XpathUtils.
      * @param doc the object
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void removeCreated(Document doc) throws XPathExpressionException {
+    private void removeCreated(Document doc) throws XPathExpressionException, XPathFactoryConfigurationException {
         LOG.trace("Entering removeCreated");
         removeAttribute(doc, DATASTREAM_CREATED,"CREATED");
 
@@ -673,14 +676,14 @@ NodeList nodes = XpathUtils.
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeLastModified(Document doc) throws
-                                                  XPathExpressionException {
+                                                  XPathExpressionException, XPathFactoryConfigurationException {
 
         removeExpathList(doc, OBJECTPROPERTIES_LSTMODIFIED);
 
     }
     
     private void addOAIItemID(Document doc, String pid, String query)
-    	throws XPathExpressionException {
+    	throws XPathExpressionException, XPathFactoryConfigurationException {
     		NodeList nodes = XpathUtils.
     		xpathQuery(doc,
     				query);
@@ -694,7 +697,7 @@ NodeList nodes = XpathUtils.
     }
     
     private void addDCMetadata( Document doc, String query, CDefaultGuiAdapter moGA )
-   		throws XPathExpressionException {    	
+   		throws XPathExpressionException , XPathFactoryConfigurationException{    	
     		NodeList nodes = XpathUtils.
     			xpathQuery(doc,
     				query);

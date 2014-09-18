@@ -71,16 +71,6 @@ import java.util.*;
 import org.apache.sanselan.*;
 import org.apache.sanselan.common.*;
 import org.geonames.*;
-import org.openrdf.repository.http.HTTPRepository;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
-import org.openrdf.sail.config.SailImplConfig;
-import org.openrdf.sail.memory.config.MemoryStoreConfig;
-import org.openrdf.repository.config.RepositoryImplConfig;
-import org.openrdf.repository.sail.config.SailRepositoryConfig;
-import org.openrdf.sail.inferencer.fc.config.ForwardChainingRDFSInferencerConfig;
-import org.openrdf.sail.nativerdf.*;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 ;
 
 
@@ -304,55 +294,6 @@ class CiriloWindow extends JPanel {
 
 				CEventListener.setBlocked(false);
 
-				try {
-		 			String ses = (String) props.getProperty("user", "sesame.server");
-		        	RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
-		        	repositoryManager.initialize();
-					SailImplConfig backendConfig = new MemoryStoreConfig(true);				 
-					backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);
-					SailRepositoryConfig repositoryTypeSpec = new SailRepositoryConfig(backendConfig);
-					org.openrdf.repository.config.RepositoryConfig repConfig = new org.openrdf.repository.config.RepositoryConfig(user.getUrl().substring(7).replace("/","."), repositoryTypeSpec);
-					repositoryManager.addRepositoryConfig(repConfig);					
-				} catch (Exception s) {
-				}
-
-				try {
-					if (!Repository.exist("sdef:TEI")) {
-						DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-						DocumentBuilder builder = factory.newDocumentBuilder();
-						String format = FedoraClient.FOXML1_1.uri;
-						String fedora = user.getUrl();						
-						String host = fedora.substring(0,fedora.lastIndexOf("/"));
-						String cocoon = host+"/cocoon";
-				    	files = new ArrayList<String>();
-	                    File fp = new File ("bundle/cm");
-				    	treeWalk(fp);
-						for (int i = 0; i<files.size(); i++) {
-						  try {
-					    	Document doc = builder.parse((String) files.get(i));
-							DOMSource domSource = new DOMSource(doc);
-							StringWriter writer = new StringWriter();
-							StreamResult result = new StreamResult(writer);
-							TransformerFactory tf = TransformerFactory.newInstance();
-							Transformer transformer = tf.newTransformer();
-							transformer.transform(domSource, result);
-							InputSource is = new InputSource();
-							is.setCharacterStream(new StringReader(writer.toString()
-						    .replaceAll("http://fedora.host/fedora", fedora)
-							.replaceAll("http://fedora.host/cocoon", cocoon)
-							.replaceAll("http://fedora.host", host)
-							.replaceAll(host+"#", "http://gams.uni-graz.at#")
-							.replaceAll(host+"/ontology#","http://gams.uni-graz.at/ontology#")));
-							doc = builder.parse(is);
-							Repository.ingestDocument(doc,  format, "Object ingested by Cirilo");
-						  } catch (Exception eq) {
-							  eq.printStackTrace();
-						  }	
-						}		
-					}
-				} catch (Exception s) {
-				}
-				
 				CServiceProvider.addService(new Session(), ServiceNames.SESSIONCLASS);				
 				Session se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
 

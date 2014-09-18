@@ -25,6 +25,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactoryConfigurationException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
@@ -120,10 +121,16 @@ public class XpathUtils {
      *                                  expression.
      */
     public static NodeList xpathQuery(Node node, String xpathExpression)
-            throws XPathExpressionException {
-        XPath xPath = XPathFactory.newInstance().newXPath();
+            throws XPathExpressionException, XPathFactoryConfigurationException{
+    	
+    	
+        XPath xPath = XPathFactory.newInstance(
+      		  XPathFactory.DEFAULT_OBJECT_MODEL_URI,
+      		  "com.sun.org.apache.xpath.internal.jaxp.XPathFactoryImpl",
+      		  ClassLoader.getSystemClassLoader()).newXPath();
         xPath.setNamespaceContext(ECM_NAMESPACE_CONTEXT);
 
+        
         return (NodeList) xPath
                 .evaluate(xpathExpression, node, XPathConstants.NODESET);
     }
