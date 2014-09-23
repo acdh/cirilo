@@ -184,7 +184,7 @@ public class DCMI {
 	        rdf.removeContent(new ElementFilter("itemID"));			                              
 			if (isOAI_PMH) {
 	        	oai = new Element("itemID", Common.xmlns_oai);
-	        	oai.addContent(Common.URN+":"+pid);
+	        	oai.addContent(Common.OAIPHM()+pid);
 	        	rdf.addContent(oai);
 		     }
 		     Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(doc));

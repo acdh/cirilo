@@ -33,9 +33,9 @@ import net.glxn.qrgen.image.ImageType;
 
 import org.emile.cirilo.User;
 import org.emile.cirilo.ecm.repository.Repository;
-
 import org.jdom.Namespace;
 
+import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 
 public class Common {
@@ -155,9 +155,7 @@ public class Common {
     public final static String hasModel ="info:fedora/fedora-system:def/model#";
    
     public final static String itemID = "http://www.openarchives.org/OAI/2.0#itemID";
-
-    public final static String URN = "urn:kfug:at:gams";
-    
+   
     public final static String INFO_FEDORA ="info:fedora/";
     
     public final static String UNTITLED = "Ohne Titel";
@@ -203,6 +201,21 @@ public class Common {
 	   
 		return res;
 	}
+
+	public static String OAIPHM() {
+		String urn = "";
+		try {
+			CPropertyService props = (CPropertyService) CServiceProvider.getService( ServiceNames.PROPERTIES );
+			urn = props.getProperty("user", "OAI.Prefix");
+			if (urn != null && !urn.equals("null")) {
+				if (!urn.endsWith(":") && urn.trim().length() > 0) urn+=":";
+			} else {
+				urn = "";
+			}
+		} catch (Exception e) {}
+		return urn;
+	}
+
 	
 	   public static void genQR (User user, String pid) {	
 	    	try {

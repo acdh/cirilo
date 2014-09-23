@@ -65,6 +65,8 @@ public class CMIngester {
         	TemplateSubsystem temps = new TemplateSubsystem();
 
        		RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager("http://"+server+":8080/openrdf-sesame");
+            repositoryManager.setUsernameAndPassword(user, passwd);
+
        		repositoryManager.initialize();
        		SailImplConfig backendConfig = new MemoryStoreConfig(true);				 
 			backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);

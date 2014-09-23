@@ -691,7 +691,7 @@ NodeList nodes = XpathUtils.
     			Node node = nodes.item(i);    			
     			Element item = doc.createElement("oai:itemID");
     			item.setAttribute("xmlns:oai", "http://www.openarchives.org/OAI/2.0/");
-    			item.setTextContent("oai:kfug:"+pid);
+    			item.setTextContent(pid);
     			node.appendChild(item);
     		}
     }

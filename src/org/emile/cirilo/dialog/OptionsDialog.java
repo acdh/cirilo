@@ -110,6 +110,11 @@ public class OptionsDialog extends CDialog {
 			} catch (Exception ex) {}
 
 			try {
+				JTextField tf = (JTextField) getGuiComposite().getWidget("jtfOAIPrefix");
+		        props.setProperty("user", "OAI.Prefix", tf.getText());
+			} catch (Exception ex) {}
+
+			try {
 				JComboBox jcbCM = ((JComboBox) getGuiComposite().getWidget("jcbGeneralDefaultCM"));
 				props.setProperty("user", "General.DefaultContentModel", (String) jcbCM.getSelectedItem());
 			} catch (Exception ex) {}
@@ -200,6 +205,12 @@ public class OptionsDialog extends CDialog {
 				JTextField tf = (JTextField) getGuiComposite().getWidget("jtfTEILoginName");
 				tf.setText("");
 				tf.setText(props.getProperty("user", "TEI.LoginName"));
+			} catch (Exception e) {}
+
+			try {
+				JTextField tf = (JTextField) getGuiComposite().getWidget("jtfOAIPrefix");
+				tf.setText("");
+				tf.setText(props.getProperty("user", "OAI.Prefix"));
 			} catch (Exception e) {}
 			
 			try {

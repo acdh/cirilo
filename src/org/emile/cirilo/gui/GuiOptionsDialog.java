@@ -52,6 +52,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 	JCheckBox jcbTEIResolveRegex;
 	JCheckBox jcbTEIResolveGeoIDs;
 	JTextField jtfTEILoginName;
+	JTextField jtfOAIPrefix;
 	JCheckBox jcbTEIResolveSKOS;
 	JCheckBox jcbTEIIngestImages;
 	JCheckBox jcbTEIRefreshSource;
@@ -100,6 +101,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		setWidgetName(jcbMETSCreateFromJPEG, "jcbMETSCreateFromJPEG" );
 		setWidgetName(jcbTEIOnlyGeonameID, "jcbTEIOnlyGeonameID" );
 		setWidgetName(jcbTEICustomization, "jcbTEICustomization" );
+		setWidgetName(jtfOAIPrefix, "jtfOAIPrefix" );
 			
 	}
 
@@ -136,6 +138,8 @@ public class GuiOptionsDialog extends CGuiComposite {
 		
 		jtfTEILoginName = new JTextField();
 		jtfTEILoginName.setPreferredSize(new Dimension(100, jtfTEILoginName.getPreferredSize().height));
+		jtfOAIPrefix = new JTextField();
+		jtfOAIPrefix.setPreferredSize(new Dimension(150, jtfOAIPrefix.getPreferredSize().height));
 
 		JTabbedPane tp = new JTabbedPane();
 		
@@ -144,7 +148,11 @@ public class GuiOptionsDialog extends CGuiComposite {
 		Box c0  = Box.createHorizontalBox();
 		c0.add( new JLabel(res.getString("defaultcm")+": ") );
 		c0.add( jcbGeneralDefaultCM );
-		t0.add( c0, "wrap 10" );
+		t0.add( c0, "wrap 5" );
+		Box c1  = Box.createHorizontalBox();
+		c1.add( new JLabel("OAI PHM Prefix: ") );
+		c1.add( jtfOAIPrefix );
+		t0.add( c1, "wrap 5" );
 
 		Container t1 = new Container();
 		t1.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
@@ -158,10 +166,10 @@ public class GuiOptionsDialog extends CGuiComposite {
 		t1.add(jcbTEIResolveSKOS, "wrap 5"); 														
 		t1.add(jcbTEIResolveGeoIDs, "wrap 5");	
 		t1.add(jcbTEIOnlyGeonameID, "gapbefore 18px, wrap 5");
-		Box c1  = Box.createHorizontalBox();
-		c1.add( new JLabel(res.getString("geonameslogin")+": "));
-		c1.add( jtfTEILoginName );
-		t1.add( c1, "gapbefore 18px , wrap 5" );
+		Box c2  = Box.createHorizontalBox();
+		c2.add( new JLabel(res.getString("geonameslogin")+": "));
+		c2.add( jtfTEILoginName );
+		t1.add( c2, "gapbefore 18px , wrap 5" );
 		t1.add(jcbTEIRemoveEmpties); 
 		
 		Container t2 = new Container();

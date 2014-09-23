@@ -178,14 +178,15 @@ public class NewObjectDialog extends CDialog {
 			
 			String pid = ""; 
 					
-			 if (((String)jcbNamespace.getSelectedItem()).contains("context")||((String)jcbNamespace.getSelectedItem()).contains("container")||((String)jcbNamespace.getSelectedItem()).contains("query")) {
-					pid= (String)jcbNamespace.getSelectedItem()+(String)jtfPID.getText().trim(); 					
-			 } else if (((String)jtfPID.getText()).startsWith("$")) {
+			String tid = (String)jtfPID.getText().trim();
+			
+			 if (!tid.isEmpty() && (((String)jcbNamespace.getSelectedItem()).contains("context")||((String)jcbNamespace.getSelectedItem()).contains("container")||((String)jcbNamespace.getSelectedItem()).contains("query"))) {
+					pid= (String)jcbNamespace.getSelectedItem()+tid; 					
+			 } else if (tid.startsWith("$")) {
 					pid= "$"+(String)jcbNamespace.getSelectedItem()+(String)jtfPID.getText().substring(1);
 			} else {
 				pid = ((String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem()).trim();
 			}
-			 
 			 
 			if (Repository.exist(pid.substring(1))) {
 				

@@ -139,7 +139,7 @@ public class MDMapper
 			}
 			stylesheet +="</xsl:stylesheet>";
 			stylesheet = stylesheet.replaceAll("this:PID", PID); 
-			stylesheet = stylesheet.replaceAll("this:URN", Common.URN+":"+PID); 
+			stylesheet = stylesheet.replaceAll("this:URN", Common.OAIPHM()+PID); 
 						
 			xslt = builder.build(new java.io.StringReader(stylesheet));		
 			
