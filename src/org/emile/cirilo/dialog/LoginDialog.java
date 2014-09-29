@@ -142,7 +142,8 @@ public class LoginDialog extends CDialog {
 			    props.setProperty("user", "fedora.server", server);
 			    props.setProperty("user", "fedora.protocol", protocol);			    
 			    props.setProperty("user", "fedora.context", context);
-				props.setProperty("user", "sesame.server", "http://"+server+"/openrdf-sesame");
+			    String sesame = props.getProperty("user", "sesame.server");
+			    if (sesame == null) props.setProperty("user", "sesame.server", "http://"+server+"/openrdf-sesame");
 				props.saveProperties("user");
 
   		    } catch (Exception e) {}
