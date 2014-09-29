@@ -623,7 +623,7 @@ public class ObjectEditorDialog extends CDialog {
 					        	RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
 					        	repositoryManager.setUsernameAndPassword(user.getUser(), user.getPasswd());
 					        	repositoryManager.initialize();	 				           	
-					        	org.openrdf.repository.Repository repo = repositoryManager.getRepository(user.getUrl().substring(7).replace("/",".")); 	
+					        	org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
 					        	repo.initialize(); 				    			
 					        	org.openrdf.repository.RepositoryConnection con = repo.getConnection();	 				    			
 					        	con.clear(new org.openrdf.model.impl.URIImpl(pid)); 							 							  				

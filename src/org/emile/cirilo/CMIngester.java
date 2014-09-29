@@ -64,14 +64,14 @@ public class CMIngester {
         	Repository.initialise(token,new FedoraSoapImpl());
         	TemplateSubsystem temps = new TemplateSubsystem();
 
-       		RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager("http://"+server+":8080/openrdf-sesame");
+       		RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager("http://"+server+"/openrdf-sesame");
             repositoryManager.setUsernameAndPassword(user, passwd);
 
        		repositoryManager.initialize();
        		SailImplConfig backendConfig = new MemoryStoreConfig(true);				 
 			backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);
 			SailRepositoryConfig repositoryTypeSpec = new SailRepositoryConfig(backendConfig);
-			org.openrdf.repository.config.RepositoryConfig repConfig = new org.openrdf.repository.config.RepositoryConfig(server+".fedora", repositoryTypeSpec);
+			org.openrdf.repository.config.RepositoryConfig repConfig = new org.openrdf.repository.config.RepositoryConfig("FEDORA", repositoryTypeSpec);
 			repositoryManager.addRepositoryConfig(repConfig);					
 
 			if (!Repository.exist("sdef:TEI")) {

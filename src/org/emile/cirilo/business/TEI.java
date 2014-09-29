@@ -1006,7 +1006,7 @@ public class TEI {
 			        RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
 					repositoryManager.setUsernameAndPassword(user.getUser(), user.getPasswd());
 					repositoryManager.initialize();	 
-					org.openrdf.repository.Repository repo = repositoryManager.getRepository(user.getUrl().substring(7).replace("/",".")); 	
+					org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
 					repo.initialize(); 				    			
 					org.openrdf.repository.RepositoryConnection scon = repo.getConnection();	 				    			
 					scon.clear(new org.openrdf.model.impl.URIImpl(this.PID)); 							 							  				

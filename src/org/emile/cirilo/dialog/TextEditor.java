@@ -240,7 +240,7 @@ public class TextEditor extends CDialog {
 		  	 						        	RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
 		  	 						        	repositoryManager.setUsernameAndPassword(user.getUser(), user.getPasswd());
 		  	 						        	repositoryManager.initialize();	 				           	
-		  	 						        	org.openrdf.repository.Repository repo = repositoryManager.getRepository(user.getUrl().substring(7).replace("/",".")); 	
+		  	 						        	org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
 		  	 						        	repo.initialize(); 				    			
 		  	 						        	org.openrdf.repository.RepositoryConnection con = repo.getConnection();	 				    			
 		  	 						        	con.clear(new org.openrdf.model.impl.URIImpl(pid)); 							 							  				
@@ -254,6 +254,7 @@ public class TextEditor extends CDialog {
 		  	 					           		con.add(temp.getAbsoluteFile(), null, org.openrdf.rio.RDFFormat.RDFXML, new org.openrdf.model.impl.URIImpl(pid));
 		  	 					           		temp.delete();
 		  	 				    		} catch (Exception ex) {
+		  	 				    			ex.printStackTrace();
 		  	 								JOptionPane.showMessageDialog(  getCoreDialog(), ex.getMessage(), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE); 				    			
 		  	 				    		}
 		  	    				  	  }		

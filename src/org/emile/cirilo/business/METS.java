@@ -344,6 +344,21 @@ public class METS {
 				      					coll.close();
 				      				}		      			
 				      				if (f != null && f.exists()){
+      	 				    			BufferedImage img = ImageIO.read(f);			      				                		
+	      	 				    		try {
+	      	 				    			Element fcontent= new Element("FContent",Common.xmlns_mets);
+	      	 				    			Element xmldata= new Element("xmlData",Common.xmlns_mets);
+	      	 				    			Element x= new Element("xmpmeta",Common.xmlns_xmp);
+	      	 				    			Element pixelx= new Element("PixelXDimension",Common.xmlns_exif);
+	      	 				    			Element pixely= new Element("PixelYDimension",Common.xmlns_exif);
+	      	 				    			pixelx.setText(new Integer(img.getWidth()).toString());
+	      	 				    			pixely.setText(new Integer(img.getHeight()).toString());
+	      	 				    			x.addContent(pixelx);
+	      	 				    			x.addContent(pixely);
+	      	 				    			xmldata.addContent(x);
+	      	 				    			fcontent.addContent(xmldata);  									
+	      	 				    			ch.getParentElement().addContent(fcontent);
+	      	 				    		} catch (Exception q) {}
 				      					if (!onlyValidate) {
 				      						while(!Repository.exist(this.PID)) {}
 				      						if (Repository.exist(this.PID)) {
@@ -355,7 +370,6 @@ public class METS {
 			      									ImageOutputStream out = new FileImageOutputStream(tp);
 			      									imageWriter.setOutput(out);
 			      									
-			      									BufferedImage img = ImageIO.read(f);			      				                		
 			      									org.emile.cirilo.business.PTIFConverter.pyramidGenerator(imageWriter, img, 256, 256);
 			      									out.close();
 			      									String ref = null;
@@ -425,8 +439,6 @@ public class METS {
 	      									Repository.modifyDatastream(this.PID, tid, mimetype, "M", thumb);
 	      								} catch (Exception ep) {}
 	      							}
-	      							if (temp) f.delete();
-      	 				    		thumb.delete();      	 				    		
       	 				    		
       	 				    		Element file = new Element("file",Common.xmlns_mets);
       	 				    		file.setAttribute("ID", tid);
@@ -443,6 +455,11 @@ public class METS {
       	 			    			Element fptr = new Element("fptr", Common.xmlns_mets);
       	 			    			fptr.setAttribute("FILEID", tid);
       	 			    			div.addContent(fptr);
+
+      	 			    			if (temp) f.delete();
+      	 				    		thumb.delete();      	 				    		
+
+	      						
 	      						}					      											      						
 				      		}				      		
 				      	} catch (Exception eq) {

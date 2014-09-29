@@ -97,6 +97,10 @@ public class Common {
     public final static Namespace xmlns_grel= Namespace.getNamespace( "rel", "http://gams.uni-graz.at#");
 
     public final static Namespace xmlns_viewer= Namespace.getNamespace( "", "http://gams.uni-graz.at/viewer");
+    
+    public final static Namespace xmlns_xmp= Namespace.getNamespace( "x", "adobe:ns:meta/");
+    
+    public final static Namespace xmlns_exif= Namespace.getNamespace( "exif", "http://ns.adobe.com/exif/1.0/");
     	    
     public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
     

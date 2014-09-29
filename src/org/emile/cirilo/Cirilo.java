@@ -228,7 +228,7 @@ class CiriloWindow extends JPanel {
 			    	 home = System.getProperty("user.home");
 				}
 								
-				System.setProperty("user.home",home);
+				System.setProperty("user.home",home);				
 				home = home + System.getProperty("file.separator")+ "cirilo.ini";
 				try {
 					File fp = new File(home );
