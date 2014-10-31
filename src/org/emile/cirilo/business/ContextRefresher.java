@@ -62,36 +62,10 @@ public class ContextRefresher {
 	    				String uri = e.getAttributeValue("uri").substring(Common.INFO_FEDORA.length());
 	    				org.jdom.Document tei = db.build (Repository.getDatastream(uri, "TEI_SOURCE"));
 	    				
-	    				XPath oPath = XPath.newInstance("//t:placeName[contains(@key,'geo:')]");
+	 
+	    				XPath oPath = XPath.newInstance("//t:placeName/t:location/t:geo");
 	    				oPath.addNamespace( Common.xmlns_tei_p5 );
 	    				List placeNames = (List) oPath.selectNodes( tei );
-
-	    				if (placeNames.size() > 0) {
-	    					int i=0;
-	    					for (Iterator jter = placeNames.iterator(); jter.hasNext();) 
-	    		    		{
-	    		    			try {	
-	    		    				Element place = (Element) jter.next();
-	    		    				Element name = place.getChild("ref", Common.xmlns_tei_p5 );
-	    		    				
-	    		    				if (name.getText().trim().length() > 0) {
-	    		    					String p =  outputter.outputString(Placemark_template);
-	    		    					i++;
-	    		    					String pos = new Integer(i).toString();
-	    		    				
-	    		    					p = p.replace("t:placeName[", "t:placeName[position() = "+pos+" and ").replace("t:placeName/", "t:placeName[position() = "+pos+"]/");	    		    				
-	    		    					MDMapper m = new MDMapper (uri, p);	
-	    		    					String s = m.transform(tei).replace(">geo:",">");
-	    		    					org.jdom.Document Placemark = builder.build(new StringReader(s));
-	    		    					Folder.addContent((Element)Placemark.getRootElement().clone());
-	    		    				}		
-	    		    			} catch (Exception r) {}
-	    		    		}	
-	    				}
-	 
-	    				oPath = XPath.newInstance("//t:placeName/t:location/t:geo");
-	    				oPath.addNamespace( Common.xmlns_tei_p5 );
-	    				placeNames = (List) oPath.selectNodes( tei );
 
 	    				if (placeNames.size() > 0) {
 	    					int i=0;
