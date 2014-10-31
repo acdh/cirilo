@@ -39,6 +39,7 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 
 import javax.swing.JTable;
+
 import java.util.regex.*;
 
 import org.jdom.input.SAXBuilder;
@@ -219,6 +220,25 @@ public class SelectLayoutDialog extends CDefaultDialog {
 	    	 }      		
 	     } catch (Exception e){} 
          	     
+	     
+	     String def=user.getUrl()+"/objects/cirilo:"+user.getUser()+"/datastreams/";
+         String stream = "";
+         
+	     if (model.contains(":Context") || model.contains(":TEI")) { 
+	    	 if (model.contains(":Context")) {
+	    		 if (dsid.equals("STYLESHEET")) stream="CONTEXTtoHTML";
+   	    		 if (dsid.equals("FO_STYLESHEET")) stream="CONTEXTtoFO";
+	    	 }
+	    	 if (model.contains(":TEI")) {
+	    		 stream = dsid;
+	    	 }
+		     Vector row = new Vector();
+		     row.addElement("Users default "+Common.SEPERATOR+" "+def+stream+"/content");
+			 ss.put("Users default "+Common.SEPERATOR+" "+def+stream+"/content", row);
+	     }	 
+
+	
+	     
 		 Vector row = new Vector();
          row.addElement(res.getString("userdef"));
 		 ss.put(res.getString("userdef"), row);

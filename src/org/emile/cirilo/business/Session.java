@@ -57,6 +57,7 @@ public class Session  {
     		EditDialogProperties.setHeight(new Integer(props.getProperty("user", "edit.dialog.height")).intValue());
     		EditDialogProperties.setX(new Integer(props.getProperty("user", "edit.dialog.x")).intValue());
     		EditDialogProperties.setY(new Integer(props.getProperty("user", "edit.dialog.y")).intValue());
+    		getTableWidths(props, EditDialogProperties,  "edit");
     	} catch (Exception e) {}	
     	return EditDialogProperties; 
     }    
@@ -109,6 +110,7 @@ public class Session  {
     		ObjectDialogProperties.setHeight(new Integer(props.getProperty("user", "object.dialog.height")).intValue());
     		ObjectDialogProperties.setX(new Integer(props.getProperty("user", "object.dialog.x")).intValue());
     		ObjectDialogProperties.setY(new Integer(props.getProperty("user", "object.dialog.y")).intValue());
+    		getTableWidths(props, ObjectDialogProperties,  "object");
     	} catch (Exception e) {e.printStackTrace();}	
     	return ObjectDialogProperties; 
     }
@@ -207,5 +209,17 @@ public class Session  {
     public CWindowsProperties getOptionsDialogProperties() { return OptionsDialogProperties; }
     public void setOptionsDialogProperties(CWindowsProperties prop ) { OptionsDialogProperties = prop; }
 
+    public void getTableWidths(CPropertyService props, CWindowsProperties wp, String dialog) {    	
+
+    	for (int i=0; i<24; i++) {
+    		try {
+    			wp.setWidth(new Integer(props.getProperty("user", dialog+".dialog.column."+new Integer(i+1).toString())).intValue(), i);
+    		} catch (Exception e) {
+    		    wp.setWidth(0,i);	
+    		}	
+    	}
+    }
+
+    
 }
 

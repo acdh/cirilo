@@ -36,7 +36,6 @@ import org.emile.cirilo.ecm.exceptions.ObjectNotFoundException;
 import org.emile.cirilo.ecm.utils.Constants;
 import org.emile.cirilo.ecm.utils.DocumentUtils;
 import org.emile.cirilo.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jrdf.graph.Node;
@@ -49,6 +48,7 @@ import javax.xml.rpc.ServiceException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -931,7 +931,11 @@ return hasContentModel(pid, Constants.FEDORA_OBJECT_3_0);
                     String s = tuple.get("state").toString();
                 	subject += Common.SEPERATOR+s;
                 } catch (Exception e) {}
-                
+       			try {
+       				String s = tuple.get("hdl").toString();       				
+       				subject = (s.startsWith("\"hdl:")? s :"").replaceAll("\"", "").substring(4);
+    	         } catch (Exception e) {}    
+               
                 pidlist.add(subject);
             }
         } catch (TrippiException e) {
@@ -983,7 +987,12 @@ return hasContentModel(pid, Constants.FEDORA_OBJECT_3_0);
     	         } catch (Exception e) {}    
        			try {
        				row.add(tuple.get("user").toString().replace("\"", ""));    				
+    	         } catch (Exception e) {}
+       			try {
+       				String s = tuple.get("hdl").toString();
+       				row.add((s.startsWith("\"hdl:") ? s :"").replaceAll("\"", "").substring(4));    				
     	         } catch (Exception e) {}    
+       			
     	         data.add(row);
     		}
     	} catch (TrippiException e) {

@@ -30,6 +30,9 @@ import voodoosoft.jroots.exception.CException;
 
 
 
+
+
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.utils.ImagePreviewPanel;
@@ -114,8 +117,15 @@ public class ObjectEditorDialog extends CDialog {
 		try {
 			if ( op[2].contains("Inactive") && statusChanged) Repository.modifyObject(pid, "I", null, null);
 		} catch (Exception ex) {}	
-		org.emile.cirilo.dialog.CBoundSerializer.save(this.getCoreDialog(), se.getObjectDialogProperties(), (JTable) null);   
-		close();
+		try {
+		    JTable loMD = (JTable) getGuiComposite().getWidget(jtMetadata);	
+		    JTable loDS = (JTable) getGuiComposite().getWidget(jtDatastreams);
+		    JTable[] loTable = {loMD, loDS}; 
+			org.emile.cirilo.dialog.CBoundSerializer.save(this.getCoreDialog(), se.getObjectDialogProperties(), loTable);   		    
+		} catch (Exception ex) {}	
+		finally {
+			close();
+		}		
 	}
 
    public void set (String pid, String label, String model, String owner) {
@@ -796,12 +806,16 @@ public class ObjectEditorDialog extends CDialog {
 	public void show()
 	 throws CShowFailedException {
 		try {
-			se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
-			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getObjectDialogProperties(), (JTable) null);
 			
 			seekString = props.getProperty("user", "relations.seekterm");
 			moGA.setData("jtfSeek", seekString);
 		    refresh(true);			
+
+		    JTable loMD = (JTable) getGuiComposite().getWidget(jtMetadata);	
+		    JTable loDS = (JTable) getGuiComposite().getWidget(jtDatastreams);
+		    JTable[] loTable = {loMD, loDS}; 
+		    se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
+			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getObjectDialogProperties(), loTable);
 			
 		} catch (Exception e) {		
 		}

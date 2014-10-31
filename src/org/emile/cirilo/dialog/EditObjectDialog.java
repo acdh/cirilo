@@ -31,6 +31,20 @@ import voodoosoft.jroots.exception.CException;
 
 
 
+import net.handle.hdllib.AbstractMessage;
+import net.handle.hdllib.AbstractRequest;
+import net.handle.hdllib.AbstractResponse;
+import net.handle.hdllib.AdminRecord;
+import net.handle.hdllib.AuthenticationInfo;
+import net.handle.hdllib.CreateHandleRequest;
+import net.handle.hdllib.DeleteHandleRequest;
+import net.handle.hdllib.Encoder;
+import net.handle.hdllib.HandleException;
+import net.handle.hdllib.HandleValue;
+import net.handle.hdllib.PublicKeyAuthenticationInfo;
+import net.handle.hdllib.Resolver;
+import net.handle.hdllib.Util;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.Common;
@@ -449,6 +463,223 @@ public class EditObjectDialog extends CDialog {
 		
 		}
 	
+	public void handleManageHandle(boolean op, String handle, String project, String start, boolean mode)
+	throws Exception {
+	    final boolean _op = op;
+        final String _handle = handle;
+        final String _project = project;
+        final String _start = start;
+	    final boolean _mode = mode;
+	    new Thread() {
+			public void run() {
+
+				FileWriter	logger = null;
+				try {
+					  JTable loTable = (JTable) getGuiComposite().getWidget(jtData);
+					  
+					  int[] selected = loTable.getSelectedRows();
+					  
+					  int p = _mode ? Integer.parseInt(_start) : 0;
+					  
+					  ProgressDialog pd = new ProgressDialog(getCoreDialog(), Common.WINDOW_HEADER);
+					  pd.displayPercentageInProgressBar = true;
+					  pd.beginTask((_op ? res.getString("hdlcreate") :  res.getString("hdldel") ) , selected.length, true);
+					  
+					  logger = new FileWriter( System.getProperty( "user.home" )+System.getProperty( "file.separator" )+"handles.log" );
+					 
+					  MessageFormat msgFmt = new MessageFormat(res.getString("objmod"));
+	 				  Object[] args = {new Integer(selected.length).toString()};
+	 					
+				      int liChoice = JOptionPane.showConfirmDialog(null, msgFmt.format(args), (_op ? res.getString("hdlcreate") :  res.getString("hdldel") ) , JOptionPane.YES_NO_OPTION,
+				    		  						JOptionPane.QUESTION_MESSAGE);
+
+					  					 
+				      
+			    	  int fi=0;
+			    	  int fe=0;
+			    	  
+				      if (liChoice == 0) {
+
+				    	  DOMBuilder db = new DOMBuilder();
+						  Format format = Format.getRawFormat();
+						  format.setEncoding("UTF-8");
+	 					  XMLOutputter outputter = new XMLOutputter(format);		   			   														
+				    	  
+ 		    		      Handles hdl = (Handles) CServiceProvider.getService( ServiceNames.HANDLESCLASS );
+						  byte buf[] = new byte[256];
+						  buf = hdl.getHandleKey();
+							
+						  Resolver resolver = new Resolver();
+						  AuthenticationInfo   auth = new PublicKeyAuthenticationInfo(Util.encodeString(Common.HANDLE_PREFIX+_handle), 300, Util.getPrivateKeyFromBytes(buf, 0));					
+
+						  if (!resolver.checkAuthentication(auth)) {
+						        throw new HandleException(HandleException.UNABLE_TO_AUTHENTICATE, "Invalid credentials");
+						  }
+						  
+ 						  AdminRecord admin =	new AdminRecord(Util.encodeString(Common.HANDLE_PREFIX+_handle), 200,
+			                           false, true, false, false, true, true,			                      
+			                           true, true, true, true, true, false);
+ 						  
+ 						  HandleValue hs_admin = null;
+ 						  HandleValue object = null;   
+ 						  HandleValue dc = null;
+ 						  
+ 						  if (_op) hs_admin =  new HandleValue(100, Util.encodeString("HS_ADMIN"), Encoder.encodeAdminRecord(admin));
+				    	  
+				    	  for (int i=0; i<selected.length; i++) {
+
+				    		  if(pd.isCanceled()) {break;}		
+
+				    		  String pid =(String)loTable.getValueAt(selected[i],0);
+
+				    		  if (!pid.startsWith("o:")) continue;
+
+				    		  try {    						  
+
+								if (_op) {
+
+					    			String id = null;
+					    			
+									if (_mode) { 
+										id = new Integer(p++).toString();
+									} else {
+										String[] pattern = new String[10];
+										Pattern s;
+										Matcher m;
+
+										pattern[0] = "o:[a-z]*[.](\\d*)([a-z])$";
+										pattern[1] = "o:[a-z]*[.](\\d*)$";
+										pattern[2] = "o:[a-z]*[-][A-Z0-9]*[-](\\d*)$";
+										pattern[3] = "o:[a-z]*[.][a-z]*[.](\\d*)([a-z])$";
+										pattern[4] = "o:[a-z]*[.][a-z]*[.](\\d*)$";
+										
+										s = Pattern.compile(pattern[0]);
+										m = s.matcher(pid);
+
+										if (m.find()) {
+											char c = m.group(2).charAt(0);
+											id = m.group(1) + "."+ (new Integer(c-96)).toString();
+										} else {
+											s = Pattern.compile(pattern[1]);
+											m = s.matcher(pid);
+											if (m.find()) {
+												id = m.group(1);
+											} else {
+												s = Pattern.compile(pattern[2]);
+												m = s.matcher(pid);
+												if (m.find()) {
+													id = m.group(1);
+												} else {
+													s = Pattern.compile(pattern[3]);
+													m = s.matcher(pid);
+													if (m.find()) {
+														char c = m.group(2).charAt(0);
+														id = m.group(1) + "."+ (new Integer(c-96)).toString();
+													} else {
+														s = Pattern.compile(pattern[4]);
+														m = s.matcher(pid);
+														if (m.find()) {
+															id = m.group(1);
+														}
+													}	
+												}
+											}
+										}
+
+									}
+
+									Document doc = db.build (Repository.getDatastream(pid, "RELS-EXT"));
+		                            Element rdf = doc.getRootElement().getChild("Description", Common.xmlns_rdf);
+                                    Element itemID = rdf.getChild("itemID", Common.xmlns_oai);
+
+                                    if (itemID != null && itemID.getText().startsWith("hdl:")) continue;
+                                    
+									String h = _handle+"/"+_project+"."+id;
+									
+									PidList list = Repository.query("select $object from <#ri> where $object <http://www.openarchives.org/OAI/2.0/itemID> 'hdl:"+h+"'");        
+
+									if (list.isEmpty()) {
+										
+										object   =  new HandleValue(1  , Util.encodeString("URL"), Util.encodeString("http://gams.uni-graz.at/"+pid));
+										dc       =  new HandleValue(2  , Util.encodeString("URL"), Util.encodeString("http://gams.uni-graz.at/"+pid+"/DC"));
+
+										HandleValue[] values = { object, hs_admin, dc };
+								
+										AbstractRequest request = new CreateHandleRequest(Util.encodeString(h), values, auth);
+										AbstractResponse response = resolver.getResolver().processRequest(request);
+
+										if (response.responseCode == AbstractMessage.RC_SUCCESS) {
+										
+											rdf.removeContent(new ElementFilter("itemID"));			                              
+											Element oai = new Element("itemID", Common.xmlns_oai);
+											oai.addContent("hdl:"+h);
+											rdf.addContent(oai);
+											logger.write(new java.util.Date()+ " "  + pid + " :: insert hdl:" + h + "\n");									                                    	
+											Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(doc));
+											fi++;
+										} else {
+											logger.write(new java.util.Date() + " "  + pid + " ... no connection to handle server.\n");									                                    	
+											fe++;
+										}
+									} else {
+										logger.write(new java.util.Date() + " "  + pid + " :: hdl:" + h + " pre-assigned to "+ list.get(0)+"\n");									                                    	
+									}
+								} else {
+									Document doc = db.build (Repository.getDatastream(pid, "RELS-EXT"));
+		                            Element rdf = doc.getRootElement().getChild("Description", Common.xmlns_rdf);
+		                            
+                                    Element itemID = rdf.getChild("itemID", Common.xmlns_oai);
+                                    if (itemID != null) {
+                                    	String h = itemID.getText();
+                                    	AbstractRequest request = new DeleteHandleRequest(Util.encodeString(itemID.getText().substring(4)), auth);
+                                    	AbstractResponse response = resolver.getResolver().processRequest(request);                                    
+                                    	if (response.responseCode == AbstractMessage.RC_SUCCESS) {			                            
+                                    		rdf.removeContent(new ElementFilter("itemID"));			                              
+                                    		Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(doc));
+                                    		fi++;
+                                    		logger.write(new java.util.Date() + " " + pid + " :: delete " + h+"\n");									                                    	
+                                    	} else {
+                                    		logger.write(new java.util.Date() + " " + pid + " ... no connection to handle server.\n");									                                    	
+                                    		fe++;
+                                    	}
+                                    }	
+								}
+				    			  
+
+				    		  try {Thread.sleep(5);} catch (Exception e) {}	
+				    		  
+				    		  } catch (Exception eq) {
+				    			  eq.printStackTrace();
+				    		  }
+				    		  finally {
+					    		  pd.worked(1);
+				    		  }
+				    	}						
+						logger.close();
+						
+						msgFmt = new MessageFormat(res.getString(_op? "hdlcreated" : "hdldeleted"));
+		 				Object[] args0 = {new Integer(fi).toString()};
+
+						JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args0) );
+					}
+
+ 					
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(  getCoreDialog(), res.getString("hdlauthfailed") );
+				}
+				finally {
+					getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					try {
+						logger.close();
+					} catch (Exception fe) {}
+				}
+		
+			}
+		}.start();
+		
+	}
+	
+	
 	/**
 	 *  Description of the Method
 	 *
@@ -626,6 +857,21 @@ public class EditObjectDialog extends CDialog {
 				getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 	}
+	
+	public void handleHandleButton(ActionEvent e) {
+		
+		try {
+			HandleDialog dlg;
+
+			dlg = (HandleDialog) CServiceProvider.getService(DialogNames.HANDLE_DIALOG);
+			dlg.setParent(this);
+			dlg.open();
+		} catch (Exception ex) {
+		}
+
+	}
+	
+
 	
 	public void handleMouseDoubleClick(MouseEvent e, int type) {
 
@@ -930,17 +1176,18 @@ public class EditObjectDialog extends CDialog {
             	handleAddModel();
             } else {	             
             	 String seek = seekString.replace("*","");
- 			     String qu ="select distinct ?pid ?title ?model ?lastModifiedDate ?user "+
+ 			     String qu ="select distinct ?pid ?title ?model ?lastModifiedDate ?user ?hdl "+
         				       "where { ?object  <dc:title> ?title ."+
           				                  " ?object  <dc:identifier> ?pid ."+
           				                   "?object <fedora-view:lastModifiedDate> ?lastModifiedDate ."+
           				                   "?object <info:fedora/fedora-system:def/model#ownerId> ?user ."+
           				                   "optional {?object <info:fedora/fedora-system:def/model#hasModel> ?model } . " +
+         				                   "optional {?object <http://www.openarchives.org/OAI/2.0/itemID> ?hdl } . " +
           				                 "filter (" +
           				                 (!groups.contains("administrator") ? " (?user = '"+user.getUser()+"' || ?user='public')  && "  : "") +	
           				                 "(!regex(str(?model), '^info:fedora/fedora-system:') )" +
         				                   (!seek.isEmpty() ?
-        		 	          				       "&& ( regex(?title,'"+seek+"','i')  || regex(?pid,'"+seek+"','i')  || regex(?user,'"+seek+"','i') )" : "")+
+        		 	          				       "&& ( regex(?title,'"+seek+"','i') || regex(str(?model),'"+seek+"','i')  || regex(?pid,'"+seek+"','i')  || regex(?user,'"+seek+"','i') )" : "")+
         		 	          				       (!groups.contains("administrator") ?  "&&  (!regex(str(?pid), '^cirilo:') || ?user = '"+user.getUser()+"')  && !regex(str(?pid), '^ini:') && !regex(str(?pid), '^tcm:')"  : "")+
           				                 "  )"+
 		                "} order by ?pid";
@@ -953,7 +1200,9 @@ public class EditObjectDialog extends CDialog {
 	                   res.getString("title"),
 	                   res.getString("contentmodel"),
 	                   res.getString("lastupdate"),
-	                   res.getString("owner") };
+	                   res.getString("owner"),
+	                   "Handles",
+	                   };
 			
 			DefaultSortTableModel dm= Repository.getObjects(qu, columnNames);
 			tb.setModel(dm);
@@ -982,12 +1231,13 @@ public class EditObjectDialog extends CDialog {
 	public void show()
 	 throws CShowFailedException {
 		try {
-			se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
-			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getEditDialogProperties(),(JTable) getGuiComposite().getWidget(jtData));
 			seekString = props.getProperty("user", "objects.seekterm");
 			seekString = seekString == null ? "*" : seekString;
 			moGA.setData("jtfSeek", seekString);
 			refresh();
+			JTable loTable = (JTable) getGuiComposite().getWidget(jtData);
+			se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
+			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getEditDialogProperties(), loTable);
 
 		} catch (Exception e){}
 	}		
@@ -1012,10 +1262,13 @@ public class EditObjectDialog extends CDialog {
 			 CDialogTools.createButtonListener(this, "jbEdit", "handleEditButton");
 			 CDialogTools.createButtonListener(this, "jbNew", "handleNewButton");
 			 CDialogTools.createButtonListener(this, "jbSeek", "handleSeekButton");
+			 CDialogTools.createButtonListener(this, "jbManage", "handleHandleButton");
 			 
 			 user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
 			 groups = (ArrayList) CServiceProvider.getService(ServiceNames.MEMBER_LIST);
-		            
+
+  			 ((JButton) getGuiComposite().getWidget("jbManage")).setEnabled(groups.contains("administrator"));
+  			           
  			 popup = new JPopupMenu();
 		     JMenuItem mi;
 			 mi = new JMenuItem(res.getString("refresh"));

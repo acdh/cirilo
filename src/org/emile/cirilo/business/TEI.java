@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.URL;
@@ -267,6 +268,34 @@ public class TEI {
 
         		this.tei = builder.build( new StringReader( outputter.outputString(out.getResult())) );	
 
+        		XPath xpath = XPath.newInstance("//x:include");
+  				xpath.addNamespace( Common.xmlns_xinc);
+         		
+  				List includes = (List) xpath.selectNodes( this.tei );
+
+  	    		for (Iterator iter = includes.iterator(); iter.hasNext();) {
+  	    			Element parent = null;
+  	    			try {
+  	    				List a = null;
+  	    				Element e = (Element) iter.next();
+  	    				InputStream is = new URL(e.getAttributeValue("href")).openStream();
+  	    				Document include = builder.build(is);
+  	    				if (e.getAttributeValue("xpointer") != null) {
+  	    		       		XPath qpath = XPath.newInstance("//*[@xml:id='"+e.getAttributeValue("xpointer")+"']");
+  	    	  				Element xpointer = (Element) qpath.selectSingleNode(include);	
+  	    	  				a = xpointer.getParentElement().cloneContent();
+  	    				} else {
+  	    					a = include.cloneContent();
+  	    				} 	    				
+  	    				parent = e.getParentElement();
+  	    				int index = parent.indexOf(e);
+  	    				parent.setContent(index, a);
+  	    			} catch (Exception e) {  	    				
+ 	    				parent.removeChild("include", Common.xmlns_xinc);
+ 	    			}
+  	    		}	
+          		
+        		
         		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
         		Schema schema = factory.newSchema(new URL(Common.TEIP5SCHEMA));
         		Validator validator = schema.newValidator();
@@ -659,8 +688,11 @@ public class TEI {
 		        			Element settlement = place.getChild("settlement", Common.xmlns_tei_p5);
 		        			Element country = place.getChild("country", Common.xmlns_tei_p5);
 		        			Element reg = place.getChild("reg", Common.xmlns_tei_p5);
+		        			Element ref = place.getChild("ref", Common.xmlns_tei_p5);
 
-		        			String placeName = (reg != null ? reg.getText() : place.getText() );
+		        			String placeName;
+		        			placeName = (reg != null ? reg.getText() : place.getText() );
+		        			placeName = (ref != null ? ref.getText() : placeName );
 		        			if (settlement != null) placeName += "  "+ settlement.getText();
 		        			if (country != null) placeName += " "+ country.getText();
 			        		if (!placeName.isEmpty()) {		        			

@@ -28,12 +28,14 @@ import voodoosoft.jroots.core.*;
 import voodoosoft.jroots.data.*;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.gui.*;
+
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.dialog.DialogNames;
 import org.emile.cirilo.dialog.OptionsDialog;
 
 import java.util.ResourceBundle;
 import java.text.DateFormat;
+
 import javax.swing.*;
 
 import java.util.*;
@@ -100,6 +102,7 @@ public class Setup {
 		CreateDatastreamDialog loCreateDatastreamDialog;
 		LoginExistDialog loLoginExistDialog;
 		IngestExcelDialog loIngestExcelDialog;
+		HandleDialog loHandleDialog;
 		ImportDialog loImportDialog;
 		MakeEnvironmentDialog loMakeEnvironmentDialog;
 		LocationDialog loLocationDialog;
@@ -145,6 +148,12 @@ public class Setup {
 		loEditObjectDialog.setGuiManager(aoGuiMan);
 		loDialogManager.registerPrototype(loEditObjectDialog, true);
 		CServiceProvider.addService(loEditObjectDialog, DialogNames.EDITOBJECT_DIALOG);
+
+		// HandleDialog
+		loHandleDialog = (HandleDialog) loCreator.createDialog(HandleDialog.class, "GuiHandleDialog",  res.getString("hdlmanage"), DialogNames.HANDLE_DIALOG);
+		loHandleDialog.setGuiManager(aoGuiMan);
+		loDialogManager.registerPrototype(loHandleDialog, true);
+		CServiceProvider.addService(loHandleDialog, DialogNames.HANDLE_DIALOG);
 
 		// EditDCDialog
 		loEditDCDialog = (EditDCDialog) loCreator.createDialog(EditDCDialog.class, "GuiEditDCDialog", res.getString("editdc"), DialogNames.EDITDC_DIALOG);
@@ -278,6 +287,7 @@ public class Setup {
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiImportDialog", "GuiImportDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiTemplaterDialog", "GuiTemplaterDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiOptionsDialog", "GuiOptionsDialog");
+		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiHandleDialog", "GuiHandleDialog");
 
 		// build menu gui
 		loGuiMan.addGuiComposite(loFactory.createGuiFromXML(Cirilo.class.getResourceAsStream("menu.xml"), true), "FrameMenu");

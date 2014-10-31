@@ -50,6 +50,10 @@ public class ServiceNames {
 	 */
 	public final static CServiceName DIALOG_MANAGER = new CServiceName("Dialog_Manager");
 	/**
+	 *  Description of the Field
+	 */
+	public final static CServiceName HANDLESCLASS = new CServiceName("HandlesClass");
+	/**
 	 * Description of the Field
 	 */
 	public final static CServiceName ACCESS_MANAGER = new CServiceName("Access_Manager");

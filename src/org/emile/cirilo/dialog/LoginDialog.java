@@ -30,6 +30,7 @@ import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import java.net.*;
@@ -51,7 +52,6 @@ import javax.naming.directory.*;
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
-
 import voodoosoft.jroots.dialog.*;
 
 /**
@@ -199,7 +199,10 @@ public class LoginDialog extends CDialog {
 			} catch (Exception x) {}
 			CServiceProvider.addService(member, ServiceNames.MEMBER_LIST);
 			bAuthentication = true;
-		
+			try {
+				Handles hdl = new Handles();
+				CServiceProvider.addService(hdl, ServiceNames.HANDLESCLASS);
+			} catch (Exception x) {}
 			close();
 			
             } else {

@@ -19,7 +19,9 @@
 
 package org.emile.cirilo;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 
 public class CiriloResources_en extends java.util.ListResourceBundle {
 
@@ -258,7 +260,21 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
 
            { "datalocations"          , "Datastream locations"          },
            
-                     
+           { "hdlprefix"          , "Handle prefix:"          },
+           { "proprefix"          , "Project prefix:"          },
+           { "numcons"          , "Number consecutively:"          },
+           { "startw"          , "Beginning with:"          },
+           { "getkey"          , "Get key"          },
+           { "hdlmanage"          , "Manage handles"          },
+           { "hdlcreate"          , "Creating handles ..."          },
+           { "hdldel"          , "Deleting handles ..."          },
+           { "hdlauthfailed"          , "Authentification on Handle service failed! Couldn't found a valid public key file."          },
+           { "hdlsel"          , "Select key file"          },
+           { "hdlvalid"        ,  "Successful authentification on Handle service." },
+           { "hdlcreated"  , "Handle(s) for {0} object(s) created."          },
+           { "hdldeleted"  , "Handle(s) of  {0} deleted."          },
+ 
+
         };    
 
 

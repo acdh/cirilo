@@ -24,31 +24,49 @@ import java.awt.Dimension;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 
 public class CBoundSerializer {
 	
-	public static void load (Container container, CWindowsProperties prop, JTable table) {
-		Dimension screensize = java.awt.Toolkit.getDefaultToolkit().getScreenSize ();
+	public static void load (Container container, CWindowsProperties prop, Object table) {
+		Dimension screensize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();		
+
 		if ((prop.getX()+prop.getWidth() <= screensize.getWidth() &&  prop.getWidth() > 300)
 				&& (prop.getY()+prop.getHeight() <= screensize.getHeight() &&  prop.getHeight() > 300 ) ) {
 			container.setSize(new Dimension(prop.getWidth(), prop.getHeight()));
 			container.setLocation(prop.getX(), prop.getY());
-		       try {
-		        	if (table != null)
-		        	  for (int i=0; i < table.getColumnCount(); i++) {
-		        		TableColumn col = table.getColumn(table.getColumnName(i));
-		        		col.setPreferredWidth(prop.getWidth(i)); 		
-		          	 }
-		        } catch (Exception e) {
-		        	e.printStackTrace();
-		        }
 		} else {
 			container.setSize(new Dimension(800,550));
 			container.setLocation(100,100);			
 		} 
+       try {
+	          if (table != null) {
+	              if (table instanceof JTable) {
+	            	  JTable t = (JTable) table;
+	            	  for (int i=0; i < t.getColumnCount(); i++) {
+	            		  TableColumn col = t.getColumn(t.getColumnName(i));
+	            		  col.setPreferredWidth(prop.getWidth(i)); 		
+	            	  }
+	               }
+	              
+	               if (table instanceof JTable[]) {
+		               JTable[] t = (JTable[]) table;
+		               int dx = 0;
+	            	   for (int j=0; j<t.length;j++) {
+		            	  for (int i=0; i < t[j].getColumnCount(); i++) {
+		            		  TableColumn col = t[j].getColumn(t[j].getColumnName(i));
+		            		  col.setPreferredWidth(prop.getWidth(dx+i)); 		
+		            	  }
+	            	      dx = t[j].getColumnCount();
+	            	   }  
+	               }
+	        	} 
+        } catch (Exception e) {
+	        	e.printStackTrace();
+        }
 	}
 	       
-	public static void save (Container container, CWindowsProperties prop, JTable table)
+	public static void save (Container container, CWindowsProperties prop, Object table)
 	{			
 			prop.setX(container.getX());
 			prop.setY(container.getY());
@@ -56,11 +74,28 @@ public class CBoundSerializer {
 			prop.setHeight(container.getHeight());
 
 	        try {
-	        	if (table != null)
-	        	  for (int i=0; i < table.getColumnCount(); i++) {
-   	 				TableColumn col = table.getColumn(table.getColumnName(i));
-   	 				prop.setWidth((Integer)col.getWidth(),i);
-   	 			 }
+	        	if (table != null) {
+	        	  if (table instanceof JTable) {
+	        		  JTable t = (JTable) table;
+	        		  for (int i=0; i < t.getColumnCount(); i++) {
+	        			  TableColumn col = t.getColumn(t.getColumnName(i));
+	        			  prop.setWidth((Integer)col.getWidth(),i);
+   	 			  	}
+	        	  } 
+	               if (table instanceof JTable[]) {
+		               JTable[] t = (JTable[]) table;
+		               int dx = 0;
+	            	   for (int j=0; j<t.length;j++) {
+	 	        		  for (int i=0; i < t[j].getColumnCount(); i++) {
+		        			  TableColumn col = t[j].getColumn(t[j].getColumnName(i));
+		        			  prop.setWidth((Integer)col.getWidth(),dx+i);
+	   	 			  	  }
+	            	      dx = t[j].getColumnCount();
+	            	  }  
+	               }
+	        	  
+	        	  
+	        	}	  
 	        } catch (Exception e) {
 	        	e.printStackTrace();
 	        }

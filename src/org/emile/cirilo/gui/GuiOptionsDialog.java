@@ -150,7 +150,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		c0.add( jcbGeneralDefaultCM );
 		t0.add( c0, "wrap 5" );
 		Box c1  = Box.createHorizontalBox();
-		c1.add( new JLabel("OAI PHM Prefix: ") );
+		c1.add( new JLabel("Handle Prefix: ") );
 		c1.add( jtfOAIPrefix );
 		t0.add( c1, "wrap 5" );
 

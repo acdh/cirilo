@@ -20,10 +20,12 @@
 package org.emile.cirilo.gui;
 
 import org.emile.cirilo.ServiceNames;
+
 import java.util.ResourceBundle;
 
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.gui.CGuiComposite;
+
 import java.awt.*;
 
 import javax.swing.*;
@@ -46,6 +48,7 @@ public class GuiEditObjectDialog extends CGuiComposite {
 	JButton jbRefresh;
 	JButton jbAddGeo;
 	JButton jbExport;
+	JButton jbManage;
 	JButton jbClose;
     JTextField jtfSeek;
 
@@ -80,6 +83,7 @@ public class GuiEditObjectDialog extends CGuiComposite {
 		setWidgetName(jbNew, "jbNew");
 		setWidgetName(jbDel, "jbDel");
 		setWidgetName(jtfSeek, "jtfSeek");
+		setWidgetName(jbManage, "jbManage");
 	}
 
 
@@ -105,9 +109,11 @@ public class GuiEditObjectDialog extends CGuiComposite {
 		jbNew = new JButton(res.getString("new"));
         jtfSeek = new JTextField();  
 		jbSeek = new JButton( res.getString("search") );
+		jbManage = new JButton( res.getString("hdlmanage")  );
+
         jtfSeek.setPreferredSize(new Dimension(100, jbSeek.getPreferredSize().height));
 		
-		container.add(new JScrollPane(jtData),"span 10, wrap 10");
+		container.add(new JScrollPane(jtData),"span 11, wrap 10");
  	    container.add(jtfSeek);
 		container.add(jbSeek);
 		container.add(jbEdit);
@@ -117,6 +123,8 @@ public class GuiEditObjectDialog extends CGuiComposite {
 		container.add(jbExport);
 		container.add(jbAddGeo);
 		container.add(jbRefresh);
+		container.add(jbRefresh);
+		container.add(jbManage);
 		container.add(jbClose);
 
 	}

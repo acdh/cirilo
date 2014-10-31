@@ -250,6 +250,12 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 			props.setProperty("user", dialog+".dialog.height", new Integer(q.getHeight()).toString());
 			props.setProperty("user", dialog+".dialog.x", new Integer(q.getX()).toString());
 			props.setProperty("user", dialog+".dialog.y", new Integer(q.getY()).toString());
+			
+			for (int i=0; i<24; i++) {
+				int w = q.getWidth(i);
+				if (w == 0) break;
+				props.setProperty("user", dialog+".dialog.column."+new Integer(i+1).toString(), new Integer(w).toString());
+			}				
 			props.saveProperties("user");
             
 		}

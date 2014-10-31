@@ -52,5 +52,6 @@ public class DialogNames {
 	public final static CServiceName INGESTEXCEL_DIALOG = new CServiceName("IngestExcelDialog");
 	public final static CServiceName OPTIONS_DIALOG = new CServiceName("OptionsDialog");
 	public final static CServiceName IMPORT_DIALOG = new CServiceName("ImportDialog");
+	public final static CServiceName HANDLE_DIALOG = new CServiceName("HandleDialog");
 }
 

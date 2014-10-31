@@ -25,7 +25,7 @@ public class CWindowsProperties  {
 	private  int y = 0;
 	private  int width = 0; 
 	private  int height = 0;
-	private  Integer[] columns = new Integer[12];
+	private  Integer[] columns = new Integer[24];
 	
 	public int getX() { return this.x; };
 	public int getY() { return this.y; };

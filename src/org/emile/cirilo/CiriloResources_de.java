@@ -254,7 +254,21 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "parsererror"          , "Beim XML Parsing von Datei {0} ist ein Fehler aufgetreten."          },
 
                 { "datalocations"          , "Datenstromreferenzen"          },
-     
+                
+                { "hdlprefix"          , "Handle-Prefix:"          },
+                { "proprefix"          , "Projekt-Prefix:"          },
+                { "numcons"          , "Fortlaufend numerieren:"          },
+                { "startw"          , " Beginn bei: "          },
+                { "getkey"          , "Key holen"          },
+                { "hdlmanage"          , "Handles verwalten"          },
+                { "hdlcreate"          , "Handles erstellen ..."          },
+                { "hdldel"          , "Handles löschen ..."          },
+                { "hdlauthfailed"          , "Authentifizierung am Handle Service ist fehlgeschlagen! Es konnte keine gültige Schlüsseldatei gefunden werden."          },
+                { "hdlsel"          , "Schlüsseldatei wählen"          },
+                { "hdlvalid"        ,  "Authentifizierung am Handle Service war erfolgreich. Handles können nun bearbeitet werden."}, 
+                { "hdlcreated"  , " Für {0} Objekt(e) wurden Handle(s) erstellt."          },
+                { "hdldeleted"  , "Die Handle(s) von {0} Objekt(en) wurden entfernt."          },
+
              };    
 
 

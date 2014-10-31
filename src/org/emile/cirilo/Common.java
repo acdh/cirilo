@@ -101,7 +101,9 @@ public class Common {
     public final static Namespace xmlns_xmp= Namespace.getNamespace( "x", "adobe:ns:meta/");
     
     public final static Namespace xmlns_exif= Namespace.getNamespace( "exif", "http://ns.adobe.com/exif/1.0/");
-    	    
+  
+    public final static Namespace xmlns_xinc= Namespace.getNamespace( "x", "http://www.w3.org/2001/XInclude");
+    
     public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
     
     public final static String SESAME_SERVER = "http://localhost:8080/openrdf-sesame";
@@ -181,7 +183,8 @@ public class Common {
 	public final static String SYSTEM_DATASTREAMS ="|STYLESHEET|FO_STYLESHEET|QUERY|KML_TEMPLATE|DC_MAPPING|RDF_MAPPING|BIBTEX_MAPPING|RELS-EXT|RELS-INT|REPLACEMENT_RULESET|VOYANT|PID|METADATA|METHODS"+
 												   "|THUMBNAIL|TEI_SOURCE|PDF_STREAM|URL|DC|BIBTEX|HTML_STREAM|ONTOLOGY|KML|KML_TEMPLATE|METS_SOURCE|TOMETS|";
 
-    
+    public final static String HANDLE_PREFIX = "0.NA/";
+
 	public static String itrim(String s) {
         return s.replaceAll("\\b\\s{2,}\\b", " ");
 	}
