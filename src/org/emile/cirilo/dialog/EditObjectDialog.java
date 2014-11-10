@@ -601,7 +601,7 @@ public class EditObjectDialog extends CDialog {
 									if (list.isEmpty()) {
 										
 										object   =  new HandleValue(1  , Util.encodeString("URL"), Util.encodeString("http://gams.uni-graz.at/"+pid));
-										dc       =  new HandleValue(2  , Util.encodeString("URL"), Util.encodeString("http://gams.uni-graz.at/"+pid+"/DC"));
+										dc       =  new HandleValue(2  , Util.encodeString("URL.METADATA"), Util.encodeString("http://gams.uni-graz.at/"+pid+"/DC"));
 
 										HandleValue[] values = { object, hs_admin, dc };
 								
