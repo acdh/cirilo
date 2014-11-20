@@ -33,19 +33,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class RawWrite {
-    public static void harvest(FileWriter logger, String arg) {
+    public static void harvest(FileWriter logger, String arg, String baseURL) {
 	try {
 	    
 	       String[] args = arg.split(" ");
 	    
             HashMap options = getOptions(args);
-            List rootArgs = (List)options.get("rootArgs");
-	        String baseURL = null;
-            if (rootArgs.size() > 0) {
-                baseURL = (String)rootArgs.get(0);
-            } else {
-                throw new IllegalArgumentException();
-            }
             
             OutputStream out = System.out;
             String outFileName = (String)options.get("-out");
@@ -137,12 +130,14 @@ public class RawWrite {
             out.write(listRecords.toString().getBytes("UTF-8"));
             logger.write("\n"+new java.util.Date() +" Harvesting process successfully terminated");
             out.write("\n".getBytes("UTF-8"));
+            /*
             String resumptionToken = listRecords.getResumptionToken();
             if (resumptionToken == null || resumptionToken.length() == 0) {
                 listRecords = null;
             } else {
                 listRecords = new ListRecords(baseURL, resumptionToken);
             }
+            */
         }
     }
 

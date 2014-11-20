@@ -58,6 +58,7 @@ public class GuiNewObjectDialog extends CGuiComposite
 	JTextField jtfCoverage;
 	JTextField jtfRights;
 	JComboBox jcbStatus;
+	JCheckBox jcbGenerated;
 	JComboBox jcbContentModel;
 	JComboBox jcbNamespace;
 	JComboBox jcbUser;
@@ -115,6 +116,7 @@ public class GuiNewObjectDialog extends CGuiComposite
 		setWidgetName( jtfCoverage, "jtfCoverage" );
 		setWidgetName( jtfRights, "jtfRights" );
 		setWidgetName( jcbOAIProvider, "jcbOAIProvider" );
+		setWidgetName( jcbGenerated, "jcbGenerated" );
 
 	}
 
@@ -132,6 +134,8 @@ public class GuiNewObjectDialog extends CGuiComposite
 		container.setLayout(new net.miginfocom.swing.MigLayout("insets 10","[][grow]",""));
 		
 		jcbOAIProvider = new JCheckBox( res.getString("checkoai") );
+
+		jcbGenerated = new JCheckBox( "PID:" );
 
 		jtfPID = new JTextField();
 		jtfPID.setBackground( new Color (238,238,238)  );
@@ -201,7 +205,7 @@ public class GuiNewObjectDialog extends CGuiComposite
 		
 		jbReset = new JButton( res.getString("reset") );
 
-		container.add( new JLabel("PID:"));
+		container.add(jcbGenerated);
 		Box c0  = Box.createHorizontalBox();
 		c0.add( jcbNamespace );
 		c0.add( new JLabel (" "));
@@ -290,9 +294,6 @@ public class GuiNewObjectDialog extends CGuiComposite
 				return;
 			}
 			if ( ch == (char) 8 ) {
-				return;
-			}
-			if ( ch == '$' ) {
 				return;
 			}
 			if ( ch == '-' ) {

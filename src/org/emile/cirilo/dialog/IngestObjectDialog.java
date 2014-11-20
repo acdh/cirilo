@@ -242,11 +242,26 @@ public class IngestObjectDialog extends CDialog {
 						TEI t = new TEI(logger, onlyValidate, false);
 						METS m = new METS(logger, onlyValidate, false);
 
+						JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
+						JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
 						
 						for (int i = 0; i<files.size(); i++) {
 
 							String pid = (String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem();
 
+							if (jcbGenerated.isSelected() && !jtfPID.getText().isEmpty()) {
+							   pid = "o:"+jtfPID.getText();
+							   if (files.size() == 1) {
+								   if (Repository.exist(pid)) {
+                                   	msgFmt = new MessageFormat(res.getString("double"));
+   									Object[] args9 = {pid};
+   									JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args9) , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);									   
+   									break;
+								   }
+								   pid = "$"+pid;
+							   }
+							}
+							
 							if(progressDialog.isCanceled()) {
 								break;
 							}				
@@ -477,11 +492,27 @@ public class IngestObjectDialog extends CDialog {
 
 							TEI t = new TEI(logger, onlyValidate, false);
 							METS m = new METS(logger, onlyValidate, false);
+
+							JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
+							JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
 														
 							for (int i = 0; i<files.size(); i++) {
 											    
 								String pid = (String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem();
-							    
+
+								if (jcbGenerated.isSelected() && !jtfPID.getText().isEmpty()) {
+									   pid = "o:"+jtfPID.getText();
+									   if (files.size() == 1) {
+										   if (Repository.exist(pid)) {
+		                                   	msgFmt = new MessageFormat(res.getString("double"));
+		   									Object[] args9 = {pid};
+		   									JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args9) , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);									   
+		   									break;
+										   }
+										   pid = "$"+pid;
+									   }
+									}
+				    
 								if(progressDialog.isCanceled()) {
 									break;
 								}				

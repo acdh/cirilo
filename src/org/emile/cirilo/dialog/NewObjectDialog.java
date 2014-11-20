@@ -122,7 +122,19 @@ public class NewObjectDialog extends CDialog {
 			
 	}
 
+	/**
+	 *  Description of the Method
+	 *
+	 * @param  e  Description of the Parameter
+	 */
+	 public void handleCBGenerated(ActionEvent e) {
+		try {
+			set();
+		} catch (Exception ex) {			
+		}
+	}
 
+	 
 	 
 	private void reset() {
 		try {
@@ -158,6 +170,41 @@ public class NewObjectDialog extends CDialog {
 		
 	}
 
+	private void set() {
+		try {
+			JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
+			JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
+			JTextField jtfTitle = ((JTextField) getGuiComposite().getWidget("jtfTitle"));
+			JComboBox jcbNamespace = ((JComboBox) getGuiComposite().getWidget("jcbNamespace"));
+			JComboBox jcbUser = ((JComboBox) getGuiComposite().getWidget("jcbUser"));
+			JComboBox jcbContentModel = ((JComboBox) getGuiComposite().getWidget("jcbContentModel"));			
+			
+			jcbUser.setSelectedItem(user.getUser());
+			jcbNamespace.setEnabled(false);			
+		
+            String cm = jcbContentModel.getSelectedItem().toString().toLowerCase();
+			if (cm.contains("context")) {
+				jcbNamespace.setSelectedIndex(1);
+			} else {
+				jcbNamespace.setSelectedIndex(0);				
+			}
+			
+			if (!jcbGenerated.isSelected()) {
+				jtfPID.setBackground( new Color (238,238,238) );
+				jtfPID.setText("");
+				jtfPID.setEnabled(false);
+				jtfTitle.requestFocus();
+			} else {
+				jtfPID.setBackground( Color.YELLOW );
+				jtfPID.setEnabled(true);
+				jtfPID.requestFocus();
+			}
+		} catch (Exception ex) {		
+		}
+		
+	}	
+	
+	
 	/**
 	 *  Description of the Method
 	 *
@@ -171,6 +218,7 @@ public class NewObjectDialog extends CDialog {
 			TemplateSubsystem temps = (TemplateSubsystem) CServiceProvider.getService(ServiceNames.TEMPLATESUBSYSTEM);
 			JComboBox jcbContentModel = ((JComboBox) getGuiComposite().getWidget("jcbContentModel"));            
 			JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
+			JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 			JComboBox jcbNamespace = ((JComboBox) getGuiComposite().getWidget("jcbNamespace"));
 			JComboBox jcbUser = ((JComboBox) getGuiComposite().getWidget("jcbUser"));
 			model = (String)jcbContentModel.getSelectedItem();
@@ -182,10 +230,19 @@ public class NewObjectDialog extends CDialog {
 			
 			 if (!tid.isEmpty() && (((String)jcbNamespace.getSelectedItem()).contains("context")||((String)jcbNamespace.getSelectedItem()).contains("container")||((String)jcbNamespace.getSelectedItem()).contains("query"))) {
 					pid= (String)jcbNamespace.getSelectedItem()+tid; 					
-			 } else if (tid.startsWith("$")) {
-					pid= "$"+(String)jcbNamespace.getSelectedItem()+(String)jtfPID.getText().substring(1);
-			} else {
-				pid = ((String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem()).trim();
+			} else {			
+				if (jcbGenerated.isSelected() && !jtfPID.getText().isEmpty()) {
+					   pid =(String)jcbNamespace.getSelectedItem()+jtfPID.getText();
+					   if (Repository.exist(pid)) {
+							MessageFormat msgFmt = new MessageFormat(res.getString("double"));
+							Object[] args = {pid};
+							JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args) , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
+							return;
+					   }
+					   pid = "$"+pid;
+					} else {
+						pid = ((String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem()).trim();
+					}	
 			}
 			 
 			if (Repository.exist(pid.substring(1))) {
@@ -301,10 +358,12 @@ public class NewObjectDialog extends CDialog {
 			CDialogTools.createButtonListener(this, "jbClose", "handleCancelButton");
 			CDialogTools.createButtonListener(this, "jbReset", "handleResetButton");
 			CDialogTools.createButtonListener(this, "jbSave", "handleCreateButton");			
+			CDialogTools.createButtonListener(this, "jcbGenerated", "handleCBGenerated");
 			
 			JComboBox jcbContentModel = ((JComboBox) getGuiComposite().getWidget("jcbContentModel"));			
 			JComboBox jcbUser = ((JComboBox) getGuiComposite().getWidget("jcbUser"));
 			JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
+			JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 			
 			groups = (ArrayList) CServiceProvider.getService(ServiceNames.MEMBER_LIST);
 			user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
@@ -332,7 +391,8 @@ public class NewObjectDialog extends CDialog {
             
 			jcbUser.setEnabled(groups.contains("administrator"));
 			jtfPID.setEnabled(groups.contains("administrator"));
-	
+			jcbGenerated.setEnabled(groups.contains("administrator"));
+
 			new CItemListener((JComboBox) getGuiComposite().getWidget("jcbContentModel"), this, "handleCMComboBox");
 			reset();
 			

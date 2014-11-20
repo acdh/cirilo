@@ -160,9 +160,11 @@ public class HarvesterDialog extends CDefaultDialog {
 				   		    		} else {
 				   		    			from ="";
 				   		    		}
-				   		    		org.emile.cirilo.oai.RawWrite.harvest(logger, "-metadataPrefix " +metadataPrefix+from+"-out "+saveto+System.getProperty( "file.separator" )+java.net.URLEncoder.encode(baseURL+time,"US-ASCII")+".xml "+baseURL);
-				   		    		filename = saveto+System.getProperty( "file.separator" )+java.net.URLEncoder.encode(baseURL+time,"US-ASCII")+".xml ";
-				   		    		addItems();
+				   		    //		String filename = saveto+System.getProperty( "file.separator" )+java.net.URLEncoder.encode(baseURL+time,"US-ASCII")+".xml ";
+				   		    		
+				   		    		String filename = saveto+System.getProperty( "file.separator" )+"test.xml";
+				   		    		org.emile.cirilo.oai.RawWrite.harvest(logger, "-metadataPrefix " +metadataPrefix+from+" -out "+filename, baseURL);
+				   		    		addItems(filename);
 				   		    		
 				   		    	} catch (Exception ex) {				   		    		
 				   		    	}
@@ -202,8 +204,7 @@ public class HarvesterDialog extends CDefaultDialog {
 	}
 
 	
-	
-	public void addItems()
+	public void addItems(String filename)
 			throws Exception {
 					try {
 
@@ -222,7 +223,8 @@ public class HarvesterDialog extends CDefaultDialog {
 		    			    						   		    	
 		    			    		try {
 	    			    				String pid = "o:"+em.getChild("header", Common.xmlns_oai  ).getChild("identifier", Common.xmlns_oai  ).getText().replaceAll("o:","").replace(":","_");
-		    			    			if (!Repository.exist(pid)) {
+		    			    	        System.out.println(pid);
+	    			    				if (!Repository.exist(pid)) {
 		    			    				pid = temps.cloneTemplate("info:fedora/cirilo:OAIItem", user.getUser(), "$"+pid, (String) null);
 			    			    			logger.write("\n"+ new java.util.Date() + res.getString("creatingobject")+pid);		    			    				
 		    			    			} else {
@@ -314,7 +316,7 @@ public class HarvesterDialog extends CDefaultDialog {
 			 names.addElement(res.getString("updated"));
 
 	    	 doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/DATAPROVIDERS/content");
-   	         saveto =doc.getRootElement().getAttributeValue("location");
+   	         saveto =doc.getRootElement().getAttributeValue("objectstore");
    	         
 		     xPath = XPath.newInstance( "/dataproviders/repository[@state='active']" );
 		     repositories = (List) xPath.selectNodes( doc );
@@ -402,7 +404,6 @@ public class HarvesterDialog extends CDefaultDialog {
 	private String logfile;
 	private String saveto;
 	private FileWriter logger;
-	private String filename;
 }
 
 

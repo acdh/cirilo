@@ -64,7 +64,7 @@ public class HelpFrame extends JWindow {
 			log.append("Cirilo\nAn application for data curation and content preservation\nin FEDORA based repositories\n");
 			log.append("\nAuthor: Johannes H. Stigler, (c)  2011 - 2014\n");
 			log.append("Documentation: Elisabeth Steiner\n");
-			log.append("Version 2.4.0 (build 2014-08-19)\n");
+			log.append("Version 2.4.0.1 (build 2014-11-20)\n");
 			log.append("Used third-party libraries:\n");
 			log.append("JRoots 1.5.0 (c) 2002-2003, by Stefan Wischnewski\n");
 			log.append("This product includes software developed by the\n");

@@ -579,11 +579,15 @@ public class METS {
                             Element flocat = file.getChild("FLocat", Common.xmlns_mets);
 		    				String href = flocat.getAttributeValue("href",Common.xmlns_xlink);
 		    				if (e.getAttributeValue("CONTENTIDS") == null) e.setAttribute("CONTENTIDS", href);
-		    			} catch (Exception eq) {}
+		    			} catch (Exception eq) {
+		    				eq.printStackTrace();
+		    			}
 		    		}	
 		    	}
 
-		    } catch (Exception e) {}    
+		    } catch (Exception e) {
+		    	e.printStackTrace();
+		    }    
    }	
 	
    public void createMapping(String pid, CDefaultGuiAdapter moGA) 
@@ -632,7 +636,6 @@ public class METS {
 			}
 					
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}
