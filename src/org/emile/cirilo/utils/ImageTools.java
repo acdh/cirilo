@@ -23,9 +23,11 @@ import ij.*;
 import ij.gui.*;
 import ij.io.*;
 import ij.process.*;
-import java.awt.*;
 
+import java.awt.*;
 import java.io.*;
+
+import javax.imageio.*;
 
 import org.emile.cirilo.ecm.exceptions.*;
 
@@ -60,7 +62,14 @@ public class ImageTools {
 			ImagePlus imp1 = makeThumbnail(imp0, bgWidth, bgHeight, bgColor);
 
 			if (imp1 != null) {
-				new FileSaver(imp1).saveAsJpeg(out.getCanonicalPath());
+				
+				
+			    try {
+			    	ImageIO.write(imp1.getBufferedImage(), "jpeg", out);
+			    } catch (Exception q) { 	
+			    	new FileSaver(imp1).saveAsJpeg(out.getCanonicalPath());
+			    }	
+
 				imp0 = null;
 				imp1 = null;
 				return;
@@ -83,7 +92,12 @@ public class ImageTools {
 			ImagePlus imp1 = makePreview(imp0, bgWidth);
 
 			if (imp1 != null) {
-				new FileSaver(imp1).saveAsJpeg(out.getCanonicalPath());
+			    try {
+			    	ImageIO.write(imp1.getBufferedImage(), "jpeg", out);
+			    } catch (Exception q) { 	
+			    	new FileSaver(imp1).saveAsJpeg(out.getCanonicalPath());
+			    }	
+
 				imp0 = null;
 				imp1 = null;
 				return;
@@ -182,6 +196,6 @@ public class ImageTools {
 		return imp1;
 	}
 	
-	
+
 }
 
