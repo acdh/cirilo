@@ -67,6 +67,7 @@ public class TEI {
 
     private static int cc = 0;
 	private Document tei;
+	private String raw;
 	private File file;
 	private String collection;
 	private Format format;
@@ -95,6 +96,7 @@ public class TEI {
 			this.onlyValidate = validate;
 			this.mode = mode;
 			this.builder = new SAXBuilder();
+			this.raw = null;
 		} catch (Exception e) {}
 	}
 	
@@ -211,6 +213,7 @@ public class TEI {
 				}
 			}
 			this.PID = pid;
+			this.raw = outputter.outputString(this.tei);
 			
 		} catch (Exception e) {}
 	}
@@ -335,19 +338,19 @@ public class TEI {
 	}
 
 	
-	public boolean write() {
+	public boolean write(boolean mode) {
 		try {
 			if (!onlyValidate)  {
 				if (this.collection.isEmpty()) {
 					FileOutputStream fos = new FileOutputStream( this.file.toString() );
 					BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
-					out.write(outputter.outputString(this.tei));
+					out.write(new String((mode ? outputter.outputString(this.tei) : this.raw).getBytes("UTF-8"),"UTF-8"));
 					out.close();
 				} else {
 					eXist eX = new eXist (this.collection);
 					org.xmldb.api.base.Collection coll = DatabaseManager.getCollection( URI + eX.getCollection(), user.getExistUser(), user.getExistPasswd() );
 					XMLResource res = (XMLResource) coll.getResource(eX.getStream());
-					res.setContent(new String(outputter.outputString(this.tei).getBytes("UTF-8"),"UTF-8"));
+					res.setContent(new String((mode ? outputter.outputString(this.tei) : this.raw).getBytes("UTF-8"),"UTF-8"));
 					coll.storeResource(res);
 					coll.close();
 				}
@@ -1373,7 +1376,7 @@ public class TEI {
 		p = props.getProperty("user", "TEI.SEMExtraction"); 
 		if (p == null || p.equals("1")) createRELS_INT(null);
 		p = props.getProperty("user", "TEI.RefreshSource"); 
-		if (p != null && p.equals("1"))  write();
+		write(p != null && p.equals("1"));
 		} catch (Exception e) {
 		}
 

@@ -389,7 +389,9 @@ public class IngestObjectDialog extends CDialog {
  							    
  							    try {														    
  							    	if (!onlyValidate) Repository.modifyDatastreamByValue(m.getPID(), "METS_SOURCE", "text/xml", m.toString());
- 							    } catch (Exception q) {}	
+ 							    } catch (Exception q) {
+ 							    	q.printStackTrace();
+ 							    }	
 
 							}
 							
@@ -1084,7 +1086,7 @@ public class IngestObjectDialog extends CDialog {
 	  }
 	}
 	
-	private static String book = "<book xmlns=\"http://gams.uni-graz.at/viewer\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>unknown</title><author>unknown</author><idno/><structure/></book>";
+	private static String book = "<book xmlns=\"http://gams.uni-graz.at/viewer\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>unknown</title><author>unknown</author><structure/></book>";
 	 
 	private static String importpath; 
 	private static ArrayList<String> files;
