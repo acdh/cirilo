@@ -240,7 +240,9 @@ public class IngestObjectDialog extends CDialog {
 						
 
 						TEI t = new TEI(logger, onlyValidate, false);
+						t.setUser((String)jcbUser.getSelectedItem());
 						METS m = new METS(logger, onlyValidate, false);
+						t.setUser((String)jcbUser.getSelectedItem());
 
 						JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 						JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
@@ -493,7 +495,9 @@ public class IngestObjectDialog extends CDialog {
 							logger.write( new java.util.Date()  +res.getString("start")+ simulate+res.getString("ofingest"));	
 
 							TEI t = new TEI(logger, onlyValidate, false);
+							t.setUser((String)jcbUser.getSelectedItem());
 							METS m = new METS(logger, onlyValidate, false);
+							t.setUser((String)jcbUser.getSelectedItem());
 
 							JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 							JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
@@ -737,7 +741,9 @@ public class IngestObjectDialog extends CDialog {
 
 							
 							TEI t = new TEI(logger, onlyValidate, false);
+							t.setUser((String)jcbUser.getSelectedItem());
 							METS m = new METS(logger, onlyValidate, false);
+							t.setUser((String)jcbUser.getSelectedItem());
 
 							int i = 0;
 							

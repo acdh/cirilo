@@ -82,6 +82,7 @@ public class TEI {
 	private boolean mode;
 	private Element tmptree;
 	private CPropertyService props;
+	private String xuser;
 	
 	public TEI(FileWriter logger, boolean validate, boolean mode) {		
 		try {
@@ -97,9 +98,12 @@ public class TEI {
 			this.mode = mode;
 			this.builder = new SAXBuilder();
 			this.raw = null;
+			this.xuser = null;
 		} catch (Exception e) {}
 	}
-	
+
+	public void setUser (String u) {this.xuser = u;}
+
     public boolean set (String file, boolean eXist) {
     	try {
 			this.PID = "";
@@ -248,7 +252,7 @@ public class TEI {
 		byte[] stylesheet = null;
         try {
         	try {
-        		stylesheet =  Repository.getDatastream("cirilo:"+user.getUser(), "TOTEI" , "");
+        		stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), "TOTEI" , "");
         	} catch (Exception ex) {
            		try { 
         		stylesheet =  Repository.getDatastream("cirilo:Backbone", "TOTEI" , "");

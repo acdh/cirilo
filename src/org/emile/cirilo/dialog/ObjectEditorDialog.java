@@ -167,6 +167,7 @@ public class ObjectEditorDialog extends CDialog {
 			   }
 
 			  TEI t = new TEI(null,false,true);
+			  t.setUser(this.owner);
        		  if (t.get(pid)) {
        			   t.createRELS_INT(null);
        		  }	   
@@ -596,6 +597,7 @@ public class ObjectEditorDialog extends CDialog {
  		    		
  		    		if (dsid.equals("TEI_SOURCE")) {
 						TEI t = new TEI(null,false,true);
+						t.setUser(this.owner);
 						t.set(chooser.getSelectedFile().getAbsolutePath(), false);
 						if (t.isValid()) {
 						    t.setPID(pid);
@@ -605,6 +607,7 @@ public class ObjectEditorDialog extends CDialog {
 						} else { ret = false; }
  				    } else if (dsid.equals("METS_SOURCE")) {
 						METS m = new METS(null,false,true);
+						m.setUser(this.owner);
 						m.set(selected.getAbsolutePath(), false);
 						if (m.isValid()) {
 						    m.setPID(pid);

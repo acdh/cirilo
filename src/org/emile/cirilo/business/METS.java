@@ -30,7 +30,6 @@ import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.utils.Split;
 import org.emile.cirilo.utils.eXist;
 import org.emile.cirilo.business.Scp;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -67,6 +66,7 @@ public class METS {
 	private boolean onlyValidate;
 	private boolean mode;
 	private CPropertyService props;
+	private String xuser;
 	
 	
 	public METS(FileWriter logger, boolean validate, boolean mode) {		
@@ -81,8 +81,11 @@ public class METS {
 			this.logger = logger;
 			this.onlyValidate = validate;
 			this.mode = mode;
+			this.xuser = null;
 		} catch (Exception e) {}
 	}
+
+	public void setUser (String u) {this.xuser = u;}
 	
     public boolean set (String file, boolean eXist) {
     	try {
@@ -189,7 +192,7 @@ public class METS {
 		    	
 				byte[] stylesheet = null;
 				try {
-					stylesheet =  Repository.getDatastream("cirilo:"+user.getUser(), "TOMETS" , "");
+					stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), "TOMETS" , "");
 				} catch (Exception ex) {
 					stylesheet =  Repository.getDatastream("cirilo:Backbone", "TOMETS" , "");					
 				}

@@ -165,7 +165,7 @@
       <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:dfgMETS/methods?format=xml" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="E" ID="METS_REF" STATE="A" VERSIONABLE="false">
+  <foxml:datastream CONTROL_GROUP="R" ID="METS_REF" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T13:01:21.496Z" ID="METS_REF.1" LABEL="Reference to METS_SOURCE" MIMETYPE="text/html">
       <foxml:contentLocation REF="http://fedora.host/fedora/get/cirilo:dfgMETS/METS_SOURCE" TYPE="URL"/>
     </foxml:datastreamVersion>
