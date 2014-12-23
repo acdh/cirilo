@@ -80,6 +80,7 @@ public class TEI {
 	private SAXBuilder builder;
 	private boolean onlyValidate;
 	private boolean mode;
+	private boolean isCustomized; 	
 	private Element tmptree;
 	private CPropertyService props;
 	private String xuser;
@@ -98,7 +99,7 @@ public class TEI {
 			this.mode = mode;
 			this.builder = new SAXBuilder();
 			this.raw = null;
-			this.xuser = null;
+			this.xuser = user.getUser();
 		} catch (Exception e) {}
 	}
 
@@ -157,7 +158,7 @@ public class TEI {
 	}
     
  	public String toString() {
- 		    removeEmpty();
+ 		   // removeEmpty();
 	    	return this.outputter.outputString(this.tei); 
 	}
 	
@@ -211,19 +212,22 @@ public class TEI {
 				child.setText(pid);
 				child.setAttribute("type", "PID");
 				anchor.addContent(child);								
+				this.raw = outputter.outputString(this.tei);
 			} else {
 				if (this.mode) { 
 					idno.setText(pid);
 				}
 			}
 			this.PID = pid;
-			this.raw = outputter.outputString(this.tei);
 			
 		} catch (Exception e) {}
 	}
 		
 	public boolean isValid() {
 		try  {
+			isCustomized = false;
+			this.raw = null;
+			
 			XPath xpath = XPath.newInstance( "/t:TEI" );
 			xpath.addNamespace( Common.xmlns_tei_p5 );
 			if ( xpath.selectSingleNode( this.tei ) == null  ) { 
@@ -240,6 +244,7 @@ public class TEI {
 				try {
 					validator.validate(new JDOMSource(this.tei));			        
 				} catch (Exception q) {
+					isCustomized = true;
 					return transform();
 				}
 			}
@@ -252,7 +257,7 @@ public class TEI {
 		byte[] stylesheet = null;
         try {
         	try {
-        		stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), "TOTEI" , "");
+        		stylesheet =  Repository.getDatastream("cirilo:"+xuser, "TOTEI" , "");
         	} catch (Exception ex) {
            		try { 
         		stylesheet =  Repository.getDatastream("cirilo:Backbone", "TOTEI" , "");
@@ -341,22 +346,28 @@ public class TEI {
 		} catch (Exception e) {return false;}
 	}
 
-	
 	public boolean write(boolean mode) {
 		try {
+
 			if (!onlyValidate)  {
 				if (this.collection.isEmpty()) {
-					FileOutputStream fos = new FileOutputStream( this.file.toString() );
-					BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
-					out.write(new String((mode ? outputter.outputString(this.tei) : this.raw).getBytes("UTF-8"),"UTF-8"));
-					out.close();
+					if  (mode || (!isCustomized && this.raw !=null)) {
+						FileOutputStream fos = new FileOutputStream( this.file.toString() );
+						BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
+						if (mode) out.write(new String(outputter.outputString(this.tei).getBytes("UTF-8"),"UTF-8")); 
+						else if (!isCustomized && this.raw !=null) out.write(this.raw);	
+						out.close();
+					}
 				} else {
-					eXist eX = new eXist (this.collection);
-					org.xmldb.api.base.Collection coll = DatabaseManager.getCollection( URI + eX.getCollection(), user.getExistUser(), user.getExistPasswd() );
-					XMLResource res = (XMLResource) coll.getResource(eX.getStream());
-					res.setContent(new String((mode ? outputter.outputString(this.tei) : this.raw).getBytes("UTF-8"),"UTF-8"));
-					coll.storeResource(res);
-					coll.close();
+					if  (mode || (!isCustomized && this.raw !=null)) {
+						eXist eX = new eXist (this.collection);
+						org.xmldb.api.base.Collection coll = DatabaseManager.getCollection( URI + eX.getCollection(), user.getExistUser(), user.getExistPasswd() );
+						XMLResource res = (XMLResource) coll.getResource(eX.getStream());
+						if (mode) res.setContent(new String(outputter.outputString(this.tei).getBytes("UTF-8"),"UTF-8"));
+						else if (!isCustomized && this.raw !=null) res.setContent(this.raw);
+						coll.storeResource(res);
+						coll.close();
+					}		
 				}
 			}
 			return true;			
@@ -603,7 +614,7 @@ public class TEI {
 		    SAXBuilder parser = new SAXBuilder();
 		    try {
 		         Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/STYLESHEETS/content");
- 		    	 XPath xPath = XPath.newInstance( "/stylesheets/stylesheet[@type='STYLESHEET' and @model='cm:Context' and @state='default' and @owner='"+user.getUser()+"']" );
+ 		    	 XPath xPath = XPath.newInstance( "/stylesheets/stylesheet[@type='STYLESHEET' and @model='cm:Context' and @state='default' and @owner='"+xuser+"']" );
  		   	     List stylesheets = (List) xPath.selectNodes( doc );	        		 	     
  		    	 if (stylesheets != null) {	        			    		 
  	 	    		 Iterator jter = stylesheets.iterator();
@@ -612,7 +623,7 @@ public class TEI {
  		    	 }    
     	     } catch (Exception e0){} 	        		  	        					        				
              try {
-	            Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/"+user.getUser().toUpperCase()+"/content");
+	            Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/"+xuser.toUpperCase()+"/content");
  	            XPath xPath = XPath.newInstance( "/stylesheets/stylesheet[@type='STYLESHEET' and @model='cm:Context' and @state='default']" );
  	            List stylesheets = (List) xPath.selectNodes( doc );	        		 	     
            	    if (stylesheets != null) {	        			    		 
@@ -628,8 +639,8 @@ public class TEI {
 	        		target = target.startsWith(Common.INFO_FEDORA) ? target.substring(12) : target; 
 	        		if (!Repository.exist(target)) {  				
 	        			String title = Common.itrim(e.getText()); 	
-	        			if (Repository.exist("cirilo:Context."+user.getUser())) {
-	        				temps.cloneTemplate("info:fedora/cirilo:Context."+user.getUser(), account, target, title);	        				
+	        			if (Repository.exist("cirilo:Context."+xuser)) {
+	        				temps.cloneTemplate("info:fedora/cirilo:Context."+xuser, account, target, title);	        				
 	        			} else {	        			
 	        				temps.cloneTemplate("info:fedora/cirilo:Context", account, target, title);
            				    if (href != null) Repository.modifyDatastream (target, "STYLESHEET", null, "R", href);
@@ -1031,7 +1042,7 @@ public class TEI {
                     rdfs = outputter.outputString(doc);					
 				} catch (Exception ex0) {
 					try {
-						Document doc  =builder.build(new StringReader(new String(Repository.getDatastream("cirilo:"+user.getUser(), "TORDF",""))));
+						Document doc  =builder.build(new StringReader(new String(Repository.getDatastream("cirilo:"+xuser, "TORDF",""))));
                         rdfs = outputter.outputString(doc);
 					} catch (Exception ex1) {
 						Document doc  =builder.build(new StringReader(new String(Repository.getDatastream("cirilo:Backbone", "TORDF",""))));
@@ -1043,7 +1054,7 @@ public class TEI {
 					
 		    		String ses = (String) props.getProperty("user", "sesame.server");
 			        RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
-					repositoryManager.setUsernameAndPassword(user.getUser(), user.getPasswd());
+					repositoryManager.setUsernameAndPassword(xuser, user.getPasswd());
 					repositoryManager.initialize();	 
 					org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
 					repo.initialize(); 				    			
@@ -1250,7 +1261,7 @@ public class TEI {
         	pid = leaf.getAttributeValue("id", Common.xmlns_xml).replaceFirst("_", ":");
         	name = leaf.getChildText("catDesc", Common.xmlns_tei_p5);
         	if (!Repository.exist("info:fedora/"+pid)) {
-        		temps.cloneTemplate("info:fedora/cirilo:Context", user.getUser(), pid, name);
+        		temps.cloneTemplate("info:fedora/cirilo:Context", xuser, pid, name);
         	} 
         } catch (Exception e) {
         }
@@ -1361,7 +1372,7 @@ public class TEI {
 		if(this.PID != null && this.PID.startsWith("cirilo:")) return;
 		expanNamespaces();
 		p = props.getProperty("user", "TEI.CreateContexts"); 
-		if (p == null || p.equals("1")) createContexts(user.getUser());
+		if (p == null || p.equals("1")) createContexts(xuser);
 		p = props.getProperty("user", "TEI.IngestImages"); 
 		if (p == null || p.equals("1"))  ingestImages();
 		p = props.getProperty("user", "TEI.RemoveEmpties"); 
@@ -1394,7 +1405,7 @@ public class TEI {
 		String p;  
 		if(this.PID.startsWith("cirilo:")) return;
 		p = props.getProperty("user", "TEI.CreateContexts"); 
-		if (p == null || p.equals("1")) createContexts(user.getUser());
+		if (p == null || p.equals("1")) createContexts(xuser);
 		p = props.getProperty("user", "TEI.SEMExtraction"); 
 		if (p == null || p.equals("1")) createRELS_INT(null);
 		} catch (Exception e) {

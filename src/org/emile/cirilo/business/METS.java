@@ -286,6 +286,7 @@ public class METS {
 		    	Element fileGrp = null; 
 		   	    List images = getChildren("//mets:fileGrp[@USE='DEFAULT']/mets:file");
 		   	    List thumbs = getChildren("//mets:fileGrp[@USE='THUMBS']/mets:file");
+				String host = "http://"+ props.getProperty("user", "fedora.server") + "/";
 
 		   	    if (images.size() > 0) {
 		    		int i = 0;		    		
@@ -316,7 +317,7 @@ public class METS {
 				      					String[] AS;
                                         AS = s.split("/");
                                         if (AS.length == 2) {
-                                        	ch.setAttribute("href", user.getUrl()+"/objects/"+AS[0]+"/datastreams/"+AS[1]+"/content", Common.xmlns_xlink);
+                                        	ch.setAttribute("href", host+AS[0]+"/"+AS[1], Common.xmlns_xlink);
                                         }	
 				      				} else {
 				      				if (this.collection.isEmpty()) {
@@ -399,7 +400,7 @@ public class METS {
 			      											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
 			      										} catch (Exception ep) {}
 			      									}
-			      									ch.setAttribute("href", user.getUrl()+"/objects/"+this.PID+"/datastreams/"+id+"/content", Common.xmlns_xlink);			      									
+			      									ch.setAttribute("href", host+this.PID+"/"+id, Common.xmlns_xlink);			      									
 			      								}
 					      						
 				      							
@@ -448,7 +449,7 @@ public class METS {
       	 				    		file.setAttribute("MIMETYPE","image/jpeg");
       	 				    		Element flocat = new Element("FLocat",Common.xmlns_mets);
       	 				    		flocat.setAttribute("LOCTYPE", "URL");
-      	 				    		flocat.setAttribute("href", user.getUrl()+"/objects/"+this.PID+"/datastreams/"+tid+"/content", Common.xmlns_xlink);
+      	 				    		flocat.setAttribute("href", host+this.PID+"/"+tid, Common.xmlns_xlink);
       	 				    		file.addContent(flocat);
       	 				    		fileGrp.addContent(file);
       	 				    		
@@ -497,7 +498,7 @@ public class METS {
 				      					String[] AS;
                                         AS = s.split("/");
                                         if (AS.length == 2) {
-                                        	ch.setAttribute("href", user.getUrl()+"/objects/"+AS[0]+"/datastreams/"+AS[1]+"/content", Common.xmlns_xlink);
+                                        	ch.setAttribute("href", host+AS[0]+"/"+AS[1], Common.xmlns_xlink);
                                         }	
 				      				} else {
 				      				if (this.collection.isEmpty()) {
@@ -546,7 +547,7 @@ public class METS {
 				      								} catch (Exception ep) {}
 				      							}
 				      	 				    	thumb.delete();
-				      							ch.setAttribute("href", user.getUrl()+"/objects/"+this.PID+"/datastreams/"+id+"/content", Common.xmlns_xlink);
+				      							ch.setAttribute("href", host+this.PID+"/"+id, Common.xmlns_xlink);
 				      						}
 				      					} else {
 				      						if (logger != null && this.PID != null) logger.write( new java.util.Date()  +" Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
