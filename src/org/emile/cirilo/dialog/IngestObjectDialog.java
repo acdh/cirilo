@@ -242,7 +242,7 @@ public class IngestObjectDialog extends CDialog {
 						TEI t = new TEI(logger, onlyValidate, false);
 						t.setUser((String)jcbUser.getSelectedItem());
 						METS m = new METS(logger, onlyValidate, false);
-						t.setUser((String)jcbUser.getSelectedItem());
+						m.setUser((String)jcbUser.getSelectedItem());
 
 						JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 						JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
@@ -291,7 +291,7 @@ public class IngestObjectDialog extends CDialog {
 												
 								if (t.getPID().isEmpty()) {		
 									if (!onlyValidate) {
-										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), pid.trim(), res.getString("notitle"));
+										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 										t.setPID(pid);
 										while (!Repository.exist(pid));
 									} else {t.setPID("obj:generated");}
@@ -303,7 +303,7 @@ public class IngestObjectDialog extends CDialog {
 								} else {
                                     if (!Repository.exist(t.getPID())) {
     									if (!onlyValidate) {
-    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), "$"+ t.getPID(), res.getString("notitle"));
+    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ t.getPID(), res.getString("notitle"));
     										while (!Repository.exist(t.getPID()));
     									}
     									fi++;
@@ -312,7 +312,7 @@ public class IngestObjectDialog extends CDialog {
     									
     									logger.write(msgFmt.format(args2));									                                    	
                                     } else {
-                                    	if (t.getPID().contains(":"+user.getUser()+".") || groups.contains("administrator")) {
+                                    	if (t.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
                                     		
                                     		msgFmt = new MessageFormat(res.getString("objingrefr"));
         									Object[] args3 = {new java.util.Date(), t.getPID(), t.getName() };
@@ -320,7 +320,7 @@ public class IngestObjectDialog extends CDialog {
                                     		fa++;
                                     	} else {	
                                     		msgFmt = new MessageFormat(res.getString("denied"));
-        									Object[] args4 = {new java.util.Date(), user.getUser(), t.getPID() };
+        									Object[] args4 = {new java.util.Date(), (String)jcbUser.getSelectedItem(), t.getPID() };
                                     		
                                     		logger.write( msgFmt.format(args4));
                                     		continue;
@@ -355,7 +355,7 @@ public class IngestObjectDialog extends CDialog {
 												
 								if (m.getPID().isEmpty()) {		
 									if (!onlyValidate) {
-										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), pid.trim(), res.getString("notitle"));
+										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 										m.setPID(pid);
 										while (!Repository.exist(pid));
 									} else {m.setPID("obj:generated");}
@@ -367,7 +367,7 @@ public class IngestObjectDialog extends CDialog {
 								} else {
                                     if (!Repository.exist(m.getPID())) {
     									if (!onlyValidate) {
-    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), "$"+ m.getPID(), res.getString("notitle"));
+    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
     										while (!Repository.exist(m.getPID()));
     									}
     									fi++;
@@ -497,7 +497,7 @@ public class IngestObjectDialog extends CDialog {
 							TEI t = new TEI(logger, onlyValidate, false);
 							t.setUser((String)jcbUser.getSelectedItem());
 							METS m = new METS(logger, onlyValidate, false);
-							t.setUser((String)jcbUser.getSelectedItem());
+							m.setUser((String)jcbUser.getSelectedItem());
 
 							JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 							JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
@@ -547,7 +547,7 @@ public class IngestObjectDialog extends CDialog {
 									
 									if (t.getPID().isEmpty()) {	
 										if (!onlyValidate) {
-											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), pid.trim(), res.getString("notitle"));
+											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											t.setPID(pid);
 											while (!Repository.exist(pid));
 										} else {t.setPID("obj:generated");}
@@ -559,7 +559,7 @@ public class IngestObjectDialog extends CDialog {
 									} else {
 	                                    if (!Repository.exist(t.getPID())) {
 	    									if (!onlyValidate) {
-	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), "$"+ t.getPID(), res.getString("notitle"));
+	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ t.getPID(), res.getString("notitle"));
 	    										while (!Repository.exist(t.getPID()));
 	    									}
 	    									fi++;
@@ -568,7 +568,7 @@ public class IngestObjectDialog extends CDialog {
 											Object[] args3 = {new java.util.Date(), t.getPID(), t.getName()};
 	    									logger.write( msgFmt.format(args3));									                                    	
 	                                    } else {
-	                                    	if (t.getPID().contains(":"+user.getUser()+".") || groups.contains("administrator")) {
+	                                    	if (t.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
 	                                    		msgFmt = new MessageFormat(res.getString("objingrefr"));
 												Object[] args4 = {new java.util.Date(), t.getPID(), t.getName()};
 	                                    		
@@ -576,7 +576,7 @@ public class IngestObjectDialog extends CDialog {
 	                                    		fa++;
 	                                    	} else {
 	                                    		msgFmt = new MessageFormat(res.getString("denied"));
-												Object[] args5 = {new java.util.Date(), user.getUser(), t.getPID()};
+												Object[] args5 = {new java.util.Date(), (String)jcbUser.getSelectedItem(), t.getPID()};
 	                                    		
 	                                    		logger.write( msgFmt.format(args5));
 	                                    		continue;
@@ -613,7 +613,7 @@ public class IngestObjectDialog extends CDialog {
 								
 									if (m.getPID().isEmpty()) {
 										if (!onlyValidate) {
-											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), pid.trim(), res.getString("notitle"));
+											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											m.setPID(pid);
 											while (!Repository.exist(pid));
 										} else {m.setPID("obj:generated");}
@@ -625,7 +625,7 @@ public class IngestObjectDialog extends CDialog {
 									} else {
 										if (!Repository.exist(m.getPID())) {
 											if (!onlyValidate) {
-												pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), "$"+ m.getPID(), res.getString("notitle"));
+												pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
 												while (!Repository.exist(m.getPID()));
 											}	
 											fi++;
@@ -743,7 +743,7 @@ public class IngestObjectDialog extends CDialog {
 							TEI t = new TEI(logger, onlyValidate, false);
 							t.setUser((String)jcbUser.getSelectedItem());
 							METS m = new METS(logger, onlyValidate, false);
-							t.setUser((String)jcbUser.getSelectedItem());
+							m.setUser((String)jcbUser.getSelectedItem());
 
 							int i = 0;
 							
@@ -778,7 +778,7 @@ public class IngestObjectDialog extends CDialog {
 													
 									if (t.getPID().isEmpty()) {		
 										if (!onlyValidate) {
-											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), pid.trim(), res.getString("notitle"));
+											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											t.setPID(pid);
 											while (!Repository.exist(pid));
 										} else {t.setPID("obj:generated");}
@@ -790,7 +790,7 @@ public class IngestObjectDialog extends CDialog {
 									} else {
 	                                    if (!Repository.exist(t.getPID())) {
 	    									if (!onlyValidate) {
-	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), "$"+ t.getPID(), res.getString("notitle"));
+	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ t.getPID(), res.getString("notitle"));
 	    										while (!Repository.exist(t.getPID()));
 	    									}
 	    									fi++;
@@ -799,7 +799,7 @@ public class IngestObjectDialog extends CDialog {
 	    									
 	    									logger.write(msgFmt.format(args2));									                                    	
 	                                    } else {
-	                                    	if (t.getPID().contains(":"+user.getUser()+".") || groups.contains("administrator")) {
+	                                    	if (t.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
 	                                    		
 	                                    		msgFmt = new MessageFormat(res.getString("objingrrefr"));
 	        									Object[] args3 = {new java.util.Date(), t.getPID(), new Integer(i).toString() };
@@ -807,7 +807,7 @@ public class IngestObjectDialog extends CDialog {
 	                                    		fa++;
 	                                    	} else {	
 	                                    		msgFmt = new MessageFormat(res.getString("denied"));
-	        									Object[] args4 = {new java.util.Date(), user.getUser(), t.getPID() };
+	        									Object[] args4 = {new java.util.Date(), (String)jcbUser.getSelectedItem(), t.getPID() };
 	                                    		
 	                                    		logger.write( msgFmt.format(args4));
 	                                    		continue;
@@ -841,7 +841,7 @@ public class IngestObjectDialog extends CDialog {
 													
 									if (m.getPID().isEmpty()) {		
 										if (!onlyValidate) {
-											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), pid.trim(), res.getString("notitle"));
+											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											m.setPID(pid);
 											while (!Repository.exist(pid));
 										} else {m.setPID("obj:generated");}
@@ -853,7 +853,7 @@ public class IngestObjectDialog extends CDialog {
 									} else {
 	                                    if (!Repository.exist(m.getPID())) {
 	    									if (!onlyValidate) {
-	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), user.getUser(), "$"+ m.getPID(), res.getString("notitle"));
+	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
 	    										while (!Repository.exist(m.getPID()));
 	    									}
 	    									fi++;
