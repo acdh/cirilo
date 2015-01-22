@@ -806,12 +806,27 @@ public class EditObjectDialog extends CDialog {
 			    	          FileOutputStream fos = new FileOutputStream(fp.getAbsolutePath()+System.getProperty( "file.separator" )+pid.replace(":",".")+".xml" );
 							  BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
 
+							  byte[] query = null;
+							  
+							  if (pid.startsWith("query:")) {
+								  query = Repository.getDatastream(pid, "QUERY", "");
+								  String q = new String (query, "UTF-8").replaceAll(host, "http://fedora.host")
+										  .replaceAll("http://fedora.host#", "http://gams.uni-graz.at#")
+										  .replaceAll("http://fedora.host/ontology#","http://gams.uni-graz.at/ontology#");								 
+								  Repository.modifyDatastream(pid, "QUERY", q.getBytes("UTF-8"));
+							  }							  
+
 							  String buf = Repository.get2ObjectXml(pid);
+
+							  if (pid.startsWith("query:")) {
+								  Repository.modifyDatastream(pid, "QUERY", query);
+							  }
 							  
 							  out.write(buf.replaceAll(fedora, "http://fedora.host/fedora")
 							           .replaceAll(cocoon, "http://fedora.host/cocoon")
 							           .replaceAll(host, "http://fedora.host")
 										.replaceAll("http://fedora.host#", "http://gams.uni-graz.at#")
+										.replaceAll("http://fedora.host/viewer", "http://gams.uni-graz.at/viewer")
 										.replaceAll("http://fedora.host/ontology#","http://gams.uni-graz.at/ontology#"));
 							  out.close();
 			    			  

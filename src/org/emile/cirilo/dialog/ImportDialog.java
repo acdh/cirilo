@@ -22,7 +22,6 @@ package org.emile.cirilo.dialog;
 
 import org.emile.cirilo.Common;
 import org.emile.cirilo.business.TEI;
-
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
 import org.emile.cirilo.ecm.repository.Repository;
@@ -53,6 +52,7 @@ import org.apache.commons.logging.LogFactory;
 import com.asprise.util.ui.progress.ProgressDialog;
 
 import fedora.client.FedoraClient;
+
 
 
 
@@ -289,6 +289,13 @@ public class ImportDialog extends CDialog {
 								 	  			    		cm =  p;
 								 	  			    	}
 								 	  			    }
+
+								 	  			    if (pid.startsWith("query:")) {
+														  byte[] query = Repository.getDatastream(pid, "QUERY", "");
+														  String q = new String (query, "UTF-8").replaceAll("http://fedora.host",host);								 
+														  Repository.modifyDatastream(pid, "QUERY", q.getBytes("UTF-8"));
+												    }							  
+								 	  			    								 	  			    
 								 	  			    Common.genQR(user, pid);
 								 	  			    if (Common.ONTOLOGYOBJECTS.contains(cm)) {
 							 				    		try {
