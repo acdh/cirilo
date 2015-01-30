@@ -388,7 +388,9 @@ public class IngestObjectDialog extends CDialog {
 							    m.write();
  							    m.createMapping(pcm.get(), moGA);
                                 Common.genQR(user, m.getPID());
- 							    
+                                
+                                if (m.isTEI()) Repository.addDatastream(pid, "TEI_SOURCE", "TEI Source", "M", "text/xml", new File( files.get(i)));
+
  							    try {														    
  							    	if (!onlyValidate) Repository.modifyDatastreamByValue(m.getPID(), "METS_SOURCE", "text/xml", m.toString());
  							    } catch (Exception q) {
@@ -1080,7 +1082,8 @@ public class IngestObjectDialog extends CDialog {
 	 {
 	  public boolean accept( File f, String s )
 	  {
-	    return s.toLowerCase().endsWith( ".jpg" );
+			s=s.toLowerCase();
+		    return (s.endsWith( ".jpg" ) || s.endsWith( ".jpeg" ) || s.endsWith( ".tif" ) || s.endsWith( ".tiff" )) && !s.startsWith(".");
 	  }
 	}
 
@@ -1088,7 +1091,7 @@ public class IngestObjectDialog extends CDialog {
 	 {
 	  public boolean accept( File f, String s )
 	  {
-	    return s.toLowerCase().endsWith( ".xml" );
+	    return s.toLowerCase().endsWith( ".xml" ) && !s.startsWith(".");
 	  }
 	}
 	

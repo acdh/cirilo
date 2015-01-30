@@ -269,9 +269,7 @@ public class ImportDialog extends CDialog {
 										is.setCharacterStream(new StringReader(writer.toString()
 									    .replaceAll("http://fedora.host/fedora", fedora)
 										.replaceAll("http://fedora.host/cocoon", cocoon)
-									    .replaceAll("http://fedora.host", host)
-										.replaceAll(host+"#", "http://gams.uni-graz.at#")
-										.replaceAll(host+"/ontology#","http://gams.uni-graz.at/ontology#")));
+									    .replaceAll("http://fedora.host", host)));
 										doc = builder.parse(is);
 										
 										logger.write("\n " + new java.util.Date() + ". "+ msgFmt0.format(arg0));

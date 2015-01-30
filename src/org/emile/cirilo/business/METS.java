@@ -67,6 +67,7 @@ public class METS {
 	private boolean mode;
 	private CPropertyService props;
 	private String xuser;
+	private boolean bisTEI;
 	
 	
 	public METS(FileWriter logger, boolean validate, boolean mode) {		
@@ -124,7 +125,11 @@ public class METS {
 			return false;
 		}
 	}
-    
+ 
+    public boolean isTEI() {
+    	return bisTEI;
+    }
+ 
  	public String toString() { 		
 		return (this.outputter.outputString(this.mets).replaceAll("this:PID", this.PID).replaceAll("this:FEDORA", user.getUrl())); 
 	}
@@ -175,26 +180,31 @@ public class METS {
 		try  {
 			XPath xpath = XPath.newInstance( "/");		
 			xpath.addNamespace( Common.xmlns_viewer );
-		    if ( this.mets.getRootElement().getNamespace() == Common.xmlns_viewer)
+			bisTEI = false;
+		    if ( this.mets.getRootElement().getNamespace() == Common.xmlns_viewer || this.mets.getRootElement().getNamespace() == Common.xmlns_ntei_p5)
 			{
-		    	Element structure = this.mets.getRootElement().getChild("structure", Common.xmlns_viewer );
-		    	if (structure.getChild("div", Common.xmlns_viewer) == null) {
-		    		Element div = new Element("div",Common.xmlns_viewer);
-		    		File[] images = this.file.getParentFile().listFiles(new JPGFilter());
-					for (int i = 0; i < images.length; i++) {
-						Element page = new Element("page",Common.xmlns_viewer);
-						page.setAttribute("href","file:///"+images[i].getAbsolutePath(), Common.xmlns_xlink);
-						div.addContent (page);
-					}
-		    		structure.addContent(div);
-		    	}
-	    		this.viewer = this.mets;
+		    	try {
+		    		bisTEI = this.mets.getRootElement().getNamespace() == Common.xmlns_ntei_p5;
+		    		Element structure = this.mets.getRootElement().getChild("structure", Common.xmlns_viewer );
+		    		if (structure.getChild("div", Common.xmlns_viewer) == null) {
+		    			Element div = new Element("div",Common.xmlns_viewer);
+		    			File[] images = this.file.getParentFile().listFiles(new JPGFilter());
+		    			for (int i = 0; i < images.length; i++) {
+		    				Element page = new Element("page",Common.xmlns_viewer);
+		    				page.setAttribute("href","file:///"+images[i].getAbsolutePath(), Common.xmlns_xlink);
+		    				div.addContent (page);
+		    			}
+		    			structure.addContent(div);
+		    		}
+		    	} catch (Exception s) {}	
+
+		    	this.viewer = this.mets;
 		    	
 				byte[] stylesheet = null;
 				try {
-					stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), "TOMETS" , "");
+					stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), (isTEI() ? "TEI":"") +"TOMETS" , "");
 				} catch (Exception ex) {
-					stylesheet =  Repository.getDatastream("cirilo:Backbone", "TOMETS" , "");					
+					stylesheet =  Repository.getDatastream("cirilo:Backbone", (isTEI() ? "TEI":"") +"TOMETS" , "");					
 				}
 				
 		        System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
@@ -202,14 +212,14 @@ public class METS {
 		        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet))));
 		  	    JDOMSource in = new JDOMSource(this.mets);
 		        JDOMResult out = new JDOMResult();
+			
 		        transformer.transform(in, out);
 
 		        System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");
 		  		SAXBuilder builder = new SAXBuilder();
 	
+		  		
     	        this.mets = builder.build( new StringReader( outputter.outputString(out.getResult())) );	
-
-    	        
 			}
 			
 			xpath = XPath.newInstance( "/mets:mets" );
@@ -262,7 +272,7 @@ public class METS {
 		    		}
 		    	}
 		    }
-		    if (this.viewer != null) {
+		    if (this.viewer != null &&  this.viewer.getRootElement().getNamespace() == Common.xmlns_viewer ) {
 		    	Element idno = this.viewer.getRootElement().getChild("idno", Common.xmlns_viewer );
 		    	if (idno!= null) {
 		    		idno.setText(this.PID);	
@@ -648,7 +658,8 @@ public class METS {
 	 {
 	  public boolean accept( File f, String s )
 	  {
-	    return s.toLowerCase().endsWith( ".jpg" );
+		s=s.toLowerCase();
+	    return (s.endsWith( ".jpg" ) || s.endsWith( ".jpeg" ) || s.endsWith( ".tif" ) || s.endsWith( ".tiff" )) && !s.startsWith(".");
 	  }
 	}
 	   

@@ -7115,6 +7115,142 @@
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="TEITOMETS" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2014-03-21T12:34:12.499Z" ID="TEITOMETS.0"
+      LABEL="Transformation for DFG Viewer from TEI to METS Format" MIMETYPE="text/xml" SIZE="4827">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:mets="http://www.loc.gov/METS/"
+          xmlns:t="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:template match="t:TEI">
+            <mets:mets>
+              <mets:dmdSec ID="DMD.1">
+                <mets:mdWrap MDTYPE="MODS" MIMETYPE="text/xml">
+                  <mets:xmlData>
+                    <mods:mods xmlns:mods="http://www.loc.gov/mods/v3">
+                      <mods:titleInfo>
+                        <mods:title>
+                          <xsl:value-of select="//t:title"/>
+                        </mods:title>
+                      </mods:titleInfo>
+                      <mods:name type="personal">
+                        <mods:displayForm>
+                          <xsl:value-of
+                            select="concat(//t:author/t:persName/t:forename,' ',//t:author/t:persName/t:surname)"
+                          />
+                        </mods:displayForm>
+                        <mods:role>
+                          <mods:roleTerm type="text">author</mods:roleTerm>
+                        </mods:role>
+                      </mods:name>
+                      <mods:originInfo>
+                        <mods:dateIssued>
+                          <xsl:value-of select="t:date"/>
+                        </mods:dateIssued>
+                      </mods:originInfo>
+                    </mods:mods>
+                  </mets:xmlData>
+                </mets:mdWrap>
+              </mets:dmdSec>
+              <mets:amdSec ID="AMD.1">
+                <mets:rightsMD ID="RMD.1">
+                  <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVRIGHTS">
+                    <mets:xmlData>
+                      <dv:rights xmlns:dv="http://dfg-viewer.de/">
+                        <dv:owner/>
+                        <dv:ownerContact/>
+                        <dv:ownerLogo/>
+                        <dv:ownerSiteURL/>
+                      </dv:rights>
+                    </mets:xmlData>
+                  </mets:mdWrap>
+                </mets:rightsMD>
+                <mets:digiprovMD ID="PMD.1">
+                  <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVLINKS">
+                    <mets:xmlData>
+                      <dv:links xmlns:dv="http://dfg-viewer.de/">
+                        <dv:reference/>
+                        <dv:presentation/>
+                      </dv:links>
+                    </mets:xmlData>
+                  </mets:mdWrap>
+                </mets:digiprovMD>
+              </mets:amdSec>
+              <mets:fileSec>
+                <mets:fileGrp USE="DEFAULT">
+                  <xsl:for-each select="//t:surface">
+                    <mets:file ID="{concat('IMG.', position())}" MIMETYPE="image/jpeg">
+                      <mets:FLocat LOCTYPE="URL" xlink:href="{t:graphic/@url}"/>
+                    </mets:file>
+                  </xsl:for-each>
+                </mets:fileGrp>
+              </mets:fileSec>
+              <mets:structMap TYPE="PHYSICAL">
+                <mets:div ID="PHY.1" TYPE="physSequence">
+                  <xsl:for-each select="//t:surface">
+                    <mets:div ID="{concat('DIV.', position())}" ORDER="{position()}" TYPE="page">
+                      <mets:fptr FILEID="{concat('IMG.', position())}"/>
+                    </mets:div>
+                  </xsl:for-each>
+                </mets:div>
+              </mets:structMap>
+              <mets:structMap TYPE="LOGICAL">
+                <mets:div ADMID="AMD.1" DMDID="DMD.1" ID="LOG.0" TYPE="monograph">
+                  <xsl:for-each select="//t:div1">
+                    <mets:div ID="{concat('LOG.', position())}">
+                      <xsl:choose>
+                        <xsl:when test="t:head">
+                          <xsl:attribute name="LABEL">
+                            <xsl:value-of select="t:head"/>
+                          </xsl:attribute>
+                        </xsl:when>
+                        <xsl:when test="@type">
+                          <xsl:attribute name="TYPE">
+                            <xsl:value-of select="@type"/>
+                          </xsl:attribute>
+                        </xsl:when>
+                      </xsl:choose>
+                      <xsl:variable name="level1" select="position()"/>
+                      <xsl:for-each select="t:div2">
+                        <mets:div ID="{concat('LOG.',$level1,'.',position())}">
+                          <xsl:choose>
+                            <xsl:when test="t:head">
+                              <xsl:attribute name="LABEL">
+                                <xsl:value-of select="t:head"/>
+                              </xsl:attribute>
+                            </xsl:when>
+                            <xsl:when test="@type">
+                              <xsl:attribute name="TYPE">
+                                <xsl:value-of select="@type"/>
+                              </xsl:attribute>
+                            </xsl:when>
+                          </xsl:choose>
+                        </mets:div>
+                      </xsl:for-each>
+                    </mets:div>
+                  </xsl:for-each>
+                </mets:div>
+              </mets:structMap>
+              <mets:structLink>
+                <mets:smLink xlink:from="LOG.0" xlink:to="PHY.1"/>
+                <xsl:for-each select="//t:div1">
+                  <mets:smlink xlink:from="{concat('LOG.', position())}"
+                    xlink:to="{concat('DIV.',substring-after(preceding::t:pb[1]/@xml:id,'.'))}"/>
+                  <xsl:variable name="level1" select="position()"/>
+                  <xsl:for-each select="t:div2">
+                    <mets:smLink xlink:from="{concat('LOG.',$level1,'.',position())}"
+                      xlink:to="{concat('DIV.',substring-after(preceding::t:pb[1]/@xml:id,'.'))}"
+                    />
+                  </xsl:for-each>
+                </xsl:for-each>
+              </mets:structLink>
+            </mets:mets>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="SKOStoFO" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2014-04-01T12:07:29.814Z" ID="SKOStoFO.3" LABEL="SKOS to XSL-FO Stylesheet"
       MIMETYPE="text/xml" SIZE="4541">
@@ -7225,4 +7361,217 @@
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="METS2JSON" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="METS2JSON.0" LABEL="Convert dfgViewer METS to JSON" MIMETYPE="text/xml" SIZE="386">
+      <foxml:xmlContent>
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exif="http://ns.adobe.com/exif/1.0/" xmlns:mets="http://www.loc.gov/METS/" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:x="adobe:ns:meta/" xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0">
+          <xsl:output encoding="utf-8" method="text" />
+          <xsl:strip-space elements="*" />
+          <xsl:variable name="pid" select="concat('http://gams.uni-graz.at/', //mods:identifier[@type='urn'])" />
+          <xsl:template match="mets:mets">
+            <xsl:text>{</xsl:text>
+            <xsl:text>"@context":"http://iiif.io/api/presentation/2/context.json",</xsl:text>
+            <xsl:text>"@type":"sc:Manifest",</xsl:text>
+            <xsl:text>"@id":"</xsl:text>
+            <xsl:value-of select="$pid" />
+            <xsl:text>",</xsl:text>
+            <xsl:text>"label":</xsl:text>
+            <xsl:text>"</xsl:text>
+            <xsl:apply-templates select="//mods:mods/mods:titleInfo/mods:title" />
+            <xsl:text>",</xsl:text>
+            <xsl:text>"metadata": [</xsl:text>
+            <xsl:apply-templates select="//mods:mods/mods:name[@type='personal']" />
+            
+            <xsl:text>],</xsl:text>
+            <xsl:text>"sequences": [{</xsl:text>
+            <xsl:text>"@id":"http://www.example.org/iiif/book1/sequence/normal",</xsl:text>
+            <xsl:text>"@type":"sc:Sequence",</xsl:text>
+            <xsl:text>"label":"Current Page Order",</xsl:text>
+            <xsl:text>"viewingDirection":"left-to-right",</xsl:text>
+            <xsl:text>"viewingHint":"paged",</xsl:text>
+            <xsl:text>"canvases": [</xsl:text>
+            <xsl:apply-templates select="//mets:structMap[@TYPE='PHYSICAL']/mets:div[@TYPE='physSequence']/mets:div[@TYPE='page']" />
+            <xsl:text>}]</xsl:text>
+            <xsl:text>}</xsl:text>
+            <xsl:text>]</xsl:text>
+            <xsl:text>,</xsl:text>
+            <xsl:text>"structures": [</xsl:text>
+            <xsl:apply-templates select="//mets:structMap[@TYPE='LOGICAL']" />
+            <xsl:text>]</xsl:text>
+            <xsl:text>}</xsl:text>
+          </xsl:template>
+          <xsl:template match="mets:div[ancestor::mets:structMap[@TYPE='LOGICAL']]">
+            <xsl:if test="not(parent::mets:structMap[@TYPE='LOGICAL'])">
+              <xsl:text>,</xsl:text>
+            </xsl:if>
+            <xsl:text>{</xsl:text>
+            <xsl:text>"@id":"</xsl:text>
+            <xsl:value-of select="@ID" />
+            <xsl:text>",</xsl:text>
+            <xsl:text>"@type":"sc:Range",</xsl:text>
+            <xsl:text>"label":"</xsl:text>
+            <xsl:value-of select="@TYPE" />
+            <xsl:text>"</xsl:text>
+            <xsl:text>,</xsl:text>
+            <xsl:if test="mets:div">
+              <xsl:text>"ranges": [</xsl:text>
+              <xsl:text>"</xsl:text>
+              <xsl:value-of select="mets:div/@ID" separator="&quot;,&quot;" />
+              <xsl:text>"</xsl:text>
+              <xsl:text>],</xsl:text>
+            </xsl:if>
+            <xsl:text>"canvases": [</xsl:text>
+            <xsl:variable name="smLink" select="//mets:structLink/mets:smLink[@xlink:from=current()/@ID]" />
+            <xsl:for-each select="$smLink">
+              <xsl:choose>
+                <xsl:when test="//mets:div[ancestor::mets:structMap[@TYPE='PHYSICAL']][@ID=current()/@xlink:to]/@TYPE='page'">
+                  <xsl:text>"</xsl:text>
+                  <xsl:value-of select="//mets:div[ancestor::mets:structMap[@TYPE='PHYSICAL']][@ID=current()/@xlink:to][@TYPE='page']/@CONTENTIDS" />
+                  <xsl:text>"</xsl:text>
+                  <xsl:if test="position()!=last()">
+                    <xsl:text>,</xsl:text>
+                  </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>"</xsl:text>
+                  <xsl:value-of select="//mets:div[ancestor::mets:structMap[@TYPE='PHYSICAL']][@ID=current()/@xlink:to]/mets:div[@TYPE='page']/@CONTENTIDS" separator="&quot;,&quot;" />
+                  <xsl:text>"</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each>
+            <xsl:text>]</xsl:text>
+            <xsl:text>}</xsl:text>
+            <xsl:apply-templates />
+          </xsl:template>
+          <xsl:template match="mets:div[@TYPE='physSequence']/mets:div[@TYPE='page']">
+            <xsl:text>{</xsl:text>
+            <xsl:text>"@id":"</xsl:text>
+            <xsl:value-of select="@CONTENTIDS" />
+            <xsl:text>",</xsl:text>
+            <xsl:text>"@type":"sc:Canvas",</xsl:text>
+            <xsl:text>"label": "</xsl:text>
+            <xsl:choose>
+              <xsl:when test="@ORDERLABEL">
+                <xsl:value-of select="@ORDERLABEL" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="@ORDER" />
+              </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>",</xsl:text>
+            <xsl:text>"images": [</xsl:text>
+            <xsl:apply-templates select="mets:fptr" />
+            <xsl:text>"on":"</xsl:text>
+            <xsl:value-of select="@CONTENTIDS" />
+            <xsl:text>"}</xsl:text>
+            <xsl:text>]</xsl:text>
+            <xsl:if test="position()!= last()">
+              <xsl:text>},</xsl:text>
+            </xsl:if>
+            <xsl:text />
+          </xsl:template>
+          <xsl:template match="mets:fptr[1]">
+            <xsl:variable name="file" select="//mets:fileGrp/mets:file[@ID=current()/@FILEID]" />
+            <xsl:text>{</xsl:text>
+            <xsl:text>"@type":"oa:Annotation",
+                "motivation":"sc:painting",
+                "resource":{"@id":"</xsl:text>
+            <xsl:value-of select="$file/mets:FLocat/@xlink:href" />
+            <xsl:text>"</xsl:text>
+            <xsl:text>,"@type":"dctypes:Image",</xsl:text>
+            <xsl:text>"format":"</xsl:text>
+            <xsl:value-of select="$file/@MIMETYPE" />
+            <xsl:text>",</xsl:text>
+            <xsl:text>"service": {</xsl:text>
+            <xsl:text>"@id":"</xsl:text>
+            <xsl:value-of select="$file/mets:FLocat/@xlink:href" />
+            <xsl:text>"},</xsl:text>
+            <xsl:text>"height":</xsl:text>
+            <xsl:value-of select="$file/mets:FContent/mets:xmlData/x:xmpmeta/exif:PixelYDimension" />
+            <xsl:text>,</xsl:text>
+            <xsl:text>"width":</xsl:text>
+            <xsl:value-of select="$file/mets:FContent/mets:xmlData/x:xmpmeta/exif:PixelXDimension" />
+            <xsl:text>},</xsl:text>
+          </xsl:template>
+          <xsl:template match="mods:name[@type='personal']">
+            <xsl:text>{"label":"</xsl:text>
+            <xsl:value-of select="mods:role/mods:roleTerm" />
+            <xsl:text>", "value":"</xsl:text>
+            <xsl:value-of select="mods:displayForm" />
+            <xsl:text>"}</xsl:text>
+          </xsl:template>
+          <xsl:template match="text()">
+            <xsl:call-template name="escape-string">
+              <xsl:with-param name="s" select="." />
+            </xsl:call-template>
+          </xsl:template>
+          <xsl:template name="escape-string">
+            <xsl:param name="s" />
+            <xsl:call-template name="escape-bs-string">
+              <xsl:with-param name="s" select="$s" />
+            </xsl:call-template>
+          </xsl:template>
+          <xsl:template name="escape-bs-string">
+            <xsl:param name="s" />
+            <xsl:choose>
+              <xsl:when test="contains($s,'\')">
+                <xsl:call-template name="escape-quot-string">
+                  <xsl:with-param name="s" select="concat(substring-before($s,'\'),'\\')" />
+                </xsl:call-template>
+                <xsl:call-template name="escape-bs-string">
+                  <xsl:with-param name="s" select="substring-after($s,'\')" />
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:call-template name="escape-quot-string">
+                  <xsl:with-param name="s" select="$s" />
+                </xsl:call-template>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:template>
+          <xsl:template name="escape-quot-string">
+            <xsl:param name="s" />
+            <xsl:choose>
+              <xsl:when test="contains($s,'&quot;')">
+                <xsl:call-template name="encode-string">
+                  <xsl:with-param name="s" select="concat(substring-before($s,'&quot;'),'\&quot;')" />
+                </xsl:call-template>
+                <xsl:call-template name="escape-quot-string">
+                  <xsl:with-param name="s" select="substring-after($s,'&quot;')" />
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:call-template name="encode-string">
+                  <xsl:with-param name="s" select="$s" />
+                </xsl:call-template>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:template>
+          <xsl:template name="encode-string">
+            <xsl:param name="s" />
+            <xsl:choose>
+              <xsl:when test="contains($s,' ')">
+                <xsl:call-template name="encode-string">
+                  <xsl:with-param name="s" select="concat(substring-before($s,' '),'\t',substring-after($s,' '))" />
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:when test="contains($s,' ')">
+                <xsl:call-template name="encode-string">
+                  <xsl:with-param name="s" select="concat(substring-before($s,' '),'\n',substring-after($s,' '))" />
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:when test="contains($s,' ')">
+                <xsl:call-template name="encode-string">
+                  <xsl:with-param name="s" select="concat(substring-before($s,' '),'\r',substring-after($s,' '))" />
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$s" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>  
 </foxml:digitalObject>

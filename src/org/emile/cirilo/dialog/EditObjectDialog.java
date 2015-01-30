@@ -827,7 +827,7 @@ public class EditObjectDialog extends CDialog {
 							           .replaceAll(host, "http://fedora.host")
 										.replaceAll("http://fedora.host#", "http://gams.uni-graz.at#")
 										.replaceAll("http://fedora.host/viewer", "http://gams.uni-graz.at/viewer")
-										.replaceAll("http://fedora.host/ontology#","http://gams.uni-graz.at/ontology#"));
+										.replaceAll("http://fedora.host/ontology","http://gams.uni-graz.at/ontology"));
 							  out.close();
 			    			  
 			    			  exported++;

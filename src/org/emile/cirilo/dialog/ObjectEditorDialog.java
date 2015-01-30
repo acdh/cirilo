@@ -820,6 +820,8 @@ public class ObjectEditorDialog extends CDialog {
 		    se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
 			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getObjectDialogProperties(), loTable);
 			
+			this.setTitle(res.getString("editobjsing")+" - "+pid);
+			
 		} catch (Exception e) {		
 		}
 	}
