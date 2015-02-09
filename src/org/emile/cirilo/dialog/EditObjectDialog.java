@@ -526,6 +526,10 @@ public class EditObjectDialog extends CDialog {
  						  
  						  if (_op) hs_admin =  new HandleValue(100, Util.encodeString("HS_ADMIN"), Encoder.encodeAdminRecord(admin));
 				    	  
+ 						  String fedora = user.getUrl();						
+ 						  String host = fedora.substring(0,fedora.lastIndexOf("/"));
+
+ 						  
 				    	  for (int i=0; i<selected.length; i++) {
 
 				    		  if(pd.isCanceled()) {break;}		
@@ -600,8 +604,8 @@ public class EditObjectDialog extends CDialog {
 
 									if (list.isEmpty()) {
 										
-										object   =  new HandleValue(1  , Util.encodeString("URL"), Util.encodeString("http://gams.uni-graz.at/"+pid));
-										dc       =  new HandleValue(2  , Util.encodeString("URL.METADATA"), Util.encodeString("http://gams.uni-graz.at/"+pid+"/DC"));
+										object   =  new HandleValue(1  , Util.encodeString("URL"), Util.encodeString(host+"/"+pid));
+										dc       =  new HandleValue(2  , Util.encodeString("URL.METADATA"), Util.encodeString(host+"/"+pid+"/DC"));
 
 										HandleValue[] values = { object, hs_admin, dc };
 								

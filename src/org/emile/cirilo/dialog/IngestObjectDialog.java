@@ -749,6 +749,7 @@ public class IngestObjectDialog extends CDialog {
 
 							int i = 0;
 							
+							
 							while (excel.hasNext()) {
 
 								String pid = (String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem();
@@ -766,9 +767,9 @@ public class IngestObjectDialog extends CDialog {
 								}
 									
 								if (model.indexOf("TEI") > -1) {
-									 
+																	
 	                                t.set(excel.toString());                                                                 
-									
+										                                
 									if (!t.isValid()) {									
 										msgFmt = new MessageFormat(res.getString("novalidrtei"));
 										Object[] args0 = {new java.util.Date(),new Integer(i).toString()}; 

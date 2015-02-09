@@ -78,6 +78,7 @@ public class EXCEL {
 
     		return true;
     	} catch (Exception e) {
+    		e.printStackTrace();
     		return false;
     	}    	
     }
@@ -201,15 +202,15 @@ public class EXCEL {
 		try {
     		SAXBuilder builder = new SAXBuilder();
 			template =builder.build(tp);
-
-			int currentPos = currentRow;
-			int delta = 1;
-
-					
+		
 			XPath xpath = XPath.newInstance("//mm:while");
 			xpath.addNamespace( Common.xmlns_mm);
 			java.util.List <org.jdom.Element> iterates = (List) xpath.selectNodes( this.template);
-						
+			
+			int currentPos = currentRow;
+			int delta = 1;
+
+			
 			for (org.jdom.Element iterate : iterates) {			
 			    
 				String fore = (String) iterate.getAttributeValue("field").substring(1);
