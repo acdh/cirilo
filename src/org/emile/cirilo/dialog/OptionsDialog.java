@@ -92,11 +92,6 @@ public class OptionsDialog extends CDialog {
 	    	} catch (Exception ex) {
 	    	}
 			   	
-			try {
-	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbMETSCreateFromJPEG");
-	    		props.setProperty("user", "METS.CreateFromJPEG", cb.isSelected() ? "1" : "0");
-	    	} catch (Exception ex) {
-	    	}
 
 			try {
 	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbMETSRefreshSource");
@@ -189,11 +184,6 @@ public class OptionsDialog extends CDialog {
 	    	} catch (Exception e) {
 	    	}
 			
-			try {
-	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbMETSCreateFromJPEG");
-	    		cb.setSelected(props.getProperty("user", "METS.CreateFromJPEG").equals("1"));
-	    	} catch (Exception e) {
-	    	}
 
 			try {
 	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbMETSRefreshSource");

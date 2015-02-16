@@ -209,7 +209,7 @@ public class IngestObjectDialog extends CDialog {
 					getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					
 					files = new ArrayList<String>();
-					treeWalk(fp);
+					treeWalk(fp,true);
 					
 					MessageFormat msgFmt = new MessageFormat(res.getString("objcrea"));
 					Object[] args = {new Integer(files.size()).toString(), model, fp.getAbsolutePath()};
@@ -1033,11 +1033,13 @@ public class IngestObjectDialog extends CDialog {
 	}
 
 
-	private void treeWalk(File file) {
+	private void treeWalk(File file, boolean mode) {
+		   
 		  try {
 	 		if (file.isDirectory()) {
 		 		File[] xml = file.listFiles(new XMLFilter());
-			    if (xml.length == 0  && createFromJPEG) {
+		 		if (mode) createFromJPEG = (xml.length == 0);
+			    if (xml.length == 0 && createFromJPEG) {
 		 		    File[] images = file.listFiles(new JPGFilter());
 		 		 	if (images.length > 0) {
 		    	        FileOutputStream fos = new FileOutputStream( file.getAbsolutePath()+File.separator+"mets.xml" );
@@ -1048,7 +1050,7 @@ public class IngestObjectDialog extends CDialog {
 	 			}
 		 		File[] children = file.listFiles();
 		 		for (int i = 0; i < children.length; i++) {
-		 			treeWalk(children[i]);
+		 			treeWalk(children[i],false);
 		 		}
 	     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml")) {
 	     		files.add(file.getAbsolutePath());

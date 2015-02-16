@@ -59,7 +59,6 @@ public class GuiOptionsDialog extends CGuiComposite {
 	JCheckBox jcbTEIOnlyGeonameID;
 	JCheckBox jcbTEICustomization;
 	JCheckBox jcbMETSRefreshSource;
-	JCheckBox jcbMETSCreateFromJPEG;
 	JComboBox jcbGeneralDefaultCM;
 
 
@@ -98,7 +97,6 @@ public class GuiOptionsDialog extends CGuiComposite {
 		setWidgetName(jcbTEIRefreshSource, "jcbTEIRefreshSource");
 		setWidgetName(jcbMETSRefreshSource, "jcbMETSRefreshSource");
 		setWidgetName(jcbGeneralDefaultCM, "jcbGeneralDefaultCM");
-		setWidgetName(jcbMETSCreateFromJPEG, "jcbMETSCreateFromJPEG" );
 		setWidgetName(jcbTEIOnlyGeonameID, "jcbTEIOnlyGeonameID" );
 		setWidgetName(jcbTEICustomization, "jcbTEICustomization" );
 		setWidgetName(jtfOAIPrefix, "jtfOAIPrefix" );
@@ -133,7 +131,6 @@ public class GuiOptionsDialog extends CGuiComposite {
 		jcbTEICustomization = new JCheckBox(res.getString("customization"), false);
 		jcbGeneralDefaultCM = new JComboBox();
 		jcbMETSRefreshSource = new JCheckBox(res.getString("refreshsource"), false);
-		jcbMETSCreateFromJPEG = new JCheckBox(res.getString("createfromjpeg"), false);
 		jcbTEIOnlyGeonameID = new JCheckBox(res.getString("onlygeonameids"), false);
 		
 		jtfTEILoginName = new JTextField();
@@ -175,7 +172,6 @@ public class GuiOptionsDialog extends CGuiComposite {
 		Container t2 = new Container();
 		t2.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
 		t2.add(jcbMETSRefreshSource, "wrap 5");
-		t2.add( jcbMETSCreateFromJPEG, "wrap 5");
 		
 		tp.addTab(res.getString("general"), t0);
 		tp.addTab(res.getString("teiupload"), t1);
