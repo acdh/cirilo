@@ -27,10 +27,8 @@ import voodoosoft.jroots.core.gui.CItemListener;
 import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
 import org.emile.cirilo.ecm.templates.*;
@@ -74,31 +72,19 @@ public class ReplaceDialog extends CDialog {
 	public ReplaceDialog() {}
 
 	
-	public void handleStylesheetButton( ActionEvent ev ) {
+	public void handleReferencesButton( ActionEvent ev ) {
 		try {
 	
 			SelectLayoutDialog dlg = (SelectLayoutDialog) CServiceProvider.getService(DialogNames.SELECTLAYOUT_DIALOG);
-			dlg.set(null, "STYLESHEET", null, "yoda");
+			dlg.set(null, "*", null, "yoda");
 			dlg.open();
-			if (!dlg.getLocation().isEmpty()) ((JTextField) getGuiComposite().getWidget("jtfStylesheet")).setText(dlg.getStylesheet());
-			((JTextField) getGuiComposite().getWidget("jtfStylesheet")).setCaretPosition(0);
+			if (!dlg.getLocation().isEmpty()) ((JTextField) getGuiComposite().getWidget("jtfReferences")).setText(dlg.getStylesheet());
+			((JTextField) getGuiComposite().getWidget("jtfReferences")).setCaretPosition(0);
 		}
 		catch ( Exception e ) {
 		}
 	}
 
-	public void handleFO_StylesheetButton( ActionEvent ev ) {
-		try {
-	
-			SelectLayoutDialog dlg = (SelectLayoutDialog) CServiceProvider.getService(DialogNames.SELECTLAYOUT_DIALOG);
-			dlg.set(null, "FO_STYLESHEET", null, "yoda");
-			dlg.open();
-			if (!dlg.getLocation().isEmpty()) ((JTextField) getGuiComposite().getWidget("jtfFO_Stylesheet")).setText(dlg.getStylesheet());
-			((JTextField) getGuiComposite().getWidget("jtfFO_Stylesheet")).setCaretPosition(0);
-		}
-		catch ( Exception e ) {
-		}
-	}
 	
 	public void handleRelsMouseDoubleClick(MouseEvent e, int type) {
 
@@ -203,6 +189,8 @@ public class ReplaceDialog extends CDialog {
 	 * @param  ev  Description of the Parameter
 	 */
 	public void handleReplaceButton( ActionEvent ev ) {
+//		Object[] references = { "STYLESHEET", "FO_STYLESHEET", "HSSF_STYLESHEET", "DC_MAPPING", "RDF_MAPPING", "BIBTEX_MAPPING", "KML_TEMPLATE", "REPLACEMENT_RULESET", "TORDF", "TOMETS","TEI2METS"};
+		String[] references = { Common.HTML_LAYOUT, Common.FO_LAYOUT, Common.HSSF_LAYOUT, Common.DC_MAPPING, Common.RDF_MAPPING, Common.BIBTEX_MAPPING, Common.KML_TEMPLATE, Common.REPLACEMENT_RULESET, Common.TORDF, Common.TOMETS };
 		try {
 			JList ltRels = (JList) getGuiComposite().getWidget( "jtRelations" );
 			DefaultListModel lm = (DefaultListModel) ltRels.getModel();
@@ -212,19 +200,11 @@ public class ReplaceDialog extends CDialog {
 				substitutions.add(Common.DUBLIN_CORE + new Integer(((JComboBox)getGuiComposite().getWidget( "jcb"+Common.DCMI[i])).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtf"+Common.DCMI[i])).getText());
 			}
 			substitutions.add(Common.OAIPROVIDER + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbOAI")).getSelectedIndex()).toString() + (((JCheckBox) getGuiComposite().getWidget("jcbOAIProvider")).isSelected() ? "true":"false"));
-			substitutions.add(Common.HTML_LAYOUT + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbStylesheet")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfStylesheet")).getText());
-			substitutions.add(Common.FO_LAYOUT + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbFO_Stylesheet")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfFO_Stylesheet")).getText());
 			substitutions.add(Common.QUERY + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbQueries")).getSelectedIndex()).toString() + ((JTextArea) getGuiComposite().getWidget("jtaQueries")).getText());
 			substitutions.add(Common.OWNER + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbOwner")).getSelectedIndex()).toString() + ((JComboBox) getGuiComposite().getWidget("jcbUser")).getSelectedItem().toString());
 			substitutions.add(Common.XSLT + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbXSLStylesheet")).getSelectedIndex()).toString() +((JTextField) getGuiComposite().getWidget("jtfXSLStylesheet")).getText()+Common.SEPERATOR+((JComboBox) getGuiComposite().getWidget("jcbDatastreams")).getSelectedItem().toString());
 			substitutions.add(Common.DCMAPPING + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbDCMapping")).getSelectedIndex()).toString() + (((JCheckBox) getGuiComposite().getWidget("jcbDCMIMapping")).isSelected() ? "true":"false"));
-			substitutions.add(Common.DC_MAPPING + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbDC_MAPPING")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfDC_MAPPING")).getText());
-			substitutions.add(Common.RDF_MAPPING + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbRDF_MAPPING")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfRDF_MAPPING")).getText());
-			substitutions.add(Common.BIBTEX_MAPPING + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbBIBTEX_MAPPING")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfBIBTEX_MAPPING")).getText());
-			substitutions.add(Common.KML_TEMPLATE + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbKML_TEMPLATE")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfKML_TEMPLATE")).getText());
-			substitutions.add(Common.REPLACEMENT_RULESET + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbREPLACEMENT_RULESET")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfREPLACEMENT_RULESET")).getText());
-			substitutions.add(Common.TORDF + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbTORDF")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfTORDF")).getText());
-			substitutions.add(Common.TOMETS + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbTOMETS")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfTOMETS")).getText());
+			substitutions.add(references[((JComboBox)getGuiComposite().getWidget( "jcbReferences")).getSelectedIndex()] + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbMReferences")).getSelectedIndex()).toString() + ((JTextField) getGuiComposite().getWidget("jtfReferences")).getText());
 
 			for(int i=0; i < lm.size(); i++) {
 				substitutions.add(Common.RELATIONS + new Integer(((JComboBox)getGuiComposite().getWidget( "jcbRels")).getSelectedIndex()).toString() + (String)lm.getElementAt(i));
@@ -381,8 +361,7 @@ public class ReplaceDialog extends CDialog {
 			CDialogTools.createButtonListener(this, "jbRemoveRelation", "handleRemoveRelationButton");
 			CDialogTools.createButtonListener(this, "jbReplace", "handleReplaceButton");
 			CDialogTools.createButtonListener(this, "jbSeek", "handleSeekButton");			
-			CDialogTools.createButtonListener(this, "jbStylesheet", "handleStylesheetButton");
-			CDialogTools.createButtonListener(this, "jbFO_Stylesheet", "handleFO_StylesheetButton");
+			CDialogTools.createButtonListener(this, "jbReferences", "handleReferencesButton");
 			CDialogTools.createButtonListener(this, "jbXSLStylesheet", "handleXSLStylesheetButton");
 
 			props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);			

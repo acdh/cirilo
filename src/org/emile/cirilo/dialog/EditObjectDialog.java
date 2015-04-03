@@ -244,6 +244,17 @@ public class EditObjectDialog extends CDialog {
 				    		  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
+				    			  if (p.substring(0,1).equals(Common.HSSF_LAYOUT)) {
+				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
+				    					  try {
+				    					  Repository.modifyDatastream (pid, "HSSF_STYLESHEET", null, "R", p.substring(2));
+				    					  } catch (Exception q) {}  
+				    				  }	  
+				    			  }				    		  
+				    		  }
+				    		  
+				    		  for (int j = 0; j < substitutions.size(); j++) {
+				    			  String p = (String) substitutions.get(j);
 				    			  if (p.substring(0,1).equals(Common.HTML_LAYOUT)) {
 				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
 				    					  try {

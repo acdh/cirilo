@@ -145,6 +145,8 @@ public class Common {
     public final static String TORDF = "F";
     
     public final static String TOMETS = "G";
+
+    public final static String HSSF_LAYOUT = "H";
    
     public final static String REPLACE = "1";
 

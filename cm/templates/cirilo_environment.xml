@@ -28,7 +28,7 @@
         <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
           <rdf:Description rdf:about="info:fedora/cirilo:Environment">
             <hasModel rdf:resource="info:fedora/cirilo:DefaultContentModel-1.0" xmlns="info:fedora/fedora-system:def/model#"/>
-          </rdf:Description>
+            <isTemplateFor xmlns="http://ecm.sourceforge.net/relations/0/2/#" rdf:resource="info:fedora/cirilo:DefaultContentModel-1.0" />         </rdf:Description>
         </rdf:RDF>
       </foxml:xmlContent>
     </foxml:datastreamVersion>
@@ -205,6 +205,32 @@
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="HSSF_STYLESHEET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="HSSF_STYLESHEET.1" LABEL="Stylesheet to generate HSSF stream"
+      MIMETYPE="text/xml" SIZE="648">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:gmr="http://www.gnome.org/gnumeric/v7" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:template match="/">
+            <gmr:Workbook>
+              <gmr:Sheets>
+                <gmr:Sheet>
+                  <gmr:Name>GNumeric Template</gmr:Name>
+                  <gmr:MaxCol>-1</gmr:MaxCol>
+                  <gmr:MaxRow>-1</gmr:MaxRow>            
+                  <gmr:Cells>
+                    <!-- 10-empty, 30-integer, 40-float, 60-string -->
+                    <gmr:Cell Row="0" Col="0" ValueType="60">
+                      <gmr:Content>!</gmr:Content>
+                    </gmr:Cell>
+                  </gmr:Cells>
+                </gmr:Sheet>
+              </gmr:Sheets>
+            </gmr:Workbook>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream> 
   <foxml:datastream CONTROL_GROUP="X" ID="CONTEXTtoHTML" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="CONTEXTtoHTML1.0" LABEL="Context to HTML Stylesheet"
       MIMETYPE="text/xml" SIZE="4584">
@@ -502,6 +528,142 @@
               <xsl:number count="vi:page" level="any"/>
             </xsl:variable>
             <mets:smLink xlink:from="{concat('U.',$unit)}" xlink:to="{concat('DIV.',$page)}"/>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="TEITOMETS" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2014-03-21T12:34:12.499Z" ID="TEITOMETS.0"
+      LABEL="Stylesheet to generate dfgMETS from a TEI document" MIMETYPE="text/xml" SIZE="4827">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:mets="http://www.loc.gov/METS/"
+          xmlns:t="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:template match="t:TEI">
+            <mets:mets>
+              <mets:dmdSec ID="DMD.1">
+                <mets:mdWrap MDTYPE="MODS" MIMETYPE="text/xml">
+                  <mets:xmlData>
+                    <mods:mods xmlns:mods="http://www.loc.gov/mods/v3">
+                      <mods:titleInfo>
+                        <mods:title>
+                          <xsl:value-of select="//t:title"/>
+                        </mods:title>
+                      </mods:titleInfo>
+                      <mods:name type="personal">
+                        <mods:displayForm>
+                          <xsl:value-of
+                            select="concat(//t:author/t:persName/t:forename,' ',//t:author/t:persName/t:surname)"
+                          />
+                        </mods:displayForm>
+                        <mods:role>
+                          <mods:roleTerm type="text">author</mods:roleTerm>
+                        </mods:role>
+                      </mods:name>
+                      <mods:originInfo>
+                        <mods:dateIssued>
+                          <xsl:value-of select="t:date"/>
+                        </mods:dateIssued>
+                      </mods:originInfo>
+                    </mods:mods>
+                  </mets:xmlData>
+                </mets:mdWrap>
+              </mets:dmdSec>
+              <mets:amdSec ID="AMD.1">
+                <mets:rightsMD ID="RMD.1">
+                  <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVRIGHTS">
+                    <mets:xmlData>
+                      <dv:rights xmlns:dv="http://dfg-viewer.de/">
+                        <dv:owner/>
+                        <dv:ownerContact/>
+                        <dv:ownerLogo/>
+                        <dv:ownerSiteURL/>
+                      </dv:rights>
+                    </mets:xmlData>
+                  </mets:mdWrap>
+                </mets:rightsMD>
+                <mets:digiprovMD ID="PMD.1">
+                  <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVLINKS">
+                    <mets:xmlData>
+                      <dv:links xmlns:dv="http://dfg-viewer.de/">
+                        <dv:reference/>
+                        <dv:presentation/>
+                      </dv:links>
+                    </mets:xmlData>
+                  </mets:mdWrap>
+                </mets:digiprovMD>
+              </mets:amdSec>
+              <mets:fileSec>
+                <mets:fileGrp USE="DEFAULT">
+                  <xsl:for-each select="//t:surface">
+                    <mets:file ID="{concat('IMG.', position())}" MIMETYPE="image/jpeg">
+                      <mets:FLocat LOCTYPE="URL" xlink:href="{t:graphic/@url}"/>
+                    </mets:file>
+                  </xsl:for-each>
+                </mets:fileGrp>
+              </mets:fileSec>
+              <mets:structMap TYPE="PHYSICAL">
+                <mets:div ID="PHY.1" TYPE="physSequence">
+                  <xsl:for-each select="//t:surface">
+                    <mets:div ID="{concat('DIV.', position())}" ORDER="{position()}" TYPE="page">
+                      <mets:fptr FILEID="{concat('IMG.', position())}"/>
+                    </mets:div>
+                  </xsl:for-each>
+                </mets:div>
+              </mets:structMap>
+              <mets:structMap TYPE="LOGICAL">
+                <mets:div ADMID="AMD.1" DMDID="DMD.1" ID="LOG.0" TYPE="monograph">
+                  <xsl:for-each select="//t:div1">
+                    <mets:div ID="{concat('LOG.', position())}">
+                      <xsl:choose>
+                        <xsl:when test="t:head">
+                          <xsl:attribute name="LABEL">
+                            <xsl:value-of select="t:head"/>
+                          </xsl:attribute>
+                        </xsl:when>
+                        <xsl:when test="@type">
+                          <xsl:attribute name="TYPE">
+                            <xsl:value-of select="@type"/>
+                          </xsl:attribute>
+                        </xsl:when>
+                      </xsl:choose>
+                      <xsl:variable name="level1" select="position()"/>
+                      <xsl:for-each select="t:div2">
+                        <mets:div ID="{concat('LOG.',$level1,'.',position())}">
+                          <xsl:choose>
+                            <xsl:when test="t:head">
+                              <xsl:attribute name="LABEL">
+                                <xsl:value-of select="t:head"/>
+                              </xsl:attribute>
+                            </xsl:when>
+                            <xsl:when test="@type">
+                              <xsl:attribute name="TYPE">
+                                <xsl:value-of select="@type"/>
+                              </xsl:attribute>
+                            </xsl:when>
+                          </xsl:choose>
+                        </mets:div>
+                      </xsl:for-each>
+                    </mets:div>
+                  </xsl:for-each>
+                </mets:div>
+              </mets:structMap>
+              <mets:structLink>
+                <mets:smLink xlink:from="LOG.0" xlink:to="PHY.1"/>
+                <xsl:for-each select="//t:div1">
+                  <mets:smlink xlink:from="{concat('LOG.', position())}"
+                    xlink:to="{concat('DIV.',substring-after(preceding::t:pb[1]/@xml:id,'.'))}"/>
+                  <xsl:variable name="level1" select="position()"/>
+                  <xsl:for-each select="t:div2">
+                    <mets:smLink xlink:from="{concat('LOG.',$level1,'.',position())}"
+                      xlink:to="{concat('DIV.',substring-after(preceding::t:pb[1]/@xml:id,'.'))}"
+                    />
+                  </xsl:for-each>
+                </xsl:for-each>
+              </mets:structLink>
+            </mets:mets>
           </xsl:template>
         </xsl:stylesheet>
       </foxml:xmlContent>

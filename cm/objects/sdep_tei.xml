@@ -30,6 +30,7 @@
             <fedora-model:hasModel rdf:resource="info:fedora/fedora-system:ServiceDeployment-3.0"/>
             <fedora-model:isDeploymentOf rdf:resource="info:fedora/sdef:TEI"/>
             <fedora-model:isContractorOf rdf:resource="info:fedora/cm:TEI"/>
+            <fedora-model:isContractorOf rdf:resource="info:fedora/cm:dfgMETS"/>
           </rdf:Description>
         </rdf:RDF>
       </foxml:xmlContent>
@@ -56,6 +57,13 @@
             <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
             <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="application/pdf"/>
           </fmm:Method>
+          <fmm:Method operationLabel="Generate HSSF stream" operationName="getHSSF" wsdlMsgName="getHSSFRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:DatastreamInputParm label="" parmName="HSSF_STYLESHEET" passBy="URL_REF" required="true"/>
+            <fmm:DatastreamInputParm label="" parmName="TEI_SOURCE" passBy="URL_REF" required="true"/>
+            <fmm:UserInputParm defaultValue="de" parmName="locale" passBy="VALUE" required="false"/>
+            <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="application/vnd.ms-excel"/>
+          </fmm:Method>
         </fmm:MethodMap>
       </foxml:xmlContent>
     </foxml:datastreamVersion>
@@ -73,6 +81,11 @@
           </fbs:DSInput>
           <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="FO_STYLESHEET">
             <fbs:DSInputLabel>FO_STYLESHEET Binding</fbs:DSInputLabel>
+            <fbs:DSMIME>text/xml</fbs:DSMIME>
+            <fbs:DSInputInstruction/>
+          </fbs:DSInput>
+          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="HSSF_STYLESHEET">
+            <fbs:DSInputLabel>HSSF_STYLESHEET Binding</fbs:DSInputLabel>
             <fbs:DSMIME>text/xml</fbs:DSMIME>
             <fbs:DSInputInstruction/>
           </fbs:DSInput>
@@ -113,6 +126,12 @@
             <wsdl:part name="locale" type="this:STRING"/>
             <wsdl:part name="mode" type="this:STRING"/>
           </wsdl:message>
+          <wsdl:message name="getHSSFRequest">
+            <wsdl:part name="HSSF_STYLESHEET" type="this:STRING"/>
+            <wsdl:part name="TEI_SOURCE" type="this:STRING"/>
+            <wsdl:part name="locale" type="this:STRING"/>
+            <wsdl:part name="mode" type="this:STRING"/>
+          </wsdl:message>
           <wsdl:message name="getVoyantRequest">
             <wsdl:part name="TEI_SOURCE" type="this:STRING"/>
           </wsdl:message>
@@ -126,6 +145,10 @@
             </wsdl:operation>
             <wsdl:operation name="getPDF">
               <wsdl:input message="this:getPDFRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="getHSSF">
+              <wsdl:input message="this:getHSSFRequest"/>
               <wsdl:output message="this:dissemResponse"/>
             </wsdl:operation>
             <wsdl:operation name="getVoyant">
@@ -156,6 +179,15 @@
               </wsdl:input>
               <wsdl:output>
                 <mime:content type="application/pdf"/>
+              </wsdl:output>
+            </wsdl:operation>
+            <wsdl:operation name="getHSSF">
+              <http:operation location="toHSSF?source=(TEI_SOURCE)&amp;style=(HSSF_STYLESHEET)&amp;model=TEI&amp;locale=(locale)&amp;mode=(mode)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="application/vnd.ms-excel"/>
               </wsdl:output>
             </wsdl:operation>
           </wsdl:binding>

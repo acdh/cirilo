@@ -21,11 +21,11 @@ package org.emile.cirilo.gui;
 
 import org.emile.cirilo.*;
 
-import org.emile.cirilo.ServiceNames;
 import java.util.ResourceBundle;
 
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.gui.CGuiComposite;
+
 import java.awt.*;
 
 import javax.swing.*;
@@ -55,8 +55,7 @@ public class GuiReplaceDialog extends CGuiComposite {
 	JTextField jtfRelation;
 	JTextField jtfCoverage;
 	JTextField jtfRights;
-	JTextField jtfStylesheet;
-	JTextField jtfFO_Stylesheet;
+	JTextField jtfReferences;
 	JComboBox jcbTitle;
 	JComboBox jcbSubject;
 	JComboBox jcbDescription;
@@ -71,8 +70,6 @@ public class GuiReplaceDialog extends CGuiComposite {
 	JComboBox jcbRelation;
 	JComboBox jcbCoverage;
 	JComboBox jcbRights;
-	JComboBox jcbStylesheet;
-	JComboBox jcbFO_Stylesheet;
 	JComboBox jcbQueries;
 	JCheckBox jcbOAIProvider;
 	JCheckBox jcbDCMIMapping;
@@ -81,34 +78,22 @@ public class GuiReplaceDialog extends CGuiComposite {
 	JComboBox jcbOwner;
 	JComboBox jcbUser;
 	JComboBox jcbDCMapping;
+	JComboBox jcbReferences;
+	JComboBox jcbMReferences;
+
+	
 	JList jtRelations;
 	JList jtNonRelations;
 	JTextField jtfXSLStylesheet;
 	JComboBox jcbXSLStylesheet;
 	JComboBox jcbDatastreams;
 	
-	JComboBox jcbDC_MAPPING;
-	JComboBox jcbRDF_MAPPING;
-	JComboBox jcbBIBTEX_MAPPING;
-	JComboBox jcbKML_TEMPLATE;
-	JComboBox jcbREPLACEMENT_RULESET;
-	JComboBox jcbTORDF;
-	JComboBox jcbTOMETS;
-
-	JTextField jtfDC_MAPPING;
-	JTextField jtfRDF_MAPPING;
-	JTextField jtfBIBTEX_MAPPING;
-	JTextField jtfKML_TEMPLATE;
-	JTextField jtfREPLACEMENT_RULESET;
-	JTextField jtfTORDF;
-	JTextField jtfTOMETS;
 	
 	JButton jbXSLStylesheet; 
-	JButton jbStylesheet;
-	JButton jbFO_Stylesheet;
 	JButton jbAddRelation;
 	JButton jbRemoveRelation;
 	JTextArea jtaQueries;
+	JButton jbReferences;
 
 	JButton jbReplace;
 	JButton jbClose;
@@ -166,32 +151,16 @@ public class GuiReplaceDialog extends CGuiComposite {
 		setWidgetName(jcbRelation, "jcbRelation");
 		setWidgetName(jcbCoverage, "jcbCoverage");
 		setWidgetName(jcbRights, "jcbRights");
-		setWidgetName(jtfStylesheet, "jtfStylesheet");
-		setWidgetName(jtfFO_Stylesheet, "jtfFO_Stylesheet");
-		setWidgetName(jcbStylesheet, "jcbStylesheet");
-		setWidgetName(jcbFO_Stylesheet, "jcbFO_Stylesheet");
-		setWidgetName(jbStylesheet, "jbStylesheet");
-		setWidgetName(jbFO_Stylesheet, "jbFO_Stylesheet");
+		setWidgetName(jtfReferences, "jtfReferences");
+		setWidgetName(jcbReferences, "jcbReferences");
+		setWidgetName(jcbMReferences, "jcbMReferences");
+		setWidgetName(jbReferences, "jbReferences");
+
 		setWidgetName(jcbOwner, "jcbOwner");
 		setWidgetName(jcbUser, "jcbUser");
 		setWidgetName(jbSeek, "jbSeek");
 		setWidgetName(jtfSeek, "jtfSeek");
 		
-		setWidgetName(jcbDC_MAPPING, "jcbDC_MAPPING");
-		setWidgetName(jcbRDF_MAPPING, "jcbRDF_MAPPING");
-		setWidgetName(jcbBIBTEX_MAPPING, "jcbBIBTEX_MAPPING");
-		setWidgetName(jcbKML_TEMPLATE, "jcbKML_TEMPLATE");
-		setWidgetName(jcbREPLACEMENT_RULESET, "jcbREPLACEMENT_RULESET");
-		setWidgetName(jcbTORDF, "jcbTORDF");
-		setWidgetName(jcbTOMETS, "jcbTOMETS");
-		setWidgetName(jtfDC_MAPPING, "jtfDC_MAPPING");
-		setWidgetName(jtfRDF_MAPPING, "jtfRDF_MAPPING");
-		setWidgetName(jtfBIBTEX_MAPPING, "jtfBIBTEX_MAPPING");
-		setWidgetName(jtfKML_TEMPLATE, "jtfKML_TEMPLATE");
-		setWidgetName(jtfREPLACEMENT_RULESET, "jtfREPLACEMENT_RULESET");
-		setWidgetName(jtfTORDF, "jtfTORDF");
-		setWidgetName(jtfTOMETS, "jtfTOMETS");
-
 		setWidgetName(jtaQueries, "jtaQueries");
 		setWidgetName(jcbQueries, "jcbQueries");
 
@@ -222,6 +191,7 @@ public class GuiReplaceDialog extends CGuiComposite {
 		Object[] modes = { res.getString("unmod"), res.getString("replace") };
 		Object[] cmodes = { res.getString("unmod"), res.getString("simulate"), res.getString("apply")};
 		Object[] datastreams = { "BIBTEX", "DC", "METS_SOURCE", "RELS-EXT", "TEI_SOURCE" };
+		Object[] references = { "STYLESHEET", "FO_STYLESHEET", "HSSF_STYLESHEET", "DC_MAPPING", "RDF_MAPPING", "BIBTEX_MAPPING", "KML_TEMPLATE", "REPLACEMENT_RULESET", "TORDF", "TOMETS"};
 		
 		container = new Container();
 		container.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
@@ -295,52 +265,12 @@ public class GuiReplaceDialog extends CGuiComposite {
 		jcbRights = new JComboBox(states);
 		jcbRights.setPreferredSize(new Dimension(88, jcbRights.getPreferredSize().height));
 
-		jtfStylesheet = new JTextField();
-		jcbStylesheet = new JComboBox(modes);
-		jbStylesheet = new JButton(new ImageIcon(Cirilo.class.getResource("seek.gif")));
-		jcbStylesheet.setPreferredSize(new Dimension(88, jcbStylesheet.getPreferredSize().height));
-		jtfStylesheet.setPreferredSize(new Dimension(1500, jtfStylesheet.getPreferredSize().height));
-
-		jtfFO_Stylesheet = new JTextField();
-		jcbFO_Stylesheet = new JComboBox(modes);
-		jbFO_Stylesheet = new JButton(new ImageIcon(Cirilo.class.getResource("seek.gif")));
-		jcbFO_Stylesheet.setPreferredSize(new Dimension(88, jcbFO_Stylesheet.getPreferredSize().height));
-		jtfFO_Stylesheet.setPreferredSize(new Dimension(1500, jtfFO_Stylesheet.getPreferredSize().height));
-
-		jtfDC_MAPPING = new JTextField();
-		jcbDC_MAPPING = new JComboBox(modes);
-		jcbDC_MAPPING.setPreferredSize(new Dimension(88, jcbDC_MAPPING.getPreferredSize().height));
-		jtfDC_MAPPING.setPreferredSize(new Dimension(1500, jtfDC_MAPPING.getPreferredSize().height));
-		
-		jtfRDF_MAPPING = new JTextField();
-		jcbRDF_MAPPING = new JComboBox(modes);
-		jcbRDF_MAPPING.setPreferredSize(new Dimension(88, jcbRDF_MAPPING.getPreferredSize().height));
-		jtfRDF_MAPPING.setPreferredSize(new Dimension(1500, jtfRDF_MAPPING.getPreferredSize().height));
-	
-		jtfBIBTEX_MAPPING = new JTextField();
-		jcbBIBTEX_MAPPING = new JComboBox(modes);
-		jcbBIBTEX_MAPPING.setPreferredSize(new Dimension(88, jcbBIBTEX_MAPPING.getPreferredSize().height));
-		jtfBIBTEX_MAPPING.setPreferredSize(new Dimension(1500, jtfBIBTEX_MAPPING.getPreferredSize().height));
-		
-		jtfKML_TEMPLATE = new JTextField();
-		jcbKML_TEMPLATE = new JComboBox(modes);
-		jcbKML_TEMPLATE.setPreferredSize(new Dimension(88, jcbKML_TEMPLATE.getPreferredSize().height));
-		jtfKML_TEMPLATE.setPreferredSize(new Dimension(1500, jtfKML_TEMPLATE.getPreferredSize().height));
-		
-		jtfREPLACEMENT_RULESET = new JTextField();
-		jcbREPLACEMENT_RULESET = new JComboBox(modes);
-		jcbREPLACEMENT_RULESET.setPreferredSize(new Dimension(88, jcbREPLACEMENT_RULESET.getPreferredSize().height));
-		jtfREPLACEMENT_RULESET.setPreferredSize(new Dimension(1500, jtfREPLACEMENT_RULESET.getPreferredSize().height));
-		
-		jtfTORDF = new JTextField();
-		jcbTORDF = new JComboBox(modes);
-		jcbTORDF.setPreferredSize(new Dimension(88, jcbTORDF.getPreferredSize().height));
-		jtfTORDF.setPreferredSize(new Dimension(1500, jtfTORDF.getPreferredSize().height));
-		
-		jtfTOMETS = new JTextField();
-		jcbTOMETS = new JComboBox(modes);
-		jcbTOMETS.setPreferredSize(new Dimension(88, jcbTOMETS.getPreferredSize().height));
-		jtfTOMETS.setPreferredSize(new Dimension(1500, jtfTOMETS.getPreferredSize().height));
+		jtfReferences = new JTextField();
+		jtfReferences.setPreferredSize(new Dimension(900, jtfReferences.getPreferredSize().height));
+		jcbMReferences = new JComboBox(modes);
+		jcbReferences = new JComboBox(references);
+		jbReferences = new JButton(new ImageIcon(Cirilo.class.getResource("seek.gif")));
+		jcbMReferences.setPreferredSize(new Dimension(88, jcbMReferences.getPreferredSize().height));
 
 		
 		jcbOwner = new JComboBox(modes);
@@ -451,40 +381,12 @@ public class GuiReplaceDialog extends CGuiComposite {
 				
 		
 		Container t1 = new Container();
-		t1.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
-        t1.add(new JLabel("STYLESHEET"));
-		t1.add(jcbStylesheet);
-		Box c1  = Box.createHorizontalBox();
-		c1.add(jtfStylesheet);
-		c1.add(jbStylesheet);
-		t1.add( c1, "wrap 5" );
-        t1.add(new JLabel("FO_STYLESHEET"));
-		t1.add(jcbFO_Stylesheet);
-		Box c2  = Box.createHorizontalBox();
-		c2.add(jtfFO_Stylesheet);
-		c2.add(jbFO_Stylesheet);
-		t1.add( c2, "wrap 5" );
-        t1.add(new JLabel("DC_MAPPING"));
-		t1.add(jcbDC_MAPPING);
-		t1.add( jtfDC_MAPPING, "wrap 5" );
-        t1.add(new JLabel("RDF_MAPPING"));
-		t1.add(jcbRDF_MAPPING);
-		t1.add( jtfRDF_MAPPING, "wrap 5" );
-        t1.add(new JLabel("BIBTEX_MAPPING"));
-		t1.add(jcbBIBTEX_MAPPING);
-		t1.add( jtfBIBTEX_MAPPING, "wrap 5" );
-        t1.add(new JLabel("KML_TEMPLATE"));
-		t1.add(jcbKML_TEMPLATE);
-		t1.add( jtfKML_TEMPLATE, "wrap 5" );
-        t1.add(new JLabel("REPLACEMENT_RULESET"));
-		t1.add(jcbREPLACEMENT_RULESET);
-		t1.add( jtfREPLACEMENT_RULESET, "wrap 5" );
-        t1.add(new JLabel("TORDF"));
-		t1.add(jcbTORDF);
-		t1.add( jtfTORDF, "wrap 5" );
-        t1.add(new JLabel("TOMETS"));
-		t1.add(jcbTOMETS);
-		t1.add( jtfTOMETS, "wrap 5" );
+//		t1.setLayout(new net.miginfocom.swing.MigLayout("fillx"));
+		t1.setLayout(new net.miginfocom.swing.MigLayout("","[][][grow][]",""));
+        t1.add(jcbReferences);
+		t1.add(jcbMReferences);
+	    t1.add(jtfReferences);
+		t1.add(jbReferences);
 
 		
 		Container t2 = new Container();

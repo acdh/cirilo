@@ -152,6 +152,32 @@
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="HSSF_STYLESHEET" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="HSSF_STYLESHEET.1" LABEL="Stylesheet to generate HSSF stream"
+      MIMETYPE="text/xml" SIZE="648">
+      <foxml:xmlContent>
+        <xsl:stylesheet version="1.0" xmlns:gmr="http://www.gnome.org/gnumeric/v7" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:template match="/">
+            <gmr:Workbook>
+              <gmr:Sheets>
+                <gmr:Sheet>
+                  <gmr:Name>GNumeric Template</gmr:Name>
+                  <gmr:MaxCol>-1</gmr:MaxCol>
+                  <gmr:MaxRow>-1</gmr:MaxRow>            
+                  <gmr:Cells>
+                    <!-- 10-empty, 30-integer, 40-float, 60-string -->
+                    <gmr:Cell Row="0" Col="0" ValueType="60">
+                      <gmr:Content>!</gmr:Content>
+                    </gmr:Cell>
+                  </gmr:Cells>
+                </gmr:Sheet>
+              </gmr:Sheets>
+            </gmr:Workbook>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="BIBTEXtoFO" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="BIBTEXtoFO1.0" LABEL="BibTeX to FO Stylesheet"
       MIMETYPE="text/xml" SIZE="1128">
@@ -7117,7 +7143,7 @@
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="TEITOMETS" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2014-03-21T12:34:12.499Z" ID="TEITOMETS.0"
-      LABEL="Transformation for DFG Viewer from TEI to METS Format" MIMETYPE="text/xml" SIZE="4827">
+      LABEL="Stylesheet to generate dfgMETS from a TEI document" MIMETYPE="text/xml" SIZE="4827">
       <foxml:xmlContent>
         <xsl:stylesheet version="1.0" xmlns:mets="http://www.loc.gov/METS/"
           xmlns:t="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"

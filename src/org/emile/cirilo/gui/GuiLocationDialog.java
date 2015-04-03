@@ -97,7 +97,7 @@ public class GuiLocationDialog extends CGuiComposite {
 		ResourceBundle res=(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
 		
 		container = new Container();
-		container.setLayout(new net.miginfocom.swing.MigLayout("insets 10","[grow]",""));
+		container.setLayout(new net.miginfocom.swing.MigLayout("","[][grow]",""));
 
 		jtfLocation = new JTextField();
 		jtlLocation = new JLabel();
@@ -106,7 +106,7 @@ public class GuiLocationDialog extends CGuiComposite {
 		jbCancel = new JButton(res.getString("cancel"));
 		
 		container.add(jtlLocation);
-		container.add( jtfLocation, "height 100:500:1000, wrap 10");
+		container.add( jtfLocation, "span, grow");
 		Box c0  = Box.createHorizontalBox();
 		c0.add( jbOK );
 		c0.add( new JLabel (" "));

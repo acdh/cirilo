@@ -46,6 +46,11 @@
             <fbs:DSMIME>text/xml</fbs:DSMIME>
             <fbs:DSInputInstruction/>
           </fbs:DSInput>
+          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="HSSF_STYLESHEET">
+            <fbs:DSInputLabel>HSSF_STYLESHEET Binding</fbs:DSInputLabel>
+            <fbs:DSMIME>text/xml</fbs:DSMIME>
+            <fbs:DSInputInstruction/>
+          </fbs:DSInput>
           <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="QUERY">
             <fbs:DSInputLabel>QUERY Binding</fbs:DSInputLabel>
             <fbs:DSMIME>text/plain</fbs:DSMIME>
@@ -68,6 +73,14 @@
             <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
             <fmm:UserInputParm defaultValue="" parmName="params" passBy="VALUE" required="false"/>
             <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/html"/>
+          </fmm:Method>
+          <fmm:Method operationLabel="Generate HSSF stream" operationName="getHSSF" wsdlMsgName="getHSSFRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:DatastreamInputParm label="" parmName="HSSF_STYLESHEET" passBy="URL_REF" required="true"/>
+            <fmm:DatastreamInputParm label="" parmName="QUERY" passBy="URL_REF" required="true"/>
+            <fmm:UserInputParm defaultValue="de" parmName="locale" passBy="VALUE" required="false"/>
+            <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
+            <fmm:UserInputParm defaultValue="" parmName="params" passBy="VALUE" required="false"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="application/vnd.ms-excel"/>
           </fmm:Method>
           <fmm:Method operationLabel="XML representation" operationName="getXML" wsdlMsgName="getXMLRequest" wsdlMsgOutput="dissemResponse">
             <fmm:DatastreamInputParm label="" parmName="STYLESHEET" passBy="URL_REF" required="true"/>
@@ -99,6 +112,14 @@
             <wsdl:part name="QUERY" type="this:STRING"/>
             <wsdl:part name="locale" type="this:STRING"/>
             <wsdl:part name="mode" type="this:STRING"/>
+            <wsdl:part name="params" type="this:STRING"/>
+          </wsdl:message>
+          <wsdl:message name="getHSSFRequest">
+            <wsdl:part name="HSSF_STYLESHEET" type="this:STRING"/>
+            <wsdl:part name="QUERY" type="this:STRING"/>
+            <wsdl:part name="locale" type="this:STRING"/>
+            <wsdl:part name="mode" type="this:STRING"/>
+            <wsdl:part name="params" type="this:STRING"/>
           </wsdl:message>
           <wsdl:message name="getXMLRequest">
             <wsdl:part name="STYLESHEET" type="this:STRING"/>
@@ -110,6 +131,10 @@
           <wsdl:portType name="QueryPortType">
             <wsdl:operation name="get">
               <wsdl:input message="this:getRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="getHSSF">
+              <wsdl:input message="this:getHSSFRequest"/>
               <wsdl:output message="this:dissemResponse"/>
             </wsdl:operation>
             <wsdl:operation name="getXML">
@@ -131,6 +156,15 @@
               </wsdl:input>
               <wsdl:output>
                 <mime:content type="text/html"/>
+              </wsdl:output>
+            </wsdl:operation>
+            <wsdl:operation name="getHSSF">
+              <http:operation location="queryToHSSF?query=(QUERY)&amp;style=(HSSF_STYLESHEET)&amp;locale=(locale)&amp;mode=(mode)&amp;params=(params)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="application/vnd.ms-excel"/>
               </wsdl:output>
             </wsdl:operation>
             <wsdl:operation name="getXML">

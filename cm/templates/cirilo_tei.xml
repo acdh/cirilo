@@ -91,19 +91,23 @@
     </foxml:datastreamVersion>
   </foxml:datastream>
    <foxml:datastream CONTROL_GROUP="R" ID="TORDF" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="TORDF.1"
-      LABEL="XSLT Stylesheet to create RDF-Triples from TEI_SOURCE" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TORDF/content" TYPE="URL"/>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
+     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="TORDF.1"
+       LABEL="XSLT Stylesheet to create RDF-Triples from TEI_SOURCE" MIMETYPE="text/xml">
+       <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TORDF/content" TYPE="URL"/>
+     </foxml:datastreamVersion>
+   </foxml:datastream>
+   <foxml:datastream CONTROL_GROUP="R" ID="HSSF_STYLESHEET" STATE="A" VERSIONABLE="false">
+     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="HSSF_STYLESHEET.1" LABEL="Stylesheet to generate HSSF stream" MIMETYPE="text/xml">
+       <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/HSSF_STYLESHEET/content" TYPE="URL"/>
+     </foxml:datastreamVersion>
+   </foxml:datastream>
    <foxml:datastream CONTROL_GROUP="E" ID="PID" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="PID.1" LABEL="Persistent Identifier" MIMETYPE="text/html">
       <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:TEI/methods/sdef:TEI/get" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream> 
   <foxml:datastream CONTROL_GROUP="R" ID="STYLESHEET" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="STYLESHEET.1"
-      LABEL="TEI resp. BibTeX to HTML Stylesheet" MIMETYPE="text/xml">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="STYLESHEET.1" LABEL="TEI resp. BibTeX to HTML Stylesheet" MIMETYPE="text/xml">
       <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TEItoHTML/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>

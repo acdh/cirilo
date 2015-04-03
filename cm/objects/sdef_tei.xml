@@ -48,6 +48,10 @@
             <fmm:UserInputParm defaultValue="de" parmName="locale" passBy="VALUE" required="false"/>
             <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
           </fmm:Method>
+          <fmm:Method operationLabel="Generate HSSF stream" operationName="getHSSF">
+            <fmm:UserInputParm defaultValue="de" parmName="locale" passBy="VALUE" required="false"/>
+            <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
+          </fmm:Method>
         </fmm:MethodMap>
       </foxml:xmlContent>
     </foxml:datastreamVersion>

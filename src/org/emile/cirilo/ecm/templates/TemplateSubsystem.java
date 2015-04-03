@@ -297,11 +297,13 @@ public class TemplateSubsystem {
         		setLocation(newPid, "DC_MAPPING", "DC_MAPPING", ownerid);
         		setLocation(newPid, "RDF_MAPPING", "RDF_MAPPING", ownerid);
         		setLocation(newPid, "REPLACEMENT_RULESET", "REPLACEMENT_RULESET", ownerid);
+        		setLocation(newPid, "HSSF_STYLESHEET", "HSSF_STYLESHEET", ownerid);
             }
         	if (newPid.contains("Context")) { 
         		setLocation(newPid, "STYLESHEET", "CONTEXTtoHTML", ownerid);
         		setLocation(newPid, "FO_STYLESHEET", "CONTEXTtoFO", ownerid);
         		setLocation(newPid, "KML_TEMPLATE", "KML_TEMPLATE", ownerid);
+        		setLocation(newPid, "HSSF_STYLESHEET", "HSSF_STYLESHEET", ownerid);
             }
         	if (mode) {
         		byte[] buf = Repository.getDatastream(templatepid, "QUERY", (String) null);

@@ -52,6 +52,7 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.BinaryResource;
 import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.business.Scp;
+import org.emile.cirilo.business.Unzipper;
 
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
@@ -109,12 +110,45 @@ public class TEI {
     	try {
 			this.PID = "";
     		if (!eXist) {
-    			this.file = new File (file);
-    			this.collection="";
-    			if (this.file.exists()) { 
-    				this.tei = builder.build( this.file );
-    			}   
-    			return this.file.exists();
+    			
+    			if (file.contains(".docx")) {
+                    try {
+	    				Unzipper unzipper = new Unzipper();
+
+	    				String tmpDir = System.getProperty("java.io.tmpdir");
+	    				
+			            unzipper.unzip(file, tmpDir, "");
+	                    SAXBuilder builder = new SAXBuilder();                
+	                    org.jdom.Document docx = builder.build (new File(tmpDir+"word/document.xml"));		                    
+                    
+			            System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
+			            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+			            StreamSource is =  new StreamSource(user.getUrl().substring(0,user.getUrl().lastIndexOf("/")+1)+"tei/docx/from/docxtotei.xsl"); 				            
+			            Transformer transformer = transformerFactory.newTransformer(is);
+			            transformer.setParameter("word-directory", tmpDir.substring(0,tmpDir.length()-1).replace('\\', '/'));
+			            
+		        		JDOMSource in = new JDOMSource(docx);
+		        		JDOMResult out = new JDOMResult();
+		        		transformer.transform(in, out); 			        	
+		        		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");
+		        		
+		        		XMLOutputter outputter = new XMLOutputter();
+	    				set(outputter.outputString(out.getResult()));
+                        return true;		    				
+                    } catch (Exception q){
+                    	q.printStackTrace();
+                    	return false;
+                    }                    
+    			} else {    		
+    			
+    				this.file = new File (file);
+    				this.collection="";
+    				if (this.file.exists()) { 
+    					this.tei = builder.build( this.file );
+    				}   
+    				return this.file.exists();
+    			}
     		} else {
     			eXist eX = new eXist(file);
     			org.xmldb.api.base.Collection collection = DatabaseManager.getCollection( URI + eX.getCollection(), user.getExistUser(), user.getExistPasswd() );
