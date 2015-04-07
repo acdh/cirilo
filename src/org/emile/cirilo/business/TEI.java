@@ -139,7 +139,34 @@ public class TEI {
                     } catch (Exception q){
                     	q.printStackTrace();
                     	return false;
-                    }                    
+                    }   
+    			} else if (file.contains(".odt")) {
+                    try {
+	    				Unzipper unzipper = new Unzipper();
+
+	    				String tmpDir = System.getProperty("java.io.tmpdir");
+	    				
+			            unzipper.unzip(file, tmpDir, "");
+	                    SAXBuilder builder = new SAXBuilder();                
+	                    org.jdom.Document docx = builder.build (new File(tmpDir+"content.xml"));		                    
+                    
+			            System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
+			            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+			            StreamSource is =  new StreamSource(user.getUrl().substring(0,user.getUrl().lastIndexOf("/")+1)+"tei/odt/odttotei.xsl"); 				            
+			            Transformer transformer = transformerFactory.newTransformer(is);
+			            
+		        		JDOMSource in = new JDOMSource(docx);
+		        		JDOMResult out = new JDOMResult();
+		        		transformer.transform(in, out); 			        	
+		        		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");
+		        		
+		        		XMLOutputter outputter = new XMLOutputter();
+	    				set(outputter.outputString(out.getResult()));
+                        return true;		    				
+                    } catch (Exception q){
+                    	return false;
+                    }                                            
     			} else {    		
     			
     				this.file = new File (file);

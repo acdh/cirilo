@@ -1052,7 +1052,7 @@ public class IngestObjectDialog extends CDialog {
 		 		for (int i = 0; i < children.length; i++) {
 		 			treeWalk(children[i],false);
 		 		}
-	     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml")) {
+	     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml") || file.getAbsolutePath().toLowerCase().endsWith(".docx")|| file.getAbsolutePath().toLowerCase().endsWith(".odt")) {
 	     		files.add(file.getAbsolutePath());
 	     	}
 		  } catch (Exception e) {e.printStackTrace();}	
