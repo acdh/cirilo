@@ -244,97 +244,61 @@ public class EditObjectDialog extends CDialog {
 				    		  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.HSSF_LAYOUT)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try {
-				    					  Repository.modifyDatastream (pid, "HSSF_STYLESHEET", null, "R", p.substring(2));
-				    					  } catch (Exception q) {}  
-				    				  }	  
-				    			  }				    		  
+					    		  if (p.substring(0,1).equals(Common.HSSF_LAYOUT)) {
+				    				  addReference(pid, "HSSF_STYLESHEET", p);
+				    		      }
 				    		  }
 				    		  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.HTML_LAYOUT)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try {
-				    					  Repository.modifyDatastream (pid, "STYLESHEET", null, "R", p.substring(2));
-				    					 } catch (Exception q) {}  
-
-				    				  }	  
-				    			  }
+					    		  if (p.substring(0,1).equals(Common.HTML_LAYOUT)) {
+				    				  addReference(pid, "STYLESHEET", p);
+				    		      }
 				    		  }
  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.DC_MAPPING)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try {
-				    					  Repository.modifyDatastream (pid, "DC_MAPPING", null, "R", p.substring(2));
-				    					 } catch (Exception q) {}  
-				    				  }	  
-				    			  }
+					    		  if (p.substring(0,1).equals(Common.DC_MAPPING)) {
+				    				  addReference(pid, "DC_MAPPING", p);
+				    		      }
 				    		  }
  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.RDF_MAPPING)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try {
-				    					  Repository.modifyDatastream (pid, "RDF_MAPPING", null, "R", p.substring(2));
-				    					 } catch (Exception q) {}  
-				    				  }	  
+					    		  if (p.substring(0,1).equals(Common.RDF_MAPPING)) {
+				    				  addReference(pid, "RDF_MAPPING", p);
+				    		      }
+				    		  }
+				    		  for (int j = 0; j < substitutions.size(); j++) {
+				    			  String p = (String) substitutions.get(j);
+					    		  if (p.substring(0,1).equals(Common.BIBTEX_MAPPING)) {
+				    				  addReference(pid, "BIBTEX_MAPPING", p);
+					    		  }	  
+				    		  }
+				    		  for (int j = 0; j < substitutions.size(); j++) {
+				    			  String p = (String) substitutions.get(j);
+					    		  if (p.substring(0,1).equals(Common.KML_TEMPLATE)) {
+				    				  addReference(pid, "KML_TEMPLATE", p);
+					    		  }	  			    			  
+				    		  }
+				    		  for (int j = 0; j < substitutions.size(); j++) {
+				    			  String p = (String) substitutions.get(j);
+					    		  if (p.substring(0,1).equals(Common.REPLACEMENT_RULESET)) {
+				    				  addReference(pid, "REPLACEMENT_RULESET", p);
 				    			  }
 				    		  }
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.BIBTEX_MAPPING)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try {
-				    					  Repository.modifyDatastream (pid, "BIBTEX_MAPPING", null, "R", p.substring(2));
-				    					 } catch (Exception q) {}  
-				    				  }	  
+					    		  if (p.substring(0,1).equals(Common.TORDF)) {
+				    				  addReference(pid, "TORDF", p);
 				    			  }
 				    		  }
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.KML_TEMPLATE)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try {
-				    					  Repository.modifyDatastream (pid, "KML_TEMPLATE", null, "R", p.substring(2));
-				    					 } catch (Exception q) {}  
-				    				  }	  
+					    		  if (p.substring(0,1).equals(Common.TOMETS)) {
+				    				  addReference(pid, "TOMETS", p);
 				    			  }
-				    		  }
-				    		  for (int j = 0; j < substitutions.size(); j++) {
-				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.REPLACEMENT_RULESET)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try {
-				    					  Repository.modifyDatastream (pid, "REPLACEMENT_RULESET", null, "R", p.substring(2));
-				    					 } catch (Exception q) {}  
-				    				  }	  
-				    			  }
-				    		  }
-				    		  for (int j = 0; j < substitutions.size(); j++) {
-				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.TORDF)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-                                          try {
-				    					  Repository.modifyDatastream (pid, "TORDF", null, "R", p.substring(2));
- 				    					 } catch (Exception q) {}  
-				    				  }	  
-				    			  }
-				    		  }
-				    		  for (int j = 0; j < substitutions.size(); j++) {
-				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.TOMETS)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try {
-				    					  Repository.modifyDatastream (pid, "TOMETS", null, "R", p.substring(2));
-				    											    					 } catch (Exception q) {}  
-				    				  }	  
-				    			  }
+				    			  
 				    		  }
  				    		  
 				    		  				    		  
@@ -376,13 +340,9 @@ public class EditObjectDialog extends CDialog {
 				    		  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
-				    			  if (p.substring(0,1).equals(Common.FO_LAYOUT)) {
-				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-				    					  try  {
-				    					  Repository.modifyDatastream (pid, "FO_STYLESHEET", null, "R", p.substring(2));
-				    					 } catch (Exception q) {}  
-				    				  }	  
-				    			  }				    		  
+					    		  if (p.substring(0,1).equals(Common.FO_LAYOUT)) {
+				    				  addReference(pid, "FO_STYLESHEET", p);
+				    			  }				    			  
 				    		  }
 				    		  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
@@ -472,7 +432,27 @@ public class EditObjectDialog extends CDialog {
 			}
 		}.start();
 		
+	}
+	
+	private void addReference (String pid, String dsid, String p) 
+	{
+        try {
+      	  if (p.substring(1,2).equals(Common.REPLACE)) {
+      		  Repository.modifyDatastream (pid, dsid , null, "R", p.substring(2));
+      	  }
+		} catch (Exception q) {			
 		}
+        
+       try {
+      	  if (p.substring(1,2).equals(Common.ADD)) {
+			  Repository.addDatastream(pid, dsid,  "Reference to "+dsid, "text/xml",  p.substring(2));
+      	  }
+	   } catch (Exception q) {			
+			 try {
+	      		  Repository.modifyDatastream (pid, dsid , null, "R", p.substring(2));
+			 } catch (Exception e) {}  
+	   }
+	}      
 	
 	public void handleManageHandle(boolean op, String handle, String project, String start, boolean mode)
 	throws Exception {

@@ -43,7 +43,7 @@
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="HSSF_STYLESHEET" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="HSSF_STYLESHEET.1" LABEL="Stylesheet to generate HSSF stream" MIMETYPE="text/xml">
-      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/HSSF_STYLESHEET/content" TYPE="URL"/>
+      <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/QUERYtoHSSF/content" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream> 
   <foxml:datastream CONTROL_GROUP="M" ID="THUMBNAIL" STATE="A" VERSIONABLE="false">

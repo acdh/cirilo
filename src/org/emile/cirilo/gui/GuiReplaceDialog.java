@@ -267,7 +267,7 @@ public class GuiReplaceDialog extends CGuiComposite {
 
 		jtfReferences = new JTextField();
 		jtfReferences.setPreferredSize(new Dimension(900, jtfReferences.getPreferredSize().height));
-		jcbMReferences = new JComboBox(modes);
+		jcbMReferences = new JComboBox(states);
 		jcbReferences = new JComboBox(references);
 		jbReferences = new JButton(new ImageIcon(Cirilo.class.getResource("seek.gif")));
 		jcbMReferences.setPreferredSize(new Dimension(88, jcbMReferences.getPreferredSize().height));

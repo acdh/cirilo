@@ -37,6 +37,113 @@
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="QUERYtoHTML" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" 
+      ID="QUERYtoHTML1.0" LABEL="Stylesheet to create HTML representation" MIMETYPE="text/xml" SIZE="386">
+      <foxml:xmlContent>
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result"
+          xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xs" version="2.0">
+          <xsl:output method="xhtml" indent="yes" encoding="UTF-8"/>
+          <xsl:template match="/">
+            <html>
+              <head>
+                <meta charset="utf-8"/>
+                <title>SPARQL-result</title>
+                <link href="http://gams.uni-graz.at/mws/css/flexible-grids.css" rel="stylesheet"
+                  type="text/css"/>
+                <link href="http://gams.uni-graz.at/mws/css/mws.css" rel="stylesheet"
+                  type="text/css"/>
+              </head>
+              <body>
+                <table id="myTable" class="tablesorter">
+                  <thead>
+                    <xsl:for-each select="//s:result[1]/s:*">
+                      <tr>
+                        <td>
+                          <xsl:value-of select="name()"/>
+                        </td>
+                      </tr>
+                    </xsl:for-each>
+                    <tbody>
+                      <xsl:apply-templates select="//s:result"/>
+                    </tbody>
+                  </thead>
+                </table>
+              </body>
+            </html>
+          </xsl:template>
+          <xsl:template match="s:result">
+            <tr>
+              <xsl:for-each select="s:*">
+                <td>
+                  <xsl:value-of select="."/>
+                </td>
+              </xsl:for-each>
+            </tr>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>  
+  <foxml:datastream CONTROL_GROUP="X" ID="QUERYtoHSSF" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" 
+      ID="QUERYtoHSSF1.0" LABEL="Stylesheet to create HSSF representation" MIMETYPE="text/xml" SIZE="386">
+      <foxml:xmlContent>
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result"
+          xmlns:gmr="http://www.gnome.org/gnumeric/v7"
+          xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
+          exclude-result-prefixes="xs"
+          version="2.0">
+          <xsl:output method="xml" indent="yes" encoding="UTF-8"></xsl:output>
+          <xsl:template match="/">
+            <gmr:Workbook>
+              <gmr:Sheets>
+                <gmr:Sheet>
+                  <gmr:Name>SPARQL-result1</gmr:Name>
+                  <gmr:MaxCol><xsl:value-of select="count(//s:variable)"/></gmr:MaxCol>
+                  <gmr:MaxRow><xsl:value-of select="(count(//s:result) + 1)"/></gmr:MaxRow>
+                  <gmr:Cells>
+                    <xsl:for-each select="//s:result[1]/s:*">
+                      <gmr:Cell Col="{(position() - 1)}" Row="0"  ValueType="60">
+                        <gmr:Content><xsl:value-of select="name()"/></gmr:Content>
+                      </gmr:Cell>
+                    </xsl:for-each>
+                    <xsl:apply-templates select="//s:result"/>
+                  </gmr:Cells>
+                </gmr:Sheet>
+              </gmr:Sheets>
+            </gmr:Workbook>
+          </xsl:template>
+          <xd:doc>
+            <xd:desc>
+              ToDo:
+              @ValueType sollte man noch nach dem Zellinhalt bestimmen:
+              @ValueType="10" => empty  
+              @ValueType"20" => boolean
+              @ValueType"30" => integer
+              @ValueType"40" => float  
+              @ValueType"50" => error  
+              @ValueType"60" => string 
+              @ValueType"70" => cellrange
+              @ValueType"80" => array 
+            </xd:desc>
+          </xd:doc>
+          <xsl:template match="s:result">
+            <xsl:variable name="row" select="position()"/>
+            <xsl:for-each select="s:*">
+              <gmr:Cell Col="{(position()-1)}" Row="{$row}" ValueType="60">
+                <gmr:Content><xsl:value-of select="."/></gmr:Content>
+              </gmr:Cell>
+            </xsl:for-each>
+          </xsl:template>
+        </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>    
   <foxml:datastream CONTROL_GROUP="X" ID="TEItoHTML" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="TEItoHTML1.0"
       LABEL="TEI resp. BibTeX to HTML Stylesheet" MIMETYPE="text/xml" SIZE="1441">
@@ -152,8 +259,8 @@
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="HSSF_STYLESHEET" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="HSSF_STYLESHEET.1" LABEL="Stylesheet to generate HSSF stream"
+  <foxml:datastream CONTROL_GROUP="X" ID="TEItoHSSF" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="TEItoHSSF.1" LABEL="Stylesheet to generate HSSF stream"
       MIMETYPE="text/xml" SIZE="648">
       <foxml:xmlContent>
         <xsl:stylesheet version="1.0" xmlns:gmr="http://www.gnome.org/gnumeric/v7" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

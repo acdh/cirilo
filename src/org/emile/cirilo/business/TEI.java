@@ -111,7 +111,7 @@ public class TEI {
 			this.PID = "";
     		if (!eXist) {
     			
-    			if (file.contains(".docx")) {
+    			if (file.toLowerCase().contains(".docx")) {
                     try {
 	    				Unzipper unzipper = new Unzipper();
 
@@ -140,7 +140,7 @@ public class TEI {
                     	q.printStackTrace();
                     	return false;
                     }   
-    			} else if (file.contains(".odt")) {
+    			} else if (file.toLowerCase().contains(".odt")) {
                     try {
 	    				Unzipper unzipper = new Unzipper();
 
@@ -310,7 +310,9 @@ public class TEI {
 				}
 			}
 			return true;
-		} catch (Exception e) { return false;}
+		} catch (Exception e) { 
+			e.printStackTrace();
+			return false;}
 	}
 	
 
@@ -323,9 +325,12 @@ public class TEI {
            		try { 
         		stylesheet =  Repository.getDatastream("cirilo:Backbone", "TOTEI" , "");
         		} catch (Exception q) {
+        			q.printStackTrace();
         			return false;
         		}
           	}
+        	
+        	System.out.println("Stylesheet");
         	
         	if (new String(stylesheet).contains(":template")) {
         		System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
@@ -376,10 +381,13 @@ public class TEI {
         			validator.validate(new JDOMSource(this.tei));
         			return true;			        
         		} catch (Exception q) {
+        			q.printStackTrace();
         			return false;
         		}
         	}	
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
         	
        	return true;
 	}
