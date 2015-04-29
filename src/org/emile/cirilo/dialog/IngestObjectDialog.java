@@ -243,6 +243,8 @@ public class IngestObjectDialog extends CDialog {
 						t.setUser((String)jcbUser.getSelectedItem());
 						METS m = new METS(logger, onlyValidate, false);
 						m.setUser((String)jcbUser.getSelectedItem());
+						LIDO l = new LIDO(logger, onlyValidate, false);
+						l.setUser((String)jcbUser.getSelectedItem());
 
 						JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 						JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
@@ -339,7 +341,7 @@ public class IngestObjectDialog extends CDialog {
 							}
 
 							
-							if (model.contains("DFGViewer") || model.contains("METS") ) {
+							if (model.contains("METS") ) {
 
 								m.set((String) files.get(i), false);
 								
@@ -396,6 +398,69 @@ public class IngestObjectDialog extends CDialog {
  							    } catch (Exception q) {
  							    	q.printStackTrace();
  							    }	
+
+							}
+
+							if (model.indexOf("LIDO") > -1) {
+
+								l.set((String) files.get(i), false);
+								
+								if (!l.isValid()) {	
+									
+									msgFmt = new MessageFormat(res.getString("novalidtei"));
+									Object[] args0 = {new java.util.Date(), (String) files.get(i)}; 
+					  	  		    logger.write( msgFmt.format(args0)  ); 
+					 				continue;
+								}
+
+								Split pcm = new Split(model);
+												
+								if (l.getPID().isEmpty()) {		
+									if (!onlyValidate) {
+										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
+										l.setPID(pid);
+										while (!Repository.exist(pid));
+									} else {l.setPID("obj:generated");}
+									fi++;
+									msgFmt = new MessageFormat(res.getString("objing"));
+									Object[] args1 = {new java.util.Date(), pid, l.getName() };
+									
+									logger.write(msgFmt.format(args1) );									
+								} else {
+                                    if (!Repository.exist(l.getPID())) {
+    									if (!onlyValidate) {
+    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ l.getPID(), res.getString("notitle"));
+    										while (!Repository.exist(l.getPID()));
+    									}
+    									fi++;
+    									msgFmt = new MessageFormat(res.getString("objing"));
+    									Object[] args2 = {new java.util.Date(), l.getPID(), l.getName() };
+    									
+    									logger.write(msgFmt.format(args2));									                                    	
+                                    } else {
+                                    	if (l.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
+                                    		
+                                    		msgFmt = new MessageFormat(res.getString("objingrefr"));
+        									Object[] args3 = {new java.util.Date(), l.getPID(), l.getName() };
+                                    		logger.write( msgFmt.format(args3));
+                                    		fa++;
+                                    	} else {	
+                                    		msgFmt = new MessageFormat(res.getString("denied"));
+        									Object[] args4 = {new java.util.Date(), (String)jcbUser.getSelectedItem(), l.getPID() };
+                                    		
+                                    		logger.write( msgFmt.format(args4));
+                                    		continue;
+                                    	}	
+                                    }
+							    }
+								
+															    
+ 							    l.validate(pcm.get(), moGA);
+ 							    Common.genQR(user, l.getPID());
+										
+ 							    try { 							    
+ 							    	if (!onlyValidate) Repository.modifyDatastreamByValue(l.getPID(), "LIDO_SOURCE", "text/xml", l.toString()); 							    	
+ 							    } catch (Exception q) {}	
 
 							}
 							
@@ -475,7 +540,7 @@ public class IngestObjectDialog extends CDialog {
 								Common.WINDOW_HEADER, JOptionPane.YES_NO_OPTION,
 								JOptionPane.QUESTION_MESSAGE);
 
-						FileWriter logger = new FileWriter(System.getProperty("java.io.tmpdir")+ "ingest.log" );
+						FileWriter logger = new FileWriter(new File(System.getProperty("java.io.tmpdir")).getAbsolutePath()+System.getProperty("file.separator")+ "ingest.log" );
 
 						if (liChoice == 0) {
 							
@@ -500,6 +565,8 @@ public class IngestObjectDialog extends CDialog {
 							t.setUser((String)jcbUser.getSelectedItem());
 							METS m = new METS(logger, onlyValidate, false);
 							m.setUser((String)jcbUser.getSelectedItem());
+							LIDO l = new LIDO(logger, onlyValidate, false);
+							l.setUser((String)jcbUser.getSelectedItem());
 
 							JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 							JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
@@ -598,7 +665,7 @@ public class IngestObjectDialog extends CDialog {
 
 								}
 
-								if (model.contains("DFGViewer") || model.contains("METS") ) {
+								if (model.contains("METS") ) {
 
 									m.set((String) files.get(i), true);
 								
@@ -654,13 +721,80 @@ public class IngestObjectDialog extends CDialog {
 		 							} catch (Exception q) {}	
 							
 								}
+								
+								if (model.contains("LIDO")) {
+
+									l.set((String) files.get(i), true);
+									
+									if (!l.isValid()) {	
+										 msgFmt = new MessageFormat(res.getString("novalidtei"));
+										Object[] args1 = {new java.util.Date(), (String) files.get(i)};
+										
+						  	  		    logger.write( msgFmt.format(args1)); 
+						 				continue;
+									}
+
+									Split pcm = new Split(model);
+									
+									if (l.getPID().isEmpty()) {	
+										if (!onlyValidate) {
+											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
+											l.setPID(pid);
+											while (!Repository.exist(pid));
+										} else {l.setPID("obj:generated");}
+										fi++;
+										msgFmt = new MessageFormat(res.getString("objing"));
+										Object[] args2 = {new java.util.Date(), pid, l.getName()};
+										
+										logger.write( msgFmt.format(args2));									
+									} else {
+	                                    if (!Repository.exist(l.getPID())) {
+	    									if (!onlyValidate) {
+	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ l.getPID(), res.getString("notitle"));
+	    										while (!Repository.exist(l.getPID()));
+	    									}
+	    									fi++;
+	    									
+	    									msgFmt = new MessageFormat(res.getString("objing"));
+											Object[] args3 = {new java.util.Date(), l.getPID(), l.getName()};
+	    									logger.write( msgFmt.format(args3));									                                    	
+	                                    } else {
+	                                    	if (l.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
+	                                    		msgFmt = new MessageFormat(res.getString("objingrefr"));
+												Object[] args4 = {new java.util.Date(), l.getPID(), l.getName()};
+	                                    		
+	                                    		logger.write( msgFmt.format(args4));
+	                                    		fa++;
+	                                    	} else {
+	                                    		msgFmt = new MessageFormat(res.getString("denied"));
+												Object[] args5 = {new java.util.Date(), (String)jcbUser.getSelectedItem(), l.getPID()};
+	                                    		
+	                                    		logger.write( msgFmt.format(args5));
+	                                    		continue;
+	                                    	}	
+	                                    }
+								    }
+									
+	 							    l.validate(pcm.get(), moGA);
+	 							    Common.genQR(user, l.getPID());
+	 							    
+	 							    try {														    
+	 	 							   if (!onlyValidate) Repository.modifyDatastreamByValue(l.getPID(), "LIDO_SOURCE", "text/xml", l.toString());
+	 							    } catch (Exception q) {
+	 							    	q.printStackTrace();
+	 							    }	
+								
+
+								}
+
+
 							
 							}
 							                           		
 							
 							logger.write("\n"+ new java.util.Date()  +res.getString("end")+simulate+res.getString("ofingest")+new Integer(fi).toString().trim() + res.getString("ingested")+ new Integer(fa).toString().trim() + res.getString("refreshed"));									
 							logger.close();
-							logfile = System.getProperty("java.io.tmpdir")+"ingest.log"; 
+							logfile = new File(System.getProperty("java.io.tmpdir")).getAbsolutePath()+System.getProperty("file.separator")+"ingest.log"; 
 							JOptionPane.showMessageDialog(  getCoreDialog(), new Integer(fi).toString()+ res.getString("ingested") + new Integer(fa).toString().trim() + res.getString("refreshed") +res.getString("details")+logfile, Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE );
 							getGuiComposite().getWidget("jbShowLogfile").setEnabled(true);
 							
@@ -716,7 +850,7 @@ public class IngestObjectDialog extends CDialog {
 						MessageFormat msgFmt = new MessageFormat(res.getString("objcrea"));
 						Object[] args = {new Integer(excel.getRowCount()).toString(), model, ""};
 
-						logger = new FileWriter(System.getProperty("java.io.tmpdir")+ "ingest.log" );
+						logger = new FileWriter(new File(System.getProperty("java.io.tmpdir")).getAbsolutePath()+System.getProperty("file.separator")+ "ingest.log" );
        
 						int liChoice = JOptionPane.showConfirmDialog(null, msgFmt.format(args) ,
 								Common.WINDOW_HEADER, JOptionPane.YES_NO_OPTION,
@@ -746,6 +880,8 @@ public class IngestObjectDialog extends CDialog {
 							t.setUser((String)jcbUser.getSelectedItem());
 							METS m = new METS(logger, onlyValidate, false);
 							m.setUser((String)jcbUser.getSelectedItem());
+							LIDO l = new LIDO(logger, onlyValidate, false);
+							l.setUser((String)jcbUser.getSelectedItem());
 
 							int i = 0;
 							
@@ -828,7 +964,7 @@ public class IngestObjectDialog extends CDialog {
 								}
 
 								
-								if (model.contains("DFGViewer") || model.contains("METS") ) {
+								if (model.contains("METS") ) {
 
                                     m.set(excel.toString());                                                                 
 									
@@ -884,6 +1020,67 @@ public class IngestObjectDialog extends CDialog {
 
 								}
 								
+								if (model.indexOf("LIDO") > -1) {
+									
+	                                l.set(excel.toString());                                                                 
+										                                
+									if (!l.isValid()) {									
+										msgFmt = new MessageFormat(res.getString("novalidrtei"));
+										Object[] args0 = {new java.util.Date(),new Integer(i).toString()}; 
+						  	  		    logger.write( msgFmt.format(args0)  ); 
+						 				continue;
+									}
+
+									Split pcm = new Split(model);
+													
+									if (l.getPID().isEmpty()) {		
+										if (!onlyValidate) {
+											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
+											l.setPID(pid);
+											while (!Repository.exist(pid));
+										} else {l.setPID("obj:generated");}
+										fi++;
+										msgFmt = new MessageFormat(res.getString("objingr"));
+										Object[] args1 = {new java.util.Date(), pid,new Integer(i).toString() };
+										
+										logger.write(msgFmt.format(args1) );									
+									} else {
+	                                    if (!Repository.exist(l.getPID())) {
+	    									if (!onlyValidate) {
+	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ l.getPID(), res.getString("notitle"));
+	    										while (!Repository.exist(l.getPID()));
+	    									}
+	    									fi++;
+	    									msgFmt = new MessageFormat(res.getString("objingr"));
+	    									Object[] args2 = {new java.util.Date(), l.getPID(),new Integer(i).toString()};
+	    									
+	    									logger.write(msgFmt.format(args2));									                                    	
+	                                    } else {
+	                                    	if (l.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
+	                                    		
+	                                    		msgFmt = new MessageFormat(res.getString("objingrrefr"));
+	        									Object[] args3 = {new java.util.Date(), l.getPID(), new Integer(i).toString() };
+	                                    		logger.write( msgFmt.format(args3));
+	                                    		fa++;
+	                                    	} else {	
+	                                    		msgFmt = new MessageFormat(res.getString("denied"));
+	        									Object[] args4 = {new java.util.Date(), (String)jcbUser.getSelectedItem(), l.getPID() };
+	                                    		
+	                                    		logger.write( msgFmt.format(args4));
+	                                    		continue;
+	                                    	}	
+	                                    }
+								    }
+									
+	 							    l.validate(pcm.get(), moGA);
+	 							    Common.genQR(user, l.getPID());
+											
+	 							    try { 							    
+	 							    	if (!onlyValidate) Repository.modifyDatastreamByValue(l.getPID(), "LIDO_SOURCE", "text/xml", l.toString()); 							    	
+	 							    } catch (Exception q) {}	
+
+								}
+								
 							}
 							
 							progressDialog.setCanceled(true);
@@ -893,7 +1090,7 @@ public class IngestObjectDialog extends CDialog {
 							
 							
 							JOptionPane.showMessageDialog(  getCoreDialog(), new Integer(fi).toString()+ res.getString("ingested")+ new Integer(fa).toString().trim() + res.getString("refreshed") + res.getString("details")+""+System.getProperty( "file.separator" )+"ingest.log" , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
-							logfile = System.getProperty("java.io.tmpdir")+"ingest.log"; 
+							logfile = new File(System.getProperty("java.io.tmpdir")).getAbsolutePath()+System.getProperty("file.separator")+"ingest.log"; 
 							getGuiComposite().getWidget("jbShowLogfile").setEnabled(true);
 							excel.destroy();
 
@@ -1002,7 +1199,7 @@ public class IngestObjectDialog extends CDialog {
 	
 	        List<String> ds = Repository.getTemplates(user.getUser(),groups.contains("administrator"));                
 	        for (String s: ds) {
-	              if (!s.isEmpty() && (s.contains("TEI") || s.contains("DFGViewer") || s.contains("METS"))) jcbContentModel.addItem(s);            	
+	              if (!s.isEmpty() && (s.contains("TEI") || s.contains("METS") || s.contains("LIDO"))) jcbContentModel.addItem(s);            	
 	         }
 	           
             boolean contains = false;

@@ -26,6 +26,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.emile.cirilo.Cirilo;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
@@ -62,7 +63,6 @@ import org.geonames.*;
 
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriter;
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
-
 
 public class TEI {
 
@@ -113,24 +113,45 @@ public class TEI {
     			
     			if (file.toLowerCase().contains(".docx")) {
                     try {
+                    	String stylesheet = "tei/docx/from/docxtotei.xsl";
 	    				Unzipper unzipper = new Unzipper();
 
-	    				String tmpDir = System.getProperty("java.io.tmpdir");
+	    				String tmpDir = new File(System.getProperty("java.io.tmpdir")).getAbsolutePath();
+	    				String homeDir = new File(System.getProperty("user.home")).getAbsolutePath();
 	    				
 			            unzipper.unzip(file, tmpDir, "");
-	                    SAXBuilder builder = new SAXBuilder();                
-	                    org.jdom.Document docx = builder.build (new File(tmpDir+"word/document.xml"));		                    
+	                    SAXBuilder builder = new SAXBuilder();   
+	                    File doc = new File(tmpDir+System.getProperty("file.separator")+"word"+System.getProperty("file.separator")+"document.xml"); 
+	                    
+	                    org.jdom.Document docx = builder.build (doc);		                    
                     
 			            System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
 			            TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-			            StreamSource is =  new StreamSource(user.getUrl().substring(0,user.getUrl().lastIndexOf("/")+1)+"tei/docx/from/docxtotei.xsl"); 				            
-			            Transformer transformer = transformerFactory.newTransformer(is);
-			            transformer.setParameter("word-directory", tmpDir.substring(0,tmpDir.length()-1).replace('\\', '/'));
-			            
+				        StreamSource is = null; 
+				        Transformer transformer = null;
 		        		JDOMSource in = new JDOMSource(docx);
 		        		JDOMResult out = new JDOMResult();
-		        		transformer.transform(in, out); 			        	
+
+				        try {
+				        	is =  new StreamSource(user.getUrl().substring(0,user.getUrl().lastIndexOf("/")+1)+stylesheet); 				            
+				        	transformer = transformerFactory.newTransformer(is);
+				            transformer.setParameter("word-directory", tmpDir);				            
+			        		transformer.transform(in, out); 			        	
+				        	} catch (Exception q) {
+				        	try {
+				        		String fp = tmpDir+System.getProperty("file.separator")+stylesheet;
+				        		if (!(new File(fp)).exists()) fp = homeDir+System.getProperty("file.separator")+stylesheet;
+				        		is =  new StreamSource(fp); 
+				        		transformer = transformerFactory.newTransformer(is);
+					            transformer.setParameter("word-directory", tmpDir);					            
+				        		transformer.transform(in, out); 			        	
+				        	} catch (Exception s) {
+				        		s.printStackTrace();
+				        		return false;
+				        	}					        	
+				        }
+			            			            
 		        		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");
 		        		
 		        		XMLOutputter outputter = new XMLOutputter();
@@ -142,13 +163,13 @@ public class TEI {
                     }   
     			} else if (file.toLowerCase().contains(".odt")) {
                     try {
+	    				String tmpDir = new File(System.getProperty("java.io.tmpdir")).getAbsolutePath();
 	    				Unzipper unzipper = new Unzipper();
 
-	    				String tmpDir = System.getProperty("java.io.tmpdir");
-	    				
+	    			
 			            unzipper.unzip(file, tmpDir, "");
 	                    SAXBuilder builder = new SAXBuilder();                
-	                    org.jdom.Document docx = builder.build (new File(tmpDir+"content.xml"));		                    
+	                    org.jdom.Document docx = builder.build (new File(tmpDir+System.getProperty("file.separator")+"content.xml"));		                    
                     
 			            System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
 			            TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -299,6 +320,8 @@ public class TEI {
 
 	    	String p = props.getProperty("user", "TEI.Customization"); 
 			if (p != null && p.equals("1")) { 
+                transform();				
+				isCustomized = true;
 				SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 				Schema schema = factory.newSchema(new URL(Common.TEIP5SCHEMA));
 				Validator validator = schema.newValidator();
@@ -306,7 +329,7 @@ public class TEI {
 					validator.validate(new JDOMSource(this.tei));			        
 				} catch (Exception q) {
 					isCustomized = true;
-					return transform();
+					return false;
 				}
 			}
 			return true;
@@ -329,8 +352,6 @@ public class TEI {
         			return false;
         		}
           	}
-        	
-        	System.out.println("Stylesheet");
         	
         	if (new String(stylesheet).contains(":template")) {
         		System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
@@ -373,17 +394,6 @@ public class TEI {
  	    			}
   	    		}	
           		
-        		
-        		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-        		Schema schema = factory.newSchema(new URL(Common.TEIP5SCHEMA));
-        		Validator validator = schema.newValidator();
-        		try {
-        			validator.validate(new JDOMSource(this.tei));
-        			return true;			        
-        		} catch (Exception q) {
-        			q.printStackTrace();
-        			return false;
-        		}
         	}	
         } catch (Exception e) {
         	e.printStackTrace();

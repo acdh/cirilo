@@ -78,7 +78,7 @@ public class HandleDialog extends CDialog {
 	public void handleShowButton(ActionEvent e) 
 	throws Exception {
 		TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-		dlg.set(System.getProperty( "user.home" )+System.getProperty( "file.separator" )+"handles.log",null, "text/log", "R", null);
+		dlg.set(new File(System.getProperty("user.home")).getAbsolutePath()+System.getProperty( "file.separator" )+"handles.log",null, "text/log", "R", null);
 		dlg.open();
 	}	
 

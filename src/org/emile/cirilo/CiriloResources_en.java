@@ -199,7 +199,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "valerror",            "Validation error" },
            { "creatingobject",            " Creating object " },
            { "updatingobject",            " Updating object " },
-           { "excelformat",            " File format of file {0} not supported, please use  [Excel 97-2003]." },
+           { "excelformat",            " File format of file {0} not supported, please use  [Excel OOXML]." },
            { "xmlformat", 		"No valid XML document. Datastream could not be saved." },
            { "selectformat", 		"Cirilo supports import of FEDORA object files in the following formats:" },
            { "ingfail", 		"ingest failed" },

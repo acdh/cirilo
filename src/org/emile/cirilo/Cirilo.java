@@ -222,10 +222,10 @@ class CiriloWindow extends JPanel {
 					if (!file.canWrite()) { 
 						home = System.getenv("TEMP");
 						File temp = new File ( home );
-						if (!temp.canWrite()) { home = System.getProperty("user.home"); }
+						if (!temp.canWrite()) { home = new File(System.getProperty("user.home")).getAbsolutePath(); }
 					}
 				} else {
-			    	 home = System.getProperty("user.home");
+			    	 home = new File(System.getProperty("user.home")).getAbsolutePath();
 				}
 								
 				System.setProperty("user.home",home);				

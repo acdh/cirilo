@@ -143,7 +143,7 @@ public class IngestExcelDialog extends CDialog {
 			JFileChooser chooser = new JFileChooser(props.getProperty("user", "ingest.excel.path"));
 
 			chooser.setDialogTitle( res.getString("choosesource"));
-			chooser.addChoosableFileFilter(new FileFilter(".xls"));
+			chooser.addChoosableFileFilter(new FileFilter(".xlsx"));
 			if (chooser.showDialog(getCoreDialog(),  res.getString("choose")) != JFileChooser.APPROVE_OPTION) {
 				return;
 			}

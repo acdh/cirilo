@@ -104,6 +104,8 @@ public class Common {
   
     public final static Namespace xmlns_xinc= Namespace.getNamespace( "x", "http://www.w3.org/2001/XInclude");
     
+    public final static Namespace xmlns_lido= Namespace.getNamespace( "lido", "http://www.lido-schema.org");
+    
     public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
     
     public final static String SESAME_SERVER = "http://localhost:8080/openrdf-sesame";

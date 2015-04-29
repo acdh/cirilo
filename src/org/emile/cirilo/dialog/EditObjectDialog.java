@@ -143,7 +143,7 @@ public class EditObjectDialog extends CDialog {
 					  pd.displayPercentageInProgressBar = true;
 					  pd.beginTask(res.getString("replace"), selected.length, true);
 					  
-					  logger = new FileWriter( System.getProperty( "user.home" )+System.getProperty( "file.separator" )+"replace.log" );
+					  logger = new FileWriter( new File(System.getProperty("user.home")).getAbsolutePath()+System.getProperty( "file.separator" )+"replace.log" );
 					  
 					  int deleted = 0;
 					  
@@ -476,7 +476,7 @@ public class EditObjectDialog extends CDialog {
 					  pd.displayPercentageInProgressBar = true;
 					  pd.beginTask((_op ? res.getString("hdlcreate") :  res.getString("hdldel") ) , selected.length, true);
 					  
-					  logger = new FileWriter( System.getProperty( "user.home" )+System.getProperty( "file.separator" )+"handles.log" );
+					  logger = new FileWriter( new File(System.getProperty("user.home")).getAbsolutePath()+System.getProperty( "file.separator" )+"handles.log" );
 					 
 					  MessageFormat msgFmt = new MessageFormat(res.getString("objmod"));
 	 				  Object[] args = {new Integer(selected.length).toString()};

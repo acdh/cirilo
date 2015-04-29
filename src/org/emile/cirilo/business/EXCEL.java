@@ -8,18 +8,19 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.*;
+import java.text.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.ss.usermodel.*;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -30,7 +31,6 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
-
 import org.emile.cirilo.*;
 
 public class EXCEL {
@@ -41,13 +41,14 @@ public class EXCEL {
 	private  HashMap <String,String> data; 
 	private  File fp;	
 	private  File tp;
-	private  HSSFSheet sheet;
+	private  XSSFSheet sheet;
 	private  Document template;
 	private  Format format;
 	private  XMLOutputter outputter;
 	private  ScriptEngineManager manager;
 	private  ScriptEngine engine;
 	private InputStream input;
+	private FormulaEvaluator evaluator;
 	
 	private int currentRow;
 	
@@ -65,10 +66,10 @@ public class EXCEL {
 			outputter = new XMLOutputter(format);
 
 			input = new FileInputStream(fp);
-    		POIFSFileSystem fs = new POIFSFileSystem( input );
-
-    		HSSFWorkbook wb = new HSSFWorkbook(fs);
-
+    		
+    		XSSFWorkbook wb = new XSSFWorkbook(input);
+    		evaluator = wb.getCreationHelper().createFormulaEvaluator();
+    		
     		sheet = wb.getSheetAt(tab);
 
     		manager = new ScriptEngineManager();  
@@ -115,13 +116,13 @@ public class EXCEL {
     	ArrayList <String> f = new ArrayList();
     	
     	try {
-    		HSSFRow fd = (HSSFRow) sheet.getRow(0);
+    		XSSFRow fd = (XSSFRow) sheet.getRow(0);
     		Iterator fiter = fd.cellIterator();
     		while( fiter.hasNext() ) {
-    			HSSFCell cell = (HSSFCell) fiter.next();
+    			XSSFCell cell = (XSSFCell) fiter.next();
     			switch ( cell.getCellType() ) {
-					case HSSFCell.CELL_TYPE_STRING:
-						fields.put(new Integer (cell.getCellNum()), cell.getStringCellValue().trim());
+					case XSSFCell.CELL_TYPE_STRING:
+						fields.put(new Integer (cell.getColumnIndex()), cell.getStringCellValue().trim());
 						f.add(cell.getStringCellValue().trim());
 						break;
 					default:
@@ -162,29 +163,32 @@ public class EXCEL {
     	return false;
     }
     
+    
     public boolean getRow(int r) {
     	
-   	
+       	
     	try {
     		data = new HashMap <String,String> ();
     		
-    		HSSFRow row = (HSSFRow) sheet.getRow(r);
+    		XSSFRow row = (XSSFRow) sheet.getRow(r);
 			Iterator cells = row.cellIterator();
-
+			SimpleDateFormat df = new SimpleDateFormat("dd.MM.YYYY");
+			
 			while( cells.hasNext() ) {
-				HSSFCell cell = (HSSFCell) cells.next();
-				switch ( cell.getCellType() ) {
-					case HSSFCell.CELL_TYPE_NUMERIC:
-						if(HSSFDateUtil.isCellDateFormatted(cell)) {
-							java.text.SimpleDateFormat df = new java.text.SimpleDateFormat( "yyyy-MM-dd" );
-							data.put(fields.get(new Integer(cell.getCellNum())), df.format(cell.getDateCellValue()));
-						} else {
-							String n = new Double(cell.getNumericCellValue()).toString();
-							data.put(fields.get(new Integer(cell.getCellNum())), n.substring(0, n.length()-2));
-						}
+				XSSFCell cell = (XSSFCell) cells.next();
+				switch ( evaluator.evaluateInCell(cell).getCellType()) {
+					case XSSFCell.CELL_TYPE_BOOLEAN:
+						data.put(fields.get(new Integer(cell.getColumnIndex())), new Boolean(cell.getBooleanCellValue()).toString());
 						break;
-					case HSSFCell.CELL_TYPE_STRING: 
-						data.put(fields.get(new Integer(cell.getCellNum())), cell.getStringCellValue() );
+					case XSSFCell.CELL_TYPE_NUMERIC:
+					    if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
+							data.put(fields.get(new Integer(cell.getColumnIndex())), df.format(cell.getDateCellValue()));
+					    } else {	
+							data.put(fields.get(new Integer(cell.getColumnIndex())), new Double(cell.getNumericCellValue()).toString());
+					    }						
+						break;
+					case XSSFCell.CELL_TYPE_STRING: 
+						data.put(fields.get(new Integer(cell.getColumnIndex())), cell.getStringCellValue() );
 						break;
 					default: 
 						break;
@@ -195,7 +199,7 @@ public class EXCEL {
     		return false;
     	}
     }
-
+    
     
     public boolean evaluate(HashMap <String,String> data) 
     {
@@ -501,6 +505,7 @@ public class EXCEL {
 			currentRow += delta-1;
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 
