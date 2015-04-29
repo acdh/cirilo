@@ -33,6 +33,7 @@ import voodoosoft.jroots.exception.CException;
 
 
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.utils.ImagePreviewPanel;
@@ -783,7 +784,19 @@ public class ObjectEditorDialog extends CDialog {
 					 }	 
 				}
 	
-							
+			    JTable loMD = (JTable) getGuiComposite().getWidget(jtMetadata);
+				loMD.setModel(Repository.listDatastreams(pid,true));
+				loMD.setRowSelectionInterval(0,0);			
+
+			    JTable loDS = (JTable) getGuiComposite().getWidget(jtDatastreams);
+		    	loDS.setModel(Repository.listDatastreams(pid,false));
+		    	loDS.setRowSelectionInterval(0,0);		
+
+				((JTextField) getGuiComposite().getWidget("jtfIdentifier")).setText(pid);
+				((JTextField) getGuiComposite().getWidget("jtfIdentifier")).setEnabled(false);
+				JComboBox jcbUser = ((JComboBox) getGuiComposite().getWidget("jcbUser"));
+		        jcbUser.setSelectedItem(owner);
+
 				ltRels.setSelectedIndex( 0 );
 	            ltNonRels.setSelectedIndex( 0 );
 	            
