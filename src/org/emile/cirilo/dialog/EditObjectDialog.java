@@ -1355,8 +1355,10 @@ public class EditObjectDialog extends CDialog {
 		     
 			tb.addKeyListener(new KeyAdapter() {
 				public void keyPressed(KeyEvent e) {
-			         if (e.getKeyCode() == 82 &&  KeyEvent.getKeyModifiersText(e.getModifiers()).equals("Strg")) refresh();
+			         if (e.getKeyCode() == 82 &&  KeyEvent.getKeyModifiersText(e.getModifiers()).equals("Strg")) { 
+			        	 refresh();
 						handleEditButton(null);
+			         }	
 			    }
 			 });
 
