@@ -78,6 +78,10 @@ public interface FedoraConnector {
             throws IllegalStateException, FedoraIllegalContentException,
                    FedoraConnectionException;
 
+	public boolean exists(String pid, String dsid)
+            throws IllegalStateException, FedoraIllegalContentException,
+                   FedoraConnectionException;
+
 
     /**
      * Checks if the object with the given pid exists and is a data object

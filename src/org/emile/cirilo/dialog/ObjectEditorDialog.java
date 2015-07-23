@@ -34,6 +34,8 @@ import voodoosoft.jroots.exception.CException;
 
 
 
+
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.utils.ImagePreviewPanel;
@@ -606,6 +608,16 @@ public class ObjectEditorDialog extends CDialog {
 							Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", t.toString());
 						    refresh(true);
 						} else { ret = false; }
+ 		    		} else if (dsid.equals("LIDO_SOURCE")) {
+ 		    				LIDO l = new LIDO(null,false,true);
+							l.setUser(this.owner);
+							l.set(chooser.getSelectedFile().getAbsolutePath(), false);
+							if (l.isValid()) {
+							    l.setPID(pid);
+							    l.validate(null, null);
+								Repository.modifyDatastreamByValue(pid, "LIDO_SOURCE", "text/xml", l.toString());
+							    refresh(true);
+							} else { ret = false; }
  				    } else if (dsid.equals("METS_SOURCE")) {
 						METS m = new METS(null,false,true);
 						m.setUser(this.owner);
@@ -728,6 +740,70 @@ public class ObjectEditorDialog extends CDialog {
 	public void handleEditButton(ActionEvent e) {
 		  try {
 		  
+		    } catch (Exception ex) {}					  
+	}
+	
+	
+	private void handleDownload( String pid, String dsid, String mimetype, String group) {
+		  try {		
+			  getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+			  int i = mimetype.indexOf('/');
+			  String ext = mimetype.substring(i+1); 
+			  ext = ext.equals("plain") ? "txt"  : ext;
+			  String fn = (pid +"_"+dsid+"."+ext).replaceAll(":", "_").toLowerCase();
+			  CPropertyService props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
+			  JFileChooser fc = new JFileChooser(props.getProperty("user", "import.path"));
+			  fc.setSelectedFile(new File(fn));
+
+			  fc.setDialogTitle(res.getString("saveds"));  
+		      byte[] stream = null; 
+		      int sel = fc.showSaveDialog(null);
+		      if (sel == fc.APPROVE_OPTION) {
+		        		File fp = fc.getSelectedFile();
+		        		try {
+		        			stream =  Repository.getDatastream(pid, dsid, "");
+							if (group.equals("R")) {
+								URL url = new URL(new String(stream));
+								InputStream is = new URL(new String(stream)).openStream();
+								ByteArrayOutputStream baos = new ByteArrayOutputStream();
+							    int reads = is.read();					       
+							    while(reads != -1){
+							        baos.write(reads);
+							        reads = is.read();
+							     }						      
+							    stream = baos.toByteArray();
+							}	
+		        			FileOutputStream fos = new FileOutputStream(fp);
+		        			fos.write(stream);
+		        			fos.close();
+		        			MessageFormat msgFmt = new MessageFormat(res.getString("saveok"));
+		    	    		Object[] args0 = {dsid, pid, fp.getAbsolutePath()};		        			
+		        			JOptionPane.showMessageDialog(null,msgFmt.format(args0));
+		        			props.setProperty("user", "import.path", fc.getCurrentDirectory().getAbsolutePath());
+		        			props.saveProperties("user");
+		        		} catch (Exception e) {	
+		        			JOptionPane.showMessageDialog(null, res.getString("errsave")+": "+fp.getAbsolutePath());
+		        		}	
+		       }
+		    } catch (Exception ex) {}
+		    finally {
+				  getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));		    	
+		    }
+	}
+	
+	public void handleoDownloadButton(ActionEvent e) {
+		  try {
+			  JTable loDS = (JTable) getGuiComposite().getWidget(jtDatastreams);
+			  int sel = loDS.getSelectedRow();
+			  handleDownload (pid, (String) loDS.getValueAt(sel, 0), (String) loDS.getValueAt(sel, 2), (String) loDS.getValueAt(sel, 3)); 
+		    } catch (Exception ex) {}					  
+	}
+	public void handlemDownloadButton(ActionEvent e) {
+		  try {
+		      JTable loMD = (JTable) getGuiComposite().getWidget(jtMetadata);	
+			  int sel = loMD.getSelectedRow();
+			  handleDownload (pid, (String) loMD.getValueAt(sel, 0), (String) loMD.getValueAt(sel, 2), (String) loMD.getValueAt(sel, 3)); 
 		    } catch (Exception ex) {}					  
 	}
 	
@@ -856,6 +932,8 @@ public class ObjectEditorDialog extends CDialog {
 			CDialogTools.createButtonListener(this, "jbSeek", "handleSeekButton");
 			CDialogTools.createButtonListener(this, "jboUpload", "handleoUploadButton");
 			CDialogTools.createButtonListener(this, "jbmUpload", "handlemUploadButton");
+			CDialogTools.createButtonListener(this, "jboDownload", "handleoDownloadButton");
+			CDialogTools.createButtonListener(this, "jbmDownload", "handlemDownloadButton");
 			CDialogTools.createButtonListener(this, "jboEdit", "handleoEditButton");
 			CDialogTools.createButtonListener(this, "jbmEdit", "handlemEditButton");
 			CDialogTools.createButtonListener(this, "jbAddRelation", "handleAddRelationButton");
@@ -926,7 +1004,6 @@ public class ObjectEditorDialog extends CDialog {
 		    MouseListener popupListener = new PopupmListener();
 		    md.addMouseListener(popupListener);
 
-		    if (!pid.equals("cirilo:Backbone"))  {
 		    	JTable ds = (JTable) getGuiComposite().getWidget(jtDatastreams);
 		    	ds.getSelectionModel().addListSelectionListener(new MySelectionListener(ds,(JButton) getGuiComposite().getWidget("jboEdit")));			
 
@@ -936,7 +1013,6 @@ public class ObjectEditorDialog extends CDialog {
 		    	new CMouseListener(ds, this, "handleoMouseDoubleClick");
 		    	popupListener = new PopupoListener();
 		    	ds.addMouseListener(popupListener);
-		    }
 		    
 			JComboBox jcbUser = ((JComboBox) getGuiComposite().getWidget("jcbUser"));
 	        java.util.List<String> users = Repository.getUsers();

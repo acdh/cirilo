@@ -34,6 +34,10 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "yes"      , "Ja"       },
                 { "no"         , "Nein"         },
                 { "save"         , "Speichern"         },
+                { "saveas"         , "Speichern unter"         },
+                { "saveds"         , "Datenstrom speichern"         },
+                { "errsave"         , "Fehler beim Speichern von Datei" },
+                { "saveok"         ,  "Datenstrom {0} aus Objekt {1} konnte erfolgreich in Datei {2} gespeichert werden." },
                 { "submit"         , "Übermitteln"         },
                 { "edit"         , "Bearbeiten"         },
                 { "close"         , "Schließen"       },
@@ -85,9 +89,10 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "english", "Englisch"},
                 { "german", "Deutsch"},
                 { "language", "Sprache"},
-                { "harvest", "Mit dem Harvesten beginnen"},
+                { "harvest", "Sammeln"},
                 { "general", "Allgemeines"},
                 { "teiupload", "Upload von TEI-Dokumenten"},
+                { "lidoupload", "Upload von LIDO-Dokumenten"},
                 { "metsupload", "Upload von DFG Viewer-Dokumenten"},
                 { "defaultcm", "Default Content Model"},
                 { "preferences", "Einstellungen"},
@@ -106,7 +111,7 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "refreshsource", "Quelldokument mit expandiertem Inhalt überschreiben"},
                 { "customization", "TEI-Customization ausführen"},
                 { "createfromjpeg", "METS-Objekte aus Bildverzeichnissen erstellen"},
-                { "geonameslogin", "Webservice Login-Name"},
+                { "geonameslogin", "Geonames Webservice Login-Name"},
                 { "onlygeonameids", "Nur Elemente mit geonameID berücksichtigen"},
                                                    
                 /* dialog */
@@ -193,6 +198,8 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "relsintsuc",            "Der Datenstrom RELS-INT des Objekts {0} wurde erfolgreich aktualisiert." },
                 { "valerror",            "Validierungsfehler" },
                 { "creatingobject",            " Objekt wird erstellt " },
+                { "objectnotfound",            "Objekt {0} konnte nicht gefunden werden." },
+                { "imagenotfound",            "Bilddatei {0} für Objekt {1} konnte nicht gefunden werden." },
                 { "updatingobject",            " Objekt wird aktualisiert " },
                 { "excelformat",            " Datei {0} hat ein nicht unterstütztes Format. Bitte benutzen Sie [Excel OOXML]." },                                
                 { "xmlformat", 		"Fehlerhaftes XML-Dokument. Datenstrom konnte nicht gespeichert werden." },
@@ -201,7 +208,8 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "alrexist", 		"Objekt existiert bereits" },
                 { "attingest",        "Importieren von Datei {0} mit Format {1} und PID {2}"},         
                 { "novalidobj",       "Datei {0} enthält kein valides FEDORA-Objekt."},
-               
+                { "ingestof",       "Ingest von Datei "},
+              
                 /* cirilo */
                 { "loadprop"          , "Einstellungen lesen"          },
                 { "sam"          , "Berechtigungsmanager initialisieren"          },
@@ -268,6 +276,8 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "hdlvalid"        ,  "Authentifizierung am Handle Service war erfolgreich. Handles können nun bearbeitet werden."}, 
                 { "hdlcreated"  , " Für {0} Objekt(e) wurden Handle(s) erstellt."          },
                 { "hdldeleted"  , "Die Handle(s) von {0} Objekt(en) wurden entfernt."          },
+                { "shownat"  , "Shown At"          },
+                { "cmodel"  , "Inhaltsmodell"          },
 
              };    
 

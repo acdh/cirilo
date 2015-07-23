@@ -61,6 +61,13 @@ public class GuiOptionsDialog extends CGuiComposite {
 	JCheckBox jcbMETSRefreshSource;
 	JComboBox jcbGeneralDefaultCM;
 
+	JCheckBox jcbLIDODCMapping;
+	JCheckBox jcbLIDOSEMExtraction;
+	JCheckBox jcbLIDOCreateContexts;
+	JCheckBox jcbLIDOResolveGeoIDs;
+	JCheckBox jcbLIDOIngestImages;
+	JCheckBox jcbLIDORefreshSource;
+	
 
 	/**
 	 *  Constructor for the GuiObjectEditorDialog  object
@@ -100,7 +107,14 @@ public class GuiOptionsDialog extends CGuiComposite {
 		setWidgetName(jcbTEIOnlyGeonameID, "jcbTEIOnlyGeonameID" );
 		setWidgetName(jcbTEICustomization, "jcbTEICustomization" );
 		setWidgetName(jtfOAIPrefix, "jtfOAIPrefix" );
-			
+		setWidgetName(jcbLIDODCMapping, "jcbLIDODCMapping" );
+		setWidgetName(jcbLIDOSEMExtraction, "jcbLIDOSEMExtraction" );
+		setWidgetName(jcbLIDOCreateContexts, "jcbLIDOCreateContexts" );
+		setWidgetName(jcbLIDOResolveGeoIDs, "jcbLIDOResolveGeoIDs" );
+		setWidgetName(jcbLIDOIngestImages, "jcbLIDOIngestImages" );
+		setWidgetName(jcbLIDORefreshSource, "jcbLIDORefreshSource" );
+
+		
 	}
 
 
@@ -132,6 +146,16 @@ public class GuiOptionsDialog extends CGuiComposite {
 		jcbGeneralDefaultCM = new JComboBox();
 		jcbMETSRefreshSource = new JCheckBox(res.getString("refreshsource"), false);
 		jcbTEIOnlyGeonameID = new JCheckBox(res.getString("onlygeonameids"), false);
+
+		jcbLIDODCMapping = new JCheckBox(res.getString("dcmapping"), true);
+		jcbLIDOSEMExtraction = new JCheckBox(res.getString("semextraction"), true);
+		jcbLIDOCreateContexts = new JCheckBox(res.getString("createcontexts"), true);
+		jcbLIDOResolveGeoIDs = new JCheckBox(res.getString("resolvegeoids"), true);
+		jcbLIDOIngestImages = new JCheckBox(res.getString("ingestimages"), true);
+		jcbLIDORefreshSource = new JCheckBox(res.getString("refreshsource"), false);
+		
+		
+		
 		
 		jtfTEILoginName = new JTextField();
 		jtfTEILoginName.setPreferredSize(new Dimension(100, jtfTEILoginName.getPreferredSize().height));
@@ -150,6 +174,10 @@ public class GuiOptionsDialog extends CGuiComposite {
 		c1.add( new JLabel("Handle Prefix: ") );
 		c1.add( jtfOAIPrefix );
 		t0.add( c1, "wrap 5" );
+		Box c2  = Box.createHorizontalBox();
+		c2.add( new JLabel(res.getString("geonameslogin")+": "));
+		c2.add( jtfTEILoginName );
+		t0.add( c2, "wrap 5" );
 
 		Container t1 = new Container();
 		t1.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
@@ -163,18 +191,24 @@ public class GuiOptionsDialog extends CGuiComposite {
 		t1.add(jcbTEIResolveSKOS, "wrap 5"); 														
 		t1.add(jcbTEIResolveGeoIDs, "wrap 5");	
 		t1.add(jcbTEIOnlyGeonameID, "gapbefore 18px, wrap 5");
-		Box c2  = Box.createHorizontalBox();
-		c2.add( new JLabel(res.getString("geonameslogin")+": "));
-		c2.add( jtfTEILoginName );
-		t1.add( c2, "gapbefore 18px , wrap 5" );
 		t1.add(jcbTEIRemoveEmpties); 
 		
+		Container t3 = new Container();
+		t3.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
+		t3.add(jcbLIDORefreshSource, "wrap 5");
+		t3.add(jcbLIDODCMapping, "wrap 5"); 
+		t3.add(jcbLIDOSEMExtraction, "wrap 5"); 
+		t3.add(jcbLIDOCreateContexts, "wrap 5"); 
+		t3.add(jcbLIDOIngestImages, "wrap 5"); 
+		t3.add(jcbLIDOResolveGeoIDs, "wrap 5");	
+
 		Container t2 = new Container();
 		t2.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
 		t2.add(jcbMETSRefreshSource, "wrap 5");
 		
 		tp.addTab(res.getString("general"), t0);
 		tp.addTab(res.getString("teiupload"), t1);
+		tp.addTab(res.getString("lidoupload"), t3);
 		tp.addTab(res.getString("metsupload"), t2);
 		
 		container.add(tp, "grow, wrap 10");

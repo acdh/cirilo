@@ -24,13 +24,11 @@ import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
-
-public class DefaultSortTableModel
-        extends DefaultTableModel
-        implements SortTableModel {
+public class DefaultSortTableModel extends DefaultTableModel implements SortTableModel {
 
     private static final long serialVersionUID = 1L;
-
+    private Vector names;
+    
     public DefaultSortTableModel() {
     }
 
@@ -38,20 +36,10 @@ public class DefaultSortTableModel
         super(rows, cols);
     }
 
-    public DefaultSortTableModel(Object[][] data, Object[] names) {
-        super(data, names);
-    }
-
-    public DefaultSortTableModel(Object[] names, int rows) {
-        super(names, rows);
-    }
-
-    public DefaultSortTableModel(Vector names, int rows) {
-        super(names, rows);
-    }
-
     public DefaultSortTableModel(Vector data, Vector names) {
         super(data, names);
+     	setColumnIdentifiers(names);
+        this.names = names;
     }
 
     public boolean isSortable(int col) {
@@ -69,4 +57,10 @@ public class DefaultSortTableModel
     public void sortColumn(int col, boolean ascending) {
         Collections.sort(getDataVector(), new ColumnComparator(col, ascending));
     }
+              
+    public String getColumnName(int index) {
+        return (String) names.get(index);
+    }
+    
+    
 }

@@ -69,15 +69,25 @@ public class OptionsDialog extends CDialog {
 	public void handleSaveButton(ActionEvent e) {
 		try {
 			
-			set("jcbTEIDCMapping");
-			set("jcbTEISEMExtraction");
-			set("jcbTEIRemoveEmpties");
-			set("jcbTEICreateContexts");
-			set("jcbTEIResolveRegex");
-			set("jcbTEIResolveGeoIDs");
-			set("jcbTEIResolveSKOS");
-			set("jcbTEIIngestImages");
-			set("jcbTEIRefreshSource");
+			set("DCMapping","TEI");
+			set("SEMExtraction","TEI");
+			set("RemoveEmpties","TEI");
+			set("CreateContexts","TEI");
+			set("ResolveRegex","TEI");
+			set("ResolveGeoIDs","TEI");
+			set("ResolveSKOS","TEI");
+			set("IngestImages","TEI");
+			set("RefreshSource","TEI");
+			set("OnlyGeonameID","TEI");
+
+			set("DCMapping","LIDO");
+			set("SEMExtraction","LIDO");
+			set("CreateContexts","LIDO");
+			set("ResolveGeoIDs","LIDO");
+			set("IngestImages","LIDO");
+			set("RefreshSource","LIDO");
+
+			set("RefreshSource","METS");
 
 		   	
 			try {
@@ -85,20 +95,7 @@ public class OptionsDialog extends CDialog {
 	    		props.setProperty("user", "TEI.Customization", cb.isSelected() ? "1" : "0");
 	    	} catch (Exception ex) {
 	    	}
-	
-			try {
-	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbTEIOnlyGeonameID");
-	    		props.setProperty("user", "TEI.OnlyGeonameID", cb.isSelected() ? "1" : "0");
-	    	} catch (Exception ex) {
-	    	}
-			   	
-
-			try {
-	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbMETSRefreshSource");
-	    		props.setProperty("user", "METS.RefreshSource", cb.isSelected() ? "1" : "0");
-	    	} catch (Exception ex) {
-	    	}
-	
+				   		
 			try {
 				JTextField tf = (JTextField) getGuiComposite().getWidget("jtfTEILoginName");
 		        props.setProperty("user", "TEI.LoginName", tf.getText());
@@ -122,19 +119,19 @@ public class OptionsDialog extends CDialog {
 		}
 	}
 
-    private void set(String widget) {
+    private void set(String widget, String type) {
     	try {
-    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget(widget);
-    		props.setProperty("user", "TEI."+widget.substring(6), cb.isSelected() ? "1" : "0");
+    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcb"+type+widget);
+    		props.setProperty("user", type+"."+widget, cb.isSelected() ? "1" : "0");
     	} catch (Exception e) {
     	}
     }
 
     
-    private void get(String widget) {
+    private void get(String widget, String type) {
     	try {
-    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget(widget);
-    		cb.setSelected(props.getProperty("user", "TEI."+widget.substring(6)).equals("1"));
+    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcb"+type+widget);
+    		cb.setSelected(props.getProperty("user", type+"."+widget).equals("1"));
     	} catch (Exception e) {
     	}
     }
@@ -162,34 +159,34 @@ public class OptionsDialog extends CDialog {
 			se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
 			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getOptionsDialogProperties(), (JTable) null);
 			
-			get("jcbTEIDCMapping");
-			get("jcbTEISEMExtraction");
-			get("jcbTEIRemoveEmpties");
-			get("jcbTEICreateContexts");
-			get("jcbTEIResolveRegex");
-			get("jcbTEIResolveGeoIDs");
-			get("jcbTEIResolveSKOS");
-			get("jcbTEIIngestImages");
-			get("jcbTEIRefreshSource");
+			
+			get("DCMapping","TEI");
+			get("SEMExtraction","TEI");
+			get("RemoveEmpties","TEI");
+			get("CreateContexts","TEI");
+			get("ResolveRegex","TEI");
+			get("ResolveGeoIDs","TEI");
+			get("ResolveSKOS","TEI");
+			get("IngestImages","TEI");
+			get("RefreshSource","TEI");
+			get("OnlyGeonameID","TEI");
+
+			get("DCMapping","LIDO");
+			get("SEMExtraction","LIDO");
+			get("CreateContexts","LIDO");
+			get("ResolveGeoIDs","LIDO");
+			get("IngestImages","LIDO");
+			get("RefreshSource","LIDO");
+
+			get("RefreshSource","METS");
+
 			
 			try {
 	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbTEICustomization");
 	    		cb.setSelected(props.getProperty("user", "TEI.Customization").equals("1"));
 	    	} catch (Exception e) {
 	    	}
-
-			try {
-	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbTEIOnlyGeonameID");
-	    		cb.setSelected(props.getProperty("user", "TEI.OnlyGeonameID").equals("1"));
-	    	} catch (Exception e) {
-	    	}
 			
-
-			try {
-	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbMETSRefreshSource");
-	    		cb.setSelected(props.getProperty("user", "METS.RefreshSource").equals("1"));
-	    	} catch (Exception e) {
-	    	}
 			
 			try {
 				JTextField tf = (JTextField) getGuiComposite().getWidget("jtfTEILoginName");

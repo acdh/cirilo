@@ -25,7 +25,6 @@ import org.emile.cirilo.ecm.exceptions.FedoraIllegalContentException;
 import org.emile.cirilo.ecm.exceptions.ObjectIsWrongTypeException;
 import org.emile.cirilo.ecm.exceptions.ObjectNotFoundException;
 import org.w3c.dom.Document;
-
 import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 
 import fedora.server.types.gen.ObjectProfile;
@@ -311,6 +310,12 @@ public class Repository {
         return connector.exists(pid);
     }
 
+    public static boolean exists(String pid, String dsid) throws IllegalStateException, FedoraIllegalContentException,
+    FedoraConnectionException {
+    	return connector.exists(pid, dsid);
+    }
+
+    
     public static String[] getObjectProfile(String pid)
     throws FedoraConnectionException, FedoraIllegalContentException {
         return connector.getObjectProfile(pid);

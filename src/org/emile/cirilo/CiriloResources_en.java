@@ -40,6 +40,10 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "close"         , "Close"       },
            { "open"          , "Open"          },
            { "save"         , "Save"         },
+           { "saveas"         , "Save as"         },
+           { "saveds"         , "Save datastream"         },
+           { "errsave"         , "Error while saving file" },
+           { "saveok"         ,  "Datastream {0} of object {1} successfully written to file {2}." },           
            { "submit"         , "Submit"         },
            { "edit"         , "Edit"         },
            { "replace"          , "Replace"          },
@@ -89,10 +93,11 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "english", "English"},
            { "german", "German"},
            { "language", "Language"},
-           { "harvest", "Add new harvest"},
+           { "harvest", "Collect"},
            { "general", "General"},
            { "teiupload", "Upload of TEI documents"},
            { "metsupload", "Upload of METS documents"},
+           { "lidoupload", "Upload of LIDO documents"},
            { "defaultcm", "Default Content Model"},
            { "preferences", "Preferences"},
            { "texteditor", "Texteditor"},
@@ -110,7 +115,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "customization", "Execute TEI customization"},
            { "refreshsource", "Overwrite source document with expanded content"},
            { "createfromjpeg", "Create METS documents from image directories without XML metadata "},
-           { "geonameslogin", "Webservice login name"},
+           { "geonameslogin", "Geonames webservice login name"},
            { "onlygeonameids", "Accept elements with geonameID exclusively"},
    
           
@@ -141,7 +146,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "objcrea"          , "This process creates {0} object(s) based on Content Model {1} from source {2} in the repository. Are you sure you want to continue?" },
            { "objimp"          , "This process creates {0} object(s) from source {1} in the repository. Are you sure you want to continue?" },
            { "askharv"          , "This process collects metadata from {0} providers.  Are you sure you want to continue?" },
-           { "ingestcont"          , "Ingesting..."          },
+           { "ingestcont"          , "Ingesting ..."          },
            { "harvcont"          , "Harvesting ..."          },
            { "start"          , " Start"          },
            { "end"          , " End"          },
@@ -198,7 +203,9 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "relsintsuc",            "Datastream RELS-INT of object {0} updated successfully." },
            { "valerror",            "Validation error" },
            { "creatingobject",            " Creating object " },
-           { "updatingobject",            " Updating object " },
+           { "objectnotfound",            "Couldn't found object {0}." },
+           { "imagenotfound",            "Couldn't found image datastream {0} for object {1}." },                
+          { "updatingobject",            " Updating object " },
            { "excelformat",            " File format of file {0} not supported, please use  [Excel OOXML]." },
            { "xmlformat", 		"No valid XML document. Datastream could not be saved." },
            { "selectformat", 		"Cirilo supports import of FEDORA object files in the following formats:" },
@@ -206,6 +213,8 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "alrexist", 		"already exists" },
            { "attingest",        "Importing file {0} with format {1} and PID {2}" },         
            { "novalidobj",       "File {0} does not have a valid FEDORA object schema."},
+           { "ingestof",       "Ingesting file "},
+
            
            /* cirilo */
            { "loadprop"          , "Load application properties"          },
@@ -273,6 +282,8 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "hdlvalid"        ,  "Successful authentification on Handle service." },
            { "hdlcreated"  , "Handle(s) for {0} object(s) created."          },
            { "hdldeleted"  , "Handle(s) of  {0} deleted."          },
+           { "shownat"  , "Shown At"          },
+           { "cmodel"  , "Content Model"          },
  
 
         };    

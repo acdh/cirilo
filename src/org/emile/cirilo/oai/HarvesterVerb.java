@@ -273,6 +273,7 @@ public abstract class HarvesterVerb {
             sb.append(tokenizer.nextToken());
         }
         this.schemaLocation = sb.toString();
+        
     }
     
     /**

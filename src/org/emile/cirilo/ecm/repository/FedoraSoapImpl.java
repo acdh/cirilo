@@ -73,7 +73,12 @@ import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 public class FedoraSoapImpl
         implements FedoraConnector {
 
-	private final String SYSTEM_DATASTREAMS ="|STYLESHEET|FO_STYLESHEET|QUERY|KML_TEMPLATE|DC_MAPPING|RDF_MAPPING|BIBTEX_MAPPING|RELS-EXT|RELS-INT|REPLACEMENT_RULESET|VOYANT|CONTEXTtoHTML|CONTEXTtoFO|TOMETS|TORDF|METS_REF|TOTEI|QR|HSSF_STYLESHEET|";
+	private final String SYSTEM_DATASTREAMS ="|STYLESHEET|FO_STYLESHEET|QUERY|KML_TEMPLATE|DC_MAPPING|RDF_MAPPING|"+
+	                                      "BIBTEX_MAPPING|RELS-EXT|RELS-INT|REPLACEMENT_RULESET|VOYANT|CONTEXTtoHTML|"+
+										  "CONTEXTtoFO|TOMETS|TORDF|METS_REF|TOTEI|QR|HSSF_STYLESHEET|QUERYtoHSSF|QUERYtoHTML|TEItoHSSF|"+
+										  "TEItoHTML|TEItoFO|BIBTEXtoHTML|BIBTEXtoFO|PAGE-1|PAGE-2|TEItoDC_MAPPING|RDF_MAPPING|SKOStoHTML|SKOStoFO|"+
+										  "TEITOMETS|STYLESHEETS|BIBTEXtoHTML|BIBTEXtoFO|PAGE-1|PAGE-2|TEItoDC_MAPPING|RDF_MAPPING|SKOStoHTML|SKOStoFO|"+
+										  "LIDOtoDC_MAPPING|OAItoDC_MAPPING|LIDOtoHTML|LIDOtoFO|LIDOtoRDF|DATAPROVIDERS|MODStoDC_MAPPING|MODStoBIBTEX_MAPPING|";
     private final String DISSEMINATOR = "|PID|METADATA|METHODS|";
 	
 
@@ -385,7 +390,7 @@ public class FedoraSoapImpl
     			Vector row = new Vector();
     			String id =def.getID();
     			fedora.server.types.gen.Datastream ds = getAPIM().getDatastream(pid, id, "");
-    			if ( pid.equals("cirilo:Backbone") || ((metadata && SYSTEM_DATASTREAMS.contains("|"+id+"|")) || !metadata && !SYSTEM_DATASTREAMS.contains("|"+id+"|")) && !DISSEMINATOR.contains("|"+id+"|") ) {
+    			if (  ((metadata && SYSTEM_DATASTREAMS.contains("|"+id+"|")) || !metadata && !SYSTEM_DATASTREAMS.contains("|"+id+"|")) && !DISSEMINATOR.contains("|"+id+"|") ) {
     				row.add(def.getID());
     				row.add((String)ds.getLabel());
     				row.add((String)ds.getMIMEType());
@@ -830,9 +835,21 @@ public class FedoraSoapImpl
 
     public boolean exists(String pid)
     throws FedoraIllegalContentException, FedoraConnectionException {
-return hasContentModel(pid, Constants.FEDORA_OBJECT_3_0);
-}
+    	return hasContentModel(pid, Constants.FEDORA_OBJECT_3_0);
+    }
 
+    public boolean exists(String pid, String dsid)
+    throws IllegalStateException, FedoraIllegalContentException, FedoraConnectionException {
+    	try {
+    		fedora.server.types.gen.Datastream ds = getAPIM().getDatastream(pid, dsid, "");
+    		return true;
+    	} catch (Exception e) {}
+   		return false;
+    }
+
+    
+
+    
     public boolean isDataObject(String pid)
             throws FedoraIllegalContentException, FedoraConnectionException {
         boolean cm = hasContentModel(pid, Constants.CONTENT_MODEL_3_0);

@@ -56,6 +56,8 @@ public class GuiObjectEditorDialog extends CGuiComposite {
 	JComboBox jcbUser;
 	JButton jboUpload;
 	JButton jbmUpload;
+	JButton jboDownload;
+	JButton jbmDownload;
 	JButton jbNew;
 	JButton jbDel;
 	JButton jboEdit;
@@ -99,6 +101,8 @@ public class GuiObjectEditorDialog extends CGuiComposite {
 		setWidgetName(jbSaveRelations, "jbSaveRelations");
 		setWidgetName(jboUpload, "jboUpload");
 		setWidgetName(jbmUpload, "jbmUpload");
+		setWidgetName(jboDownload, "jboDownload");
+		setWidgetName(jbmDownload, "jbmDownload");
 		setWidgetName(jboEdit, "jboEdit");
 		setWidgetName(jbmEdit, "jbmEdit");
 		setWidgetName(jbNew, "jbNew");
@@ -182,8 +186,9 @@ public class GuiObjectEditorDialog extends CGuiComposite {
 						
 
 		jboUpload = new JButton(res.getString("add"));
-
 		jbmUpload = new JButton(res.getString("add"));
+		jboDownload = new JButton(res.getString("saveas"));
+		jbmDownload = new JButton(res.getString("saveas"));
 
 		jbClose = new JButton(res.getString("close"));
 			
@@ -208,6 +213,8 @@ public class GuiObjectEditorDialog extends CGuiComposite {
 		c1.add(jbmUpload);
 		c1.add(new JLabel(" "));
 		c1.add(jbmEdit);
+		c1.add(new JLabel(" "));
+		c1.add(jbmDownload);
 		t1.add( c1, "wrap 10" );
 		
 		Container t2 = new Container();
@@ -221,6 +228,8 @@ public class GuiObjectEditorDialog extends CGuiComposite {
 		c2.add(jbNew);
 		c2.add(new JLabel(" "));
 		c2.add(jbDel);
+		c2.add(new JLabel(" "));
+		c2.add(jboDownload);
 		t2.add( c2, "wrap 10" );
 
 		Container t3 = new Container();

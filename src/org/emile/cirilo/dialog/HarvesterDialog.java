@@ -23,10 +23,12 @@ package org.emile.cirilo.dialog;
 import org.apache.poi.util.SystemOutLogger;
 import org.emile.cirilo.*;
 import org.emile.cirilo.utils.*;
+import org.emile.cirilo.business.MDMapper;
 import org.emile.cirilo.business.Session;
 import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
-import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
+import org.emile.cirilo.gui.jtable.HarvesterTableModel;
+import org.emile.cirilo.oai.*;
 
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.CServiceProvider;
@@ -41,21 +43,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.FileWriter;
 import java.io.File;
+import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.net.URL;
+import java.net.URLConnection;
 import java.io.*;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.table.*;
+
 import java.util.regex.*;
 
 import javax.swing.*;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -95,7 +105,8 @@ public class HarvesterDialog extends CDefaultDialog {
 	 */
 	public void handleCloseButton(ActionEvent e)
 		throws Exception {
-		org.emile.cirilo.dialog.CBoundSerializer.save(this.getCoreDialog(), se.getHarvesterDialogProperties(), (JTable) null);   
+	    JTable tb = (JTable) getGuiComposite().getWidget("jtRepositories");
+		org.emile.cirilo.dialog.CBoundSerializer.save(this.getCoreDialog(), se.getHarvesterDialogProperties(), tb);   
 		close();
 	}
 
@@ -105,86 +116,66 @@ public class HarvesterDialog extends CDefaultDialog {
 	 * @param  e              Description of the Parameter
 	 * @exception  Exception  Description of the Exception
 	 */
-	public void handleStartButton(ActionEvent e)
-			throws Exception {
+	public void handleStartButton(ActionEvent e) throws Exception {
 		new Thread() {
 			public void run() {
 
 					try {
 
 						JTable tb = (JTable) getGuiComposite().getWidget("jtRepositories");
+			  		  	int[] selected = tb.getSelectedRows();
 
 						MessageFormat msgFmt = new MessageFormat(res.getString("askharv"));
-						Object[] args = {new Integer(tb.getRowCount()).toString()};
+						Object[] args = {new Integer(selected.length).toString()};
 						String time = new java.sql.Timestamp(System.currentTimeMillis()).toString();
-			   		    logfile =saveto+System.getProperty( "file.separator" )+java.net.URLEncoder.encode("harvest-"+time,"US-ASCII")+".log"; 
+			   		    logfile = logdir + System.getProperty( "file.separator" )+"harvest-"+time.replaceAll("[ ]", "_").replaceAll("[:]", ".")+".log"; 
 						logger = new FileWriter( logfile );
 
-						int liChoice = JOptionPane.showConfirmDialog(null, msgFmt.format(args) ,
-								Common.WINDOW_HEADER, JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE);
+						int liChoice = JOptionPane.showConfirmDialog(null, msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 						if (liChoice == 0) {
 
-							logger.write( new java.util.Date()  +res.getString("start")+" harvest"+"\n----");	
+							logger.write( new java.util.Date()  +res.getString("start")+" harvesting"+"\n");	
 
-	    			    	ProgressDialog progressDialog = new ProgressDialog( getCoreDialog(), Common.WINDOW_HEADER);
-	    			    	progressDialog.displayPercentageInProgressBar = true;
-	    			    	progressDialog.millisToDecideToPopup = 1;
-	    			    	progressDialog.millisToPopup = 1;
 
 				   		    getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));						
-	    			    	progressDialog.beginTask(res.getString("harvcont"),tb.getRowCount(), true);
-	    			    	progressDialog.worked(1);
-				   		    
-				   		    for (int i=0; i<tb.getRowCount(); i++) {	 
 
-	    			    		if(progressDialog.isCanceled()) {
-	    			    			break;
-	    			    		}				
-
-	    			    		progressDialog.worked(1);
- 															
-	    			    		try {
-	    			    			Thread.sleep(50); 
-	    			    		} catch (InterruptedException e) {
-	    			    		}
-			   		    		 																		   		    	
-				   		    	String baseURL =(String) tb.getValueAt(i,1);
-				   		    	String metadataPrefix =(String) tb.getValueAt(i,2);
+				   		    boolean exit = false;				   		    
+				   		    for (int i=0; i<selected.length; i++) {	 
+ 																    			    		
+			   		    		int x = selected[i];
+			   		    		
+				   		    	String baseURL =(String) tb.getValueAt(x,2);
+				   		    	String metadataPrefix =(String) tb.getValueAt(x,3);
+				   		    	
 				   		    	try {
-				   		    		String from = (String) tb.getValueAt(i,3);
-				   		    		int j = from.indexOf(" ");
-				   		    		if ( j > 0) {
-				   		    			from = " -from "+from.substring(0,j+1);
-				   		    		} else {
-				   		    			from ="";
-				   		    		}
-				   		    //		String filename = saveto+System.getProperty( "file.separator" )+java.net.URLEncoder.encode(baseURL+time,"US-ASCII")+".xml ";
+				   		    		boolean mode = true;
+				   		    		while (harvest (mode, metadataPrefix, baseURL, null, null)) {
+				   		    			if(!addItems( ((HarvesterTableModel) tb.getModel()).getRow(x))) {
+				   		    				exit = true;
+				   		    				break;
+				   		    			}
+			   		    				mode = false;
+				   		    		}	
+				   		    		if (exit) break;
 				   		    		
-				   		    		String filename = saveto+System.getProperty( "file.separator" )+"test.xml";
-				   		    		org.emile.cirilo.oai.RawWrite.harvest(logger, "-metadataPrefix " +metadataPrefix+from+" -out "+filename, baseURL);
-				   		    		addItems(filename);
-				   		    		
-				   		    	} catch (Exception ex) {				   		    		
+				   		    	} catch (Exception ex) {	
 				   		    	}
-				   		    	XPath xPath = XPath.newInstance( "/dataproviders/repository[@url='"+baseURL+"']" );
-				   		    	Element curr = (Element) xPath.selectSingleNode( doc );
-				   		    	if (curr != null) curr.setAttribute("updated", time);		     
-				   		    	logger.write("\n----");
+				   		    	
+				   		    	XPath xPath = XPath.newInstance( "/dataproviders/repository[serviceprovider='"+baseURL+"']" );
+				   		    	Element rep = (Element) xPath.selectSingleNode( doc );
+				   		    	if (rep != null) rep.getChild("updated").setText(time);		     
+				   		    	logger.write("\n");
 				   		    }
-				   		    Format format = Format.getRawFormat();
-				   		    format.setEncoding("UTF-8");
-				   		    XMLOutputter outputter = new XMLOutputter(format);
 
-//				   		    Repository.modifyDatastreamByValue("ini:Datastreams", "DATAPROVIDERS", "text/xml", outputter.outputString(doc));
+				   		    Repository.modifyDatastreamByValue("cirilo:Backbone", "DATAPROVIDERS", "text/xml", outputter.outputString(doc));
 
 				   		    msgFmt = new MessageFormat(res.getString("harvested"));
 				   		    Object[] argu = {};
 
 				   		    JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(argu) + res.getString("details")+logfile , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 				   		    
-				   		    logger.write("\n"+ new java.util.Date()  +res.getString("end")+" harvest");									
+				   		    logger.write("\n"+ new java.util.Date()  +res.getString("end")+" harvesting");									
 							logger.close();
 
 							getGuiComposite().getWidget("jbShowLogfile").setEnabled(true);
@@ -204,81 +195,222 @@ public class HarvesterDialog extends CDefaultDialog {
 	}
 
 	
-	public void addItems(String filename)
-			throws Exception {
-					try {
-
-							SAXBuilder builder = new SAXBuilder();
-		    				Document metadata = builder.build(new File(filename) );		    				
-		    				XPath xpath = XPath.newInstance("//oai:record ");
-		    				xpath.addNamespace( Common.xmlns_oai  );
-
-		    				List records = (List) xpath.selectNodes( metadata );
-
-		    			    if (records.size() > 0 ) {
-		    			    	int i = 0;
-			    														   		    
-		    			    	for (Iterator iter = records.iterator(); iter.hasNext();) {
-		    			    		Element em = (Element) iter.next();
-		    			    						   		    	
-		    			    		try {
-	    			    				String pid = "o:"+em.getChild("header", Common.xmlns_oai  ).getChild("identifier", Common.xmlns_oai  ).getText().replaceAll("o:","").replace(":","_");
-		    			    	        System.out.println(pid);
-	    			    				if (!Repository.exist(pid)) {
-		    			    				pid = temps.cloneTemplate("info:fedora/cirilo:OAIItem", user.getUser(), "$"+pid, (String) null);
-			    			    			logger.write("\n"+ new java.util.Date() + res.getString("creatingobject")+pid);		    			    				
-		    			    			} else {
-			    			    			logger.write("\n"+ new java.util.Date() + res.getString("updatingobject")+pid);		    			    				
-		    			    			}		    	
-		    			    			
-		    			    			XPath qpath = XPath.newInstance("oai:metadata/europeana:record");
-		    		    				qpath.addNamespace( Common.xmlns_dc  );
-		    		    				qpath.addNamespace( Common.xmlns_oai  );
-		    			    		    qpath.addNamespace(Common.xmlns_europeana);		    			    		    
-		    		    				Element root  = (Element) qpath.selectSingleNode( em );
-		    		    				
-		    		    				if (root != null) {
-		    		    					
-		    		    					try {
-		    		    						Element isShownAt = root.getChild("isShownAt", Common.xmlns_europeana);
-		    		    						Repository.modifyDatastream (pid, "PID", null, "R", isShownAt.getText());
-		    		    					} catch (Exception eq) {}
-
-		    		    					try {
-		    		    						Element object = root.getChild("object", Common.xmlns_europeana);
-		    		    						File thumbnail = File.createTempFile( "temp", ".tmp" );		
-		    		    						URL url = new URL(object.getText());
-
-		    		    						InputStream is = url.openStream();
-		    		    						OutputStream os = new FileOutputStream(thumbnail.getAbsoluteFile());
-
-		    		    						byte[] b = new byte[2048];
-		    		    						int length;
-		    		    						while ((length = is.read(b)) != -1) {
-		    		    							os.write(b, 0, length);
-		    		    						}
-		    		    						is.close();
-		    		    						os.close();
-		    		    					
-		    		    						ImageTools.createThumbnail( thumbnail, thumbnail, 100, 80, Color.lightGray );
-		    		    						Repository.modifyDatastream(pid, "THUMBNAIL", "image/jpeg", "M", thumbnail);
-		    		    						thumbnail.delete();
-		    		    					} catch (Exception eq) {}
-		    		    				}
-
-		    			    		} catch (Exception e) {
-		    			    			e.printStackTrace();
-		    			    		}
-		    			    	}
-				   		    
-		    			    }
-				   		    	         
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
- 
+	public boolean harvest(boolean mode, String metadataPrefix, String baseURL, String from, String until) {
+		try {			
+			if (mode) {			
+				listRecords = new ListRecords(baseURL, from, until, null, metadataPrefix);
+			} else if (resumptionToken != null) {
+				listRecords = new ListRecords(baseURL, resumptionToken);			
+			} else {
+				return false;
+			}
+			NodeList errors = listRecords.getErrors();
+			if (errors != null && errors.getLength() > 0) {
+			   for (int i = 0; i< errors.getLength(); i++) {
+				   Node item = errors.item(i);
+				   logger.write("\n"+ new java.util.Date()  +" "+item.getTextContent());	
+			   }
+			   return false;
+			}
+			
+			metadata = parser.build(new StringReader(listRecords.toString()));
+			resumptionToken = listRecords.getResumptionToken();
+			
+			return (metadata.getRootElement() != null);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+  	    return false;
 	}
+	
+	public boolean addItems(String[] par) throws Exception {
+		try {
+			
+			 
+			String name = par[0];
+			String updated = par[1];
+			String serviceprovider = par[2];
+			String metadataprefix = par[3];
+			String url = par[4];
+			String model = par[5];
+			String constraints = par[6];
+			String icon = par[7];
+			String owner = par[8];
+			
+			XPath xpath = XPath.newInstance("//oai:record"+(!constraints.isEmpty() ? "["+constraints+"]" : ""));
+			xpath.addNamespace(Common.xmlns_dc);
+			xpath.addNamespace(Common.xmlns_oai);
+			xpath.addNamespace(Common.xmlns_europeana);
+			xpath.addNamespace(Common.xmlns_tei_p5);
+			xpath.addNamespace(Common.xmlns_dcterms);
+			xpath.addNamespace(Common.xmlns_lido);
+			
+			List records = (List) xpath.selectNodes(metadata);
+			
+			if (records.size() > 0) {
+				
+		    	ProgressDialog progressDialog = new ProgressDialog( getCoreDialog(), Common.WINDOW_HEADER);
+		    	progressDialog.displayPercentageInProgressBar = true;
+		    	progressDialog.millisToDecideToPopup = 1;
+		    	progressDialog.millisToPopup = 1;
 
+		    	progressDialog.beginTask(name+": "+res.getString("harvcont"),records.size(), true);
+		    	progressDialog.worked(1);
+
+				
+				int i = 0;
+
+				for (Iterator iter = records.iterator(); iter.hasNext();) {
+					Element em = (Element) iter.next();
+
+					
+		    		if(progressDialog.isCanceled()) {
+		    			return false;
+		    		}				
+
+		    		progressDialog.worked(1);
+
+		    		try {
+		    			Thread.sleep(50); 
+		    		} catch (InterruptedException e) {
+		    		}
+
+					try {
+						String pid = "o:oai." + em.getChild("header", Common.xmlns_oai).getChild("identifier",	Common.xmlns_oai).getText()
+								.replaceAll("info:fedora/oai:", "")
+								.replaceAll("o:", "")
+								.replaceAll("hdl:", "")
+								.replaceAll("[:/]", ".");
+						if (!Repository.exist(pid)) {
+							pid = temps.cloneTemplate("info:fedora/"+model,	owner, "$" + pid, (String) null);
+							logger.write("\n" + new java.util.Date() + res.getString("creatingobject") + pid);
+						} else {
+							logger.write("\n" + new java.util.Date() + res.getString("updatingobject") + pid);
+						}
+
+						xpath = XPath.newInstance(url);
+						xpath.addNamespace(Common.xmlns_dc);
+						xpath.addNamespace(Common.xmlns_oai);
+						xpath.addNamespace(Common.xmlns_europeana);
+						xpath.addNamespace(Common.xmlns_tei_p5);
+						xpath.addNamespace(Common.xmlns_dcterms);
+						xpath.addNamespace(Common.xmlns_lido);
+						Element path = (Element) xpath.selectSingleNode(em);
+						
+						if (path != null) {							
+							
+							
+							XPath vpath = XPath.newInstance(icon);
+							vpath.addNamespace(Common.xmlns_dc);
+							vpath.addNamespace(Common.xmlns_oai);
+							vpath.addNamespace(Common.xmlns_europeana);
+							vpath.addNamespace(Common.xmlns_tei_p5);
+							vpath.addNamespace(Common.xmlns_dcterms);
+							vpath.addNamespace(Common.xmlns_lido);
+							Element object = (Element) vpath.selectSingleNode(em);
+
+							if (object != null) {
+
+								String iconref = object.getText();
+								String uwmetadata = null;
+								
+                                String server;
+                                String oid;
+                                
+								if(iconref.contains("phaidra")) {
+								   int ipos = iconref.indexOf("/o:");	
+								   int jpos = iconref.indexOf("//");
+								   server =  "https://"+iconref.substring(jpos+2,ipos).replaceAll("phaidra", "fedora");
+								   oid = iconref.substring(ipos+1);
+								   iconref = server+"/fedora/objects/"+oid+"/methods/bdef:Document/preview?box=520";
+								   uwmetadata =  (server+"/fedora/get/"+oid+"/bdef:Asset/getUWMETADATA");
+								}
+								
+								try {
+									if(uwmetadata != null) {
+								        InputStream is = new URL(uwmetadata).openStream();
+								        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+								        
+								        StringBuilder response = new StringBuilder();								        
+								        String line;
+								        
+								        while ( (line = br.readLine()) != null) {
+								        	response.append(line);
+								        }
+										Document uwm = parser.build(new StringReader(response.toString()));									
+
+										XPath qpath = XPath.newInstance("./oai:metadata");
+										qpath.addNamespace(Common.xmlns_oai);
+										em.addNamespaceDeclaration(Common.xmlns_ns0);
+										Element metadata = (Element) qpath.selectSingleNode(em);																				
+								        metadata.removeChild("dc", Common.xmlns_oai_dc);
+										metadata.addContent(uwm.cloneContent());																				
+									}
+									Repository.modifyDatastream(pid, "URL", null, "R", path.getText());							
+									String buf =  outputter.outputString(em);
+									Repository.modifyDatastreamByValue(pid, "RECORD", "text/xml", buf);
+									createMapping(pid, buf);
+								} catch (Exception eq) {
+									eq.printStackTrace();
+								}
+
+															
+								try {
+									File thumbnail = File.createTempFile("temp",".tmp");
+									URL ref = new URL(iconref);
+
+									InputStream is = ref.openStream();
+									OutputStream os = new FileOutputStream(thumbnail.getAbsoluteFile());
+
+									byte[] b = new byte[2048];
+									int length;
+									while ((length = is.read(b)) != -1) {
+										os.write(b, 0, length);
+									}
+									is.close();
+									os.close();
+									
+									Repository.modifyDatastream(pid, "THUMBNAIL","image/jpeg", "M", thumbnail);
+									thumbnail.delete();									
+								} catch (Exception eq) {
+									eq.printStackTrace();
+								}
+							}
+						}	
+	
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return true;
+	}
+	
+    private void createMapping (String pid, String record) {	
+	try {
+			byte[] url =  Repository.getDatastream(pid , "DC_MAPPING" , "");
+		
+			URLConnection con = new URL (new String(url)).openConnection();
+			con.setUseCaches(false);
+			Document mapping = parser.build(con.getInputStream());
+			MDMapper m = new MDMapper(pid,outputter.outputString(mapping));
+			
+			org.jdom.Document dc = parser.build( new StringReader (m.transform(parser.build(new StringReader(record)))));									
+
+			Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(dc));
+			
+				
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+    }
 	
 	public void handleShowLogfileButton(ActionEvent e) 
 	throws Exception {
@@ -293,53 +425,50 @@ public class HarvesterDialog extends CDefaultDialog {
 	 * @exception  CShowFailedException  Description of the Exception
 	 */
 	public void show()  throws CShowFailedException {
-	  try {	
-		 SAXBuilder parser = new SAXBuilder();
-	
-			se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
-			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getHarvesterDialogProperties(), (JTable) null);
-			
+	  try {
 
+		 String[] names ={res.getString("provider"),res.getString("updated"),res.getString("baseurl"),res.getString("prefix"),res.getString("shownat"), res.getString("cmodel"),"Constraints","Thumbnail", res.getString("owner")};
+		  
+		 se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
 	     JTable tb = (JTable) getGuiComposite().getWidget("jtRepositories");
-         tb.setShowHorizontalLines(false);
-         Vector data = new Vector();
-
          List repositories = null;
-	     XPath xPath;
          
 	     try {
 
-	    	 Vector names = new Vector();
-			 names.addElement(res.getString("provider"));
-			 names.addElement(res.getString("baseurl"));
-			 names.addElement(res.getString("prefix"));
-			 names.addElement(res.getString("updated"));
-
+	    	 
 	    	 doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/DATAPROVIDERS/content");
-   	         saveto =doc.getRootElement().getAttributeValue("objectstore");
+   	         logdir = doc.getRootElement().getAttributeValue("logdir");
    	         
-		     xPath = XPath.newInstance( "/dataproviders/repository[@state='active']" );
+		     XPath xPath = XPath.newInstance( "/dataproviders/repository[@state='active']" );
 		     repositories = (List) xPath.selectNodes( doc );
+
+		     HarvesterTableModel dm = new HarvesterTableModel(names);
 	     
 	    	 if (repositories != null) {
     		
 	    		 for (Iterator iter = repositories.iterator(); iter.hasNext();) {
 	    			 try {
 	    				 Element e = (Element) iter.next();
-	    				 Vector row = new Vector();
-	    				 JCheckBox x = new JCheckBox();
-	    				 row.addElement( e.getAttributeValue("name"));
-	    				 row.addElement( e.getAttributeValue("url"));
-	    				 row.addElement( e.getAttributeValue("metadataprefix"));
-	    				 row.addElement( e.getAttributeValue("updated"));
-	    				 data.addElement(row);
+	    				 String[] row = new String[9]; 
+	    				 row[0] = e.getAttributeValue("name");
+	    				 row[1] = e.getChild("updated").getText();
+	    				 row[2] = e.getChild("serviceprovider").getText();
+	    				 row[3] = e.getChild("metadataprefix").getText();
+	    				 row[4] = e.getChild("url").getText();
+	    				 row[5] = e.getChild("model").getText();
+	    				 row[6] = e.getChild("constraints").getText();
+	    				 row[7] = e.getChild("thumbnail").getText();
+	    				 row[8] = e.getChild("owner").getText();
+	    				 dm.add(row);
+	    				 
 	    			 } catch (Exception ex) {}
 	    		 }	  
 	    	 }
-	 	
-	    	 DefaultSortTableModel dm = new DefaultSortTableModel(data, names);
+	 	    	 
 	         tb.setModel(dm);
 	         tb.setRowSelectionInterval(0,0);
+			 org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getHarvesterDialogProperties(), tb);			
+	         
 	         
 	     } catch (Exception e){} 
     	 
@@ -378,16 +507,20 @@ public class HarvesterDialog extends CDefaultDialog {
 	protected void opened() throws COpenFailedException {
 
 		try {
-			 temps = (TemplateSubsystem) CServiceProvider.getService(ServiceNames.TEMPLATESUBSYSTEM);
-			 res =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
-			 user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
+			parser = new SAXBuilder();
+			
+			temps = (TemplateSubsystem) CServiceProvider.getService(ServiceNames.TEMPLATESUBSYSTEM);
+			res =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
+			user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
+			
+   		    Format format = Format.getRawFormat();
+   		    format.setEncoding("UTF-8");
+   		    outputter = new XMLOutputter(format);
 
 			CDialogTools.createButtonListener(this, "jbClose", "handleCloseButton");
 			CDialogTools.createButtonListener(this, "jbStart", "handleStartButton");
 			CDialogTools.createButtonListener(this, "jbShowLogfile", "handleShowLogfileButton");			
   		    getGuiComposite().getWidget("jbShowLogfile").setEnabled(false);
-
-		    JTable tb = (JTable) getGuiComposite().getWidget("jtRepositories");
 
 		} catch (Exception ex) {
 			throw new COpenFailedException(ex);
@@ -398,11 +531,16 @@ public class HarvesterDialog extends CDefaultDialog {
 
 	private ResourceBundle res; 
 	private TemplateSubsystem  temps;
+	private ListRecords listRecords;
+	private String resumptionToken;
 	private Document doc;
+	private Document metadata;
+	private SAXBuilder parser;
+	private XMLOutputter outputter;
 	private Session se;
 	private User user;
 	private String logfile;
-	private String saveto;
+	private String logdir;
 	private FileWriter logger;
 }
 

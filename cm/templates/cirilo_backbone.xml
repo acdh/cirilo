@@ -29,6 +29,25 @@
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="DATAPROVIDERS" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" 
+      ID="DATAPROVIDERS1.0" LABEL="List of dataproviders for OAI-PMH" MIMETYPE="text/xml" SIZE="386">
+      <foxml:xmlContent>
+        <dataproviders logdir="c:\log\harvester">
+          <repository name="EXAMPLE" state="active">
+            <serviceprovider>http://localhost:8080/oaiprovider</serviceprovider>
+            <metadataprefix>oai_dc</metadataprefix>
+            <updated>2015-07-20 15:51:23.194</updated>
+            <model>cirilo:OAIRecord</model>
+            <url/>
+            <thumbnail/>
+            <owner/>
+            <constraints/>
+          </repository>
+        </dataproviders>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="TOTEI" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" 
       ID="TOTEI1.0" LABEL="XSLT Stylesheet to customize TEI_SOURCEs" MIMETYPE="text/xml" SIZE="386">
@@ -258,7 +277,28 @@
         </xsl:stylesheet>
       </foxml:xmlContent>
     </foxml:datastreamVersion>
-  </foxml:datastream>
+  </foxml:datastream>  
+  <foxml:datastream CONTROL_GROUP="X" ID="OAItoDC_MAPPING" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="OAItoDC_MAPPING1.0" LABEL="OAI to DC Mapping"
+      MIMETYPE="text/xml" SIZE="648">
+      <foxml:xmlContent>
+        <mm:metadata-mapping xmlns:mm="http://mml.uni-graz.at/v1.0">
+          <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:europeana="http://www.europeana.eu/schemas/ese/" xmlns:oai="http://www.openarchives.org/OAI/2.0/">
+            <dc:title>
+              <mm:map select="//dc:title" />
+            </dc:title>
+            <dc:rights>
+              <mm:map select="//europeana:rights" />
+            </dc:rights>
+            <dc:relation>
+              <mm:map select="//dc:relation" />
+            </dc:relation>
+            <dc:identifier>this:PID</dc:identifier>
+          </oai_dc:dc>
+        </mm:metadata-mapping>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream> 
   <foxml:datastream CONTROL_GROUP="X" ID="TEItoHSSF" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="TEItoHSSF.1" LABEL="Stylesheet to generate HSSF stream"
       MIMETYPE="text/xml" SIZE="648">

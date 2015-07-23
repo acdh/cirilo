@@ -179,14 +179,22 @@ public class EditObjectDialog extends CDialog {
 				    			  String p = (String) substitutions.get(j);
 				    			  if (p.substring(0,1).equals(Common.DCMAPPING)) {
 				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-                                         try {
-  				    					   org.jdom.Document tei = db.build (Repository.getDatastream(pid, "TEI_SOURCE"));
-			    	            		   TEI t = new TEI(null,false,true);
-			    	            		   t.set(outputter.outputString(tei));
-			    	            		   t.setPID(pid);
-			    	            		   t.validate(null, null);
- 	    				  		   		   Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", new String(t.toString().getBytes("UTF-8"),"UTF-8"));
-				    					 } catch (Exception q) {}  
+	                                         try {
+	    				    				   org.jdom.Document tei = db.build (Repository.getDatastream(pid, "TEI_SOURCE"));
+	  			    	            		   TEI t = new TEI(null,false,true);
+	  			    	            		   t.set(outputter.outputString(tei));
+	  			    	            		   t.setPID(pid);
+	  			    	            		   t.validate(null, null);
+	   	    				  		   		   Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", new String(t.toString().getBytes("UTF-8"),"UTF-8"));
+	  				    					 } catch (Exception q) {}  
+	                                         try {
+	    				    				   org.jdom.Document lido = db.build (Repository.getDatastream(pid, "LIDO_SOURCE"));
+	  			    	            		   LIDO l = new LIDO(null,false,true);
+	  			    	            		   l.set(outputter.outputString(lido));
+	  			    	            		   l.setPID(pid);
+	  			    	            		   l.validate(null, null);
+	   	    				  		   		   Repository.modifyDatastreamByValue(pid, "LIDO_SOURCE", "text/xml", new String(l.toString().getBytes("UTF-8"),"UTF-8"));
+	  				    					 } catch (Exception q) {}  
 				    				  }	  
 				    			  }
 				    		  }
@@ -1054,7 +1062,9 @@ public class EditObjectDialog extends CDialog {
 					
 						TemplateSubsystem temps = (TemplateSubsystem) CServiceProvider.getService(ServiceNames.TEMPLATESUBSYSTEM);
 						temps.makeTemplate("cirilo:TEI", loDlg.getUser(), "$cirilo:TEI."+loDlg.getUser(), "No Title", "info:fedora/cm:TEI");
+						temps.makeTemplate("cirilo:LIDO", loDlg.getUser(), "$cirilo:LIDO."+loDlg.getUser(), "No Title", "info:fedora/cm:LIDO");
 						temps.makeTemplate("cirilo:Context", loDlg.getUser(), "$cirilo:Context."+loDlg.getUser(), "No Title", "info:fedora/cm:Content");
+						temps.makeTemplate("cirilo:Environment", loDlg.getUser(), "$cirilo:"+loDlg.getUser(), "No Title", "");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

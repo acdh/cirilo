@@ -22,9 +22,11 @@ package org.emile.cirilo;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.List;
 
 import javax.swing.UIManager;
 
@@ -106,7 +108,39 @@ public class Common {
     
     public final static Namespace xmlns_lido= Namespace.getNamespace( "lido", "http://www.lido-schema.org");
     
-    public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
+	public final static Namespace xmlns_cantus = Namespace.getNamespace( "l", "http://cantus.oeaw.ac.at");
+
+	public final static Namespace xmlns_dcterms = Namespace.getNamespace( "dcterms", "http://purl.org/dc/terms/");
+		
+	public final static Namespace xmlns_ns0 = Namespace.getNamespace( "ns0", "http://phaidra.univie.ac.at/XML/metadata/V1.0");
+
+	public final static Namespace xmlns_ns1 = Namespace.getNamespace( "ns1", "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0");
+	
+	public final static Namespace xmlns_ns2 = Namespace.getNamespace( "ns2", "http://phaidra.univie.ac.at/XML/metadata/extended/V1.0");
+		    	
+	public final static Namespace xmlns_ns3 = Namespace.getNamespace( "ns3", "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/entity");
+	
+	public final static Namespace xmlns_ns4 = Namespace.getNamespace( "ns4", "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/requirement");
+	
+	public final static Namespace xmlns_ns5 = Namespace.getNamespace( "ns5", "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/educational");
+	
+	public final static Namespace xmlns_ns6 = Namespace.getNamespace( "ns6", "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/annotation");
+	
+	public final static Namespace xmlns_ns7 = Namespace.getNamespace( "ns7", "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification");
+	
+	public final static Namespace xmlns_ns8 = Namespace.getNamespace( "ns8", "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization");
+	
+	public final static Namespace xmlns_ns9 = Namespace.getNamespace( "ns9", "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0");
+	
+	public final static Namespace xmlns_ns10 = Namespace.getNamespace( "ns10", "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0");
+	
+	public final static Namespace xmlns_ns11 = Namespace.getNamespace( "ns11", "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/entity");
+	
+	public final static Namespace xmlns_ns12 = Namespace.getNamespace( "ns12", "http://phaidra.univie.ac.at/XML/metadata/digitalbook/V1.0");
+	
+	public final static Namespace xmlns_ns13 = Namespace.getNamespace( "ns13", "http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0");
+
+	public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
     
     public final static String SESAME_SERVER = "http://localhost:8080/openrdf-sesame";
   	
@@ -189,6 +223,36 @@ public class Common {
 
     public final static String HANDLE_PREFIX = "0.NA/";
 
+	public final static String stylesheet = "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.tei-c.org/ns/1.0\" "+
+		    "xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:l=\"http://cantus.oeaw.ac.at\" exclude-result-prefixes=\"xs l\" version=\"2.0\">"+
+		    "<xsl:template match=\"*|@*|text()\"> <xsl:copy><xsl:apply-templates select=\"*|@*|text()\"/></xsl:copy></xsl:template>"+        
+		    "<xsl:template match=\"l:*\">"+
+		     "<xsl:element name=\"seg\"><xsl:if test=\"not(@type)\"><xsl:attribute name=\"type\"><xsl:value-of select=\"'Incipit'\"/></xsl:attribute></xsl:if>´"+
+		     "<xsl:attribute name=\"ana\"><xsl:value-of select=\"concat('#',substring(name(),3))\"></xsl:value-of></xsl:attribute>"+
+		     "<xsl:apply-templates select=\"*|@*|text()\"/>"+            
+		     "</xsl:element></xsl:template>"+
+		     "<xsl:template match=\"t:publicationStmt\">"+
+		     "<xsl:copy><authority>Cantus</authority><xsl:apply-templates select=\".//t:idno\"/>"+
+		     "</xsl:copy></xsl:template></xsl:stylesheet>";
+
+    public final static int INFO = 0;
+    public final static int WARN = 1;
+    public final static int DEBUG = 2;
+    public final static int LOGLEVEL = INFO;
+  
+    public static void log(FileWriter logger, Exception e) {
+ 	   try {
+ 		   if (logger != null) logger.write(new java.util.Date()  +" "+e.getLocalizedMessage()+"\n");
+ 		   if (Common.LOGLEVEL==Common.DEBUG)  e.printStackTrace();
+ 	   } catch (Exception eq) {}	   
+    }
+      
+    public static void log(FileWriter logger, String s) {
+  	   try {
+  		   if (logger != null) logger.write(new java.util.Date()  +" "+s+"\n");
+  	   } catch (Exception eq) {}	   
+     }    
+    
 	public static String itrim(String s) {
         return s.replaceAll("\\b\\s{2,}\\b", " ");
 	}
@@ -229,15 +293,17 @@ public class Common {
 
 	
 	   public static void genQR (User user, String pid) {	
-	    	try {
+	    	try { 
+	    		List<String> cm = Repository.getContentModels(pid);
+	    		if (cm.contains("cm:OAIRecord")) return;
 	    		String toEncode = user.getUrl().substring(0,user.getUrl().lastIndexOf("/")+1)+pid;
 	    		ByteArrayOutputStream stream = QRCode.from(toEncode).to(ImageType.JPG).withSize(125, 125).stream();
 	    		File temp = File.createTempFile("tmp","xml");
 	    		OutputStream out = new FileOutputStream (temp);
 	    		stream.writeTo(out);
-	    		try {
+	    		if (!Repository.exists(pid, "QR")) {
 	    			Repository.addDatastream(pid, "QR", "QR Code", "M", "image/jpeg", temp);
-	    		} catch (Exception q) {
+	    		} else {
 	    			Repository.modifyDatastream(pid, "QR", "image/jpeg", "M", temp);
 	    		}
 	    		temp.delete();

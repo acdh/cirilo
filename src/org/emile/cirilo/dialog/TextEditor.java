@@ -201,20 +201,30 @@ public class TextEditor extends CDialog {
 	    	            		   }
 
 	    	            		   
-	    	            		   
-	    	            		   t.validate(null, null);
-  	    				  		   jebEditorPane.setText( t.toString());
- 
-	    	            		   SAXBuilder builder = new SAXBuilder();
-	    	            		   try {
-	    	            			   Document doc = builder.build(new StringReader(t.toString()));
-		  	    				  	   Repository.modifyDatastreamByValue(pid, dsid, mimetype, new String(t.toString().getBytes("UTF-8"),"UTF-8"));
-	  	    				  		   jebEditorPane.setText( t.toString());
-	    	            		   } catch (Exception ex) {
-	  	 								JOptionPane.showMessageDialog(  getCoreDialog(),  res.getString("xmlformat") , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE); 				    				    	            			   
-	    	            		   }
-	    	            	   } else {   
+	    	            	   } else if (dsid.equals("LIDO_SOURCE") && !pid.startsWith("cirilo:")) {
+		    	            		   LIDO l = new LIDO(null,false,true);
+		    	            		   l.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
+		    	            		   l.setPID(pid);
+		    	            		   
+		    	            		   if (l.isValid()) {
+		    	            			   l.validate(null, null);
+	  	    				  		       jebEditorPane.setText( l.toString());
 
+	  	    				  		   	   SAXBuilder builder = new SAXBuilder();
+	  	    				  		   	   try {
+	  	    				  		   		   Document doc = builder.build(new StringReader(l.toString()));
+	  	    				  		   		   Repository.modifyDatastreamByValue(pid, dsid, mimetype, new String(l.toString().getBytes("UTF-8"),"UTF-8"));
+	  	    				  		   	   } catch (Exception ex) {
+	  		  	 								JOptionPane.showMessageDialog(  getCoreDialog(),  res.getString("xmlformat") , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE); 				    				    	            			   
+	  	    				  		   	   }
+		    	            		   } else {
+		    	    		    			MessageFormat msgFmt = new MessageFormat(res.getString("parsererror"));
+		    	    		    			Object[] args = {"LIDO_SOURCE"}; 		    		
+		    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
+		    	            		   }
+
+	    	            		   
+	    	            	   } else {   
 	    	            		   SAXBuilder builder = new SAXBuilder();
 	    	            		   try {
 	    	            			   Document doc = builder.build(new StringReader(jebEditorPane.getText()));

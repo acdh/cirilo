@@ -92,7 +92,7 @@ public class GuiHarvesterDialog extends CGuiComposite {
 
 		jbShowLogfile = new JButton( res.getString("showlog") );
 
-		container.add( jtRepositories, "height 100:500:1500, growx, wrap 5" );
+		container.add( new JScrollPane(jtRepositories), "height 100:500:1500, growx, wrap 5" );
 		Box c0  = Box.createHorizontalBox();
 		c0.add( jbStart );
 		c0.add( new JLabel (" "));

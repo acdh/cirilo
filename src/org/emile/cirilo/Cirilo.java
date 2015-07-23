@@ -185,29 +185,8 @@ class CiriloWindow extends JPanel {
 		public void begin() {
 
 			try {
-													
-
-/*				
-				ImagePHash ph = new ImagePHash();
-
-				String image1 = ph.getHash(new FileInputStream(new File("c:/temp/1.jpg")));
-				String image2 = ph.getHash(new FileInputStream(new File("c:/temp/2.jpg")));
-
-				System.out.println("Score is " + ph.distance(image1, image2));
-*/	
 			
-//				String xmpXml = Sanselan.getXmpXml(new File("c:/temp/image.jpg"));
-				
-				
-/*				
-				IImageMetadata metadata = Sanselan.getMetadata(new File("c:/temp/image.tif"));
-				System.out.println(metadata);
-				String xmpXml = Sanselan.getXmpXml(new File("c:/temp/image.tif"));
-				System.out.println(xmpXml);
-*/				
-		 		   								
-				               
-                
+        
 				Properties p = new Properties();
 				p.load(Cirilo.class.getResourceAsStream("cirilo.ini"));
 				CPropertyService props = new CPropertyService();
@@ -309,7 +288,6 @@ class CiriloWindow extends JPanel {
 				se.loadHarvesterDialogProperties();
 				se.loadTemplaterDialogProperties();
 				se.loadOptionsDialogProperties();
-				
 				
 			}
 			catch (Exception ex) {

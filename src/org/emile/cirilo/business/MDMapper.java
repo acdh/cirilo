@@ -37,6 +37,7 @@ import javax.xml.transform.stream.StreamSource;
 
 
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.Common;
@@ -165,6 +166,30 @@ public class MDMapper
 	}
 	
 
+	public Document removeEmpty(JDOMResult result) {
+		try {			
+			XPath xpath = XPath.newInstance("//*[not(*) and (string-length(normalize-space(.)) = 0 or normalize-space(.) = ',')]");
+		
+			List nodes = (List) xpath.selectNodes( result.getDocument() );
+			 
+			if (nodes.size() > 0) {
+				for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+					try {
+						Element e = (Element) iter.next();
+						e.getParent().removeContent(e); 	
+					} catch (Exception e) {}
+				}
+			}	
+			
+			return result.getDocument();
+		} catch (Exception e) {
+			return null;
+		}
+	
+	}	
+	
+	
+	
 	public String transform(Document doc) {
 		try {
 			String xalan = System.getProperty("javax.xml.transform.TransformerFactory");
@@ -177,7 +202,7 @@ public class MDMapper
 
 	        System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");  
 	        
-			String s = outputter.outputString(out.getResult());			
+			String s = outputter.outputString(removeEmpty(out));			
 			return s;
 	     }
 	     catch (Exception e) {
@@ -198,7 +223,7 @@ public class MDMapper
 
 	        System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");  
 				        
-			String s = outputter.outputString(out.getResult());			
+			String s = outputter.outputString(removeEmpty(out));			
 			return s;
 	     }
 	     catch (Exception e) {

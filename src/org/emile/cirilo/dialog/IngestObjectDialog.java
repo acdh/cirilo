@@ -239,11 +239,11 @@ public class IngestObjectDialog extends CDialog {
 						logger.write( res.getString("start")+ simulate+res.getString("ofingest") +new java.util.Date() );	
 						
 
-						TEI t = new TEI(logger, onlyValidate, false);
+						TEI t = new TEI(logger, onlyValidate, true);
 						t.setUser((String)jcbUser.getSelectedItem());
-						METS m = new METS(logger, onlyValidate, false);
+						METS m = new METS(logger, onlyValidate, true);
 						m.setUser((String)jcbUser.getSelectedItem());
-						LIDO l = new LIDO(logger, onlyValidate, false);
+						LIDO l = new LIDO(logger, onlyValidate, true);
 						l.setUser((String)jcbUser.getSelectedItem());
 
 						JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
@@ -253,6 +253,7 @@ public class IngestObjectDialog extends CDialog {
 
 							String pid = (String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem();
 
+							progressDialog.setTaskName(res.getString("ingestof")+files.get(i)+" ...");
 							if (jcbGenerated.isSelected() && !jtfPID.getText().isEmpty()) {
 							   pid = "o:"+jtfPID.getText();
 							   if (files.size() == 1) {
@@ -454,8 +455,10 @@ public class IngestObjectDialog extends CDialog {
                                     }
 							    }
 								
-															    
+		
+								
  							    l.validate(pcm.get(), moGA);
+ 							    
  							    Common.genQR(user, l.getPID());
 										
  							    try { 							    
@@ -561,11 +564,11 @@ public class IngestObjectDialog extends CDialog {
 	                        String simulate = onlyValidate ? res.getString("ofsim") : "";                        						
 							logger.write( new java.util.Date()  +res.getString("start")+ simulate+res.getString("ofingest"));	
 
-							TEI t = new TEI(logger, onlyValidate, false);
+							TEI t = new TEI(logger, onlyValidate, true);
 							t.setUser((String)jcbUser.getSelectedItem());
-							METS m = new METS(logger, onlyValidate, false);
+							METS m = new METS(logger, onlyValidate, true);
 							m.setUser((String)jcbUser.getSelectedItem());
-							LIDO l = new LIDO(logger, onlyValidate, false);
+							LIDO l = new LIDO(logger, onlyValidate, true);
 							l.setUser((String)jcbUser.getSelectedItem());
 
 							JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
@@ -575,6 +578,7 @@ public class IngestObjectDialog extends CDialog {
 											    
 								String pid = (String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem();
 
+								progressDialog.setTaskName(res.getString("ingestof")+files.get(i)+" ...");
 								if (jcbGenerated.isSelected() && !jtfPID.getText().isEmpty()) {
 									   pid = "o:"+jtfPID.getText();
 									   if (files.size() == 1) {

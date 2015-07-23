@@ -392,23 +392,19 @@ public class METS {
 			      										ref = s.put(tp, this.PID, id);
 			      										s.disconnect();
 			      										ref = "http://"+user.getIIPSUrl()+"/iipsrv?FIF="+ref+"&hei=900&cvt=jpeg";
-			      										try {
+			      										if (!Repository.exists(this.PID, id)) {				      								
 			      											Repository.addDatastream(this.PID, id,  "Facsimile", mimetype, ref);
-			      										} catch (Exception eq) {
-			         										try {
-			          											Repository.modifyDatastream(this.PID, id, mimetype, "M", ref);
-			          										} catch (Exception ep) {}          											
+			      										} else {
+		          											Repository.modifyDatastream(this.PID, id, mimetype, "M", ref);
 			      										}
 				      									ch.setAttribute("href", ref, Common.xmlns_xlink);			      	
 			      									}
 			      									tp.delete();
 			      								 } else {
-			      									try {				      								
+			      									 if (!Repository.exists(this.PID, id)) {				      								
 			      										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
-			      									} catch (Exception eq) {
-			      										try {
-			      											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
-			      										} catch (Exception ep) {}
+			      									} else {
+		      											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
 			      									}
 			      									ch.setAttribute("href", host+this.PID+"/"+id, Common.xmlns_xlink);			      									
 			      								}
@@ -422,14 +418,14 @@ public class METS {
 					      						}
 				      						}
 				      					} else {
-				      						if (logger != null && this.PID != null) logger.write( new java.util.Date()  +" Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
+				      						Common.log(logger, "Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
 				      						return;
 				      					}
 				      					try {
 				      						if (!this.collection.isEmpty()) f.delete();
 				      					} catch (Exception q) {}
 				      				} else {
-				      					if (logger != null && this.PID != null) logger.write( new java.util.Date()  +" Bilddatei  '"+url+"' für Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
+				      					Common.log(logger, "Bilddatei  '"+url+"' für Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
 				      				}
 				      			}
 				      			}	
@@ -445,13 +441,11 @@ public class METS {
 	      								fos.write(image);
 	      								fos.close();
 	      							}	
-	      							try {
+									if (!Repository.exists(this.PID, tid)) {				      								
 	      								ImageTools.createThumbnail( f, thumb, 150, 150, Color.lightGray );
 	      								Repository.addDatastream(this.PID, tid, "Thumbnail", "M", mimetype, thumb);
-	      							} catch (Exception eq) {
-	      								try {
-	      									Repository.modifyDatastream(this.PID, tid, mimetype, "M", thumb);
-	      								} catch (Exception ep) {}
+	      							} else {
+      									Repository.modifyDatastream(this.PID, tid, mimetype, "M", thumb);
 	      							}
       	 				    		
       	 				    		Element file = new Element("file",Common.xmlns_mets);
@@ -477,8 +471,7 @@ public class METS {
 	      						}					      											      						
 				      		}				      		
 				      	} catch (Exception eq) {
-				      		if (logger != null) logger.write(new java.util.Date()  +" "+eq.getLocalizedMessage()+"\n");
-				      	}
+				      		Common.log(logger, eq);				      	}
 		    		}
 		    		if (thumbs.size() == 0) {
 		    			XPath xpath = XPath.newInstance( "//mets:fileSec" );
@@ -544,23 +537,21 @@ public class METS {
 				      						if (Repository.exist(this.PID)) {
 				      							i++;
 				      							File thumb = File.createTempFile( "temp", ".tmp" );
-				      							try {
+				      							if (!Repository.exists(this.PID, id)) {	
 				      								if( e.getAttribute("resize") != null) {
 				      									ImageTools.createThumbnail( f, thumb, 150, 150, Color.lightGray );
 				      								    Repository.addDatastream(this.PID, id, "Thumbnail", "M", mimetype, thumb);
 				      								} else {
 				      								    Repository.addDatastream(this.PID, id, "Thumbnail", "M", mimetype, f);
 				      								}    
-								      			} catch (Exception eq) {
-				      								try {
-				      									Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
-				      								} catch (Exception ep) {}
+								      			} else {
+			      									Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
 				      							}
 				      	 				    	thumb.delete();
 				      							ch.setAttribute("href", host+this.PID+"/"+id, Common.xmlns_xlink);
 				      						}
 				      					} else {
-				      						if (logger != null && this.PID != null) logger.write( new java.util.Date()  +" Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
+				      						Common.log(logger, "Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
 				      						return;
 				      					}
 				      					try {
@@ -568,13 +559,13 @@ public class METS {
 				      					} catch (Exception q) {}
 				      					continue;
 				      				} else {
-				      					if (logger != null && this.PID != null) logger.write( new java.util.Date()  +" Thumbnail  '"+url+"' für Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
+				      					Common.log(logger, "Thumbnail  '"+url+"' für Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
 				      				}
 				      			}
 				      			}	
 				      		}				      		
 				      	} catch (Exception eq) {
-				      		if (logger != null) logger.write(new java.util.Date()  +" "+eq.getLocalizedMessage()+"\n");
+				      		Common.log(logger, eq);
 				      	}
 		    		}
 		    	}

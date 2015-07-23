@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,6 +55,9 @@ import org.xmldb.api.modules.BinaryResource;
 import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.business.Scp;
 import org.emile.cirilo.business.Unzipper;
+import org.emile.cirilo.business.Topos;
+
+import org.emile.cirilo.business.CantusConverter;
 
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
@@ -85,6 +89,7 @@ public class TEI {
 	private Element tmptree;
 	private CPropertyService props;
 	private String xuser;
+	private Document intermedidate;
 	
 	public TEI(FileWriter logger, boolean validate, boolean mode) {		
 		try {
@@ -101,7 +106,8 @@ public class TEI {
 			this.builder = new SAXBuilder();
 			this.raw = null;
 			this.xuser = user.getUser();
-		} catch (Exception e) {}
+			this.intermedidate = null;
+	} catch (Exception e) {}
 	}
 
 	public void setUser (String u) {this.xuser = u;}
@@ -109,7 +115,8 @@ public class TEI {
     public boolean set (String file, boolean eXist) {
     	try {
 			this.PID = "";
-    		if (!eXist) {
+			this.intermedidate = null;
+			if (!eXist) {
     			
     			if (file.toLowerCase().contains(".docx")) {
                     try {
@@ -147,7 +154,7 @@ public class TEI {
 					            transformer.setParameter("word-directory", tmpDir);					            
 				        		transformer.transform(in, out); 			        	
 				        	} catch (Exception s) {
-				        		s.printStackTrace();
+                                Common.log(logger,s);
 				        		return false;
 				        	}					        	
 				        }
@@ -156,9 +163,31 @@ public class TEI {
 		        		
 		        		XMLOutputter outputter = new XMLOutputter();
 	    				set(outputter.outputString(out.getResult()));
+	    				
+	    				XPath xpath = XPath.newInstance("//t:revisionDesc/t:listChange/t:change/t:name");
+	    				xpath.addNamespace( Common.xmlns_tei_p5 );
+	    				Element name = (Element) xpath.selectSingleNode( tei );
+
+	    				if (name != null && name.getText().toLowerCase().contains("cantus")) {
+	    				   CantusConverter cc = new CantusConverter();
+	    				   this.intermedidate = cc.transform(this.tei);
+	    				   if (this.intermedidate != null) {
+	    					  this.intermedidate.getRootElement().addNamespaceDeclaration(Common.xmlns_cantus);  					  	    					  
+    			              System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
+	    			            
+	    			          transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(Common.stylesheet)));
+	    				      in = new JDOMSource(this.intermedidate);
+	    				      out = new JDOMResult();
+	    				      transformer.transform(in, out);	    				        		        
+	    				      this.tei = builder.build( new StringReader( outputter.outputString(out.getResult())) );
+	    				        		        
+	    		        	  System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
+	    				   }	  
+	    				}
+	    					    				
                         return true;		    				
                     } catch (Exception q){
-                    	q.printStackTrace();
+                        Common.log(logger,q);
                     	return false;
                     }   
     			} else if (file.toLowerCase().contains(".odt")) {
@@ -220,7 +249,7 @@ public class TEI {
 			this.PID = pid;
    	        return true;
 		} catch (Exception e) { 
-			e.printStackTrace();
+            Common.log(logger,e);
 			return false;
 		}
 	}
@@ -234,7 +263,7 @@ public class TEI {
 			this.PID = "";
    	        return true;
 		} catch (Exception e) { 
-			e.printStackTrace();
+            Common.log(logger,e);
 			return false;
 		}
 	}
@@ -301,7 +330,7 @@ public class TEI {
 				}
 			}
 			this.PID = pid;
-			
+
 		} catch (Exception e) {}
 	}
 		
@@ -328,13 +357,15 @@ public class TEI {
 				try {
 					validator.validate(new JDOMSource(this.tei));			        
 				} catch (Exception q) {
+	       			Common.log(logger, "-----------------------\n"+outputter.outputString(this.tei)+"-----------------------\n");
+	       			Common.log(logger, q);
 					isCustomized = true;
 					return false;
 				}
 			}
 			return true;
-		} catch (Exception e) { 
-			e.printStackTrace();
+		} catch (Exception e) {
+   			Common.log(logger, e);   		 
 			return false;}
 	}
 	
@@ -348,7 +379,7 @@ public class TEI {
            		try { 
         		stylesheet =  Repository.getDatastream("cirilo:Backbone", "TOTEI" , "");
         		} catch (Exception q) {
-        			q.printStackTrace();
+           			Common.log(logger, q);   		 
         			return false;
         		}
           	}
@@ -396,7 +427,7 @@ public class TEI {
           		
         	}	
         } catch (Exception e) {
-        	e.printStackTrace();
+        	Common.log(logger, e);
         }
         	
        	return true;
@@ -559,7 +590,9 @@ public class TEI {
 	
    public void ingestImages() {	
 	   
-     try { 									
+     try { 	
+    	ResourceBundle	resb =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
+	    	     	 
    	    List images = getChildren("//t:graphic");
     	if (images.size() > 0) {
     		int i = 1;
@@ -626,22 +659,18 @@ public class TEI {
       										ref = s.put(tp, this.PID, id);
       										s.disconnect();
       										ref = "http://"+user.getIIPSUrl()+"/iipsrv?FIF="+ref+"&hei=900&cvt=jpeg";
-      										try {
+      										if (!Repository.exists(this.PID, id)) {
       											Repository.addDatastream(this.PID, id,  "Facsimile", mimetype, ref);
-      										} catch (Exception eq) {
-         										try {
-          											Repository.modifyDatastream(this.PID, id, mimetype, "M", ref);
-          										} catch (Exception ep) {}          											
+     										} else {
+         										Repository.modifyDatastream(this.PID, id, mimetype, "M", ref);
       										}
       									}
       									tp.delete();
       								 } else {
-      									try {				      								
+   										if (!Repository.exists(this.PID, id)) {				      								
       										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
-      									} catch (Exception eq) {
-      										try {
-      											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
-      										} catch (Exception ep) {}
+      									} else {
+   											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
       									}
       								}
 		      						e.setAttribute("url", Common.INFO_FEDORA+this.PID);
@@ -660,7 +689,9 @@ public class TEI {
 		      						i++;		      						
 		      					}
 			      			} else {
-								if (logger != null && this.PID != null) logger.write( new java.util.Date()  +" Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
+			      				MessageFormat msgFmt = new MessageFormat(resb.getString("objectnotfound"));
+								Object[] args0 = {this.PID}; 
+								Common.log(logger, msgFmt.format(args0)+"\n");
 								return;
 			      			}
 			      			try {
@@ -668,17 +699,95 @@ public class TEI {
 			      			} catch (Exception q) {}
 			      			continue;
 		      	    } else {
-						if (logger != null && this.PID != null) logger.write( new java.util.Date()  +" Bilddatei  '"+url+"' für Objekt '"+this.PID+"' konnte nicht gefunden werden\n");
+	      				MessageFormat msgFmt = new MessageFormat(resb.getString("imagenotfound"));
+						Object[] args0 = {url, this.PID}; 
+		  	  		    Common.log(logger, msgFmt.format(args0)+"\n");
 		           }
 			     }
     			} catch (Exception eq) {
-    				if (logger != null) logger.write(new java.util.Date()  +" "+eq.getLocalizedMessage()+"\n");
+    				Common.log(logger, eq);
     				return;
     			}
     		}
     	}
+   	    List attachments = getChildren("//t:list[@type='attachments']/t:item");
+    	if (attachments.size() > 0) {
+    		int i = 1;
+    		for (Iterator iter = attachments.iterator(); iter.hasNext();) {
+    			try {
+    				Element e = (Element) iter.next();
+			      	String url = e.getChild("ref", Common.xmlns_tei_p5).getAttributeValue("target");
+			      	if (!url.startsWith(Common.INFO_FEDORA) && !url.startsWith("http://")) {
+			      		String id = e.getChild("ref", Common.xmlns_tei_p5).getAttributeValue("id", Common.xmlns_xml);
+			      		id = id == null ? "STREAM."+new Integer(i).toString() : id;
+			      		String mimetype = e.getChild("ref", Common.xmlns_tei_p5).getAttributeValue("mimeType");
+	      				File f = null;
+	      				if (this.collection.isEmpty()) {
+		      				url = url.startsWith("file:///") ? url.substring(8) : url;
+	      					f = new File (url);
+	      					if (!f.exists()) {
+	      						f = new File (file.getParent()+System.getProperty( "file.separator" )+url); 		      			   
+	      					}
+	      				} else {	
+		      				url = url.startsWith("exist:///") ? url.substring(9) : url;
+		    	    		eXist eX = new eXist(this.collection);
+		      				eXist eP = new eXist(url);
+		    	    		String suffix = "";
+		    	    		if (!eP.getCollection().isEmpty()) {
+		    	    			suffix = "/"+eP.getCollection();
+		    	    			url = eP.getStream();
+		    	    		}
+		    				org.xmldb.api.base.Collection coll = DatabaseManager.getCollection( URI + eX.getCollection()+suffix, user.getExistUser(), user.getExistPasswd() );
+	    					Resource res = (Resource) coll.getResource(url);
+		    				if (res != null) {		    				
+		    					f= File.createTempFile("temp", ".tmp");	    					
+		    					byte[] data = (byte[]) res.getContent();		    					
+		    					FileOutputStream fos = new FileOutputStream(f);
+		    					fos.write(data);
+		    					fos.flush();
+		    					fos.close();
+		    				}
+		    				coll.close();
+		      			}		      			
+		      			if (f != null && f.exists()){
+		      				if (!onlyValidate) {
+		      					while(!Repository.exist(this.PID)) {}
+		      					if (Repository.exist(this.PID)) {
+										if (!Repository.exists(this.PID, id)) {			      								
+      										Repository.addDatastream(this.PID, id, e.getChildText("name", Common.xmlns_tei_p5), "M", mimetype, f);
+      									} else {
+   											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
+      									}
+		      						e.setAttribute("url", Common.INFO_FEDORA+this.PID);
+		      						e.setAttribute("id", id, Common.xmlns_xml);		      						
+		      						
+		      						i++;		      						
+		      					}
+			      			} else {
+			      				MessageFormat msgFmt = new MessageFormat(resb.getString("objectnotfound"));
+								Object[] args0 = {this.PID}; 
+								Common.log(logger, msgFmt.format(args0)+"\n");
+								return;
+			      			}
+			      			try {
+			      				if (!this.collection.isEmpty()) f.delete();
+			      			} catch (Exception q) {}
+			      			continue;
+		      	    } else {
+	      				MessageFormat msgFmt = new MessageFormat(resb.getString("streamnotfound"));
+						Object[] args0 = {url, this.PID}; 
+						Common.log(logger,  msgFmt.format(args0)  ); 
+		           }
+			     }
+    			} catch (Exception eq) {
+    				Common.log(logger, eq);
+    				return;
+    			}
+    		}
+    	}	
+
 	  } catch (Exception e) {
-		  e.printStackTrace();
+          Common.log(logger,e);
 	  }	     
    }
 
@@ -716,6 +825,7 @@ public class TEI {
 	        		Element e = (Element) iter.next();
 	        		String target = e.getAttributeValue("target");
 	        		target = target.startsWith(Common.INFO_FEDORA) ? target.substring(12) : target; 
+	        		target = target.replaceAll("[,;]","");
 	        		if (!Repository.exist(target)) {  				
 	        			String title = Common.itrim(e.getText()); 	
 	        			if (Repository.exist("cirilo:Context."+xuser)) {
@@ -724,7 +834,7 @@ public class TEI {
 	        				temps.cloneTemplate("info:fedora/cirilo:Context", account, target, title);
            				    if (href != null) Repository.modifyDatastream (target, "STYLESHEET", null, "R", href);
 	        			}	
-	        			if (logger != null) logger.write(new java.util.Date()  +" Context-Objekt '"+target+ "' wurde erstellt\n");
+	        			Common.log(logger, "Context-Objekt '"+target+ "' wurde erstellt\n");
 	        		}
 	        		e.setAttribute("target", Common.INFO_FEDORA+target);
 	        		IsMemberOf.put(target,target);
@@ -745,7 +855,7 @@ public class TEI {
  	    }
    	 } catch (Exception e) {
 	   try {
-			if (logger != null) logger.write(new java.util.Date()  +" "+e.getLocalizedMessage()+"\n");
+		   Common.log(logger, e);
   	   } catch (Exception eq) {
   	   }            
      }
@@ -757,10 +867,11 @@ public class TEI {
 	   
 	   	try { 			
 		    String s = props.getProperty("user", "TEI.OnlyGeonameID"); 
- 		    s = (s != null && s.equals("1")) ? "[contains(@ref,'geonameID')]" : "";
- 
+ 		    s = (s != null && s.equals("1")) ? "[contains(@ref,'geonameID') and (not(@type) or @type != 'cirilo:ignore')]" : "";
+            s = s.isEmpty() ? "[not(@type) or @type != 'cirilo:ignore']" : s;
+ 		    
  		    Element place;
-	 	    List places = getChildren("//t:text//t:placeName"+s);
+	 	    List places = getChildren("//t:text//t:placeName"+s+"|//t:sourceDesc//t:placeName"+s);
 	 	    WebService.setUserName(account);
 	 	    cc = 0;
 	 	    ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
@@ -803,7 +914,8 @@ public class TEI {
 	        		    				 toponym.getCountryName(),
 	        		    				 new Double(toponym.getLatitude()).toString(),
 	        		    				 new Double(toponym.getLongitude()).toString(),
-	        		    				 toponym.getFeatureCode()
+	        		    				 toponym.getFeatureCode(),
+	        		    				 ++cc
 	        		    				);
 	        		    		      normdata.put(new Integer(toponym.getGeoNameId()), t);
 			        				}
@@ -822,7 +934,8 @@ public class TEI {
 		    		        							toponym.getCountryName(),
 		    		        							new Double(toponym.getLatitude()).toString(),
 		    		        							new Double(toponym.getLongitude()).toString(),
-		    		        		    				 toponym.getFeatureCode()
+		    		        		    				 toponym.getFeatureCode(),
+		    		        		    				 ++cc
 		    		        							);
 	        		    		      normdata.put(new Integer(toponym.getGeoNameId()), t);
 		        				}  
@@ -905,92 +1018,13 @@ public class TEI {
   
 	 	    }
 	   	 } catch (Exception e) {
-	   		 e.printStackTrace();
 		   try {
-				if (logger != null) logger.write(new java.util.Date()  +" "+e.getLocalizedMessage()+"\n");
+			   Common.log(logger, e); 
 	  	   } catch (Exception eq) {
 	  	   }            
 	   	 }	   
 	   }
  
-
-   public void resolvePersNames (String account) {	   
-	   
-	   	try { 			
-	 	    List persons = getChildren("//t:text//t:persName");
-	 	    Element person;
-	 	    cc = 0;
-	 	    
-	 	    if (persons.size() > 0 && !onlyValidate) {
-	 	    	int i =0;
-		        HashMap<String, Person> normdata = new HashMap<String,Person> ();  
-		        for (Iterator iter = persons.iterator(); iter.hasNext();) 
-		        {
-		        		person = (Element) iter.next();		        		
-	        			Element reg = person.getChild("reg", Common.xmlns_tei_p5);
-	        			String persName = (reg != null ? reg.getText() : person.getText());
-		        		Attribute subtype = person.getAttribute("subtype"); 		        
-		        		
-		        		if (subtype != null )
-		        		{		        				        				        		
-		        			Person p =  normdata.get(persName);
-       				 		if (p == null) {
-       				 			p = new Person (persName, subtype.getValue());
-       				 			normdata.put(persName, p);
-       				 		}
-       				 		person.setAttribute("key", "#"+p.getXMLID());
-		        		}
-		        }
-		        
-		        
-				XPath xpath = XPath.newInstance("//t:profileDesc");
-				xpath.addNamespace( Common.xmlns_tei_p5 );
-				Element profileDesc = (Element) xpath.selectSingleNode( this.tei );
-				Element normalizedList = null;
-				if (profileDesc == null) { 
-					profileDesc = new Element("profileDesc", Common.xmlns_ntei_p5 );
-				    this.tei.getRootElement().getChild("teiHeader", Common.xmlns_ntei_p5).addContent(profileDesc);
-				}
-				XPath qpath = XPath.newInstance("//t:profileDesc/t:textClass/t:keywords[@scheme='cirilo:normalizedPersNames']/t:list");
-				qpath.addNamespace( Common.xmlns_tei_p5 );
-				normalizedList = (Element) qpath.selectSingleNode( this.tei );				
-				if (normalizedList != null) {
-					normalizedList.removeChildren("item", Common.xmlns_ntei_p5);
-				} else {
-					qpath = XPath.newInstance("//t:profileDesc/t:textClass/t:keywords[@scheme='cirilo:normalizedPersNames']");
-					qpath.addNamespace( Common.xmlns_tei_p5 );
-					normalizedList = (Element) qpath.selectSingleNode( this.tei );				
-					Element textClass = new Element("textClass", Common.xmlns_ntei_p5 );
-					Element keywords = new Element("keywords", Common.xmlns_ntei_p5 );
-					keywords.setAttribute("scheme","cirilo:normalizedPersNames");
-					normalizedList = new Element("list", Common.xmlns_ntei_p5 );
-					keywords.addContent(normalizedList);
-					textClass.addContent(keywords);
-					profileDesc.addContent(textClass);
-				}
-
-				for (Person p : normdata.values()) 
-		        {
-					Element item = new Element("item", Common.xmlns_ntei_p5);
-					Element persName = new Element("persName", Common.xmlns_ntei_p5);
-					Element name = new Element("name", Common.xmlns_ntei_p5);
-	                name.setText(p.getName());
-	                name.setAttribute("type",p.getType());
-					persName.addContent(name); 					
-					persName.setAttribute("id", p.getXMLID(), Common.xmlns_xml);
-					item.addContent(persName);
-					normalizedList.addContent(item);
-		        }
- 
-	 	    }
-	   	 } catch (Exception e) {
-		   try {
-				if (logger != null) logger.write(new java.util.Date()  +" "+e.getLocalizedMessage()+"\n");
-	  	   } catch (Exception eq) {
-	  	   }            
-	   	 }	   
-	   }
-
 
    
    public void createRELS_INT(String pid) 
@@ -1099,9 +1133,9 @@ public class TEI {
 	 			      stream+
 	 			     "</rdf:RDF>";
  
- 			    try {
+				if (Repository.exists(this.PID, "RELS-INT")) {
  					Repository.modifyDatastreamByValue(this.PID, "RELS-INT", "text/xml", new String(rdf.getBytes("UTF-8"),"UTF-8"));
- 				} catch (Exception ex) {
+ 				} else {
 					File f= File.createTempFile("temp", ".tmp");	    					
      	            FileOutputStream fos = new FileOutputStream(f.getAbsolutePath());
 					BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
@@ -1140,7 +1174,7 @@ public class TEI {
 					org.openrdf.repository.RepositoryConnection scon = repo.getConnection();	 				    			
 					scon.clear(new org.openrdf.model.impl.URIImpl(this.PID)); 							 							  				
 					
-					if (rdfs.contains("xsl:template")) {
+					if (rdfs!= null && rdfs.contains("xsl:template")) {
 						System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
 
 						Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(rdfs)));
@@ -1156,23 +1190,24 @@ public class TEI {
 						fos.close();
 						scon.add(temp.getAbsoluteFile(), null, org.openrdf.rio.RDFFormat.RDFXML, new org.openrdf.model.impl.URIImpl(this.PID));
 						
-  						try {
+						if (!Repository.exists(this.PID, "RDF")) {
   							Repository.addDatastream(this.PID, "RDF", "RDF Stream created by TORDF", "M", "text/xml", temp);
-  						} catch (Exception eq) {
-  							try {
-  								Repository.modifyDatastream(this.PID, "RDF", "text/xml", "M", temp);
-  							} catch (Exception ep) {}
+  						} else {
+							Repository.modifyDatastream(this.PID, "RDF", "text/xml", "M", temp);
   						}
 						
 						temp.delete();
 					}	
 			     } catch (Exception ex) {
-			    	 ex.printStackTrace();
+			    	 Common.log(logger, ex);
 			     }
 			      
 		    }					 				
  					
  		} catch (Exception e) {
+ 			try {
+ 				Common.log(logger, e);
+ 			} catch (Exception q) {} 	 
  		} finally {
  			this.PID =currPID;
  		}
@@ -1415,7 +1450,7 @@ public class TEI {
 				}
 						
 			} catch (Exception e) {
-				e.printStackTrace();
+                Common.log(logger,e);
 			}
 	       finally {
 	        }
@@ -1463,7 +1498,6 @@ public class TEI {
 		p = props.getProperty("user", "TEI.ResolveGeoIDs"); 
 		account = props.getProperty("user","TEI.LoginName");
 		if (p == null || p.equals("1"))  resolveGeoNameID(account);
-//			resolvePersNames (account);
 		createContextualizations();
 		p = props.getProperty("user", "TEI.ResolveSKOS"); 
 		if (p == null || p.equals("1"))  interfereTerms();
@@ -1474,6 +1508,22 @@ public class TEI {
 		} catch (Exception e) {
 		}
 
+		if (this.intermedidate != null) {
+ 			try {
+ 				File temp = File.createTempFile("tmp","xml");
+ 				String s = this.outputter.outputString(this.intermedidate);
+				if (!Repository.exists(this.PID, "INTERMEDIATE_CODE")) {				      								
+      				FileOutputStream fos = new FileOutputStream(temp);
+      				fos.write(s.getBytes("UTF-8"));
+      				fos.close();
+      				Repository.addDatastream(this.PID, "INTERMEDIATE_CODE","Intermediate TEI Code",  "X", "text/xml", temp);
+ 				} else {
+		    		Repository.modifyDatastreamByValue(this.PID, "INTERMEDIATE_CODE", "text/xml", s);                 							            	
+ 				}
+				temp.delete();
+ 				
+ 			} catch (Exception e) {}
+ 		}
 	 }	
 	
 	
@@ -1491,59 +1541,5 @@ public class TEI {
 		}	    
 	 }	
 
-	private class Topos
-	{
-		private String ID;
-		private String Name;
-		private String Country;
-		private String Latitude;
-		private String Longitude;
-		private String XMLID;
-		private String Feature;
-		
-		public Topos( String id, String name, String country, String latitude, String longitude, String feature  ) {
-			this.ID = id;
-			this.Name = name;
-			this.Country = country;
-			this.Latitude = latitude;
-			this.Longitude = longitude;
-			this.Feature = feature;
-			this.XMLID = new Integer (++cc).toString();
-            			
-		}
-		
-		public String getID() {return this.ID;};
-		public String getName() {return this.Name;};
-		public String getCountry() {return this.Country;};
-		public String getLatitude() {return this.Latitude;};
-		public String getLongitude() {return this.Longitude;};
-		public String getFeature() {return this.Feature;};
-		public String getXMLID() {return "GID."+this.XMLID;};
-	}
-	private class Person
-	{
-			private String Name;
-			private String Type;
-			private String XMLID;
-			
-			public Person( String name, String type  ) {
-				this.Name = name.replace("_"," ");
-				this.Type = type;				
-				if (type.equals("H")) {
-					this.Type ="historic";
-				} else if (type.equals("F")) {
-					this.Type ="fictive";
-				} if (type.equals("U") || type.equals("R")) {
-					this.Type ="unknown";
-				}
-				this.XMLID = new Integer (++cc).toString();
-	            			
-			}
-			
-			public String getName() {return this.Name;};
-			public String getType() {return this.Type;};
-			public String getXMLID() {return "PD."+this.XMLID;};
-
-	}
 	 	 
 }
