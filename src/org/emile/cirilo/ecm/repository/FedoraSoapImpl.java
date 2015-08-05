@@ -73,7 +73,7 @@ import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 public class FedoraSoapImpl
         implements FedoraConnector {
 
-	private final String SYSTEM_DATASTREAMS ="|STYLESHEET|FO_STYLESHEET|QUERY|KML_TEMPLATE|DC_MAPPING|RDF_MAPPING|"+
+	private final String SYSTEM_DATASTREAMS ="|STYLESHEET|FO_STYLESHEET|QUERY|RDF|KML_TEMPLATE|DC_MAPPING|RDF_MAPPING|"+
 	                                      "BIBTEX_MAPPING|RELS-EXT|RELS-INT|REPLACEMENT_RULESET|VOYANT|CONTEXTtoHTML|"+
 										  "CONTEXTtoFO|TOMETS|TORDF|METS_REF|TOTEI|QR|HSSF_STYLESHEET|QUERYtoHSSF|QUERYtoHTML|TEItoHSSF|"+
 										  "TEItoHTML|TEItoFO|BIBTEXtoHTML|BIBTEXtoFO|PAGE-1|PAGE-2|TEItoDC_MAPPING|RDF_MAPPING|SKOStoHTML|SKOStoFO|"+
@@ -839,15 +839,14 @@ public class FedoraSoapImpl
     }
 
     public boolean exists(String pid, String dsid)
-    throws IllegalStateException, FedoraIllegalContentException, FedoraConnectionException {
-    	try {
-    		fedora.server.types.gen.Datastream ds = getAPIM().getDatastream(pid, dsid, "");
-    		return true;
-    	} catch (Exception e) {}
-   		return false;
-    }
-
-    
+    	    throws IllegalStateException, FedoraIllegalContentException, FedoraConnectionException {
+    	    	try {    	    	
+    		    	PidList list = query ("select $p from <#ri> where <info:fedora/"+pid+"> $p <info:fedora/"+pid+"/"+dsid+">");	  
+    		    	return (list.size() > 0);
+   	    	} catch (Exception e) {}
+    	   		return false;
+    	    }
+   
 
     
     public boolean isDataObject(String pid)

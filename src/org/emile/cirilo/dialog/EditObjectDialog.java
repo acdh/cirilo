@@ -1269,6 +1269,7 @@ public class EditObjectDialog extends CDialog {
 	protected void opened() throws COpenFailedException {
 
 		try {
+			
 			 res =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
    			 props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);			
 		
