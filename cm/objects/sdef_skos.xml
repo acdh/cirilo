@@ -34,9 +34,6 @@
     <foxml:datastreamVersion CREATED="2011-02-24T18:00:22.355Z" FORMAT_URI="info:fedora/fedora-system:FedoraSDefMethodMap-1.0" ID="METHODMAP1.0" LABEL="Abstract Method Map" MIMETYPE="text/xml" SIZE="800">
       <foxml:xmlContent>
         <fmm:MethodMap xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap" name="MethodMap">
-          <fmm:Method operationLabel="SPARQL Query" operationName="getSPARQL">
-            <fmm:UserInputParm defaultValue="" parmName="query" passBy="VALUE" required="true"/>
-          </fmm:Method>
           <fmm:Method operationLabel="Get concept by URI" operationName="getConceptByURI">
             <fmm:UserInputParm defaultValue="" parmName="uri" passBy="VALUE" required="true"/>
           </fmm:Method>

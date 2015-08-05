@@ -46,14 +46,14 @@
             <fbs:DSMIME>text/xml</fbs:DSMIME>
             <fbs:DSInputInstruction/>
           </fbs:DSInput>
-          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="METADATA">
-            <fbs:DSInputLabel>METADATA Binding</fbs:DSInputLabel>
+          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="FO_STYLESHEET">
+            <fbs:DSInputLabel>FO_STYLESHEET Binding</fbs:DSInputLabel>
             <fbs:DSMIME>text/xml</fbs:DSMIME>
             <fbs:DSInputInstruction/>
           </fbs:DSInput>
-          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="URL">
-            <fbs:DSInputLabel>URL Binding</fbs:DSInputLabel>
-            <fbs:DSMIME>text/html</fbs:DSMIME>
+          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="METADATA">
+            <fbs:DSInputLabel>METADATA Binding</fbs:DSInputLabel>
+            <fbs:DSMIME>text/xml</fbs:DSMIME>
             <fbs:DSInputInstruction/>
           </fbs:DSInput>
         </fbs:DSInputSpec>
@@ -73,6 +73,14 @@
             <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
             <fmm:UserInputParm defaultValue="" parmName="context" passBy="VALUE" required="false"/>
             <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/html"/>
+          </fmm:Method>
+          <fmm:Method operationLabel="FO representation" operationName="getPDF" wsdlMsgName="getPDFRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:DatastreamInputParm label="" parmName="FO_STYLESHEET" passBy="URL_REF" required="true"/>
+            <fmm:DatastreamInputParm label="" parmName="METADATA" passBy="URL_REF" required="true"/>
+            <fmm:UserInputParm defaultValue="de" parmName="locale" passBy="VALUE" required="false"/>
+            <fmm:UserInputParm defaultValue="" parmName="mode" passBy="VALUE" required="false"/>
+            <fmm:UserInputParm defaultValue="" parmName="context" passBy="VALUE" required="false"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="application/pdf"/>
           </fmm:Method>
           <fmm:Method operationLabel="Get identifiers of neighbours objects in context" operationName="getNeighbours"
             wsdlMsgName="getNeighboursRequest" wsdlMsgOutput="dissemResponse">
@@ -104,6 +112,13 @@
             <wsdl:part name="mode" type="this:STRING"/>
             <wsdl:part name="context" type="this:STRING"/>
           </wsdl:message>
+          <wsdl:message name="getPDFRequest">
+            <wsdl:part name="FO_STYLESHEET" type="this:STRING"/>
+            <wsdl:part name="METADATA" type="this:STRING"/>
+            <wsdl:part name="locale" type="this:STRING"/>
+            <wsdl:part name="mode" type="this:STRING"/>
+            <wsdl:part name="context" type="this:STRING"/>
+          </wsdl:message>          
           <wsdl:message name="getNeighboursRequest">
             <wsdl:part name="identifier" type="this:STRING"/>
           </wsdl:message>
@@ -115,6 +130,10 @@
               <wsdl:input message="this:getRequest"/>
               <wsdl:output message="this:dissemResponse"/>
             </wsdl:operation>
+            <wsdl:operation name="getPDF">
+              <wsdl:input message="this:getPDFRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>            
             <wsdl:operation name="getNeighbours">
               <wsdl:input message="this:getNeighboursRequest"/>
               <wsdl:output message="this:dissemResponse"/>
@@ -122,7 +141,7 @@
           </wsdl:portType>
           <wsdl:service name="Context">
             <wsdl:port binding="this:Context_http" name="Context_port">
-              <http:address location="http://fedora.host/cocoon/"/>
+              <http:address location="http://glossa/cocoon/"/>
             </wsdl:port>
           </wsdl:service>
           <wsdl:binding name="Context_http" type="this:ContextPortType">
@@ -136,6 +155,15 @@
                 <mime:content type="text/html"/>
               </wsdl:output>
             </wsdl:operation>
+            <wsdl:operation name="getPDF">
+              <http:operation location="toPDF?source=(METADATA)&amp;style=(FO_STYLESHEET)&amp;model=Context&amp;locale=(locale)&amp;mode=(mode)&amp;context=(context)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="application/pdf"/>
+              </wsdl:output>
+            </wsdl:operation>            
             <wsdl:operation name="getNeighbours">
               <http:operation location="toXML?source=(METADATA)&amp;style=http://fedora.host/cocoon/context-neighbours.xsl&amp;identifier=(identifier)"/>
               <wsdl:input>

@@ -43,9 +43,6 @@ import org.xmldb.api.base.Resource;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.BinaryResource;
 
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriter;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
-
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
@@ -202,9 +199,9 @@ public class METS {
 		    	
 				byte[] stylesheet = null;
 				try {
-					stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), (isTEI() ? "TEI":"") +"TOMETS" , "");
+					stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), isTEI() ? "TEITOMETS" : "TOMETS" , "");
 				} catch (Exception ex) {
-					stylesheet =  Repository.getDatastream("cirilo:Backbone", (isTEI() ? "TEI":"") +"TOMETS" , "");					
+					stylesheet =  Repository.getDatastream("cirilo:Backbone", isTEI() ? "TEITOMETS" : "TOMETS" , "");					
 				}
 				
 		        System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
@@ -279,12 +276,14 @@ public class METS {
 		    	} else {
 		    		idno = new Element("idno", Common.xmlns_viewer );
 		    		idno.setText(this.PID);
-		    		this.viewer.getRootElement().addContent(2,idno);
+		    	    this.viewer.getRootElement().addContent(2,idno);
 		    	}
-    	        FileOutputStream fos = new FileOutputStream( this.file.toString() );
-    			BufferedWriter os = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
-    			os.write(outputter.outputString(this.viewer));
-    			os.close();		    		
+		    	if (!isTEI()) {
+		    		FileOutputStream fos = new FileOutputStream( this.file.toString() );
+		    		BufferedWriter os = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
+		    		os.write(outputter.outputString(this.viewer));
+		    		os.close();		
+		    	}
 		    }		    
 			return true;
 		} catch (Exception e) {return false;}
@@ -376,40 +375,12 @@ public class METS {
 				      					if (!onlyValidate) {
 				      						while(!Repository.exist(this.PID)) {}
 				      						if (Repository.exist(this.PID)) {
-			      								if (mimetype.equals("image/tiff") && !user.getIIPSUser().isEmpty()) {
-			      									TIFFImageWriterSpi imageWriterSpi = new TIFFImageWriterSpi();
-			      									TIFFImageWriter imageWriter = (TIFFImageWriter)imageWriterSpi.createWriterInstance();
-
-			      									File tp = File.createTempFile("temp", ".tmp");
-			      									ImageOutputStream out = new FileImageOutputStream(tp);
-			      									imageWriter.setOutput(out);
-			      									
-			      									org.emile.cirilo.business.PTIFConverter.pyramidGenerator(imageWriter, img, 256, 256);
-			      									out.close();
-			      									String ref = null;
-			      									Scp s = new Scp();
-			      									if (s.connect()) {
-			      										ref = s.put(tp, this.PID, id);
-			      										s.disconnect();
-			      										ref = "http://"+user.getIIPSUrl()+"/iipsrv?FIF="+ref+"&hei=900&cvt=jpeg";
-			      										if (!Repository.exists(this.PID, id)) {				      								
-			      											Repository.addDatastream(this.PID, id,  "Facsimile", mimetype, ref);
-			      										} else {
-		          											Repository.modifyDatastream(this.PID, id, mimetype, "M", ref);
-			      										}
-				      									ch.setAttribute("href", ref, Common.xmlns_xlink);			      	
-			      									}
-			      									tp.delete();
-			      								 } else {
-			      									 if (!Repository.exists(this.PID, id)) {				      								
-			      										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
-			      									} else {
-		      											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
-			      									}
-			      									ch.setAttribute("href", host+this.PID+"/"+id, Common.xmlns_xlink);			      									
+ 	      									    if (!Repository.exists(this.PID, id)) {				      								
+ 	      									    	Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
+			      								} else {
+		      										Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
 			      								}
-					      						
-				      							
+			      								ch.setAttribute("href", host+this.PID+"/"+id, Common.xmlns_xlink);			      									
 				      							if ( i == 1 ) {
 					      							File thumb = File.createTempFile( "temp", ".tmp" );
 				      								ImageTools.createThumbnail( f, thumb, 100, 80, Color.lightGray );
@@ -650,7 +621,7 @@ public class METS {
 	  public boolean accept( File f, String s )
 	  {
 		s=s.toLowerCase();
-	    return (s.endsWith( ".jpg" ) || s.endsWith( ".jpeg" ) || s.endsWith( ".tif" ) || s.endsWith( ".tiff" )) && !s.startsWith(".");
+	    return (s.endsWith( ".jp2" ) || s.endsWith( ".jpg" ) || s.endsWith( ".jpeg" ) || s.endsWith( ".tif" ) || s.endsWith( ".tiff" )) && !s.startsWith(".");
 	  }
 	}
 	   

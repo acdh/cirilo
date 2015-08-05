@@ -239,13 +239,6 @@ public class IngestObjectDialog extends CDialog {
 						logger.write( res.getString("start")+ simulate+res.getString("ofingest") +new java.util.Date() );	
 						
 
-						TEI t = new TEI(logger, onlyValidate, true);
-						t.setUser((String)jcbUser.getSelectedItem());
-						METS m = new METS(logger, onlyValidate, true);
-						m.setUser((String)jcbUser.getSelectedItem());
-						LIDO l = new LIDO(logger, onlyValidate, true);
-						l.setUser((String)jcbUser.getSelectedItem());
-
 						JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 						JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
 						
@@ -280,6 +273,8 @@ public class IngestObjectDialog extends CDialog {
 								
 							if (model.indexOf("TEI") > -1) {
 
+								TEI t = new TEI(logger, onlyValidate, true);
+								t.setUser((String)jcbUser.getSelectedItem());
 								t.set((String) files.get(i), false);
 								
 								if (!t.isValid()) {	
@@ -344,6 +339,8 @@ public class IngestObjectDialog extends CDialog {
 							
 							if (model.contains("METS") ) {
 
+								METS m = new METS(logger, onlyValidate, true);
+								m.setUser((String)jcbUser.getSelectedItem());
 								m.set((String) files.get(i), false);
 								
 								if (!m.isValid()) {	
@@ -404,6 +401,8 @@ public class IngestObjectDialog extends CDialog {
 
 							if (model.indexOf("LIDO") > -1) {
 
+								LIDO l = new LIDO(logger, onlyValidate, true);
+								l.setUser((String)jcbUser.getSelectedItem());
 								l.set((String) files.get(i), false);
 								
 								if (!l.isValid()) {	
@@ -564,13 +563,6 @@ public class IngestObjectDialog extends CDialog {
 	                        String simulate = onlyValidate ? res.getString("ofsim") : "";                        						
 							logger.write( new java.util.Date()  +res.getString("start")+ simulate+res.getString("ofingest"));	
 
-							TEI t = new TEI(logger, onlyValidate, true);
-							t.setUser((String)jcbUser.getSelectedItem());
-							METS m = new METS(logger, onlyValidate, true);
-							m.setUser((String)jcbUser.getSelectedItem());
-							LIDO l = new LIDO(logger, onlyValidate, true);
-							l.setUser((String)jcbUser.getSelectedItem());
-
 							JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 							JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
 														
@@ -606,6 +598,8 @@ public class IngestObjectDialog extends CDialog {
 
 								if (model.contains("TEI")) {
 
+									TEI t = new TEI(logger, onlyValidate, true);
+									t.setUser((String)jcbUser.getSelectedItem());
 									t.set((String) files.get(i), true);
 									
 									if (!t.isValid()) {	
@@ -671,6 +665,8 @@ public class IngestObjectDialog extends CDialog {
 
 								if (model.contains("METS") ) {
 
+									METS m = new METS(logger, onlyValidate, true);
+									m.setUser((String)jcbUser.getSelectedItem());
 									m.set((String) files.get(i), true);
 								
 									if (!m.isValid()) {	
@@ -728,6 +724,8 @@ public class IngestObjectDialog extends CDialog {
 								
 								if (model.contains("LIDO")) {
 
+									LIDO l = new LIDO(logger, onlyValidate, true);
+									l.setUser((String)jcbUser.getSelectedItem());
 									l.set((String) files.get(i), true);
 									
 									if (!l.isValid()) {	
@@ -878,15 +876,7 @@ public class IngestObjectDialog extends CDialog {
 							boolean onlyValidate = ((JCheckBox) getGuiComposite().getWidget("jcbSimulate")).isSelected(); 
 	                        String simulate = onlyValidate ? res.getString("ofsim") : "";                        						
 							logger.write( res.getString("start")+ simulate+res.getString("ofingest") +new java.util.Date() );	
-
-							
-							TEI t = new TEI(logger, onlyValidate, false);
-							t.setUser((String)jcbUser.getSelectedItem());
-							METS m = new METS(logger, onlyValidate, false);
-							m.setUser((String)jcbUser.getSelectedItem());
-							LIDO l = new LIDO(logger, onlyValidate, false);
-							l.setUser((String)jcbUser.getSelectedItem());
-
+						
 							int i = 0;
 							
 							
@@ -908,6 +898,8 @@ public class IngestObjectDialog extends CDialog {
 									
 								if (model.indexOf("TEI") > -1) {
 																	
+									TEI t = new TEI(logger, onlyValidate, false);
+									t.setUser((String)jcbUser.getSelectedItem());
 	                                t.set(excel.toString());                                                                 
 										                                
 									if (!t.isValid()) {									
@@ -970,6 +962,8 @@ public class IngestObjectDialog extends CDialog {
 								
 								if (model.contains("METS") ) {
 
+									METS m = new METS(logger, onlyValidate, false);
+									m.setUser((String)jcbUser.getSelectedItem());
                                     m.set(excel.toString());                                                                 
 									
 									if (!m.isValid()) {	
@@ -1026,6 +1020,8 @@ public class IngestObjectDialog extends CDialog {
 								
 								if (model.indexOf("LIDO") > -1) {
 									
+									LIDO l = new LIDO(logger, onlyValidate, false);
+									l.setUser((String)jcbUser.getSelectedItem());
 	                                l.set(excel.toString());                                                                 
 										                                
 									if (!l.isValid()) {									
@@ -1203,7 +1199,7 @@ public class IngestObjectDialog extends CDialog {
 	
 	        List<String> ds = Repository.getTemplates(user.getUser(),groups.contains("administrator"));                
 	        for (String s: ds) {
-	              if (!s.isEmpty() && (s.contains("TEI") || s.contains("METS") || s.contains("LIDO"))) jcbContentModel.addItem(s);            	
+	              if (!s.isEmpty() && (s.contains("TEI") || s.contains("METS") || s.contains("LIDO") )) jcbContentModel.addItem(s);            	
 	         }
 	           
             boolean contains = false;

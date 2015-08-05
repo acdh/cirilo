@@ -150,14 +150,26 @@ public class HarvesterDialog extends CDefaultDialog {
 				   		    	
 				   		    	try {
 				   		    		boolean mode = true;
-				   		    		while (harvest (mode, metadataPrefix, baseURL, null, null)) {
-				   		    			if(!addItems( ((HarvesterTableModel) tb.getModel()).getRow(x))) {
-				   		    				exit = true;
-				   		    				break;
-				   		    			}
-			   		    				mode = false;
+				   		    		
+				   		    		if (baseURL.startsWith("http")) {
+				   		    			while (harvest (mode, metadataPrefix, baseURL, null, null)) {
+				   		    				if(!addItems( ((HarvesterTableModel) tb.getModel()).getRow(x))) {
+				   		    					exit = true;
+				   		    					break;
+				   		    				}
+				   		    				mode = false;
+				   		    			}	
+				   		    			if (exit) break;
 				   		    		}	
-				   		    		if (exit) break;
+				   		    		if (baseURL.startsWith("file:///")) {
+				   		    			if (collect (mode, metadataPrefix, baseURL, null, null)) {
+				   		    				if(!addItems( ((HarvesterTableModel) tb.getModel()).getRow(x))) {
+				   		    					exit = true;
+				   		    					break;
+				   		    				}
+				   		    			}	
+				   		    			if (exit) break;
+				   		    		}	
 				   		    		
 				   		    	} catch (Exception ex) {	
 				   		    	}
@@ -194,6 +206,17 @@ public class HarvesterDialog extends CDefaultDialog {
  
 	}
 
+	public boolean collect(boolean mode, String metadataPrefix, String baseURL, String from, String until)  {
+		try {
+			metadata = parser.build(new File(baseURL.substring(8)));	
+			return true;
+		} catch (Exception e) {
+			try {
+				logger.write("\n" + new java.util.Date() + e.getLocalizedMessage() );
+			} catch (Exception q) {} 	
+			return false;
+		}	
+	}
 	
 	public boolean harvest(boolean mode, String metadataPrefix, String baseURL, String from, String until) {
 		try {			
@@ -219,7 +242,9 @@ public class HarvesterDialog extends CDefaultDialog {
 			return (metadata.getRootElement() != null);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				logger.write("\n" + new java.util.Date() + e.getLocalizedMessage() );
+			} catch (Exception q) {} 	
 		}
   	    return false;
 	}

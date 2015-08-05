@@ -39,7 +39,8 @@
       MIMETYPE="text/xml" SIZE="234">
       <foxml:xmlContent>
         <fmm:MethodMap name="MethodMap" xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap">
-          <fmm:Method operationLabel="Getter via Google Maps" operationName="get"/>
+          <fmm:Method operationLabel="Getter via KML Viewer" operationName="get"/>
+          <fmm:Method operationLabel="Getter via Platin GeoBrowser" operationName="pget"/>
         </fmm:MethodMap>
       </foxml:xmlContent>
     </foxml:datastreamVersion>

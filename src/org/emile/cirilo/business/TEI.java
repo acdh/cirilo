@@ -65,9 +65,6 @@ import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
 
 import org.geonames.*;
 
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriter;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
-
 public class TEI {
 
     private static int cc = 0;
@@ -117,6 +114,7 @@ public class TEI {
 			this.PID = "";
 			this.intermedidate = null;
 			if (!eXist) {
+				this.file = new File (file);
     			
     			if (file.toLowerCase().contains(".docx")) {
                     try {
@@ -215,11 +213,10 @@ public class TEI {
 	    				set(outputter.outputString(out.getResult()));
                         return true;		    				
                     } catch (Exception q){
+                        Common.log(logger,q);
                     	return false;
                     }                                            
     			} else {    		
-    			
-    				this.file = new File (file);
     				this.collection="";
     				if (this.file.exists()) { 
     					this.tei = builder.build( this.file );
@@ -281,7 +278,7 @@ public class TEI {
 	
 	public String getPID() { 
 		try {
-			XPath xpath = XPath.newInstance("//t:fileDesc[1]/t:publicationStmt/t:idno[@type='PID']");
+			XPath xpath = XPath.newInstance("//t:fileDesc[1]/t:publicationStmt//t:idno[@type='PID']");
 			xpath.addNamespace( Common.xmlns_tei_p5 );
 			Element idno = (Element) xpath.selectSingleNode( tei );
 			if (idno != null) {
@@ -307,7 +304,7 @@ public class TEI {
 
 	public void setPID(String pid) { 
 		try {
-			XPath xpath = XPath.newInstance("//t:fileDesc[1]/t:publicationStmt/t:idno[@type='PID']");
+			XPath xpath = XPath.newInstance("//t:fileDesc[1]/t:publicationStmt//t:idno[@type='PID']");
 			xpath.addNamespace( Common.xmlns_tei_p5 );
 			Element idno = (Element) xpath.selectSingleNode( tei );
 			if (idno == null) {
@@ -642,37 +639,11 @@ public class TEI {
 			      				}      								      							      						      					
 		      					while(!Repository.exist(this.PID)) {}
 		      					if (Repository.exist(this.PID)) {
-		      						if (mimetype.equals("image/tiff") && !user.getIIPSUser().isEmpty()) {
-      									TIFFImageWriterSpi imageWriterSpi = new TIFFImageWriterSpi();
-      									TIFFImageWriter imageWriter = (TIFFImageWriter)imageWriterSpi.createWriterInstance();
-
-      									File tp = File.createTempFile("temp", ".tmp");
-      									ImageOutputStream out = new FileImageOutputStream(tp);
-      									imageWriter.setOutput(out);
-      									
-      									BufferedImage img = ImageIO.read(f);			      				                		
-      									org.emile.cirilo.business.PTIFConverter.pyramidGenerator(imageWriter, img, 256, 256);
-      									out.close();
-      									String ref = null;
-      									Scp s = new Scp();
-      									if (s.connect()) {
-      										ref = s.put(tp, this.PID, id);
-      										s.disconnect();
-      										ref = "http://"+user.getIIPSUrl()+"/iipsrv?FIF="+ref+"&hei=900&cvt=jpeg";
-      										if (!Repository.exists(this.PID, id)) {
-      											Repository.addDatastream(this.PID, id,  "Facsimile", mimetype, ref);
-     										} else {
-         										Repository.modifyDatastream(this.PID, id, mimetype, "M", ref);
-      										}
-      									}
-      									tp.delete();
-      								 } else {
-   										if (!Repository.exists(this.PID, id)) {				      								
-      										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
-      									} else {
-   											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
-      									}
-      								}
+									if (!Repository.exists(this.PID, id)) {				      								
+   										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
+   									} else {
+										Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
+   									}
 		      						e.setAttribute("url", Common.INFO_FEDORA+this.PID);
 		      						e.setAttribute("id", id, Common.xmlns_xml);		      						
 		      						

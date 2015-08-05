@@ -52,9 +52,6 @@ import org.geonames.ToponymSearchCriteria;
 import org.geonames.ToponymSearchResult;
 import org.geonames.WebService;
 
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriter;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
-
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
@@ -317,38 +314,11 @@ public class LIDO {
 					      				}      								      							      						      					
 				      					while(!Repository.exist(this.PID)) {}
 				      					if (Repository.exist(this.PID)) {
-				      						if (mimetype.equals("image/tiff") && !user.getIIPSUser().isEmpty()) {
-		      									TIFFImageWriterSpi imageWriterSpi = new TIFFImageWriterSpi();
-		      									TIFFImageWriter imageWriter = (TIFFImageWriter)imageWriterSpi.createWriterInstance();
-
-		      									File tp = File.createTempFile("temp", ".tmp");
-		      									ImageOutputStream out = new FileImageOutputStream(tp);
-		      									imageWriter.setOutput(out);
-		      									
-		      									BufferedImage img = ImageIO.read(f);			      				                		
-		      									org.emile.cirilo.business.PTIFConverter.pyramidGenerator(imageWriter, img, 256, 256);
-		      									out.close();
-		      									String ref = null;
-		      									Scp s = new Scp();
-		      									if (s.connect()) {
-		      										ref = s.put(tp, this.PID, id);
-		      										s.disconnect();
-		      										ref = "http://"+user.getIIPSUrl()+"/iipsrv?FIF="+ref+"&hei=900&cvt=jpeg";
-		      										if (!Repository.exists(this.PID, id)) {				      								
-		      											Repository.addDatastream(this.PID, id,  "Facsimile", mimetype, ref);
-		      										} else {
-	          											Repository.modifyDatastream(this.PID, id, mimetype, "M", ref);
-		      										}
-		      									}
-		      									tp.delete();
-		      								 } else {
-	      										if (!Repository.exists(this.PID, id)) {				      								
-		      										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
-		      									} else {
-	      											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
-		      									}
-		      								}
-				      						
+      										if (!Repository.exists(this.PID, id)) {				      								
+	      										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
+	      									} else {
+      											Repository.modifyDatastream(this.PID, id, mimetype, "M", f);
+	      									}				      						
 			      						    if ( i == 1 ) {
 				      							File thumb = File.createTempFile( "temp", ".tmp" );
 			      								ImageTools.createThumbnail( f, thumb, 100, 80, Color.lightGray );

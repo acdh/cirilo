@@ -225,10 +225,13 @@ public class Common {
 
 	public final static String stylesheet = "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.tei-c.org/ns/1.0\" "+
 		    "xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:l=\"http://cantus.oeaw.ac.at\" exclude-result-prefixes=\"xs l\" version=\"2.0\">"+
-		    "<xsl:template match=\"*|@*|text()\"> <xsl:copy><xsl:apply-templates select=\"*|@*|text()\"/></xsl:copy></xsl:template>"+        
+		    "<xsl:template match=\"*|@*|text()\"> <xsl:copy><xsl:apply-templates select=\"*|@*|text()\"/></xsl:copy></xsl:template>"+
+		    "<xsl:template match=\"t:seg[@ana='#strikethrough']\"><xsl:element name=\"del\" namespace=\"http://www.tei-c.org/ns/1.0\"><xsl:apply-templates select=\"*|text()\"/></xsl:element></xsl:template>"+   		    
 		    "<xsl:template match=\"l:*\">"+
-		     "<xsl:element name=\"seg\"><xsl:if test=\"not(@type)\"><xsl:attribute name=\"type\"><xsl:value-of select=\"'Incipit'\"/></xsl:attribute></xsl:if>´"+
-		     "<xsl:attribute name=\"ana\"><xsl:value-of select=\"concat('#',substring(name(),3))\"></xsl:value-of></xsl:attribute>"+
+		     "<xsl:element name=\"seg\"><xsl:if test=\"not(@type)\"><xsl:attribute name=\"type\"><xsl:value-of select=\"'incipit'\"/></xsl:attribute></xsl:if>"+
+		     "<xsl:attribute name=\"ana\"><xsl:choose><xsl:when test=\"contains(name(),'_')\"><xsl:value-of select=\"concat('#',substring(name(),4))\"></xsl:value-of></xsl:when>"+
+		     "<xsl:otherwise><xsl:value-of select=\"concat('#',substring(name(),3))\"/></xsl:otherwise></xsl:choose></xsl:attribute>"+
+	         "<xsl:if test=\"contains(name(),'_')\"><xsl:attribute name=\"corresp\"><xsl:value-of select=\"concat('./preceding-sibling::',substring(name(),4),'[1]')\"/></xsl:attribute></xsl:if>"+   
 		     "<xsl:apply-templates select=\"*|@*|text()\"/>"+            
 		     "</xsl:element></xsl:template>"+
 		     "<xsl:template match=\"t:publicationStmt\">"+

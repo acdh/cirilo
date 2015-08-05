@@ -38,7 +38,8 @@
             <fedora-model:isContractorOf rdf:resource="info:fedora/cm:HTML"/>
             <fedora-model:isContractorOf rdf:resource="info:fedora/cm:Ontology"/>
             <fedora-model:isContractorOf rdf:resource="info:fedora/cm:SKOS"/>
-            <fedora-model:isContractorOf rdf:resource="info:fedora/cm:Wrapper"/>
+            <fedora-model:isContractorOf rdf:resource="info:fedora/cm:LIDO"/>
+            <fedora-model:isContractorOf rdf:resource="info:fedora/cm:OAIItem"/>			
           </rdf:Description>
         </rdf:RDF>
       </foxml:xmlContent>

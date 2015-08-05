@@ -169,7 +169,7 @@ public class MDMapper
 	public Document removeEmpty(JDOMResult result) {
 		try {			
 			XPath xpath = XPath.newInstance("//*[not(*) and (string-length(normalize-space(.)) = 0 or normalize-space(.) = ',')]");
-		
+	
 			List nodes = (List) xpath.selectNodes( result.getDocument() );
 			 
 			if (nodes.size() > 0) {

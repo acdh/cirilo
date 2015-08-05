@@ -132,9 +132,6 @@
             <wsdl:part name="locale" type="this:STRING"/>
             <wsdl:part name="mode" type="this:STRING"/>
           </wsdl:message>
-          <wsdl:message name="getVoyantRequest">
-            <wsdl:part name="TEI_SOURCE" type="this:STRING"/>
-          </wsdl:message>
           <wsdl:message name="dissemResponse">
             <wsdl:part name="dissem" type="xsd:base64Binary"/>
           </wsdl:message>
@@ -149,10 +146,6 @@
             </wsdl:operation>
             <wsdl:operation name="getHSSF">
               <wsdl:input message="this:getHSSFRequest"/>
-              <wsdl:output message="this:dissemResponse"/>
-            </wsdl:operation>
-            <wsdl:operation name="getVoyant">
-              <wsdl:input message="this:getVoyantRequest"/>
               <wsdl:output message="this:dissemResponse"/>
             </wsdl:operation>
           </wsdl:portType>

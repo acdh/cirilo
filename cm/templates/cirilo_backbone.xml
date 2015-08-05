@@ -7302,6 +7302,7 @@
                 <mets:mdWrap MDTYPE="MODS" MIMETYPE="text/xml">
                   <mets:xmlData>
                     <mods:mods xmlns:mods="http://www.loc.gov/mods/v3">
+                      <mods:identifier type="urn">info:fedora/<xsl:value-of select="//t:idno[@type='PID']" /></mods:identifier>                      
                       <mods:titleInfo>
                         <mods:title>
                           <xsl:value-of select="//t:title"/>

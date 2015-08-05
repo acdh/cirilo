@@ -89,8 +89,6 @@ import org.openrdf.repository.manager.RemoteRepositoryManager;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.lowagie.text.pdf.PdfReader;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriter;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
 
 import fedora.server.types.gen.RelationshipTuple;
 
@@ -554,29 +552,6 @@ public class ObjectEditorDialog extends CDialog {
 			    	ImageTools.createThumbnail( chooser.getSelectedFile(), thumbnail, 100, 80, Color.lightGray );
 			    	Repository.modifyDatastream(pid, dsid, mimetype, controlgroup, thumbnail);
 			    	thumbnail.delete();
-			    } else if (mimetype.toLowerCase().equals("image/tiff") && !user.getIIPSUser().isEmpty()) {
-					TIFFImageWriterSpi imageWriterSpi = new TIFFImageWriterSpi();
-					TIFFImageWriter imageWriter = (TIFFImageWriter)imageWriterSpi.createWriterInstance();
-
-					File tp = File.createTempFile("temp", ".tmp");
-					ImageOutputStream out = new FileImageOutputStream(tp);
-					imageWriter.setOutput(out);
-						
-					BufferedImage img = ImageIO.read(chooser.getSelectedFile());			      				                		
-					org.emile.cirilo.business.PTIFConverter.pyramidGenerator(imageWriter, img, 256, 256);
-					out.close();
-					String ref = null;
-					Scp s = new Scp();
-					if (s.connect()) {
-						ref = s.put(tp, pid, dsid);
-						s.disconnect();
-						ref = "http://"+user.getIIPSUrl()+"/iipsrv?FIF="+ref+"&hei=900&cvt=jpeg";
-						try {
-							Repository.modifyDatastream(pid, dsid, mimetype, "M", ref);
-						} catch (Exception ep) {}          											
-					}
-					tp.delete();
-			    	
  		    	} else {
  		    		if (mimetype.toLowerCase().contains("pdf")) {
 /* 		    			try {
@@ -593,7 +568,6 @@ public class ObjectEditorDialog extends CDialog {
 				    	Repository.modifyDatastream(pid, "THUMBNAIL", "image/jpeg", "M", thumb);
 				    	thumb.delete();
  		    		} 	
-
  		    		String path = chooser.getSelectedFile().getAbsolutePath();
  		    		File selected = new File(path);
 

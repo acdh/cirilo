@@ -34,8 +34,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.XPath;
 
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.*;
@@ -71,7 +73,11 @@ import java.util.*;
 import org.apache.sanselan.*;
 import org.apache.sanselan.common.*;
 import org.geonames.*;
-;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
 
 
 /**
@@ -185,8 +191,7 @@ class CiriloWindow extends JPanel {
 		public void begin() {
 
 			try {
-			
-        
+
 				Properties p = new Properties();
 				p.load(Cirilo.class.getResourceAsStream("cirilo.ini"));
 				CPropertyService props = new CPropertyService();

@@ -125,10 +125,10 @@
 </foxml:binaryContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="R" ID="URL" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2011-07-12T07:47:20.013Z" ID="URL.1" LABEL="Reference to Google Maps Viewer" MIMETYPE="text/html">
+  <foxml:datastream CONTROL_GROUP="R" ID="KML_REF" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-07-12T07:47:20.013Z" ID="KML_REF.1" LABEL="Reference to KML Stream" MIMETYPE="text/xml">
       <foxml:contentLocation
-        REF="http://maps.google.com?q=http://fedora.host/fedora/objects/cirilo:Context/datastreams/KML/content" TYPE="URL"/>
+        REF="http://maps.google.com?q=http://fedora.host/fedora/get/cirilo:Context/KML" TYPE="URL"/>
     </foxml:datastreamVersion>
   </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="R" ID="METADATA" STATE="A" VERSIONABLE="false">
