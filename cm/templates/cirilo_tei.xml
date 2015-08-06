@@ -96,6 +96,12 @@
        <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TORDF/content" TYPE="URL"/>
      </foxml:datastreamVersion>
    </foxml:datastream>
+   <foxml:datastream CONTROL_GROUP="R" ID="SOURCE_REF" STATE="A" VERSIONABLE="false">
+     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="SOURCE_REF.1"
+       LABEL="Reference to source stream" MIMETYPE="text/xml">
+       <foxml:contentLocation REF="http://fedora.host/fedora/get/cirilo:TEI/TEI_SOURCE" TYPE="URL"/>
+     </foxml:datastreamVersion>
+   </foxml:datastream>
    <foxml:datastream CONTROL_GROUP="R" ID="HSSF_STYLESHEET" STATE="A" VERSIONABLE="false">
      <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="HSSF_STYLESHEET.1" LABEL="Stylesheet to generate HSSF stream" MIMETYPE="text/xml">
        <foxml:contentLocation REF="http://fedora.host/fedora/objects/cirilo:Backbone/datastreams/TEItoHSSF/content" TYPE="URL"/>

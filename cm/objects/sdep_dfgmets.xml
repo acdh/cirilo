@@ -52,6 +52,10 @@
             <fmm:UserInputParm defaultValue="" parmName="page" passBy="VALUE" required="false"/>
             <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/html"/>
           </fmm:Method>          
+          <fmm:Method operationLabel="Get Shared Canvas Manifest" operationName="getJSON" wsdlMsgName="getJSONRequest" wsdlMsgOutput="dissemResponse">
+            <fmm:DatastreamInputParm label="" parmName="METS_REF" passBy="URL_REF" required="true"/>
+            <fmm:MethodReturnType wsdlMsgName="dissemResponse" wsdlMsgTOMIME="text/plain"/>
+          </fmm:Method>          
         </fmm:MethodMap>
       </foxml:xmlContent>
     </foxml:datastreamVersion>
@@ -95,11 +99,18 @@
             <wsdl:part name="METS_REF" type="this:STRING"/>
             <wsdl:part name="page" type="this:STRING"/>
           </wsdl:message>
+          <wsdl:message name="getJSONRequest">
+            <wsdl:part name="METS_REF" type="this:STRING"/>
+          </wsdl:message>
           <wsdl:message name="dissemResponse">
             <wsdl:part name="dissem" type="xsd:base64Binary"/>
           </wsdl:message>
           <wsdl:portType name="METSPortType">
             <wsdl:operation name="get">
+              <wsdl:input message="this:getRequest"/>
+              <wsdl:output message="this:dissemResponse"/>
+            </wsdl:operation>
+            <wsdl:operation name="getJSON">
               <wsdl:input message="this:getRequest"/>
               <wsdl:output message="this:dissemResponse"/>
             </wsdl:operation>
@@ -126,6 +137,15 @@
             </wsdl:operation>
             <wsdl:operation name="vget">
               <http:operation location="http://fedora.host/cocoon/viewer?mets=(METS_REF)"/>
+              <wsdl:input>
+                <http:urlReplacement/>
+              </wsdl:input>
+              <wsdl:output>
+                <mime:content type="text/html"/>
+              </wsdl:output>
+            </wsdl:operation>            
+            <wsdl:operation name="getJSON">
+              <http:operation location="http://fedora.host/cocoon/mets2json?source=(METS_REF)"/>
               <wsdl:input>
                 <http:urlReplacement/>
               </wsdl:input>

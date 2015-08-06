@@ -744,21 +744,12 @@ public class EditObjectDialog extends CDialog {
 			  				     } catch (Exception u) {}
 
 			  				  }	
-				  			  if ( ( model.contains("TEI") || model.contains("METS") ) && !user.getIIPSUser().isEmpty()) {
-				  				  try {				  			  				  					  
-				  					  Scp s = new Scp();
-				  					  if (s.connect()) {
-				  						  s.rm(pid);
-				  						  s.disconnect();
-				  					  }
-				  				  } catch (Exception u) {u.printStackTrace();}
-			  				  }						  			  				  			  
 				    		  if (Repository.purgeObject(pid)) deleted++;
 				    		  pd.worked(1);
 				    		  try {Thread.sleep(5);} catch (Exception e) {}						    				    
 				      		}
 				    	  
-				    	  msgFmt = new MessageFormat(res.getString("objdelsuc"));
+							msgFmt = new MessageFormat(res.getString("objdelsuc"));
 			 				Object[] args0 = {new Integer(deleted).toString()};
 					       	JOptionPane.showMessageDialog( null, msgFmt.format(args0), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 				   		}

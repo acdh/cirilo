@@ -46,6 +46,7 @@
             <fmm:UserInputParm defaultValue="de" parmName="locale" passBy="VALUE" required="false"/>
             <fmm:UserInputParm defaultValue="" parmName="page" passBy="VALUE" required="false"/>            
           </fmm:Method>
+          <fmm:Method operationLabel="Get Shared Canvas Manifest" operationName="getJSON"/>          
         </fmm:MethodMap>
       </foxml:xmlContent>
     </foxml:datastreamVersion>

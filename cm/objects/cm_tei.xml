@@ -32,6 +32,7 @@
             <fedora-model:hasService rdf:resource="info:fedora/sdef:BibTeX"/>
             <fedora-model:hasService rdf:resource="info:fedora/sdef:Object"/>
             <fedora-model:hasService rdf:resource="info:fedora/sdef:Voyant"/>
+            <fedora-model:hasService rdf:resource="info:fedora/sdef:ImageViewer"/>            
           </rdf:Description>
         </rdf:RDF>
       </foxml:xmlContent>

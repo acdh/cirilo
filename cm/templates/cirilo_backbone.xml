@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<foxml:digitalObject PID="cirilo:Backbone" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+MET"<foxml:digitalObject PID="cirilo:Backbone" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
   <foxml:objectProperties>
     <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
@@ -7532,6 +7532,61 @@
             </fo:inline>
           </xsl:template>
         </xsl:stylesheet>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="XML2JSON" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" ID="XML2JSON.0" LABEL="" MIMETYPE="text/xml" SIZE="386">
+      <foxml:xmlContent>
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          xmlns:t="http://www.tei-c.org/ns/1.0"    
+          xmlns:lido="http://www.lido-schema.org"
+          exclude-result-prefixes="xs t lido"
+          version="1.0">              
+          <xsl:variable name="host" select="'http://glossa.uni-graz.at/iiif/'"></xsl:variable>          
+          <xsl:output method="text"/>          
+          <xsl:template match="/">
+            <xsl:text>[</xsl:text>        
+            <xsl:choose>
+              <xsl:when test="t:TEI"><xsl:call-template name="TEI"/></xsl:when>
+              <xsl:when test="lido:lido"><xsl:call-template name="LIDO"/></xsl:when>
+            </xsl:choose>
+            <xsl:text>]</xsl:text>                
+          </xsl:template>          
+          <xsl:template name="TEI">
+            <xsl:variable name="idno" select="//t:idno[@type='PID']"/>
+            <xsl:variable name="pid">
+              <xsl:choose>
+                <xsl:when test="contains($idno,'/')">
+                  <xsl:value-of select="substring-after($idno,'/')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="$idno"/>                        
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>            
+            <xsl:for-each select="//t:div/t:figure/t:graphic">
+              <xsl:text>"</xsl:text>
+              <xsl:value-of select="concat($host,$pid,'/',@xml:id,'/info.json')"/>            
+              <xsl:text>"</xsl:text>
+              <xsl:if test="position()&lt; last()">
+                <xsl:text>,</xsl:text>
+              </xsl:if>
+            </xsl:for-each>        
+          </xsl:template>                    
+          <xsl:template name="LIDO">
+            <xsl:variable name="pid" select="//lido:lidoRecID[@lido:type='PID']"/>
+            <xsl:for-each select="//lido:resourceID[@lido:type='IMAGE']">
+              <xsl:text>"</xsl:text>
+              <xsl:value-of select="concat($host,$pid,'/',.,'/info.json')"/>            
+              <xsl:text>"</xsl:text>
+              <xsl:if test="position()&lt; last()">
+                <xsl:text>,</xsl:text>
+              </xsl:if>            
+            </xsl:for-each>        
+          </xsl:template>          
+        </xsl:stylesheet>        
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
