@@ -179,22 +179,22 @@ public class EditObjectDialog extends CDialog {
 				    			  String p = (String) substitutions.get(j);
 				    			  if (p.substring(0,1).equals(Common.DCMAPPING)) {
 				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
-	                                         try {
-	    				    				   org.jdom.Document tei = db.build (Repository.getDatastream(pid, "TEI_SOURCE"));
-	  			    	            		   TEI t = new TEI(null,false,true);
-	  			    	            		   t.set(outputter.outputString(tei));
-	  			    	            		   t.setPID(pid);
-	  			    	            		   t.validate(null, null);
-	   	    				  		   		   Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", new String(t.toString().getBytes("UTF-8"),"UTF-8"));
-	  				    					 } catch (Exception q) {}  
-	                                         try {
-	    				    				   org.jdom.Document lido = db.build (Repository.getDatastream(pid, "LIDO_SOURCE"));
-	  			    	            		   LIDO l = new LIDO(null,false,true);
-	  			    	            		   l.set(outputter.outputString(lido));
-	  			    	            		   l.setPID(pid);
-	  			    	            		   l.validate(null, null);
-	   	    				  		   		   Repository.modifyDatastreamByValue(pid, "LIDO_SOURCE", "text/xml", new String(l.toString().getBytes("UTF-8"),"UTF-8"));
-	  				    					 } catch (Exception q) {}  
+					    					 if (!pid.contains("cirilo:") && model.contains("cm:TEI")) { 
+					    						org.jdom.Document tei = db.build (Repository.getDatastream(pid, "TEI_SOURCE"));
+	  			    	            		   	TEI t = new TEI(null,false,true);
+	  			    	            		   	t.set(outputter.outputString(tei));
+	  			    	            		   	t.setPID(pid);
+	  			    	            		   	t.validate(null, null);
+	   	    				  		   		   	Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", new String(t.toString().getBytes("UTF-8"),"UTF-8"));
+	  				    					 }   
+					    					 if (!pid.contains("cirilo:") && model.contains("cm:LIDO")) { 
+				    						    org.jdom.Document lido = db.build (Repository.getDatastream(pid, "LIDO_SOURCE"));
+	  			    	            		   	LIDO l = new LIDO(null,false,true);
+	  			    	            		   	l.set(outputter.outputString(lido));
+	  			    	            		   	l.setPID(pid);
+	  			    	            		   	l.validate(null, null);
+	   	    				  		   		   	Repository.modifyDatastreamByValue(pid, "LIDO_SOURCE", "text/xml", new String(l.toString().getBytes("UTF-8"),"UTF-8"));
+	  				    					 }   
 				    				  }	  
 				    			  }
 				    		  }
@@ -382,6 +382,8 @@ public class EditObjectDialog extends CDialog {
 				    		  }
 				    		  
                               boolean first=true;
+                              hasRelations = false;
+                              
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
 		    					  try {
@@ -399,13 +401,21 @@ public class EditObjectDialog extends CDialog {
 				    			  }
 		    					 } catch (Exception q) {}  
 				    		  }
-
-				    		  if (hasRelations) {
-	    	            		   TEI t = new TEI(null,false,true);
-	    	            		   if (t.get(pid)) {
-	    	            			   t.createRELS_INT(null);
-	    	            		   }	   
-				    		  }
+				    		  
+				    		  if (hasRelations && !pid.contains("cirilo:")) {
+				    			  if (!pid.contains("cirilo:") && model.contains("cm:TEI")) { 
+				    				  TEI t = new TEI(null,false,true);
+				    				  if (t.get(pid)) {
+				    					  t.createRELS_INT(null);
+				    				  }	   
+				    			  }
+				    			  if (!pid.contains("cirilo:") && model.contains("cm:LIDO")) { 
+				    				  LIDO l = new LIDO(null,false,true);
+				    				  if (l.get(pid)) {
+				    					  l.createRELS_INT(null);
+				    				  }	   
+				    			  }
+				    		  }	  
 				    		  
 			    			  fi++;
 							  logger.write( "... ok\n");									                                    	
