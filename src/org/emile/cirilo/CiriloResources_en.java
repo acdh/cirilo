@@ -214,6 +214,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "attingest",        "Importing file {0} with format {1} and PID {2}" },         
            { "novalidobj",       "File {0} does not have a valid FEDORA object schema."},
            { "ingestof",       "Ingesting file "},
+           { "tei2mets",       "Create METS datastream"},
 
            
            /* cirilo */

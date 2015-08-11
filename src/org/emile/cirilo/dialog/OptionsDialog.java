@@ -79,6 +79,7 @@ public class OptionsDialog extends CDialog {
 			set("IngestImages","TEI");
 			set("RefreshSource","TEI");
 			set("OnlyGeonameID","TEI");
+			set("toMETS","TEI");
 
 			set("DCMapping","LIDO");
 			set("SEMExtraction","LIDO");
@@ -170,6 +171,7 @@ public class OptionsDialog extends CDialog {
 			get("IngestImages","TEI");
 			get("RefreshSource","TEI");
 			get("OnlyGeonameID","TEI");
+			get("toMETS","TEI");
 
 			get("DCMapping","LIDO");
 			get("SEMExtraction","LIDO");

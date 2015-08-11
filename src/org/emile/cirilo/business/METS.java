@@ -64,7 +64,6 @@ public class METS {
 	private boolean mode;
 	private CPropertyService props;
 	private String xuser;
-	private boolean bisTEI;
 	
 	
 	public METS(FileWriter logger, boolean validate, boolean mode) {		
@@ -122,11 +121,7 @@ public class METS {
 			return false;
 		}
 	}
- 
-    public boolean isTEI() {
-    	return bisTEI;
-    }
- 
+  
  	public String toString() { 		
 		return (this.outputter.outputString(this.mets).replaceAll("this:PID", this.PID).replaceAll("this:FEDORA", user.getUrl())); 
 	}
@@ -177,11 +172,9 @@ public class METS {
 		try  {
 			XPath xpath = XPath.newInstance( "/");		
 			xpath.addNamespace( Common.xmlns_viewer );
-			bisTEI = false;
-		    if ( this.mets.getRootElement().getNamespace() == Common.xmlns_viewer || this.mets.getRootElement().getNamespace() == Common.xmlns_ntei_p5)
+		    if ( this.mets.getRootElement().getNamespace() == Common.xmlns_viewer )
 			{
 		    	try {
-		    		bisTEI = this.mets.getRootElement().getNamespace() == Common.xmlns_ntei_p5;
 		    		Element structure = this.mets.getRootElement().getChild("structure", Common.xmlns_viewer );
 		    		if (structure.getChild("div", Common.xmlns_viewer) == null) {
 		    			Element div = new Element("div",Common.xmlns_viewer);
@@ -199,9 +192,9 @@ public class METS {
 		    	
 				byte[] stylesheet = null;
 				try {
-					stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), isTEI() ? "TEITOMETS" : "TOMETS" , "");
+					stylesheet =  Repository.getDatastream("cirilo:"+( xuser != null ? xuser : user.getUser() ), "TOMETS" , "");
 				} catch (Exception ex) {
-					stylesheet =  Repository.getDatastream("cirilo:Backbone", isTEI() ? "TEITOMETS" : "TOMETS" , "");					
+					stylesheet =  Repository.getDatastream("cirilo:Backbone", "TOMETS" , "");					
 				}
 				
 		        System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
@@ -278,12 +271,10 @@ public class METS {
 		    		idno.setText(this.PID);
 		    	    this.viewer.getRootElement().addContent(2,idno);
 		    	}
-		    	if (!isTEI()) {
-		    		FileOutputStream fos = new FileOutputStream( this.file.toString() );
-		    		BufferedWriter os = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
-		    		os.write(outputter.outputString(this.viewer));
-		    		os.close();		
-		    	}
+	    		FileOutputStream fos = new FileOutputStream( this.file.toString() );
+	    		BufferedWriter os = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
+	    		os.write(outputter.outputString(this.viewer));
+	    		os.close();		
 		    }		    
 			return true;
 		} catch (Exception e) {return false;}

@@ -58,6 +58,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 	JCheckBox jcbTEIRefreshSource;
 	JCheckBox jcbTEIOnlyGeonameID;
 	JCheckBox jcbTEICustomization;
+	JCheckBox jcbTEItoMETS;
 	JCheckBox jcbMETSRefreshSource;
 	JComboBox jcbGeneralDefaultCM;
 
@@ -106,6 +107,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		setWidgetName(jcbGeneralDefaultCM, "jcbGeneralDefaultCM");
 		setWidgetName(jcbTEIOnlyGeonameID, "jcbTEIOnlyGeonameID" );
 		setWidgetName(jcbTEICustomization, "jcbTEICustomization" );
+		setWidgetName(jcbTEItoMETS, "jcbTEItoMETS" );
 		setWidgetName(jtfOAIPrefix, "jtfOAIPrefix" );
 		setWidgetName(jcbLIDODCMapping, "jcbLIDODCMapping" );
 		setWidgetName(jcbLIDOSEMExtraction, "jcbLIDOSEMExtraction" );
@@ -143,6 +145,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		jcbTEIResolveSKOS = new JCheckBox(res.getString("resolveskos"), true);
 		jcbTEIRefreshSource = new JCheckBox(res.getString("refreshsource"), false);
 		jcbTEICustomization = new JCheckBox(res.getString("customization"), false);
+		jcbTEItoMETS = new JCheckBox(res.getString("tei2mets"), false);
 		jcbGeneralDefaultCM = new JComboBox();
 		jcbMETSRefreshSource = new JCheckBox(res.getString("refreshsource"), false);
 		jcbTEIOnlyGeonameID = new JCheckBox(res.getString("onlygeonameids"), false);
@@ -186,6 +189,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		t1.add(jcbTEISEMExtraction, "wrap 5"); 
 		t1.add(jcbTEICreateContexts, "wrap 5"); 
 		t1.add(jcbTEICustomization, "wrap 5"); 
+		t1.add(jcbTEItoMETS, "wrap 5"); 
 		t1.add(jcbTEIResolveRegex, "wrap 5"); 
 		t1.add(jcbTEIIngestImages, "wrap 5"); 
 		t1.add(jcbTEIResolveSKOS, "wrap 5"); 														

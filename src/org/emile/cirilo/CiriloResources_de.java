@@ -209,6 +209,7 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "attingest",        "Importieren von Datei {0} mit Format {1} und PID {2}"},         
                 { "novalidobj",       "Datei {0} enthält kein valides FEDORA-Objekt."},
                 { "ingestof",       "Ingest von Datei "},
+                { "tei2mets",       "METS Datenstrom erzeugen"},
               
                 /* cirilo */
                 { "loadprop"          , "Einstellungen lesen"          },

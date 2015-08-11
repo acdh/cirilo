@@ -389,8 +389,6 @@ public class IngestObjectDialog extends CDialog {
  							    m.createMapping(pcm.get(), moGA);
                                 Common.genQR(user, m.getPID());
                                 
-                                if (m.isTEI()) Repository.addDatastream(pid, "TEI_SOURCE", "TEI Source", "M", "text/xml", new File( files.get(i)));
-
  							    try {														    
  							    	if (!onlyValidate) Repository.modifyDatastreamByValue(m.getPID(), "METS_SOURCE", "text/xml", m.toString());
  							    } catch (Exception q) {

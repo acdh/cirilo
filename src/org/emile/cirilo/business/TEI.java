@@ -1495,7 +1495,56 @@ public class TEI {
  				
  			} catch (Exception e) {}
  		}
-	 }	
+		
+		try {
+			String p = props.getProperty("user", "TEI.toMETS"); 
+			if (p != null && p.equals("1")) createMETS();
+		} catch (Exception e) {}	
+
+	}
+	
+	
+	public void createMETS() {
+	  try {	
+		String xsl;
+		try {
+			Document doc  = builder.build(new StringReader(new String(Repository.getDatastream("cirilo:"+xuser, "TEITOMETS",""))));
+            xsl = outputter.outputString(doc);
+		} catch (Exception ex1) {
+			Document doc  = builder.build(new StringReader(new String(Repository.getDatastream("cirilo:Backbone", "TEITOMETS",""))));
+            xsl = outputter.outputString(doc);
+		}
+
+        System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        
+        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(xsl)));
+        JDOMSource in = new JDOMSource(this.tei);
+	    JDOMResult out = new JDOMResult();
+	    
+	    transformer.transform(in, out);	    				        		        
+	        		        
+  	  	System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
+
+  	  	if (Repository.exists(this.PID,"METS_REF")) {
+    		Repository.modifyDatastreamByValue(this.PID, "METS_SOURCE", "text/xml", outputter.outputString(out.getResult()));                 							            	
+  	  	} else {
+			File file= File.createTempFile("temp", ".tmp");	    					
+			FileOutputStream fos = new FileOutputStream(file);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
+			bw.write(new String(outputter.outputString(out.getResult()).getBytes("UTF-8"),"UTF-8"));
+			bw.flush();
+			bw.close();
+			Repository.addDatastream(this.PID, "METS_SOURCE","METS Source",  "X", "text/xml", file);  	  		
+    		Repository.addDatastream(this.PID, "METS_REF",  "Reference to source stream", "text/xml", user.getUrl()+"/get/"+this.PID+"/METS_SOURCE");
+            file.delete();  		    
+  	  	}
+  	  		
+	  } catch (Exception ex0) {
+		  ex0.printStackTrace();
+	  }
+
+	}
 	
 	
 	public void refresh() 

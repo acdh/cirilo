@@ -30,6 +30,7 @@
             <fedora-model:hasModel rdf:resource="info:fedora/fedora-system:ServiceDeployment-3.0"/>
             <fedora-model:isDeploymentOf rdf:resource="info:fedora/sdef:dfgMETS"/>
             <fedora-model:isContractorOf rdf:resource="info:fedora/cm:dfgMETS"/>
+            <fedora-model:isContractorOf rdf:resource="info:fedora/cm:TEI"/>
           </rdf:Description>
         </rdf:RDF>
       </foxml:xmlContent>
