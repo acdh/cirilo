@@ -702,6 +702,32 @@ public class FedoraSoapImpl
     	}
     }
 
+    public String modifyDatastream(String pid, String datastream, String mimetype, byte[] stream)
+    	    throws DatastreamNotFoundException, FedoraConnectionException,
+    	           FedoraIllegalContentException, ObjectNotFoundException {
+
+    	    	pid = Repository.ensurePID(pid);
+
+    	    	try {
+    	    		File temp = File.createTempFile("tmp","bak");
+    	    		FileOutputStream fos = new FileOutputStream(temp);
+    	    		fos.write(stream);
+    	    		fos.close();
+    	    		String uploadURL = getFedoraClient().uploadFile(temp);
+    	    		temp.delete();
+    	    		return getAPIM().modifyDatastreamByReference(pid, datastream, null, null, mimetype, null, uploadURL, "DISABLED", "none", null, false);
+    	    	} catch (RemoteException e) {
+    	    		e.printStackTrace();
+    	            throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
+    	                                        e);
+    	    	} catch (IOException e) {
+    	    		e.printStackTrace();
+    	            throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
+    	                    e);
+
+    	    	}
+    	    }
+    
     public String modifyObject(String pid, String state, String label, String owner)
     throws DatastreamNotFoundException, FedoraConnectionException,
            FedoraIllegalContentException, ObjectNotFoundException {

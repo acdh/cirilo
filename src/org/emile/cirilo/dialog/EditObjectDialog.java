@@ -27,10 +27,6 @@ import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
 
-
-
-
-
 import net.handle.hdllib.AbstractMessage;
 import net.handle.hdllib.AbstractRequest;
 import net.handle.hdllib.AbstractResponse;
@@ -47,6 +43,7 @@ import net.handle.hdllib.Util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.codec.binary.Base64;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
@@ -83,6 +80,8 @@ import org.emile.cirilo.ecm.repository.Repository;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.awt.*;
 import java.awt.event.*;
@@ -772,12 +771,16 @@ public class EditObjectDialog extends CDialog {
 		new Thread() {
 			public void run() {
 			  try {
+				  XMLOutputter outputter = new XMLOutputter();
+				  
 				  JTable loTable = (JTable) getGuiComposite().getWidget(jtData);
 				  int[] selected = loTable.getSelectedRows();
 				  ProgressDialog pd = new ProgressDialog(getCoreDialog(), Common.WINDOW_HEADER);
 				  pd.displayPercentageInProgressBar = true;
 				  pd.beginTask(res.getString("export"), selected.length, true);
 				  int exported = 0;
+				  SAXBuilder builder = new SAXBuilder();
+
 				  MessageFormat msgFmt = new MessageFormat(res.getString("objex"));
 	 			  Object[] args = {new Integer(selected.length).toString()};
 				  
@@ -810,28 +813,37 @@ public class EditObjectDialog extends CDialog {
 			    	          FileOutputStream fos = new FileOutputStream(fp.getAbsolutePath()+System.getProperty( "file.separator" )+pid.replace(":",".")+".xml" );
 							  BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
 
-							  byte[] query = null;
+  				    	      Document foxml = builder.build(new StringReader(new String(Repository.get2ObjectXml(pid))));
 							  
-							  if (pid.startsWith("query:")) {
-								  query = Repository.getDatastream(pid, "QUERY", "");
-								  String q = new String (query, "UTF-8").replaceAll(host, "http://fedora.host")
-										  .replaceAll("http://fedora.host#", "http://gams.uni-graz.at#")
-										  .replaceAll("http://fedora.host/ontology#","http://gams.uni-graz.at/ontology#");								 
-								  Repository.modifyDatastream(pid, "QUERY", q.getBytes("UTF-8"));
-							  }							  
+			  	    		  try {				  	    			
+			  	    			  	List datastreams;									
+			  	    				XPath xpath = XPath.newInstance("//foxml:datastream/foxml:datastreamVersion[contains('"+Common.TEXT_MIMETYPES+"',@MIMETYPE)]");
+			  	    				xpath.addNamespace( Common.xmlns_foxml );
+			  	    				datastreams = (List) xpath.selectNodes(foxml);
+			  	    				for (Iterator iter = datastreams.iterator(); iter.hasNext();) {
+			  	    					org.jdom.Element e = (org.jdom.Element) iter.next();
+			  	    					Element bc = e.getChild("binaryContent",Common.xmlns_foxml);
+			  	    					byte[] byteArray = Base64.decodeBase64(bc.getValue().getBytes());
+			  	    					String buf = new String(byteArray).replaceAll(fedora, "http://fedora.host/fedora")
+										       .replaceAll(cocoon, "http://fedora.host/cocoon")
+										       .replaceAll(host, "http://fedora.host")
+											   .replaceAll("http://fedora.host#", "http://gams.uni-graz.at#")
+											   .replaceAll("http://fedora.host/viewer", "http://gams.uni-graz.at/viewer")
+											    .replaceAll("http://fedora.host/ontology","http://gams.uni-graz.at/ontology");
+			  	    					
+			  	    					byteArray = Base64.encodeBase64(buf.getBytes());
+			  	    					bc.setText(new String(byteArray));
+			  	    					e.setAttribute("SIZE",new Integer(byteArray.length).toString());
+			  	    				}
+			  	    		  } catch (Exception eq) {}
 
-							  String buf = Repository.get2ObjectXml(pid);
-
-							  if (pid.startsWith("query:")) {
-								  Repository.modifyDatastream(pid, "QUERY", query);
-							  }
-							  
+							  String buf = outputter.outputString(foxml);			  	    		  
 							  out.write(buf.replaceAll(fedora, "http://fedora.host/fedora")
-							           .replaceAll(cocoon, "http://fedora.host/cocoon")
-							           .replaceAll(host, "http://fedora.host")
-										.replaceAll("http://fedora.host#", "http://gams.uni-graz.at#")
-										.replaceAll("http://fedora.host/viewer", "http://gams.uni-graz.at/viewer")
-										.replaceAll("http://fedora.host/ontology","http://gams.uni-graz.at/ontology"));
+							        .replaceAll(cocoon, "http://fedora.host/cocoon")
+							        .replaceAll(host, "http://fedora.host")
+									.replaceAll("http://fedora.host#", "http://gams.uni-graz.at#")
+								    .replaceAll("http://fedora.host/viewer", "http://gams.uni-graz.at/viewer")
+									.replaceAll("http://fedora.host/ontology","http://gams.uni-graz.at/ontology"));
 							  out.close();
 			    			  
 			    			  exported++;

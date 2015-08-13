@@ -212,6 +212,12 @@ public class Repository {
        	return connector.modifyDatastream(pid, datastream, stream);
     }
 
+    public static String modifyDatastream(String pid, String datastream, String mimetype, byte[] stream)
+    throws DatastreamNotFoundException, FedoraConnectionException,
+           FedoraIllegalContentException, ObjectNotFoundException {
+       	return connector.modifyDatastream(pid, datastream, stream);
+    }
+
     public static String modifyDatastream(String pid, String datastream, String mimetype, String controlgroup, File fp )
     throws DatastreamNotFoundException, FedoraConnectionException,
            FedoraIllegalContentException, ObjectNotFoundException {    

@@ -138,7 +138,7 @@ public class TextEditor extends CDialog {
 			    	XMLOutputter outputter = new XMLOutputter();
 			    	jebEditorPane.setText(new String(outputter.outputString(doc).getBytes("UTF-8"),"UTF-8"));
 			    }
-		   } else if (mimetype.contains("text/plain")) {
+		   } else if (Common.TEXT_MIMETYPES.contains(mimetype)) {
 			  	byte[] buf = Repository.getDatastream(pid, dsid, "");
 			  	jebEditorPane.setContentType(mimetype);
 			  	jebEditorPane.setText(new String(buf));
@@ -278,7 +278,7 @@ public class TextEditor extends CDialog {
 	    	                }
 
 	    			  }
-	    			  if (mimetype.contains("text/plain")) {
+	    			  if ((Common.TEXT_MIMETYPES.contains(mimetype))) {
 	    				  JEditorPane jebEditorPane = (JEditorPane) getGuiComposite().getWidget("jebEditorPane");
 	    				  Repository.modifyDatastream(pid, dsid, jebEditorPane.getText().getBytes("UTF-8"));
 	    				  

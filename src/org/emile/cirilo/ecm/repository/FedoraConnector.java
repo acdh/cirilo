@@ -330,6 +330,10 @@ public interface FedoraConnector {
     throws DatastreamNotFoundException, FedoraConnectionException,
            FedoraIllegalContentException, ObjectNotFoundException;
     
+    public String modifyDatastream(String pid, String datastream, String mimetype, byte[] stream)
+    throws DatastreamNotFoundException, FedoraConnectionException,
+           FedoraIllegalContentException, ObjectNotFoundException;
+
     public String modifyDatastream(String pid, String datastream, String mimetype, String controlgroup, File fp )
     throws DatastreamNotFoundException, FedoraConnectionException,
            FedoraIllegalContentException, ObjectNotFoundException;    

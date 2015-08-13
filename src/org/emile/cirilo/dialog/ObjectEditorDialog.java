@@ -296,10 +296,6 @@ public class ObjectEditorDialog extends CDialog {
 		            fop.write(contentInBytes);  
 		            fop.flush();  
 		            fop.close();  
-				}
-				if (loD.getMimetype().equals("image/tiff")) {
-					String ref ="http://"+user.getIIPSUrl()+"/iipsrv?FIF=&hei=900&cvt=jpeg";
-					Repository.addDatastream(pid, loD.getID(), loD.getLabel(), loD.getMimetype(), ref);
 				} else {
 					Repository.addDatastream(pid, loD.getID(), loD.getLabel(), loD.getMimetype().equals("text/xml") ? "X" : "M", loD.getMimetype(), fp );
 				}	
@@ -1024,7 +1020,7 @@ public class ObjectEditorDialog extends CDialog {
 
 	
     private boolean isText(String mimetype) {
-    	if (mimetype.contains("xml") || mimetype.contains("text/plain")) return true;
+    	if (mimetype.contains("xml") || Common.TEXT_MIMETYPES.contains(mimetype)) return true;
     	return false;
     }
 

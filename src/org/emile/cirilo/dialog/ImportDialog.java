@@ -21,29 +21,29 @@ package org.emile.cirilo.dialog;
 
 
 import org.emile.cirilo.Common;
-import org.emile.cirilo.business.TEI;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
+import org.emile.cirilo.business.TEI;
+import org.emile.cirilo.business.LIDO;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.templates.TemplateSubsystem;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.DOMOutputter;
 import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.*;
 import org.openrdf.repository.manager.RemoteRepositoryManager;
 
-import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.InputSource;
 
 import java.awt.Cursor;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.StringWriter;
 import java.io.StringReader;
 import java.io.FilenameFilter;
+import java.util.List;
+import java.util.Iterator;
 
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.*;
 import javax.swing.*;
 
 import org.apache.commons.logging.Log;
@@ -53,24 +53,14 @@ import com.asprise.util.ui.progress.ProgressDialog;
 
 import fedora.client.FedoraClient;
 
-
-
-
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.dialog.*;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-
-import org.w3c.dom.Document;
 
 
 /**
@@ -182,9 +172,10 @@ public class ImportDialog extends CDialog {
 						String cocoon = host+"/cocoon";
 						
 						JFileChooser chooser = new JFileChooser(props.getProperty("user", "ingest.import.path"));
-						
-						DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				    	DocumentBuilder builder = factory.newDocumentBuilder();
+
+				    	SAXBuilder builder = new SAXBuilder();
+				    	XMLOutputter outputter = new XMLOutputter();
+				    	DOMOutputter domoutputter = new DOMOutputter();
 
 				    	files = new ArrayList<String>();
 
@@ -227,7 +218,7 @@ public class ImportDialog extends CDialog {
 							
 							progressDialog.worked(1);
 													
-
+                 
 							for (int i = 0; i<files.size(); i++) {
 
 								if(progressDialog.isCanceled()) {
@@ -240,42 +231,60 @@ public class ImportDialog extends CDialog {
 									Thread.sleep(50); 
 								} catch (InterruptedException e) {
 								}
-								
-								try {
-							    	Document doc = builder.parse((String) files.get(i));
-									String pid = doc.getDocumentElement().getAttribute("PID");
-									String objid = doc.getDocumentElement().getAttribute("OBJID");
-									String version = doc.getDocumentElement().getAttribute("VERSION");
-									String ext_version = doc.getDocumentElement().getAttribute("EXT_VERSION");
-									
-									String format = null;
 
-									if ( !pid.isEmpty()  && version.equals("1.1") ) format = FedoraClient.FOXML1_1.uri;
-									if ( !pid.isEmpty()  && version.isEmpty() ) format = FedoraClient.FOXML1_0.uri;
-									if ( !objid.isEmpty() && ext_version.equals("1.1") ) { format = FedoraClient.METS_EXT1_1.uri; pid = objid; }
-									if ( !objid.isEmpty() && ext_version.isEmpty() ) { format = FedoraClient.METS_EXT1_0.uri; pid = objid; }
+								try {
+								
+							    	org.jdom.Document doc = builder.build(new File(files.get(i)));
+			  	    				XPath xpath = XPath.newInstance("/foxml:digitalObject");
+			  	    				xpath.addNamespace( Common.xmlns_foxml );
+			  	    				org.jdom.Element object = (org.jdom.Element) xpath.selectSingleNode( doc );
+							    	
+							    	String pid = object.getAttributeValue("PID");
+							    	String version = object.getAttributeValue("VERSION");
+							    	String objid = object.getAttributeValue("OBJID");
+							    	String ext_version = object.getAttributeValue("EXT_VERSION");
+
+							    	String format = null;
+
+									if ( !pid.isEmpty()  && version == null ) format = FedoraClient.FOXML1_0.uri;
+									else if ( !pid.isEmpty()  && version.equals("1.1") ) format = FedoraClient.FOXML1_1.uri;
+									else if ( objid != null && ext_version == null ) { format = FedoraClient.METS_EXT1_0.uri; pid = objid; }
+									else if ( objid != null  && ext_version.equals("1.1") ) { format = FedoraClient.METS_EXT1_1.uri; pid = objid; }
 									
-									if (format != null) {
-										MessageFormat msgFmt0 = new MessageFormat(res.getString("attingest"));
+									if (format != null)
+									{
+										MessageFormat msgFmt0 = new MessageFormat("Importing file {0} with format {1} and PID {2}");
 										Object[] arg0 = {files.get(i), format, pid};
+
+										String foxml = outputter.outputString(doc)
+												.replaceAll("http://fedora.host/fedora", fedora)
+												.replaceAll("http://fedora.host/cocoon", cocoon)
+												.replaceAll("xsi:schemaLocation=\"http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd\"","")
+												.replaceAll("http://fedora.host", host);
+	
+	
+										doc = builder.build(new StringReader(foxml));
+									
+										ArrayList<String>streams = new ArrayList<String>(); 										
+										ArrayList<String>mimetypes = new ArrayList<String>(); 										
+										List datastreams;
 										
-										DOMSource domSource = new DOMSource(doc);
-										StringWriter writer = new StringWriter();
-										StreamResult result = new StreamResult(writer);
-										TransformerFactory tf = TransformerFactory.newInstance();
-										Transformer transformer = tf.newTransformer();
-										transformer.transform(domSource, result);
-										InputSource is = new InputSource();
-										is.setCharacterStream(new StringReader(writer.toString()
-									    .replaceAll("http://fedora.host/fedora", fedora)
-										.replaceAll("http://fedora.host/cocoon", cocoon)
-									    .replaceAll("http://fedora.host", host)));
-										doc = builder.parse(is);
-										
+					  	    			try {				  	    			
+					  	    				xpath = XPath.newInstance("//foxml:datastream[contains('"+Common.TEXT_MIMETYPES+"',foxml:datastreamVersion/@MIMETYPE)]");
+					  	    				xpath.addNamespace( Common.xmlns_foxml );
+					  	    				datastreams = (List) xpath.selectNodes(doc);
+					  	    				for (Iterator iter = datastreams.iterator(); iter.hasNext();) {
+					  	    						org.jdom.Element e = (org.jdom.Element) iter.next();
+					  	    						streams.add(e.getAttributeValue("ID"));
+					  	    						mimetypes.add(e.getChild("datastreamVersion", Common.xmlns_foxml).getAttributeValue("MIMETYPE"));
+					  	    				}
+					  	    			} catch (Exception eq) {}
+
+																															
 										logger.write("\n " + new java.util.Date() + ". "+ msgFmt0.format(arg0));
 										if (!Repository.exist(pid)) {	
 											try {
-												Repository.ingestDocument(doc,  format, "Object ingested by Cirilo");
+												Repository.ingestDocument(domoutputter.output(doc),  format, "Object ingested by Cirilo");
 												try {
 													while (!Repository.exist(pid));
 													Repository.getDatastream(pid, "RELS-EXT");
@@ -287,13 +296,17 @@ public class ImportDialog extends CDialog {
 								 	  			    		cm =  p;
 								 	  			    	}
 								 	  			    }
+								 	  			    								 	  			 
+								 	  			    int k = 0;
+								 	  			    for (String s: streams) {
+														  byte[] stream = Repository.getDatastream(pid,s, "");
+									 	  			      String p = new String (stream, "UTF-8").replaceAll("http://fedora.host/fedora", fedora)
+																	.replaceAll("http://fedora.host/cocoon", cocoon)
+																    .replaceAll("http://fedora.host", host);
+														  Repository.modifyDatastream(pid, s, mimetypes.get(k++), p.getBytes("UTF-8"));								 	  			    	
+								 	  			    }
 
-								 	  			    if (pid.startsWith("query:")) {
-														  byte[] query = Repository.getDatastream(pid, "QUERY", "");
-														  String q = new String (query, "UTF-8").replaceAll("http://fedora.host",host);								 
-														  Repository.modifyDatastream(pid, "QUERY", q.getBytes("UTF-8"));
-												    }							  
-								 	  			    								 	  			    
+								 	  			    								 	  			   
 								 	  			    Common.genQR(user, pid);
 								 	  			    if (Common.ONTOLOGYOBJECTS.contains(cm)) {
 							 				    		try {
@@ -326,6 +339,15 @@ public class ImportDialog extends CDialog {
 							    	            		   t.refresh();
 							 	  						} catch (Exception e) {
 							 	  						}
+								 	  			    } else if  (Common.LIDOOBJECTS.contains(cm)) {
+								 	  					try {
+							    	            		   LIDO l = new LIDO(null,false,true);
+							    	            		   byte[] buf = Repository.getDatastream(pid,"LIDO_SOURCE", "");
+							    	            		   l.set(new String(buf,"UTF-8"));
+							    	            		   l.setPID(pid);
+							    	            		   l.refresh();
+							 	  						} catch (Exception e) {
+							 	  						}
 								 	  					
 								 	  			    }
 
@@ -351,6 +373,7 @@ public class ImportDialog extends CDialog {
 												fi++;
 												logger.write(" ... Ok");
 											} catch (Exception q) {
+												q.printStackTrace();
 												ff++;
 												logger.write(" ... "+res.getString("ingfail"));										
 											}
@@ -365,6 +388,7 @@ public class ImportDialog extends CDialog {
 										ff++;
 									}	
 								} catch (Exception w) {
+									w.printStackTrace();									
 								}
 				
 							}
@@ -380,7 +404,6 @@ public class ImportDialog extends CDialog {
 
 						}		
 					} catch (Exception ex) {
-						ex.printStackTrace();
 					}
 					finally {
 						getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -391,6 +414,7 @@ public class ImportDialog extends CDialog {
 			
 		}
 
+	
 		private void treeWalk(File file) {
 			  try {
 		 		if (file.isDirectory()) {
@@ -412,8 +436,7 @@ public class ImportDialog extends CDialog {
 			}
 		}
 
-
-
+	
 		private CPropertyService props;
 		private IGuiAdapter moGA;
 		private ResourceBundle res;

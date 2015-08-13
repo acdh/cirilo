@@ -107,7 +107,7 @@ public class Common {
     public final static Namespace xmlns_xinc= Namespace.getNamespace( "x", "http://www.w3.org/2001/XInclude");
     
     public final static Namespace xmlns_lido= Namespace.getNamespace( "lido", "http://www.lido-schema.org");
-    
+
 	public final static Namespace xmlns_cantus = Namespace.getNamespace( "l", "http://cantus.oeaw.ac.at");
 
 	public final static Namespace xmlns_dcterms = Namespace.getNamespace( "dcterms", "http://purl.org/dc/terms/");
@@ -217,12 +217,16 @@ public class Common {
     public final static String ONTOLOGYOBJECTS = "info:fedora/cm:SKOS;info:fedora/cm:Ontology";
 
     public final static String TEIOBJECTS = "info:fedora/cm:TEI";
+
+    public final static String LIDOOBJECTS = "info:fedora/cm:LIDO";
     
 	public final static String SYSTEM_DATASTREAMS ="|STYLESHEET|FO_STYLESHEET|QUERY|KML_TEMPLATE|DC_MAPPING|RDF_MAPPING|BIBTEX_MAPPING|RELS-EXT|RELS-INT|REPLACEMENT_RULESET|VOYANT|PID|METADATA|METHODS"+
 												   "|THUMBNAIL|TEI_SOURCE|PDF_STREAM|URL|DC|BIBTEX|HTML_STREAM|ONTOLOGY|KML|KML_TEMPLATE|METS_SOURCE|TOMETS|";
 
     public final static String HANDLE_PREFIX = "0.NA/";
-
+        
+    public final static String TEXT_MIMETYPES = "text/plain|text/css|text/javascript|application/sparql-query";
+    
 	public final static String stylesheet = "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.tei-c.org/ns/1.0\" "+
 		    "xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:l=\"http://cantus.oeaw.ac.at\" exclude-result-prefixes=\"xs l\" version=\"2.0\">"+
 		    "<xsl:template match=\"*|@*|text()\"> <xsl:copy><xsl:apply-templates select=\"*|@*|text()\"/></xsl:copy></xsl:template>"+
