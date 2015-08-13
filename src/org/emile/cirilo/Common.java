@@ -225,7 +225,7 @@ public class Common {
 
     public final static String HANDLE_PREFIX = "0.NA/";
         
-    public final static String TEXT_MIMETYPES = "text/plain|text/css|text/javascript|application/sparql-query";
+    public final static String TEXT_MIMETYPES = "text/plain|text/css|application/javascript|application/sparql-query";
     
 	public final static String stylesheet = "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.tei-c.org/ns/1.0\" "+
 		    "xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:l=\"http://cantus.oeaw.ac.at\" exclude-result-prefixes=\"xs l\" version=\"2.0\">"+
