@@ -307,7 +307,7 @@ public class TemplateSubsystem {
             }
         	if (mode) {
         		byte[] buf = Repository.getDatastream(templatepid, "QUERY", (String) null);
-        		Repository.modifyDatastream(newPid, "QUERY", new String(buf).replaceAll("obj:self",newPid).getBytes("UTF-8"));        	
+        		Repository.modifyDatastream(newPid, "QUERY", "application/sparql-query", new String(buf).replaceAll("obj:self",newPid).getBytes("UTF-8"));        	
         	}
         	
 
@@ -429,7 +429,7 @@ public class TemplateSubsystem {
     	try {
     		
     		byte[] buf = Repository.getDatastream(templatepid, "QUERY", (String) null);
-        	Repository.modifyDatastream(newPid, "QUERY", new String(buf).replaceAll("obj:self",newPid).getBytes("UTF-8"));
+        	Repository.modifyDatastream(newPid, "QUERY", "application/sparql-query", new String(buf).replaceAll("obj:self",newPid).getBytes("UTF-8"));
     	} catch (Exception e) {        	
     	}
     	return stream;

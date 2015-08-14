@@ -361,7 +361,7 @@ public class EditObjectDialog extends CDialog {
 				    				      BufferedWriter out = new BufferedWriter(new FileWriter(query));
 				    				      out.write(p.substring(2).replaceAll("[$]self","fedora:"+pid));
 				    				      out.close();
-			    				    	  Repository.modifyDatastream(pid, "QUERY", "text/plain", "M", query);
+			    				    	  Repository.modifyDatastream(pid, "QUERY", "application/sparql-query", "M", query);
 				    				      query.delete();
 				    					 } catch (Exception q) {}  
 				    				      

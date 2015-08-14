@@ -280,7 +280,7 @@ public class TextEditor extends CDialog {
 	    			  }
 	    			  if ((Common.TEXT_MIMETYPES.contains(mimetype))) {
 	    				  JEditorPane jebEditorPane = (JEditorPane) getGuiComposite().getWidget("jebEditorPane");
-	    				  Repository.modifyDatastream(pid, dsid, jebEditorPane.getText().getBytes("UTF-8"));
+	    				  Repository.modifyDatastream(pid, dsid, mimetype, jebEditorPane.getText().getBytes("UTF-8"));
 	    				  
 	    			  }
 	    	     } catch (Exception ex) {
