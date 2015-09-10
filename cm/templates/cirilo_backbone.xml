@@ -48,6 +48,14 @@ MET"<foxml:digitalObject PID="cirilo:Backbone" VERSION="1.1" xmlns:foxml="info:f
       </foxml:xmlContent>
     </foxml:datastreamVersion>
   </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="VERSION" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" 
+      ID="VERSION1.0" LABEL="Installed Version of Cirilo's Content Models" MIMETYPE="text/xml" SIZE="386">
+      <foxml:xmlContent>
+        <cm>1.5</cm>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
   <foxml:datastream CONTROL_GROUP="X" ID="TOTEI" STATE="A" VERSIONABLE="false">
     <foxml:datastreamVersion CREATED="2011-03-16T12:51:36.114Z" 
       ID="TOTEI1.0" LABEL="XSLT Stylesheet to customize TEI_SOURCEs" MIMETYPE="text/xml" SIZE="386">

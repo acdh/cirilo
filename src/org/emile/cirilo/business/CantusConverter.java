@@ -68,33 +68,23 @@ public class CantusConverter {
 	  	        for (Element div: divs) {
 		  	        List<Element> ps = div.getChildren("p",  Common.xmlns_tei_p5);
 		  	        String shead = op.outputString( div.getChild("head", Common.xmlns_tei_p5))
+  	        			    .replaceAll("[|]","§")	  	        		
 		  	        		.replaceAll("<.*?>","")
   	        				.replaceAll("[\n\r]","")
-  	        				.replaceAll("\\[","| ")
-  	        				.replaceAll("\\]","")
+  	        				.replaceAll("\\[","{")
+  	        				.replaceAll("\\]","}")
   	        		        .replaceAll("      "," ")	  	        		
   	        		        .replaceAll("     "," ")	  	        		
   	        		        .replaceAll("    "," ")	  	        		
   	        		        .replaceAll("   "," ")	  	        		
   	        				.replaceAll("  "," ")
   	        				.trim();	  	        		
-                  
-	                Element feast = new Element("div",Common.xmlns_ntei_p5);
-	                Element head = new Element("head",Common.xmlns_ntei_p5);
-	                Element label = new Element("label",Common.xmlns_ntei_p5);
-	                String[] Head = shead.split("[|]");
-	                if (Head.length > 1) {
-                        Element supplied = new Element("supplied",Common.xmlns_ntei_p5);
-                        label.setText(Head[0].trim());
-                        supplied.setText(Head[1].trim());
-                        head.addContent(label);
-                        head.addContent(supplied);                   	
-	                } else {
-	                  label.setText(shead.trim());                    	
-	                  head.addContent(label);
-                    }
-                    feast.addContent(head);
-        		  	body.addContent(feast);
+                    
+                   Element feast = new Element("div",Common.xmlns_ntei_p5);
+                   Element head = new Element("head",Common.xmlns_ntei_p5);
+                   parseEmendations(head, shead);
+                   feast.addContent(head);
+       		  	   body.addContent(feast);
  		  	        
 		  	        ArrayList<Element> segments_1 = new ArrayList<Element>();
   	        		segments_1.add(new Element("div",Common.xmlns_ntei_p5));
@@ -135,7 +125,8 @@ public class CantusConverter {
 	  	        		        .replaceAll("     "," ")	  	        		
 	  	        		        .replaceAll("    "," ")	  	        		
 	  	        		        .replaceAll("   "," ")	  	        		
-	  	        				.replaceAll("  "," ");
+	  	        				.replaceAll("  "," ")
+	  	        		        .replaceAll("§<", "§ <");
 
 	  	        		ArrayList<String> segs = new ArrayList<String>();
 	  	        		String line = "";
@@ -269,6 +260,8 @@ public class CantusConverter {
 	 		  	        					add = Neumes(q, parser, add);	
 	 		  	        				} else if (q == parser.types.CHOICE) {
 	 			 	        				add = Choice(q, parser, add);  	        					
+	 		  	        				} else if (q == parser.types.PAGE) {
+	 		  	        					add = Page(q, parser, add);  	        					
 		  	        					}
 	  	        					}	
 	  	                  			if (ins != null) { ins.addContent(del); } else { if (currSegment_2 == null) currSegment_1.addContent(del); else currSegment_2.addContent(del); }
@@ -327,6 +320,11 @@ public class CantusConverter {
                                     continue;
 	  	        				}    
 	  	        				
+	  	        				if (q == parser.types.PAGE) {
+	 	        					ins = Page(q, parser, ins);
+                                    continue;
+	  	        				}    
+	  	        				
 	  	        			}
 	  	        		}	
 	  	        	}
@@ -372,7 +370,7 @@ public class CantusConverter {
 					phr.setAttribute("type","neume"); 
   					seg.addContent(phr);  	  	        							
 				} else {
-					parseIncipit(seg, parser.getEntity());
+					parseEmendations(seg, parser.getEntity());
 				}
 			}	  	  
 			if (elem != null) { elem.addContent(seg); } else { if (currSegment_2 == null) currSegment_1.addContent(seg); else currSegment_2.addContent(seg); }
@@ -406,28 +404,38 @@ public class CantusConverter {
 					phr.setAttribute("type","neume"); 
 					seg.addContent(phr);  	  	        							
 			} else {
-					parseIncipit(seg, parser.getEntity());
+				parseEmendations(seg, parser.getEntity());
 			}
 			if (elem != null) { elem.addContent(seg); } else { if (currSegment_2 == null) currSegment_1.addContent(seg); else currSegment_2.addContent(seg); }
 	        return elem;
 	  }	
 
+	  private Element Page(Types q, Parser parser, Element elem) {        
+	    	
+		  Element pb = new Element("pb",Common.xmlns_ntei_p5);
+		  pb.setAttribute("n", parser.getEntity());
+		  if (elem != null) { elem.addContent(pb); } else { if (currSegment_2 == null) currSegment_1.addContent(pb); else currSegment_2.addContent(pb); }
+		  return elem;
+	  }         
+
+	  
 	  private Element Description (Types q, Parser parser, Element elem) {
-			if (elem != null) { elem.addContent(parser.getEntity()); } else { if (currSegment_2 == null) currSegment_1.addContent(parser.getEntity()); else currSegment_2.addContent(parser.getEntity()); }
-		  	while (Description.contains(parser.foresee())) {	
-		  	    q= parser.next();	
-		  	    if (q == Types.PAGE) {
+		  	while (true) {	
+		  	    if (q == Types.PAGE) {		  	    	
 		  	        Element pb = new Element("pb",Common.xmlns_ntei_p5);	  	        							
 		  	        pb.setAttribute("n",parser.getEntity());
 		  	        if (elem != null) { elem.addContent(pb); } else { if (currSegment_2 == null) currSegment_1.addContent(pb); else currSegment_2.addContent(pb); }
+		  	        if (parser.foresee() == Types.WHITESPACE) parser.next();
 		  	     } else {
-    			    if (elem != null) { elem.addContent(parser.getEntity()); } else { if (currSegment_2 == null) currSegment_1.addContent(parser.getEntity()); else currSegment_2.addContent(parser.getEntity()); }
+  			    if (elem != null) { elem.addContent(parser.getEntity()); } else { if (currSegment_2 == null) currSegment_1.addContent(parser.getEntity()); else currSegment_2.addContent(parser.getEntity()); }
 		  	     }	
+		  	    if (!Description.contains(parser.foresee())) break;
+		  	    q= parser.next();	
 		  	 }	 
 		  	 return elem;
 	  }
 	  
-	  private void parseIncipit(Element seg, String s) {
+	  private void parseEmendations(Element seg, String s) {
 	
 		  int bp = 0;
 		  String ch;
@@ -535,6 +543,21 @@ public class CantusConverter {
 	        	   Element pb = new Element("pb",Common.xmlns_ntei_p5);	  	        										       
 		  	       pb.setAttribute("n",sp);		  	       
 		  	       seg.addContent(pb);
+			  } else if (ch.equals("{")) {
+				  if (!buf.isEmpty()) {
+					   seg.addContent(buf);
+					   buf = "";
+				  }
+			      String sp = "";
+				  while (true) {
+					  ch = String.valueOf(s.charAt(bp++));
+					  if (ch.equals("}") || bp > s.length()-1) break;	
+					  sp+=ch;
+				   }
+	        	   Element note = new Element("note",Common.xmlns_ntei_p5);	  	        										       
+	        	   note.setText(sp);
+	        	   note.setAttribute("type","supplied");
+		  	       seg.addContent(note);		  	       
 			  } else if (ch.equals("$")) {
 				  if (!buf.isEmpty()) {
 					   seg.addContent(buf);
@@ -671,7 +694,7 @@ public class CantusConverter {
 			
 		  public Types types;
 		  
-		  public static final String SEPARATOR = " ,.$§";
+		  public static final String SEPARATOR = " ,.$§(";
 		  		  
 		  private String buf;
 		  private String entity;
@@ -746,8 +769,9 @@ public class CantusConverter {
 				  } else {
 					 int cp = bp; 
 					 while (true) {
+						 if (bp > buf.length()-1) break;
 						 ch = String.valueOf(buf.charAt(bp++));
-						 if (ch.equals("§") || bp > buf.length()-1) break;
+						 if (ch.equals("§")) break;
 						 if (ch.equals("$")) {
 		                	 bp = cp+1;
 	                    	 return log(types.EOA);						 
@@ -770,8 +794,8 @@ public class CantusConverter {
 				  }
 				  return log(types.PAGE);
 			  } else if (ch.equals("#")) {
-				  ch = String.valueOf(buf.charAt(bp++));
 				  while (true) {
+					  ch = String.valueOf(buf.charAt(bp++));
 					  if (ch.equals("}") || bp > buf.length()-1) break;
 					  entity+=ch;
 				  }

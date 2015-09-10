@@ -87,6 +87,7 @@ public class OptionsDialog extends CDialog {
 			set("ResolveGeoIDs","LIDO");
 			set("IngestImages","LIDO");
 			set("RefreshSource","LIDO");
+			set("OnlyGeonameID","LIDO");
 
 			set("RefreshSource","METS");
 
@@ -179,6 +180,7 @@ public class OptionsDialog extends CDialog {
 			get("ResolveGeoIDs","LIDO");
 			get("IngestImages","LIDO");
 			get("RefreshSource","LIDO");
+			get("OnlyGeonameID","LIDO");
 
 			get("RefreshSource","METS");
 

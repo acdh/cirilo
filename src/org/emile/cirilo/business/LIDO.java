@@ -432,8 +432,12 @@ public class LIDO {
     HashMap<Integer,Topos> normdata = new HashMap<Integer,Topos> ();  
 
     try {
-	   
-	    List places = getChildren("//lido:place[not(@lido:geographicalEntity) or (@lido:geographicalEntity != 'cirilo:ignore')]");
+
+	    String s = props.getProperty("user", "LIDO.OnlyGeonameID"); 
+		s = (s != null && s.equals("1")) ? "[contains(@lido:geographicalEntity,'geonameID')]" : "[not(@lido:geographicalEntity) or (@lido:geographicalEntity != 'cirilo:ignore')]";
+
+    	
+	    List places = getChildren("//lido:place"+s);
 	    cc = 0;
 		List nodes = getChildren("//@lido:corresp[contains(.,'GID')]");
 		for (Iterator jter = nodes.iterator(); jter.hasNext();) {
@@ -458,7 +462,7 @@ public class LIDO {
 				        	Element e = (Element) jter.next();
 				        	Element place = e.getChild("appellationValue", Common.xmlns_lido);
 				        	
-				        	Attribute key = e.getAttribute("ref",Common.xmlns_lido); 		        		
+				        	Attribute key = parent.getAttribute("geographicalEntity",Common.xmlns_lido); 		        		
 				        	if (key == null || !key.getValue().startsWith("geonameID"))
 				        	{
 

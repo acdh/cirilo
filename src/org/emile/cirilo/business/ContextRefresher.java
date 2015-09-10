@@ -26,7 +26,7 @@ public class ContextRefresher {
 	        DOMBuilder db = new DOMBuilder();
 	        org.jdom.Document doc = db.build (Repository.getDatastream(pid, "METADATA", new Integer(0)));
 
-			XPath xpath = XPath.newInstance("/s:sparql/s:results/s:result[contains(s:model/@uri,'cm:TEI')]/s:pid");
+			XPath xpath = XPath.newInstance("/s:sparql/s:results/s:result[contains(s:model/@uri,'cm:TEI') or contains(s:model/@uri,'cm:LIDO')]");
 			xpath.addNamespace( Common.xmlns_sparql );
 
 									
@@ -59,13 +59,24 @@ public class ContextRefresher {
 	    			try {	
 	    				Element e = (Element) iter.next();
 
-	    				String uri = e.getAttributeValue("uri").substring(Common.INFO_FEDORA.length());
-	    				org.jdom.Document tei = db.build (Repository.getDatastream(uri, "TEI_SOURCE"));
+	    				String uri = e.getChild("pid", Common.xmlns_sparql ).getAttributeValue("uri").substring(Common.INFO_FEDORA.length());
+	    				String model = e.getChild("model", Common.xmlns_sparql ).getAttributeValue("uri").substring(Common.INFO_FEDORA.length());
 	    				
-	 
-	    				XPath oPath = XPath.newInstance("//t:placeName/t:location/t:geo");
-	    				oPath.addNamespace( Common.xmlns_tei_p5 );
-	    				List placeNames = (List) oPath.selectNodes( tei );
+	    				org.jdom.Document data = null;
+	    				XPath oPath = null;
+	    				
+	    				if (model.contains("cm:TEI")) { 
+	    					data= db.build (Repository.getDatastream(uri, "TEI_SOURCE"));
+		    				oPath = XPath.newInstance("//t:placeName/t:location/t:geo");
+		    				oPath.addNamespace( Common.xmlns_tei_p5 );
+	    				}
+	    				if (model.contains("cm:LIDO")) { 
+	    					data= db.build (Repository.getDatastream(uri, "LIDO_SOURCE"));
+		    				oPath = XPath.newInstance("//t:item[contains(id,'GID.')]");
+		    				oPath.addNamespace(Common.xmlns_tei_p5);
+	    				}
+	    					 
+	    				List placeNames = (List) oPath.selectNodes( data );
 
 	    				if (placeNames.size() > 0) {
 	    					int i=0;
@@ -76,7 +87,7 @@ public class ContextRefresher {
     		    					String p =  outputter.outputString(Placemark_template);
     		    					i++;
     		    					MDMapper m = new MDMapper (uri, p);	
-    		    					String s = m.transform(tei);
+    		    					String s = m.transform(data);
     		    					org.jdom.Document Placemark = builder.build(new StringReader(s));
     		    					Folder.addContent((Element)Placemark.getRootElement().clone());
 	    		    			} catch (Exception r) {}

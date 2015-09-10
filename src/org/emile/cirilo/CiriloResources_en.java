@@ -90,6 +90,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "home", "Home directory"},
            { "maketemplate", "Add as template"},
            { "extras.createenvironment", "Create environment ..."},
+           { "extras.upgrade", "Upgrade repository ..."},
            { "english", "English"},
            { "german", "German"},
            { "language", "Language"},

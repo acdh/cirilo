@@ -68,7 +68,8 @@ public class GuiOptionsDialog extends CGuiComposite {
 	JCheckBox jcbLIDOResolveGeoIDs;
 	JCheckBox jcbLIDOIngestImages;
 	JCheckBox jcbLIDORefreshSource;
-	
+	JCheckBox jcbLIDOOnlyGeonameID;
+
 
 	/**
 	 *  Constructor for the GuiObjectEditorDialog  object
@@ -115,6 +116,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		setWidgetName(jcbLIDOResolveGeoIDs, "jcbLIDOResolveGeoIDs" );
 		setWidgetName(jcbLIDOIngestImages, "jcbLIDOIngestImages" );
 		setWidgetName(jcbLIDORefreshSource, "jcbLIDORefreshSource" );
+		setWidgetName(jcbLIDOOnlyGeonameID, "jcbLIDOOnlyGeonameID" );
 
 		
 	}
@@ -149,6 +151,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		jcbGeneralDefaultCM = new JComboBox();
 		jcbMETSRefreshSource = new JCheckBox(res.getString("refreshsource"), false);
 		jcbTEIOnlyGeonameID = new JCheckBox(res.getString("onlygeonameids"), false);
+		jcbLIDOOnlyGeonameID = new JCheckBox(res.getString("onlygeonameids"), false);
 
 		jcbLIDODCMapping = new JCheckBox(res.getString("dcmapping"), true);
 		jcbLIDOSEMExtraction = new JCheckBox(res.getString("semextraction"), true);
@@ -205,6 +208,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		t3.add(jcbLIDOCreateContexts, "wrap 5"); 
 		t3.add(jcbLIDOIngestImages, "wrap 5"); 
 		t3.add(jcbLIDOResolveGeoIDs, "wrap 5");	
+		t3.add(jcbLIDOOnlyGeonameID, "gapbefore 18px, wrap 5");
 
 		Container t2 = new Container();
 		t2.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));

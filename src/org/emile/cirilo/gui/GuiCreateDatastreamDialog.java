@@ -142,7 +142,7 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 
 		Object[] mimetypes = { 
 				"text/xml",
-				"application/javascript",
+				"application/javascript",				
 				"application/mp4",
 				"application/msword",
 				"application/pdf",
@@ -160,8 +160,10 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 				"application/x-shockwave-flash",
 				"audio/mp3",
 				"audio/x-wave",
-				"image/tiff",
+				"image/gif",
 				"image/jpeg",
+				"image/png",
+				"image/tiff",
 				"text/css",
 				"text/html",
 				"text/plain",

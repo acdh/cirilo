@@ -155,6 +155,10 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 			loItem.setText(res.getString(loItem.getText()));
 			new CActionListener(loItem, this, "handleCreate");
 
+			loItem = (JMenuItem) loMenu.getWidget("Extras.Upgrade");
+			loItem.setText(res.getString(loItem.getText()));
+			new CActionListener(loItem, this, "handleUpgrade");
+
 			loItem = (JMenuItem) loMenu.getWidget("Extras.Options");
 			loItem.setText(res.getString(loItem.getText()));
 			new CActionListener(loItem, this, "handleOptionsDialog");
@@ -471,6 +475,17 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 		}
 	}	
 
+	public void handleUpgrade(ActionEvent e) {
+		
+		try {
+			UpgradeDialog dlg;
+
+			dlg = (UpgradeDialog) CServiceProvider.getService(DialogNames.UPGRADE_DIALOG);
+			dlg.open();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}	
 	
 	/**
 	 * Description of the Method

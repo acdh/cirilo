@@ -345,6 +345,12 @@ public class Repository {
         return connector.isContentModel(pid);
     }
 
+    
+    public static boolean hasContentModel(String pid, String cmpid)
+            throws FedoraIllegalContentException, FedoraConnectionException {
+    		return connector.hasContentModel(pid, cmpid);
+    }		
+    
     public static boolean purgeObject(String pid) throws
     	FedoraConnectionException,
     	FedoraIllegalContentException {

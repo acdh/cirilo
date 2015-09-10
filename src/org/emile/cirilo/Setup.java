@@ -104,6 +104,7 @@ public class Setup {
 		IngestExcelDialog loIngestExcelDialog;
 		HandleDialog loHandleDialog;
 		ImportDialog loImportDialog;
+		UpgradeDialog loUpgradeDialog;
 		MakeEnvironmentDialog loMakeEnvironmentDialog;
 		LocationDialog loLocationDialog;
 		HarvesterDialog loHarvesterDialog;
@@ -224,6 +225,11 @@ public class Setup {
 		loImportDialog.setGuiManager(aoGuiMan);
 		CServiceProvider.addService(loImportDialog, DialogNames.IMPORT_DIALOG);
 
+		// UpgradeDialog
+		loUpgradeDialog = (UpgradeDialog) loDialogCreator.createDialog(UpgradeDialog.class, "GuiUpgradeDialog", "Upgrade", DialogNames.UPGRADE_DIALOG);
+		loUpgradeDialog.setGuiManager(aoGuiMan);
+		CServiceProvider.addService(loUpgradeDialog, DialogNames.UPGRADE_DIALOG);
+
 		// MakeEnvironmentDialog
 		loMakeEnvironmentDialog = (MakeEnvironmentDialog) loDialogCreator.createDialog(MakeEnvironmentDialog.class, "GuiMakeEnvironmentDialog", res.getString("extras.createenvironment"), DialogNames.MAKEENVIRONMENT_DIALOG);
 		loMakeEnvironmentDialog.setGuiManager(aoGuiMan);
@@ -288,6 +294,7 @@ public class Setup {
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiTemplaterDialog", "GuiTemplaterDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiOptionsDialog", "GuiOptionsDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiHandleDialog", "GuiHandleDialog");
+		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiUpgradeDialog", "GuiUpgradeDialog");
 
 		// build menu gui
 		loGuiMan.addGuiComposite(loFactory.createGuiFromXML(Cirilo.class.getResourceAsStream("menu.xml"), true), "FrameMenu");

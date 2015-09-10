@@ -17,6 +17,7 @@
 		<MenuItem class="JMenuItem" text="extras.templater" mnemonic="T" enabled="true" name="Templater"/>
 		<MenuItem class="JSeparator"/>
 		<MenuItem class="JMenuItem" text="extras.createenvironment" mnemonic="C" enabled="true" name="Create"/>
+		<MenuItem class="JMenuItem" text="extras.upgrade" mnemonic="U" enabled="true" name="Upgrade"/>
 		<MenuItem class="JSeparator"/>
 		<MenuItem class="JMenuItem" text="extras.preferences" mnemonic="P" enabled="true" name="Options"/>
 	</Menu>

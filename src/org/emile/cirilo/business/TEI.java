@@ -458,7 +458,7 @@ public class TEI {
 
 			if (!onlyValidate)  {
 				if (this.collection.isEmpty()) {
-					if  (mode || (!isCustomized && this.raw !=null)) {
+					if  (mode || (!isCustomized && this.raw !=null && this.file.toString().contains(".xml"))) {
 						FileOutputStream fos = new FileOutputStream( this.file.toString() );
 						BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
 						if (mode) out.write(new String(outputter.outputString(this.tei).getBytes("UTF-8"),"UTF-8")); 
@@ -466,7 +466,7 @@ public class TEI {
 						out.close();
 					}
 				} else {
-					if  (mode || (!isCustomized && this.raw !=null)) {
+					if  (mode || (!isCustomized && this.raw !=null && this.file.toString().contains(".xml"))) {
 						eXist eX = new eXist (this.collection);
 						org.xmldb.api.base.Collection coll = DatabaseManager.getCollection( URI + eX.getCollection(), user.getExistUser(), user.getExistPasswd() );
 						XMLResource res = (XMLResource) coll.getResource(eX.getStream());

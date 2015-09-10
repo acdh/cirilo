@@ -116,6 +116,10 @@ public interface FedoraConnector {
             throws IllegalStateException, FedoraIllegalContentException,
                    FedoraConnectionException;
 
+    public boolean hasContentModel(String pid, String cmpid)
+            throws IllegalStateException, FedoraIllegalContentException,
+                   FedoraConnectionException;
+
 
     /**
      * Not public.
