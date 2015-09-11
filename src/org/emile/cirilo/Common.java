@@ -150,7 +150,7 @@ public class Common {
     
     public final static String WINDOW_HEADER = "Cirilo 2.4.0";
 
-    public final static String CM_VERSION = "1.5";
+    public final static String CM_VERSION = "15";
     
     public final static String DUBLIN_CORE = "0";
     
