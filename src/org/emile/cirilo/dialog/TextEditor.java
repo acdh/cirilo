@@ -173,7 +173,10 @@ public class TextEditor extends CDialog {
 		  jmiSave.setEnabled(!group.equals("R"));
 	      jmiSave.addActionListener(new ActionListener() {
 	    	  public void actionPerformed(ActionEvent e) {
+    			  JMenuItem jmiSave = null; 
 	    		  try {
+	    			  jmiSave = (JMenuItem) getGuiComposite().getWidget("jmiSave");
+	    			  jmiSave.setEnabled(false);
 	    			  getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	    			  if (mimetype.contains("xml")) {
 	    				  JEditorPane jebEditorPane = (JEditorPane) getGuiComposite().getWidget("jebEditorPane");
@@ -287,6 +290,7 @@ public class TextEditor extends CDialog {
 	    	    	 ex.printStackTrace();
 	    	     }
 	 	  		 finally {
+	 	  			if (jmiSave!= null) jmiSave.setEnabled(!group.equals("R"));
 	 				getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	 			}
 	    	  }

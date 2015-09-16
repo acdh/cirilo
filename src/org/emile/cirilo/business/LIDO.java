@@ -433,6 +433,7 @@ public class LIDO {
 
     try {
 
+    	
 	    String s = props.getProperty("user", "LIDO.OnlyGeonameID"); 
 		s = (s != null && s.equals("1")) ? "[contains(@lido:geographicalEntity,'geonameID')]" : "[not(@lido:geographicalEntity) or (@lido:geographicalEntity != 'cirilo:ignore')]";
 
@@ -520,10 +521,10 @@ public class LIDO {
 			xpath.addNamespace( Common.xmlns_lido );
 			Element e = (Element) xpath.selectSingleNode( this.lido ); 
 
+			if ( e != null ) e.getParent().removeContent(e);
+
 			if (normdata.size() > 0) {
-			
-				if ( e != null ) e.getParent().removeContent(e);
-            
+			            
 				Element objectDescriptionSet = new Element("objectDescriptionSet", Common.xmlns_lido);
 				objectDescriptionSet.setAttribute("type", "cirilo:normalizedPlaceNames", Common.xmlns_lido);
 				Element descriptiveNoteValue = new Element("descriptiveNoteValue", Common.xmlns_lido);

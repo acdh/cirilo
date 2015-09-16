@@ -59,6 +59,7 @@ public class ContextRefresher {
 	    			try {	
 	    				Element e = (Element) iter.next();
 
+	    				
 	    				String uri = e.getChild("pid", Common.xmlns_sparql ).getAttributeValue("uri").substring(Common.INFO_FEDORA.length());
 	    				String model = e.getChild("model", Common.xmlns_sparql ).getAttributeValue("uri").substring(Common.INFO_FEDORA.length());
 	    				
@@ -72,11 +73,12 @@ public class ContextRefresher {
 	    				}
 	    				if (model.contains("cm:LIDO")) { 
 	    					data= db.build (Repository.getDatastream(uri, "LIDO_SOURCE"));
-		    				oPath = XPath.newInstance("//t:item[contains(id,'GID.')]");
+		    				oPath = XPath.newInstance("//t:item[contains(@id,'GID.')]");
 		    				oPath.addNamespace(Common.xmlns_tei_p5);
 	    				}
 	    					 
 	    				List placeNames = (List) oPath.selectNodes( data );
+
 
 	    				if (placeNames.size() > 0) {
 	    					int i=0;
