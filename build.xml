@@ -1,0 +1,99 @@
+<project name="cirilo" default="dist" basedir=".">
+
+	<property name="main.class" value="Cirilo"/>
+	<property name="org.dir" location="src/org" />
+	<property name="lib.dir" location="lib" />
+	<property name="classes.dir" location="classes" />
+	<property name="dist.dir" location="dist"/>
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+ 
+ <!-- ========================================================================
+  Target: clean
+ ========================================================================= -->
+	<target name="clean" description="Delete all files from the classes directory.">
+		<delete>
+			<fileset dir="${classes.dir}">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="${dist.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+	</target>
+
+ <!-- ========================================================================
+  Target: remove all dist files
+ ========================================================================= -->
+	<target name="remove" description="Delete classes, dist directory and class files in org directory.">
+		<delete dir="${dist.dir}" />
+		<delete dir="${classes.dir}" />
+		<delete>
+			<fileset dir="${org.dir}">
+				<include name="**/*.class"/>
+				<include name="**/*.bak"/>
+			</fileset>
+		</delete>
+	</target>
+ 
+ <!-- ========================================================================
+  Target: compile
+ ========================================================================= -->
+	<target name="compile" description="Compile" depends="init">
+		<javac source="1.6" target="1.6" deprecation="on" compiler="javac1.7"
+				debug="on"
+				nowarn="on"
+				destdir="${classes.dir}"
+				srcdir="${org.dir}">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+ 
+ <!-- ========================================================================
+  Target: dist
+ ========================================================================= -->
+	<target name="dist" description="Compiles, jars" depends="init,clean,compile">
+		<tstamp/>
+		<copy todir="${classes.dir}/org">
+			<fileset dir="${org.dir}" includes="**/*.gif" />
+			<fileset dir="${org.dir}" includes="**/*.xml" />
+			<fileset dir="${org.dir}" includes="**/*.conf" />
+			<fileset dir="${org.dir}" includes="**/*.ttf" />
+			<fileset dir="${org.dir}" includes="**/*.jpg" />
+			<fileset dir="${org.dir}" includes="**/*.ini" />
+			<fileset dir="${org.dir}" includes="**/*.properties" />
+		</copy>
+	
+		<jar jarfile="${dist.dir}/${ant.project.name}.jar">
+			<manifest>
+				<attribute name="Application-Name" value="${ant.project.name}" />
+				<attribute name="Author" value="Johannes Stigler" />
+				<attribute name="Created-On" value="${TODAY}"/>			
+				<attribute name="Permissions" value="all-permissions"/>
+				<attribute name="Class-Path" value="lib/apache-mime4j-0.4.jar lib/bigdata-client-1.5.2_RC_1-20150916.jar lib/httpcore-4.0.1.jar lib/httpmime-4.0.jar lib/jetty-client-9.2.3.v20140905.jar lib/jetty-http-9.2.3.v20140905.jar lib/jetty-io-9.2.3.v20140905.jar lib/jetty-util-9.2.3.v20140905.jar lib/abdera-core-1.0.jar lib/abdera-i18n-1.0.jar lib/activeio-core-3.1.2.jar lib/activemq-core-5.3.2.jar lib/handle.jar lib/cnriutil.jar lib/activemq-protobuf-1.0.jar lib/aopalliance-1.0.jar lib/axis.jar lib/bibtexconverter.jar lib/bsh.jar lib/commons-codec-1.3.jar lib/commons-dbcp-1.2.1.jar lib/commons-discovery.jar lib/commons-httpclient-3.1.jar lib/commons-logging-1.0.4.jar lib/commons-logging-api-1.1.jar lib/commons-net-2.0.jar lib/exist.jar lib/fedora-client-0.1.3.jar lib/fedora-client-3.2r8084.jar lib/geonames-1.1.10.jar lib/geronimo-activation_1.0.2_spec-1.1.jar lib/geronimo-j2ee-management_1.1_spec-1.0.1.jar lib/geronimo-jms_1.1_spec-1.1.1.jar lib/icu4j-3.4.4.jar lib/ij.jar lib/iri-0.8.jar lib/itext.jar lib/jackson-core-lgpl-1.5.6.jar lib/jackson-mapper-lgpl-1.5.6.jar lib/jai_core-1.1.3.jar lib/jai_imageio-1.1.jar lib/jai_imageio-1.1.jar lib/jaxen.jar lib/jaxrpc-api-1.1.jar lib/jcommon-xml.jar lib/jcommon.jar lib/jdom.jar lib/jena-2.6.3.jar lib/jersey-client-1.3.jar lib/jersey-core-1.3.jar lib/jersey-multipart-1.3.jar lib/jfreereport.jar lib/joda-time-1.6.1.jar lib/jroots.jar lib/jsch.jar lib/jsr311-api-1.1.1.jar lib/jsyntaxpane-0.9.6.jar lib/junit-4.8.1.jar lib/kahadb-5.3.2.jar lib/log4j-1.2.14.jar lib/mail-1.4.1.jar lib/mets.jar lib/mime-util-2.1.3.jar lib/mimepull-1.4.jar lib/mockito-all-1.8.5.jar lib/openrdf-sesame-2.6.10.jar lib/org.osgi.core-4.1.0.jar lib/pixie.jar lib/poi.jar lib/poi-ooxml.jar lib/poi-ooxml-schemas.jar lib/xmlbeans-2.6.0.jar lib/progressdialog.jar lib/querylang-2.1.10.jar  lib/slf4j-api-1.6.1.jar lib/slf4j-log4j12-1.6.1.jar lib/sanselan-0.97.jar lib/serializer.jar lib/spring-beans-2.5.6.jar lib/spring-context-2.5.6.jar lib/spring-core-2.5.6.jar lib/spring-osgi-core-1.2.1.jar lib/spring-osgi-io-1.2.1.jar lib/tonic.jar lib/trippi-1.4.1-core.jar lib/ws-commons-util-1.0.2.jar lib/wsdl4j-1.6.2.jar lib/xalan.jar lib/xercesImpl.jar lib/xml-apis.jar lib/xmldb.jar lib/xmlpull_1_1_3_4a.jar lib/xmlrpc-client-3.1.2.jar lib/xmlrpc-common-3.1.2.jar lib/xmlrpc-server-3.1.2.jar lib/xmlsec-1.4.3.jar lib/xpp3_min-1.1.3.4.K.jar lib/miglayout-4.0-swing.jar lib/zsaxon9he.jar lib/qrgen-1.1.jar lib/zxing-2.1-core.jar lib/zxing-2.1-javase.jar lib/zip4j_1.3.2.jar" />
+				<attribute name="Main-Class" value="org.emile.${ant.project.name}.${main.class}" />
+			</manifest>
+			<fileset dir="${classes.dir}">
+				<include name="**/*" />
+			</fileset>
+		</jar>
+		<exec executable="jarsigner" dir="${dist.dir}">
+			<arg line=" -keystore ${lib.dir}/emile.keystore -storepass apY56Qutn ${ant.project.name}.jar emile" />
+		</exec>
+		<delete dir="${classes.dir}" />
+	</target>
+ 
+ 
+ <!-- ========================================================================
+  Target: init
+ ========================================================================= -->
+	<target name="init" description="Create directory structure.">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${dist.dir}"/>
+	</target>
+
+</project>
