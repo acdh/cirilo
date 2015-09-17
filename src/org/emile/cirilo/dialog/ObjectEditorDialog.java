@@ -296,9 +296,8 @@ public class ObjectEditorDialog extends CDialog {
 		            fop.write(contentInBytes);  
 		            fop.flush();  
 		            fop.close();  
-				} else {
-					Repository.addDatastream(pid, loD.getID(), loD.getLabel(), loD.getMimetype().equals("text/xml") ? "X" : "M", loD.getMimetype(), fp );
-				}	
+				} 
+				Repository.addDatastream(pid, loD.getID(), loD.getLabel(), loD.getMimetype().equals("text/xml") ? "X" : "M", loD.getMimetype(), fp );
 				fp.delete();
 		    	JTable ds = (JTable) getGuiComposite().getWidget(jtDatastreams);
 		    	ds.setModel(Repository.listDatastreams(pid,false));
