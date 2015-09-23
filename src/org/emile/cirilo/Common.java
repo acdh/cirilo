@@ -141,9 +141,7 @@ public class Common {
 	public final static Namespace xmlns_ns13 = Namespace.getNamespace( "ns13", "http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0");
 
 	public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
-    
-    public final static String SESAME_SERVER = "http://localhost:8080/openrdf-sesame";
-  	
+      	
     public final static String[] LANGUAGES ={"en", "de"};
     
     public final static String SEPERATOR = "|";

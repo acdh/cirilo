@@ -167,7 +167,7 @@ public class LoginDialog extends CDialog {
             CServiceProvider.addService(temps, ServiceNames.TEMPLATESUBSYSTEM);
 
             //check Authentication
-            Repository.listDatastreams("fedora-system:ContentModel-3.0", true);
+ //           Repository.listDatastreams("fedora-system:ContentModel-3.0", true);
             
             groups.add("administrator");           
             groups.add("editor");

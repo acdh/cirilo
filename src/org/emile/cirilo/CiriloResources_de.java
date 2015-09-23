@@ -87,7 +87,8 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "maketemplate", "Als Template hinzufügen"},
                 { "extras.createenvironment", "Benutzerumgebung erstellen ..."},
                 { "extras.upgrade", "Upgrade repository ..."},
-                
+                { "extras.reorganize", "Reorganize triplestore ..."},
+                               
                 { "english", "Englisch"},
                 { "german", "Deutsch"},
                 { "language", "Sprache"},
@@ -281,6 +282,8 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "hdldeleted"  , "Die Handle(s) von {0} Objekt(en) wurden entfernt."          },
                 { "shownat"  , "Shown At"          },
                 { "cmodel"  , "Inhaltsmodell"          },
+
+                { "triplestoreerror"  , "Fehler beim Verbinden mit dem {0} Triplestore."          },
 
              };    
 

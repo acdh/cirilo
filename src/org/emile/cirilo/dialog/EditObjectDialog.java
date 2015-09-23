@@ -26,7 +26,6 @@ import voodoosoft.jroots.core.gui.CItemListener;
 import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
-
 import net.handle.hdllib.AbstractMessage;
 import net.handle.hdllib.AbstractRequest;
 import net.handle.hdllib.AbstractResponse;
@@ -66,7 +65,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Attribute;
 import org.jdom.input.*;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
 
 import com.asprise.util.ui.progress.ProgressDialog;
 
@@ -723,12 +721,13 @@ public class EditObjectDialog extends CDialog {
 					  int deleted = 0;
 					  
 					  MessageFormat msgFmt = new MessageFormat(res.getString("objdel"));
-		 				Object[] args = {new Integer(selected.length).toString()};
+		 			  Object[] args = {new Integer(selected.length).toString()};
 				      int liChoice = JOptionPane.showConfirmDialog(null, msgFmt.format(args) ,
 				    		  						Common.WINDOW_HEADER, JOptionPane.YES_NO_OPTION,
 				    		  						JOptionPane.QUESTION_MESSAGE);
 					 
 				      if (liChoice == 0) {
+				    	  TripleStoreFactory tf = new TripleStoreFactory();
 				    	  for (int i=0; i<selected.length; i++) {
 
 				    		  if(pd.isCanceled()) {break;}		
@@ -742,14 +741,9 @@ public class EditObjectDialog extends CDialog {
 				    		  String model =(String)loTable.getValueAt(selected[i],2);				    		  
 				  			  if (model.contains("Ontology") || model.contains("SKOS") || model.contains("TEI")) {	
 				  			    try {
-				  			    	String ses = (String) props.getProperty("user", "sesame.server");
-				  			    	RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
-					           		repositoryManager.setUsernameAndPassword(user.getUser(), user.getPasswd());
-					           		repositoryManager.initialize();	 				           	
-					           		org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
-					           		repo.initialize(); 				    			
-					           		org.openrdf.repository.RepositoryConnection con = repo.getConnection();	 				    			
-					           		con.clear(new org.openrdf.model.impl.URIImpl(pid)); 							 							  				
+									if (tf.getStatus()) {
+										tf.remove(pid);
+									}	
 			  				     } catch (Exception u) {}
 
 			  				  }	
@@ -757,7 +751,8 @@ public class EditObjectDialog extends CDialog {
 				    		  pd.worked(1);
 				    		  try {Thread.sleep(5);} catch (Exception e) {}						    				    
 				      		}
-				    	  
+							tf.close();
+
 							msgFmt = new MessageFormat(res.getString("objdelsuc"));
 			 				Object[] args0 = {new Integer(deleted).toString()};
 					       	JOptionPane.showMessageDialog( null, msgFmt.format(args0), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);

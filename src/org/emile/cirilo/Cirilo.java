@@ -88,6 +88,8 @@ import java.sql.PreparedStatement;
  */
 public class Cirilo extends CiriloApplet {
 
+	static final long serialVersionUID = 1L;
+	
 	/**
 	 * The main program for the Cirilo class
 	 *
@@ -108,6 +110,7 @@ public class Cirilo extends CiriloApplet {
  */
 class CiriloApplet extends JApplet {
 
+	static final long serialVersionUID = 2L;
 	private CiriloWindow oWnd;
 	
 	/**
@@ -136,10 +139,7 @@ class CiriloApplet extends JApplet {
  * @created 07. September 2006
  */
 class CiriloWindow extends JPanel {
-    private static final Log LOG = LogFactory.getLog(CiriloWindow.class);
-	private Format format;
-	private XMLOutputter outputter;
-
+	static final long serialVersionUID = 3L;
 
 	/**
 	 *Constructor for the CiriloWindow object
@@ -191,7 +191,7 @@ class CiriloWindow extends JPanel {
 		public void begin() {
 
 			try {
-
+			
 				Properties p = new Properties();
 				p.load(Cirilo.class.getResourceAsStream("cirilo.ini"));
 				CPropertyService props = new CPropertyService();
@@ -269,7 +269,6 @@ class CiriloWindow extends JPanel {
 				
 				// finish
 
-				User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
 
 				JFrame loFrame = (JFrame) CServiceProvider.getService(ServiceNames.FRAME_WINDOW);
 				loFrame.setVisible(true);
@@ -296,24 +295,10 @@ class CiriloWindow extends JPanel {
 				
 			}
 			catch (Exception ex) {
-				ex.printStackTrace();
 				exit();
 			}
 
 		}
-
-		private void treeWalk(File file) {
-			  try {
-		 		if (file.isDirectory()) {
-			 		File[] children = file.listFiles();
-			 		for (int i = 0; i < children.length; i++) {
-			 			treeWalk(children[i]);
-			 		}
-		     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml")) {
-		     		files.add(file.getAbsolutePath());
-		     	}
-			  } catch (Exception e) {e.printStackTrace();}	
-		}	
 
 		/**
 		 * Description of the Method
@@ -321,7 +306,6 @@ class CiriloWindow extends JPanel {
 		public void end() {
 
 			JFrame loFrame;
-			int liChoice = 0;
 
 			try {
 
@@ -371,6 +355,7 @@ class CiriloWindow extends JPanel {
  */
 class AppletFrame extends JFrame implements AppletStub, AppletContext {
 
+	static final long serialVersionUID = 4L;
 
 	/**
 	 *Constructor for the AppletFrame object

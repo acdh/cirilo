@@ -27,10 +27,6 @@ import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
 
-
-
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.Common;
@@ -52,8 +48,6 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.*;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
-
 import com.asprise.util.ui.progress.ProgressDialog;
 
 import jsyntaxpane.DefaultSyntaxKit;
@@ -247,24 +241,15 @@ public class TextEditor extends CDialog {
 		  	    				  	   if (dsid.equals("ONTOLOGY")) {
 
 		  	 	 				    		try {
-		  	 	 				    		    CPropertyService props=(CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);	
-
-		  	 	 				    			String ses = (String) props.getProperty("user", "sesame.server");
-		  	 						        	RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
-		  	 						        	repositoryManager.setUsernameAndPassword(user.getUser(), user.getPasswd());
-		  	 						        	repositoryManager.initialize();	 				           	
-		  	 						        	org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
-		  	 						        	repo.initialize(); 				    			
-		  	 						        	org.openrdf.repository.RepositoryConnection con = repo.getConnection();	 				    			
-		  	 						        	con.clear(new org.openrdf.model.impl.URIImpl(pid)); 							 							  				
-		  	 	 
-		  	 					           		
 		  	 					           		File temp = File.createTempFile("tmp","xml");
 		  	 					           		FileOutputStream fos = new FileOutputStream(temp);
 		  	 					           		fos.write(jebEditorPane.getText().getBytes("UTF-8"));
 		  	 					           		fos.close();
-
-		  	 					           		con.add(temp.getAbsoluteFile(), null, org.openrdf.rio.RDFFormat.RDFXML, new org.openrdf.model.impl.URIImpl(pid));
+		  	 									TripleStoreFactory tf = new TripleStoreFactory();
+		  	 									if (tf.getStatus()) {
+		  	 										tf.update(temp, pid);
+		  	 									}	
+		  	 									tf.close();
 		  	 					           		temp.delete();
 		  	 				    		} catch (Exception ex) {
 		  	 				    			ex.printStackTrace();

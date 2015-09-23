@@ -36,38 +36,15 @@ import org.emile.cirilo.business.*;
 import org.emile.cirilo.utils.*;
 import org.emile.cirilo.*;
 
-import com.asprise.util.ui.progress.ProgressDialog;
-
-import org.jdom.input.DOMBuilder;
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
-import org.jdom.output.*;
-import org.jdom.input.*;
-import org.jdom.*;
-import org.jdom.transform.*;
-import org.openrdf.repository.config.RepositoryConfig;
-import org.openrdf.repository.config.RepositoryImplConfig;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
-import org.openrdf.repository.sail.config.SailRepositoryConfig;
-import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
-
-import javax.xml.transform.stream.*;
 
 import java.awt.Cursor;
 import java.awt.event.*;
 
 import javax.swing.*;
-import javax.xml.transform.*;
 
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.io.*;
 import java.awt.Color;
-
-import net.glxn.qrgen.QRCode;
-import net.glxn.qrgen.image.ImageType;
 
 
 
@@ -264,22 +241,7 @@ public class NewObjectDialog extends CDialog {
 			Common.genQR(user, pid);
 			dc.write(pid, moGA, ((JCheckBox) getGuiComposite().getWidget("jcbOAIProvider")).isSelected());
 
-/*			
-			if (model.contains("Ontology") || model.contains("SKOS")) {                
-			   	String seseameServer = new String( Repository.getDatastream(pid, "REPOSITORY", "") );				   
-			   	Pattern pattern = Pattern.compile("(.*)/(.*)/(.*)"); 
-			   	Matcher m = pattern.matcher(seseameServer); 
-			   	if (m.find()) {
-			   		RemoteRepositoryManager manager = new RemoteRepositoryManager(m.group(1));
-			   		manager.setUsernameAndPassword("fedora", "");
-			   		manager.initialize();
-			   		RepositoryImplConfig repositoryTypeSpec = new SailRepositoryConfig(new NativeStoreConfig());								
-			   		RepositoryConfig config = new RepositoryConfig(pid.substring(2), repositoryTypeSpec);
-			   		manager.addRepositoryConfig(config);
-			   	}
-		   }		
-			
-*/			if (dlg != null) dlg.refresh();
+			if (dlg != null) dlg.refresh();
 			
 			MessageFormat msgFmt = new MessageFormat(res.getString("objowner"));
 			Object[] args = {model, (String)jcbUser.getSelectedItem(), pid}; 

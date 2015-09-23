@@ -91,6 +91,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "maketemplate", "Add as template"},
            { "extras.createenvironment", "Create environment ..."},
            { "extras.upgrade", "Upgrade repository ..."},
+           { "extras.reorganize", "Reorganize triplestore ..."},
            { "english", "English"},
            { "german", "German"},
            { "language", "Language"},
@@ -276,8 +277,8 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "numcons"          , "Number consecutively:"          },
            { "startw"          , "Beginning with:"          },
            { "getkey"          , "Get key"          },
-           { "hdlmanage"          , "Manage handles"          },
-           { "hdlcreate"          , "Creating handles ..."          },
+	       { "hdlmanage"          , "Manage handles"          },
+	       	{ "hdlcreate"          , "Creating handles ..."          },
            { "hdldel"          , "Deleting handles ..."          },
            { "hdlauthfailed"          , "Authentification on Handle service failed! Couldn't found a valid public key file."          },
            { "hdlsel"          , "Select key file"          },
@@ -286,7 +287,9 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "hdldeleted"  , "Handle(s) of  {0} deleted."          },
            { "shownat"  , "Shown At"          },
            { "cmodel"  , "Content Model"          },
- 
+           
+           { "triplestoreerror"  , "Error while connecting to {0} triplestore."          },
+           
 
         };    
 

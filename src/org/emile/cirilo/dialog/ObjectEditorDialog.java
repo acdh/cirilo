@@ -73,24 +73,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import java.util.*;
-import java.util.List;
 import java.io.*;
 import java.net.URL;
 import java.text.MessageFormat;
 
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
-import org.jdom.output.*;
-import org.jdom.input.*;
-import org.jdom.*;
-import org.openrdf.repository.http.HTTPRepository;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import com.lowagie.text.pdf.PdfReader;
-
-import fedora.server.types.gen.RelationshipTuple;
 
 
 /**
@@ -614,15 +600,11 @@ public class ObjectEditorDialog extends CDialog {
  				    	if (dsid.equals("ONTOLOGY")) {
 
  				    		try {
- 				    			String ses = (String) props.getProperty("user", "sesame.server");
-					        	RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
-					        	repositoryManager.setUsernameAndPassword(user.getUser(), user.getPasswd());
-					        	repositoryManager.initialize();	 				           	
-					        	org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
-					        	repo.initialize(); 				    			
-					        	org.openrdf.repository.RepositoryConnection con = repo.getConnection();	 				    			
-					        	con.clear(new org.openrdf.model.impl.URIImpl(pid)); 							 							  				
- 					        	con.add(chooser.getSelectedFile(), null, org.openrdf.rio.RDFFormat.RDFXML, new org.openrdf.model.impl.URIImpl(pid)); 					           		
+								TripleStoreFactory tf = new TripleStoreFactory();
+								if (tf.getStatus()) {
+									tf.update(chooser.getSelectedFile(), pid);
+								}	
+								tf.close();								
  				    		} catch (Exception e) {
  				    			e.printStackTrace();
  								JOptionPane.showMessageDialog(  getCoreDialog(), e.getMessage(), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE); 				    			

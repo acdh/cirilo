@@ -25,14 +25,13 @@ import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
 import org.emile.cirilo.business.TEI;
 import org.emile.cirilo.business.LIDO;
+import org.emile.cirilo.business.TripleStoreFactory;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.templates.TemplateSubsystem;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.DOMOutputter;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.*;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
-
 
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -219,6 +218,7 @@ public class ImportDialog extends CDialog {
 							progressDialog.worked(1);
 													
                  
+							TripleStoreFactory tf = new TripleStoreFactory();
 							for (int i = 0; i<files.size(); i++) {
 
 								if(progressDialog.isCanceled()) {
@@ -310,24 +310,16 @@ public class ImportDialog extends CDialog {
 								 	  			    Common.genQR(user, pid);
 								 	  			    if (Common.ONTOLOGYOBJECTS.contains(cm)) {
 							 				    		try {
-							 				    			
-
-					  	 	 				    			String ses = (String) props.getProperty("user", "sesame.server");
-					  	 						        	RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
-					  	 						        	repositoryManager.setUsernameAndPassword(user.getUser(), user.getPasswd());
-					  	 						        	repositoryManager.initialize();	 				           	
-					  	 						        	org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
-					  	 						        	repo.initialize(); 				    			
-					  	 						        	org.openrdf.repository.RepositoryConnection con = repo.getConnection();	 				    			
-					  	 						        	con.clear(new org.openrdf.model.impl.URIImpl(pid)); 							 							  				
-							 				    			
-					  	 					           		File temp = File.createTempFile("tmp","xml");
+							 				    			File temp = File.createTempFile("tmp","xml");
 					  	 					           		FileOutputStream fos = new FileOutputStream(temp);
-					  	 								  	byte[] buf = Repository.getDatastream(pid,"TEI_SOURCE", "");
+					  	 								  	byte[] buf = Repository.getDatastream(pid,"ONTOLOGY", "");
 					  	 					           		fos.write(buf);
 					  	 					           		fos.close();
-					  	 					           		con.add(temp.getAbsoluteFile(), null, org.openrdf.rio.RDFFormat.RDFXML, new org.openrdf.model.impl.URIImpl(pid));
-					  	 					           		temp.delete();
+					  	 									if (tf.getStatus()) {
+																tf.update(temp,pid);
+															}	
+															temp.delete();
+															
 							 				    		} catch (Exception e) {
 							 				    		}	
 								 	  			    } else if  (Common.TEIOBJECTS.contains(cm)) {
@@ -392,6 +384,8 @@ public class ImportDialog extends CDialog {
 								}
 				
 							}
+							tf.close();	
+
 							String m = new Integer(fi).toString().trim() + res.getString("imported")+ new Integer(fe).toString().trim() + res.getString("existed")+ new Integer(ff).toString().trim() + res.getString("failed");
 							logger.write("\n" +res.getString("end")+res.getString("ofimport") + new java.util.Date() + ". " + m);									
 							logger.close();

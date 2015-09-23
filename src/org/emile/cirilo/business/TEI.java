@@ -47,7 +47,6 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.modules.XMLResource;
@@ -56,7 +55,6 @@ import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.business.Scp;
 import org.emile.cirilo.business.Unzipper;
 import org.emile.cirilo.business.Topos;
-
 import org.emile.cirilo.business.CantusConverter;
 
 import voodoosoft.jroots.core.CPropertyService;
@@ -1126,24 +1124,16 @@ public class TEI {
                     rdfs = outputter.outputString(doc);					
 				} catch (Exception ex0) {
 					try {
-						Document doc  =builder.build(new StringReader(new String(Repository.getDatastream("cirilo:"+xuser, "TORDF",""))));
+						Document doc  = builder.build(new StringReader(new String(Repository.getDatastream("cirilo:"+xuser, "TORDF",""))));
                         rdfs = outputter.outputString(doc);
 					} catch (Exception ex1) {
-						Document doc  =builder.build(new StringReader(new String(Repository.getDatastream("cirilo:Backbone", "TORDF",""))));
+						Document doc  = builder.build(new StringReader(new String(Repository.getDatastream("cirilo:Backbone", "TORDF",""))));
                         rdfs = outputter.outputString(doc);
 					}
 				}		
 
 				try {
 					
-		    		String ses = (String) props.getProperty("user", "sesame.server");
-			        RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager(ses == null ? Common.SESAME_SERVER : ses);
-					repositoryManager.setUsernameAndPassword(xuser, user.getPasswd());
-					repositoryManager.initialize();	 
-					org.openrdf.repository.Repository repo = repositoryManager.getRepository("FEDORA"); 	
-					repo.initialize(); 				    			
-					org.openrdf.repository.RepositoryConnection scon = repo.getConnection();	 				    			
-					scon.clear(new org.openrdf.model.impl.URIImpl(this.PID)); 							 							  				
 					
 					if (rdfs!= null && rdfs.contains("xsl:template")) {
 						System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
@@ -1159,7 +1149,11 @@ public class TEI {
 						FileOutputStream fos = new FileOutputStream(temp);
 						fos.write( outputter.outputString(out.getResult()).getBytes("UTF-8") );
 						fos.close();
-						scon.add(temp.getAbsoluteFile(), null, org.openrdf.rio.RDFFormat.RDFXML, new org.openrdf.model.impl.URIImpl(this.PID));
+						TripleStoreFactory tf = new TripleStoreFactory();
+						if (tf.getStatus()) {
+							tf.update(temp, this.PID);
+						}	
+						tf.close();
 						
 						if (!Repository.exists(this.PID, "RDF")) {
   							Repository.addDatastream(this.PID, "RDF", "RDF Stream created by TORDF", "M", "text/xml", temp);
