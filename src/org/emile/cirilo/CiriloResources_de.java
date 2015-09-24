@@ -283,7 +283,7 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "shownat"  , "Shown At"          },
                 { "cmodel"  , "Inhaltsmodell"          },
 
-                { "triplestoreerror"  , "Fehler beim Verbinden mit dem {0} Triplestore."          },
+                { "triplestoreerror"  , "Fehler beim Übermitteln von Daten an den {0} Triplestore."          },
 
              };    
 
