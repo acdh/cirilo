@@ -21,11 +21,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
-import org.openrdf.repository.sail.config.SailRepositoryConfig;
-import org.openrdf.sail.config.SailImplConfig;
-import org.openrdf.sail.inferencer.fc.config.ForwardChainingRDFSInferencerConfig;
-import org.openrdf.sail.memory.config.MemoryStoreConfig;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -63,16 +59,6 @@ public class CMIngester {
         	FedoraClient client = new FedoraClient("http://"+server+"/fedora", user, passwd);
         	Repository.initialise(token,new FedoraSoapImpl());
         	TemplateSubsystem temps = new TemplateSubsystem();
-
-       		RemoteRepositoryManager repositoryManager = new RemoteRepositoryManager("http://"+server+"/openrdf-sesame");
-            repositoryManager.setUsernameAndPassword(user, passwd);
-
-       		repositoryManager.initialize();
-       		SailImplConfig backendConfig = new MemoryStoreConfig(true);				 
-			backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);
-			SailRepositoryConfig repositoryTypeSpec = new SailRepositoryConfig(backendConfig);
-			org.openrdf.repository.config.RepositoryConfig repConfig = new org.openrdf.repository.config.RepositoryConfig("FEDORA", repositoryTypeSpec);
-			repositoryManager.addRepositoryConfig(repConfig);					
 
 			if (!Repository.exist("sdef:TEI")) {
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
