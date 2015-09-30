@@ -51,24 +51,24 @@ public class ContextRefresher {
 				qPath =  XPath.newInstance("//k:Folder");
 				qPath.addNamespace(Common.xmlns_kml);
 				Element Folder = (Element) qPath.selectSingleNode( kml_template );
-    												
+				
 				Folder.getChild("name", Common.xmlns_kml).setText(tit);
-
+   												
 				for (Iterator iter = nodes.iterator(); iter.hasNext();) 
 	    		{
 	    			try {	
 	    				Element e = (Element) iter.next();
-
 	    				
 	    				String uri = e.getChild("pid", Common.xmlns_sparql ).getAttributeValue("uri").substring(Common.INFO_FEDORA.length());
 	    				String model = e.getChild("model", Common.xmlns_sparql ).getAttributeValue("uri").substring(Common.INFO_FEDORA.length());
+	    				String title = e.getChildText("title", Common.xmlns_sparql);
 	    				
 	    				org.jdom.Document data = null;
 	    				XPath oPath = null;
 	    				
 	    				if (model.contains("cm:TEI")) { 
 	    					data= db.build (Repository.getDatastream(uri, "TEI_SOURCE"));
-		    				oPath = XPath.newInstance("//t:placeName/t:location/t:geo");
+		    				oPath = XPath.newInstance("//t:placeName[contains(@id,'GID.')]");
 		    				oPath.addNamespace( Common.xmlns_tei_p5 );
 	    				}
 	    				if (model.contains("cm:LIDO")) { 
@@ -84,15 +84,27 @@ public class ContextRefresher {
 	    					int i=0;
 	    					for (Iterator jter = placeNames.iterator(); jter.hasNext();) 
 	    		    		{
-    		    				Element place = (Element) jter.next();
 	    		    			try {	
+	    		    				Element place = (Element) jter.next();
     		    					String p =  outputter.outputString(Placemark_template);
     		    					i++;
     		    					MDMapper m = new MDMapper (uri, p);	
-    		    					String s = m.transform(data);
-    		    					org.jdom.Document Placemark = builder.build(new StringReader(s));
+    		    					
+    		    					Element o = (Element) place.clone();
+    		    					String s = m.transform(new org.jdom.Document(o));
+     		    				    org.jdom.Document Placemark = builder.build(new StringReader(s));
+     		    				    Element name =  Placemark.getRootElement().getChild("name",Common.xmlns_kml);
+     		    				    if (name == null) {
+     		    				    	name = new Element ("name", Common.xmlns_nkml);
+     		    				    	name.setText(title);
+     		    				    	Placemark.getRootElement().addContent(0,name);
+     		    				    } else {
+     		    				    	name.setText(title);
+     		    				    }
     		    					Folder.addContent((Element)Placemark.getRootElement().clone());
-	    		    			} catch (Exception r) {}
+	    		    			} catch (Exception r) {
+	    		    				r.printStackTrace();
+	    		    			}
 	    		    		}	
 	    				}
 	 
