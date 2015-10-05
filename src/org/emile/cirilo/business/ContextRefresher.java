@@ -90,7 +90,11 @@ public class ContextRefresher {
     		    					i++;
     		    					MDMapper m = new MDMapper (uri, p);	
     		    					
-    		    					Element o = (Element) place.clone();
+    		    					Element o = (Element) place.clone();    		    					
+    		    					Element q = new Element("xmlContent");
+    		    					q.addContent((Element)data.getRootElement().clone());
+    		    					o.addContent(q);
+    		    					
     		    					String s = m.transform(new org.jdom.Document(o));
      		    				    org.jdom.Document Placemark = builder.build(new StringReader(s));
      		    				    Element name =  Placemark.getRootElement().getChild("name",Common.xmlns_kml);
