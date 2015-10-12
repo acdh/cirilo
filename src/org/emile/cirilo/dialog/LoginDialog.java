@@ -167,7 +167,7 @@ public class LoginDialog extends CDialog {
             CServiceProvider.addService(temps, ServiceNames.TEMPLATESUBSYSTEM);
 
             //check Authentication
- //           Repository.listDatastreams("fedora-system:ContentModel-3.0", true);
+            Repository.getRelations("cirilo:Backbone");
             
             groups.add("administrator");           
             groups.add("editor");
@@ -180,10 +180,6 @@ public class LoginDialog extends CDialog {
             
 			User us = new User(user, passwd, server);
 			
-			String iipus = props.getProperty("user", "iipsrv.user");
-			String iipho = props.getProperty("user", "iipsrv.host");
-			us.setIIPSAuth(iipus == null ? "" : iipus, "", iipho == null ? "" : iipho);
-
 			try {
 				CServiceProvider.removeService(ServiceNames.CURRENT_USER);
 			} catch (Exception x) {}								

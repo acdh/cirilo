@@ -68,7 +68,8 @@ public class CantusConverter {
 	  	        for (Element div: divs) {
 		  	        List<Element> ps = div.getChildren("p",  Common.xmlns_tei_p5);
 		  	        String shead = op.outputString( div.getChild("head", Common.xmlns_tei_p5))
-  	        			    .replaceAll("[|]","§")	  	        		
+  	        			    .replaceAll("[?]","+")	       		
+ 	        			    .replaceAll("[|]","§")	  	        		
 		  	        		.replaceAll("<.*?>","")
   	        				.replaceAll("[\n\r]","")
   	        				.replaceAll("\\[","{")
@@ -96,6 +97,7 @@ public class CantusConverter {
 	        		  	
 	  	        	for (Element p: ps) {
 	  	        		String buf = op.outputString(p)
+	  	        			    .replaceAll("[?]","+")	       		
 	  	        			    .replaceAll("[|]","§")	  	        		
 	  	  	  		        	.replaceAll("[\n\r]","")
 	  	        				.replaceAll("[{]","!")
@@ -107,6 +109,7 @@ public class CantusConverter {
 	  	        				.replaceAll("<hi rend=\"Funktion.*?>","Ä")
 	  	        				.replaceAll("<hi rend=\"Neume.*?>","#")
 	  	        				.replaceAll("<hi rend=\"Incipit.*?>","{")
+	  	        				.replaceAll(" </hi>","</hi> ")
 	  	        				.replaceAll("<hi.*?>","")
 	  	        				.replaceAll("</hi>","}")
 	  	        				.replaceAll("<.*?>","")  	        
@@ -177,6 +180,8 @@ public class CantusConverter {
                                     currSegment_1 = segments_1.get(segments_1.size()-1);
                                     currSegment_1.setAttribute("type","time:1");
                                     if (parser.getInsertMode()) currSegment_1.setAttribute("subtype","addition");
+                                    if (parser.getRasurMode()) currSegment_1.setAttribute("subtype","rasur"); 
+                                    if (parser.getMarginalMode()) currSegment_1.setAttribute("subtype","marginal");
                                     Element ab = new Element("ab",Common.xmlns_ntei_p5);
                                     ab.setAttribute("ana","#head");
                                     Element hi = new Element("hi",Common.xmlns_ntei_p5);
@@ -207,6 +212,8 @@ public class CantusConverter {
                                     currSegment_2 = segments_2.get(segments_2.size()-1);
                                     currSegment_2.setAttribute("type","time:2");
                                     if (parser.getInsertMode()) currSegment_2.setAttribute("subtype","addition");
+                                    if (parser.getRasurMode()) currSegment_1.setAttribute("subtype","rasur"); 
+                                    if (parser.getMarginalMode()) currSegment_1.setAttribute("subtype","marginal");
                                     Element hd = new Element("label",Common.xmlns_ntei_p5);
                                     hd.setText(parser.getEntity().trim());
       	        					if (parser.getConjecture()) hd.setAttribute("type","supplied");
@@ -218,6 +225,9 @@ public class CantusConverter {
 	  	        				if (!mode) {
 	  	  	  	        			segments_2.add(new Element("ab",Common.xmlns_ntei_p5));
                                     currSegment_2 = segments_2.get(segments_2.size()-1);
+                                    if (parser.getInsertMode())  currSegment_2.setAttribute("subtype","addition"); 
+                                    if (parser.getRasurMode()) currSegment_2.setAttribute("subtype","rasur"); 
+                                    if (parser.getMarginalMode()) currSegment_2.setAttribute("subtype","marginal");                                
                                     currSegment_1.addContent(currSegment_2);
                                     mode = true;
 	  	        				}
@@ -333,7 +343,7 @@ public class CantusConverter {
 	  	        	}
 	  	        }
 	  		
-	  	        target = builder.build( new StringReader(op.outputString(target).replaceAll("[\n\r]","").replaceAll("°",".")) );	
+	  	        target = builder.build( new StringReader(op.outputString(target).replaceAll("[\n\r]","").replaceAll("°",".").replaceAll("[+]","<unclear />")));	
 
 	        } catch (Exception e) {
 	        	e.printStackTrace();	       	
@@ -571,7 +581,8 @@ public class CantusConverter {
 					  sp+=ch;
 				   }
 	        	   Element add = new Element("add",Common.xmlns_ntei_p5);	  	        										       
-		  	       seg.addContent(add);			  
+	        	   add.setText(sp);
+	  	       seg.addContent(add);			  
 			  } else {
  				  buf+=ch;
  			  }
@@ -701,17 +712,30 @@ public class CantusConverter {
 		  private int bp;
 		  private boolean conjecture;
 		  private boolean addition;
-		  
+		  private boolean rasur; 
+		  private boolean marginal; 
+			  
 		  public Parser() {
 		  }
 		  
 		  public void set( String s) {
 			  
+			  addition = false;
+			  rasur = false;
+			  marginal = false;
+			  
 			  if (s.startsWith("$E$")) {
 				  addition = true;
 				  s = s.substring(3);
-			  } else {
-				  addition = false;
+			  }
+			  
+			  if (s.startsWith("§M::") && s.trim().endsWith("§")) {
+				  marginal = true;
+				  s = s.substring(4,s.length()-1);
+			  }
+			  if (s.startsWith("§R::") && s.trim().endsWith("§")) {
+				  rasur = true;
+				  s = s.substring(4,s.length()-1);
 			  }
 			  
 			  buf = s;
@@ -779,7 +803,6 @@ public class CantusConverter {
 						 entity+=ch;
 					 }		
                      if (entity.contains("::")) {
-                    	 bp++;
                     	 return log(types.CHOICE);
                      } else {
                     	 bp = cp+1;
@@ -876,9 +899,21 @@ public class CantusConverter {
 			  return result;	
 		  }
 		  
-		  public boolean getInsertMode() {
-			  return addition;
-		  }
+		  public boolean getInsertMode() { 
+			  boolean mode = addition;
+			  addition = false;
+			  return mode; //
+		  } //
+		  
+		  public boolean getRasurMode() { 
+			  boolean mode = rasur;
+			  return mode; //
+		  } //
+		 
+		  public boolean getMarginalMode() {
+			  boolean mode = marginal;
+			  return mode; //
+		  } //
 		  
 		  public boolean getConjecture() {
 			  return conjecture;

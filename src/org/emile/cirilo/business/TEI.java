@@ -2,6 +2,7 @@ package org.emile.cirilo.business;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1510,7 +1511,6 @@ public class TEI {
 		}
 
         System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
         
         Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(xsl)));
         JDOMSource in = new JDOMSource(this.tei);
@@ -1520,20 +1520,49 @@ public class TEI {
 	        		        
   	  	System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
 
+  	    Document mets = builder.build(new StringReader(outputter.outputString(out.getResult())));
+		XPath xpath = XPath.newInstance("//mets:fileGrp[@USE='DEFAULT']/mets:file");
+		xpath.addNamespace( Common.xmlns_mets);
+
+   	    List images = xpath.selectNodes(mets);
+   	    
+		for (Iterator iter = images.iterator(); iter.hasNext();) {
+			Element e = (Element) iter.next();
+      		String id = e.getAttributeValue("ID");
+      		InputStream bin = new ByteArrayInputStream(Repository.getDatastream(this.PID, id, ""));
+						
+   			BufferedImage img = ImageIO.read(bin);			      				                		
+	    		try {
+	    			Element fcontent= new Element("FContent",Common.xmlns_mets);
+	    			Element xmldata= new Element("xmlData",Common.xmlns_mets);
+	    			Element x= new Element("xmpmeta",Common.xmlns_xmp);
+	    			Element pixelx= new Element("PixelXDimension",Common.xmlns_exif);
+	    			Element pixely= new Element("PixelYDimension",Common.xmlns_exif);
+	    			pixelx.setText(new Integer(img.getWidth()).toString());
+	    			pixely.setText(new Integer(img.getHeight()).toString());
+	    			x.addContent(pixelx);
+	    			x.addContent(pixely);
+	    			xmldata.addContent(x);
+	    			fcontent.addContent(xmldata);  									
+	    			e.addContent(fcontent);
+	    		} catch (Exception q) {}
+		}
+  	  	
+  	  	
   	  	if (Repository.exists(this.PID,"METS_REF")) {
-    		Repository.modifyDatastreamByValue(this.PID, "METS_SOURCE", "text/xml", outputter.outputString(out.getResult()));                 							            	
+    		Repository.modifyDatastreamByValue(this.PID, "METS_SOURCE", "text/xml", outputter.outputString(mets));                 							            	
   	  	} else {
 			File file= File.createTempFile("temp", ".tmp");	    					
 			FileOutputStream fos = new FileOutputStream(file);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
-			bw.write(new String(outputter.outputString(out.getResult()).getBytes("UTF-8"),"UTF-8"));
+			bw.write(new String(outputter.outputString(mets).getBytes("UTF-8"),"UTF-8"));
 			bw.flush();
 			bw.close();
 			Repository.addDatastream(this.PID, "METS_SOURCE","METS Source",  "X", "text/xml", file);  	  		
     		Repository.addDatastream(this.PID, "METS_REF",  "Reference to source stream", "text/xml", user.getUrl()+"/get/"+this.PID+"/METS_SOURCE");
             file.delete();  		    
   	  	}
-  	  		
+  	  	  	  	
 	  } catch (Exception ex0) {
 		  ex0.printStackTrace();
 	  }
