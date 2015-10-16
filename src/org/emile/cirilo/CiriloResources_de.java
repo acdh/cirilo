@@ -213,6 +213,7 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "novalidobj",       "Datei {0} enthält kein valides FEDORA-Objekt."},
                 { "ingestof",       "Ingest von Datei "},
                 { "tei2mets",       "METS Datenstrom erzeugen"},
+                { "nologdir",       "Log Verzeichnis {0} konnte nicht gefunden werden."},
               
                 /* cirilo */
                 { "loadprop"          , "Einstellungen lesen"          },

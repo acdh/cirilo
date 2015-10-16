@@ -128,7 +128,14 @@ public class HarvesterDialog extends CDefaultDialog {
 						MessageFormat msgFmt = new MessageFormat(res.getString("askharv"));
 						Object[] args = {new Integer(selected.length).toString()};
 						String time = new java.sql.Timestamp(System.currentTimeMillis()).toString();
-			   		    logfile = logdir + System.getProperty( "file.separator" )+"harvest-"+time.replaceAll("[ ]", "_").replaceAll("[:]", ".")+".log"; 
+			   		    logfile = logdir + System.getProperty( "file.separator" )+"harvest-"+time.replaceAll("[ ]", "_").replaceAll("[:]", ".")+".log";
+			   		    if (!new File(logfile).exists()) {
+			   		    	Object[] arg  = {logdir};
+			   		    	msgFmt = new MessageFormat(res.getString("nologdir"));
+			   		    	JOptionPane.showMessageDialog(null, msgFmt.format(arg),Common.WINDOW_HEADER,JOptionPane.ERROR_MESSAGE);
+			   		    	return;
+			   		    }
+			   		    
 						logger = new FileWriter( logfile );
 
 						int liChoice = JOptionPane.showConfirmDialog(null, msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);

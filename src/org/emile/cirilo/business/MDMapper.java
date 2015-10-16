@@ -244,6 +244,7 @@ public class MDMapper
    					String name = parent.getNamespacePrefix()+(parent.getNamespacePrefix().isEmpty() ? "" : ":") + parent.getName();
    					String select = node.getAttributeValue("select");
    					String delimiter = node.getAttributeValue("delimiter");
+   					String test =  node.getAttributeValue("test");
 					XPath qPath = XPath.newInstance(select);
 					qPath.addNamespace( Common.xmlns_mods );
    					Element p1 = new Element ("with-param", Common.xmlns_xsl);
@@ -262,13 +263,25 @@ public class MDMapper
    						p3.setAttribute("select", "'"+delimiter+"'" );
    					} catch (Exception ex) {}
    					
-   					parent.addContent(p1);
-   					parent.addContent(p2); 				
-   					parent.addContent(p3); 				
-   					parent.setName("call-template");
- 					parent.setAttribute("name","transform");
-   					parent.setNamespace(Common.xmlns_xsl);
-   					parent.removeChild("map", Common.xmlns_mm);
+   					if (test == null) {   					
+   						parent.addContent(p1);
+   						parent.addContent(p2); 				
+   						parent.addContent(p3); 				
+   						parent.setName("call-template");
+   						parent.setAttribute("name","transform");
+   					} else {
+   						Element ct = new Element ("call-template", Common.xmlns_xsl);
+   						ct.setAttribute("name","transform");
+   						ct.addContent(p1);
+   						ct.addContent(p2); 				
+   						ct.addContent(p3);
+   						parent.addContent(ct);
+   						parent.setName("if");
+   						parent.setAttribute("test",test);
+   						
+   					}
+					parent.setNamespace(Common.xmlns_xsl);
+					parent.removeChild("map", Common.xmlns_mm);
    				}
    				if (node.getName().equals("copy")) {
    					

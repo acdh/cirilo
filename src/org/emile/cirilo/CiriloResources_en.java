@@ -217,6 +217,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "novalidobj",       "File {0} does not have a valid FEDORA object schema."},
            { "ingestof",       "Ingesting file "},
            { "tei2mets",       "Create METS datastream"},
+           { "nologdir",       "Log directory {0} couldn't found."},
 
            
            /* cirilo */

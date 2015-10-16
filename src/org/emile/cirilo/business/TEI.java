@@ -176,7 +176,9 @@ public class TEI {
 	    				      in = new JDOMSource(this.intermedidate);
 	    				      out = new JDOMResult();
 	    				      transformer.transform(in, out);	    				        		        
-	    				      this.tei = builder.build( new StringReader( outputter.outputString(out.getResult())) );
+	    				      this.tei = builder.build( new StringReader( outputter.outputString(out.getResult())
+	    				    		.replaceAll(" </seg>","</seg> ").replaceAll("</seg> ,","</seg>,").replaceAll("</seg> \\.","</seg>.")
+	    			           		.replaceAll("</seg>([a-z])", "</seg> $1")));
 	    				        		        
 	    		        	  System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
 	    				   }	  

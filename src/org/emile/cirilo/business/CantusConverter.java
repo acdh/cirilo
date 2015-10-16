@@ -212,8 +212,8 @@ public class CantusConverter {
                                     currSegment_2 = segments_2.get(segments_2.size()-1);
                                     currSegment_2.setAttribute("type","time:2");
                                     if (parser.getInsertMode()) currSegment_2.setAttribute("subtype","addition");
-                                    if (parser.getRasurMode()) currSegment_1.setAttribute("subtype","rasur"); 
-                                    if (parser.getMarginalMode()) currSegment_1.setAttribute("subtype","marginal");
+                                    if (parser.getRasurMode()) currSegment_2.setAttribute("subtype","rasur"); 
+                                    if (parser.getMarginalMode()) currSegment_2.setAttribute("subtype","marginal");
                                     Element hd = new Element("label",Common.xmlns_ntei_p5);
                                     hd.setText(parser.getEntity().trim());
       	        					if (parser.getConjecture()) hd.setAttribute("type","supplied");
@@ -343,7 +343,9 @@ public class CantusConverter {
 	  	        	}
 	  	        }
 	  		
-	  	        target = builder.build( new StringReader(op.outputString(target).replaceAll("[\n\r]","").replaceAll("°",".").replaceAll("[+]","<unclear />")));	
+	  	        target = builder.build( new StringReader(op.outputString(target).replaceAll("[\n\r]","").replaceAll("°",".")
+	           			.replaceAll("<ab> </ab>","")
+	  	        		.replaceAll("[+]","<unclear />")));	
 
 	        } catch (Exception e) {
 	        	e.printStackTrace();	       	
@@ -371,7 +373,11 @@ public class CantusConverter {
 		  
 			Element seg = new Element(parser.getEntity(),Common.xmlns_cantus);
 			if (parser.getConjecture()) seg.setAttribute("subtype","supplied");
-			while(Types.WHITESPACE == parser.foresee() || Types.PAGE == parser.foresee()) parser.next();
+			while(true) {
+				Types x = parser.foresee();				
+				if (Types.WHITESPACE == x || Types.PAGE == x) parser.next();
+				else break;
+			}
 			while (Typus.contains(parser.foresee())) {
 				q= parser.next();
 				if (q == Types.NEUME) {
@@ -797,7 +803,7 @@ public class CantusConverter {
 						 ch = String.valueOf(buf.charAt(bp++));
 						 if (ch.equals("§")) break;
 						 if (ch.equals("$")) {
-		                	 bp = cp+1;
+		                	 bp = cp; // +1;
 	                    	 return log(types.EOA);						 
 						 }
 						 entity+=ch;
@@ -805,7 +811,7 @@ public class CantusConverter {
                      if (entity.contains("::")) {
                     	 return log(types.CHOICE);
                      } else {
-                    	 bp = cp+1;
+                    	 bp = cp; // +1;
                     	 return log(types.EOA);
                      }	 
 				  }

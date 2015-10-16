@@ -199,7 +199,6 @@ class CiriloWindow extends JPanel {
 				String home = System.getenv("USERPROFILE");	
 				
 				System.setProperty("file.encoding", "UTF-8");
-
 				
 				if (System.getProperty("os.name").toLowerCase().indexOf("windows") >- 1) {
 					File file = new File ( home );
