@@ -90,7 +90,9 @@ import voodoosoft.jroots.dialog.*;
  */
 public class UpgradeDialog extends CDialog {
     private static final Log LOG = LogFactory.getLog(UpgradeDialog.class);
-    
+    private static final String CIRILO_BACKBONE = "cirilo:Backbone";
+    private static final String CIRILO_ENVIRONMENT = "cirilo:Environment";
+       
     Document properties; 
     Format format;
     XMLOutputter outputter;
@@ -223,8 +225,69 @@ public class UpgradeDialog extends CDialog {
 								progressDialog.millisToDecideToPopup = 1;
 								progressDialog.millisToPopup = 1;
 
-					   		    progressDialog.beginTask("Upgrading content models ...", entries.size(), true);
-																
+					   		    progressDialog.beginTask("Updating cirilo:Backbone ...", entries.size()+5, true);
+							
+					           	File temp = File.createTempFile("tmp","xml");
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "OAItoHTML")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write("<xsl:stylesheet version=\"1.0\" xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\"  xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"/>".getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "OAItoHTML","",  "X", "text/xml", temp);
+		 					           	  Repository.addDatastream(CIRILO_ENVIRONMENT, "OAItoHTML","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "OAItoDC_MAPPING")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write("<mm:metadata-mapping xmlns:mm=\"http://mml.uni-graz.at/v1.0\"><oai_dc:dc xmlns:oai=\"http://www.openarchives.org/OAI/2.0/\" xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:europeana=\"http://www.europeana.eu/schemas/ese/\" /></mm:mapping>".getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "OAItoDC_MAPPING","",  "X", "text/xml", temp);
+		 					           	  Repository.addDatastream(CIRILO_ENVIRONMENT, "OAItoDC_MAPPING","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "LIDOtoHTML")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write("<xsl:stylesheet version=\"1.0\" xmlns:lido=\"http://www.lido-schema.org\" xmlns:bibtex=\"http://bibtexml.sf.net/\" xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"/>".getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "LIDOtoHTML","",  "X", "text/xml", temp);
+		 					           	  Repository.addDatastream(CIRILO_ENVIRONMENT, "LIDOtoHTML","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "LIDOtoFO")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write("<xsl:stylesheet version=\"1.0\" xmlns:fo=\"http://www.w3.org/1999/XSL/Format\" xmlns:lido=\"http://www.lido-schema.org\" xmlns:bibtex=\"http://bibtexml.sf.net/\" xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"/>".getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "LIDOtoFO","",  "X", "text/xml", temp);
+		 					           	  Repository.addDatastream(CIRILO_ENVIRONMENT, "LIDOtoFO","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "LIDOtoDC_MAPPING")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+						   	          	  fos.write("<mm:metadata-mapping xmlns:mm=\"http://mml.uni-graz.at/v1.0\"><oai_dc:dc xmlns:lido=\"http://www.lido-schema.org\" xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:europeana=\"http://www.europeana.eu/schemas/ese/\"/></mm:mapping>".getBytes("UTF-8"));
+						 				  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "LIDOtoDC_MAPPING","",  "X", "text/xml", temp);
+		 					           	  Repository.addDatastream(CIRILO_ENVIRONMENT, "LIDOtoDC_MAPPING","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+					   		    temp.delete();
+					   		    
+								progressDialog.worked(1);
+								
+					   		    progressDialog.setTaskName("Upgrading content models ...");
 								progressDialog.worked(1);
 	                 
 								for (String s: entries) {

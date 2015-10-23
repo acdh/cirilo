@@ -292,6 +292,9 @@ class CiriloWindow extends JPanel {
 				se.loadTemplaterDialogProperties();
 				se.loadOptionsDialogProperties();
 				
+	            IIIFFactory i3f = new IIIFFactory();
+	            CServiceProvider.addService(i3f, ServiceNames.I3F_SERVICE);
+	   			
 			}
 			catch (Exception ex) {
 				exit();

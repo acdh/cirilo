@@ -30,6 +30,7 @@ import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.utils.Split;
 import org.emile.cirilo.utils.eXist;
 import org.emile.cirilo.business.Scp;
+import org.emile.cirilo.business.IIIFFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -290,6 +291,8 @@ public class METS {
 
 		   	    if (images.size() > 0) {
 		    		int i = 0;		    		
+		    		IIIFFactory i3f = (IIIFFactory) CServiceProvider.getService(ServiceNames.I3F_SERVICE);
+		    		i3f.delete(this.PID);
 		    		if (thumbs.size() == 0) {
 		    			fileGrp = new Element("fileGrp", Common.xmlns_mets);
 		    			fileGrp.setAttribute("USE", "THUMBS");

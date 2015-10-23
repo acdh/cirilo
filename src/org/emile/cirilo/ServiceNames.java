@@ -77,5 +77,9 @@ public class ServiceNames {
 	 *  Description of the Field
 	 */
 	public final static CServiceName RESOURCES        = new CServiceName("Resources");
-	
+	/**
+	 *  Description of the Field
+	 */	
+	public final static CServiceName I3F_SERVICE        = new CServiceName("I3F_Service");
+
 }

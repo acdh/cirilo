@@ -57,6 +57,7 @@ import org.emile.cirilo.business.Scp;
 import org.emile.cirilo.business.Unzipper;
 import org.emile.cirilo.business.Topos;
 import org.emile.cirilo.business.CantusConverter;
+import org.emile.cirilo.business.IIIFFactory;
 
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
@@ -594,6 +595,8 @@ public class TEI {
    	    List images = getChildren("//t:graphic");
     	if (images.size() > 0) {
     		int i = 1;
+    		IIIFFactory i3f = (IIIFFactory) CServiceProvider.getService(ServiceNames.I3F_SERVICE);
+    		i3f.delete(this.PID);  		
     		for (Iterator iter = images.iterator(); iter.hasNext();) {
     			try {
     				Element e = (Element) iter.next();

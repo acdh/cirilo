@@ -29,6 +29,7 @@ import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.dialog.DialogNames;
 import org.emile.cirilo.dialog.MakeEnvironmentDialog;
 import org.emile.cirilo.dialog.OptionsDialog;
+import org.emile.cirilo.business.IIIFFactory;
 
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.business.CBusinessFactory;
@@ -233,7 +234,10 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 				saveProperties("harvester",se.getHarvesterDialogProperties());
 				saveProperties("templater",se.getTemplaterDialogProperties());
 				saveProperties("options",se.getOptionsDialogProperties());
-                
+
+				IIIFFactory i3f = (IIIFFactory) CServiceProvider.getService(ServiceNames.I3F_SERVICE);
+			    i3f.close();
+         
 			}
 			catch ( Exception ex ) {
 				ex.printStackTrace();
@@ -435,6 +439,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 						temps.makeTemplate("cirilo:TEI", loDlg.getUser(), "$cirilo:TEI."+loDlg.getUser(), "No Title", "info:fedora/cm:TEI");
 						temps.makeTemplate("cirilo:LIDO", loDlg.getUser(), "$cirilo:LIDO."+loDlg.getUser(), "No Title", "info:fedora/cm:LIDO");
 						temps.makeTemplate("cirilo:Context", loDlg.getUser(), "$cirilo:Context."+loDlg.getUser(), "No Title", "info:fedora/cm:Context");
+						temps.makeTemplate("cirilo:OAIRecord", loDlg.getUser(), "$cirilo:OAIRecord."+loDlg.getUser(), "No Title", "info:fedora/cm:OAIRecord");
 						temps.makeTemplate("cirilo:Environment", loDlg.getUser(), "$cirilo:"+loDlg.getUser(), "No Title", "");
 				} catch (Exception ex) {
 					ex.printStackTrace();

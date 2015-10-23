@@ -29,13 +29,6 @@ import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
 
 
-
-
-
-
-
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.utils.ImagePreviewPanel;
@@ -50,6 +43,7 @@ import org.emile.cirilo.business.*;
 import org.emile.cirilo.utils.*;
 import org.emile.cirilo.*;
 import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
+import org.emile.cirilo.business.IIIFFactory;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.DOMBuilder;
@@ -505,17 +499,13 @@ public class ObjectEditorDialog extends CDialog {
 			
 				if (mimetype.toLowerCase().contains("xml")) chooser.addChoosableFileFilter(new FileFilter(".xml"));
 				if (dsid.toLowerCase().contains("ontology")) chooser.addChoosableFileFilter(new FileFilter(".rdf"));
-				if (mimetype.toLowerCase().contains("jpeg")) {
+				if (mimetype.toLowerCase().contains("jpeg") || mimetype.toLowerCase().contains("tiff")) {
+			   		IIIFFactory i3f = (IIIFFactory) CServiceProvider.getService(ServiceNames.I3F_SERVICE);
+					i3f.delete(pid,dsid);
 					ImagePreviewPanel preview = new ImagePreviewPanel();
 					chooser.setAccessory(preview);
 					chooser.addPropertyChangeListener(preview);
-					chooser.addChoosableFileFilter(new FileFilter(".jpg"));
-				}
-				if (mimetype.toLowerCase().contains("tiff")) {
-					ImagePreviewPanel preview = new ImagePreviewPanel();
-					chooser.setAccessory(preview);
-					chooser.addPropertyChangeListener(preview);
-					chooser.addChoosableFileFilter(new FileFilter(".tif"));
+					chooser.addChoosableFileFilter(new FileFilter(mimetype.toLowerCase().contains("tiff") ?".tif" :".jpg"));
 				}
 
 				if (mimetype.toLowerCase().contains("plain")) chooser.addChoosableFileFilter(new FileFilter(".txt"));

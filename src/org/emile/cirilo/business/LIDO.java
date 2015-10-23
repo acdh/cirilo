@@ -46,6 +46,7 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.modules.XMLResource;
 import org.emile.cirilo.utils.ImageTools;
+import org.emile.cirilo.business.IIIFFactory;
 import org.geonames.Toponym;
 import org.geonames.ToponymSearchCriteria;
 import org.geonames.ToponymSearchResult;
@@ -257,6 +258,8 @@ public class LIDO {
 		   	    List images = getChildren("//lido:resourceWrap/lido:resourceSet[contains(lido:resourceRepresentation/lido:linkResource/@lido:formatResource,'image/')]");
 		    	if (images.size() > 0) {
 		    		int i = 1;
+		    		IIIFFactory i3f = (IIIFFactory) CServiceProvider.getService(ServiceNames.I3F_SERVICE);
+		    		i3f.delete(this.PID);
 		    		for (Iterator iter = images.iterator(); iter.hasNext();) {
 		    			try {
 		    				Element parent = (Element) iter.next();

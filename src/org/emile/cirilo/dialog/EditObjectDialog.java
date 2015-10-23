@@ -75,6 +75,7 @@ import fedora.server.utilities.StreamUtility;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.business.MDMapper;
 import org.emile.cirilo.ecm.repository.Repository;
+import org.emile.cirilo.business.IIIFFactory;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -728,6 +729,7 @@ public class EditObjectDialog extends CDialog {
 					 
 				      if (liChoice == 0) {
 				    	  TripleStoreFactory tf = new TripleStoreFactory();
+					   	  IIIFFactory i3f = (IIIFFactory) CServiceProvider.getService(ServiceNames.I3F_SERVICE);
 				    	  for (int i=0; i<selected.length; i++) {
 
 				    		  if(pd.isCanceled()) {break;}		
@@ -747,6 +749,7 @@ public class EditObjectDialog extends CDialog {
 			  				     } catch (Exception u) {}
 
 			  				  }	
+				  			  i3f.delete(pid);
 				    		  if (Repository.purgeObject(pid)) deleted++;
 				    		  pd.worked(1);
 				    		  try {Thread.sleep(5);} catch (Exception e) {}						    				    
