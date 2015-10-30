@@ -162,7 +162,12 @@ public class TEI {
 		        		XMLOutputter outputter = new XMLOutputter();
 	    				set(outputter.outputString(out.getResult()));
 	    				
-	    				XPath xpath = XPath.newInstance("//t:revisionDesc/t:listChange/t:change/t:name");
+	    				XPath xpath = XPath.newInstance("//t:fileDesc/t:titleStmt/t:title");
+	    				xpath.addNamespace( Common.xmlns_tei_p5 );
+	    				Element title = (Element) xpath.selectSingleNode( tei );
+	    				if (title.getTextTrim().isEmpty()) title.setText("No Title");
+
+	    				xpath = XPath.newInstance("//t:revisionDesc/t:listChange/t:change/t:name");
 	    				xpath.addNamespace( Common.xmlns_tei_p5 );
 	    				Element name = (Element) xpath.selectSingleNode( tei );
 
@@ -213,6 +218,12 @@ public class TEI {
 		        		
 		        		XMLOutputter outputter = new XMLOutputter();
 	    				set(outputter.outputString(out.getResult()));
+	    				
+	    				XPath xpath = XPath.newInstance("//t:fileDesc/t:titleStmt/t:title");
+	    				xpath.addNamespace( Common.xmlns_tei_p5 );
+	    				Element title = (Element) xpath.selectSingleNode( tei );
+	    				if (title.getTextTrim().isEmpty()) title.setText("No Title");
+
                         return true;		    				
                     } catch (Exception q){
                         Common.log(logger,q);

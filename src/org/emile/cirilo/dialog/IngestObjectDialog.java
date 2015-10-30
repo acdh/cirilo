@@ -135,7 +135,8 @@ public class IngestObjectDialog extends CDialog {
 			jcbUser.setSelectedItem(user.getUser());
 			jcbNamespace.setEnabled(false);			
 		
-            String cm = jcbContentModel.getSelectedItem().toString().toLowerCase();
+			String cm = jcbContentModel.getSelectedItem().toString().toLowerCase();
+
 			if (cm.contains("context")) {
 				jcbNamespace.setSelectedIndex(1);
 			} else {
@@ -219,6 +220,8 @@ public class IngestObjectDialog extends CDialog {
 							JOptionPane.QUESTION_MESSAGE);
 
 					if (liChoice == 0) {
+						
+					    props.setProperty("user", "Ingest.ContentModel", jcbContentModel.getSelectedItem().toString());
 
 						ProgressDialog progressDialog = new ProgressDialog( getCoreDialog(), Common.WINDOW_HEADER);
 						progressDialog.displayPercentageInProgressBar = true;
@@ -544,7 +547,8 @@ public class IngestObjectDialog extends CDialog {
 
 						if (liChoice == 0) {
 							
-							
+						    props.setProperty("user", "Ingest.ContentModel", jcbContentModel.getSelectedItem().toString());
+						
 							ProgressDialog progressDialog = new ProgressDialog( getCoreDialog(), Common.WINDOW_HEADER);
 							progressDialog.displayPercentageInProgressBar = true;
 							progressDialog.millisToDecideToPopup = 1;
@@ -857,6 +861,8 @@ public class IngestObjectDialog extends CDialog {
 								JOptionPane.QUESTION_MESSAGE);
 
 						if (liChoice == 0) {
+
+							props.setProperty("user", "Ingest.ContentModel", jcbContentModel.getSelectedItem().toString());
 
 							ProgressDialog progressDialog = new ProgressDialog( getCoreDialog(), Common.WINDOW_HEADER);
 							progressDialog.displayPercentageInProgressBar = true;
@@ -1230,7 +1236,13 @@ public class IngestObjectDialog extends CDialog {
 			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getIngestDialogProperties(), (JTable) null);
 			CPropertyService props = (CPropertyService) CServiceProvider.getService( ServiceNames.PROPERTIES );
 		    String p = props.getProperty("user", "METS.CreateFromJPEG"); 
-		    createFromJPEG =  p != null && p.equals("1");
+		    createFromJPEG =  p != null && p.equals("1");		    
+		    p = props.getProperty("user", "Ingest.ContentModel");
+		    if (p != null) {
+		    	JComboBox jcbContentModel = ((JComboBox) getGuiComposite().getWidget("jcbContentModel"));
+		    	jcbContentModel.setSelectedItem(p);
+		    }
+
 			} catch (Exception e) {		
 		}
 	}
