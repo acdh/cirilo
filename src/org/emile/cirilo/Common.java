@@ -112,6 +112,8 @@ public class Common {
 
 	public final static Namespace xmlns_dcterms = Namespace.getNamespace( "dcterms", "http://purl.org/dc/terms/");
 		
+	public final static Namespace xmlns_edm = Namespace.getNamespace( "edm", "http://www.europeana.eu/schemas/edm/");
+	
 	public final static Namespace xmlns_ns0 = Namespace.getNamespace( "ns0", "http://phaidra.univie.ac.at/XML/metadata/V1.0");
 
 	public final static Namespace xmlns_ns1 = Namespace.getNamespace( "ns1", "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0");

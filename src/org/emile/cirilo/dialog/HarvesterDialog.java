@@ -63,13 +63,17 @@ import javax.swing.table.*;
 import java.util.regex.*;
 
 import javax.swing.*;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.Transformer;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -274,9 +278,24 @@ public class HarvesterDialog extends CDefaultDialog {
 			xpath.addNamespace(Common.xmlns_dc);
 			xpath.addNamespace(Common.xmlns_oai);
 			xpath.addNamespace(Common.xmlns_europeana);
+			xpath.addNamespace(Common.xmlns_edm);
 			xpath.addNamespace(Common.xmlns_tei_p5);
 			xpath.addNamespace(Common.xmlns_dcterms);
 			xpath.addNamespace(Common.xmlns_lido);
+			
+			
+			byte[] stylesheet = null;
+        	try {
+	        	stylesheet =  Repository.getDatastream("cirilo:"+owner, "RECORDtoEDM" , "");
+	        } catch (Exception ex) {
+	           		try { 
+	        		stylesheet =  Repository.getDatastream("cirilo:Backbone", "RECORDtoEDM" , "");
+	        		} catch (Exception q) {
+	           			Common.log(logger, q);   		 
+	        			return false;
+	        		}
+          	}
+
 			
 			List records = (List) xpath.selectNodes(metadata);
 			
@@ -324,7 +343,7 @@ public class HarvesterDialog extends CDefaultDialog {
 						xpath = XPath.newInstance(url);
 						xpath.addNamespace(Common.xmlns_dc);
 						xpath.addNamespace(Common.xmlns_oai);
-						xpath.addNamespace(Common.xmlns_europeana);
+						xpath.addNamespace(Common.xmlns_edm);
 						xpath.addNamespace(Common.xmlns_tei_p5);
 						xpath.addNamespace(Common.xmlns_dcterms);
 						xpath.addNamespace(Common.xmlns_lido);
@@ -336,7 +355,7 @@ public class HarvesterDialog extends CDefaultDialog {
 							XPath vpath = XPath.newInstance(icon);
 							vpath.addNamespace(Common.xmlns_dc);
 							vpath.addNamespace(Common.xmlns_oai);
-							vpath.addNamespace(Common.xmlns_europeana);
+							vpath.addNamespace(Common.xmlns_edm);
 							vpath.addNamespace(Common.xmlns_tei_p5);
 							vpath.addNamespace(Common.xmlns_dcterms);
 							vpath.addNamespace(Common.xmlns_lido);
@@ -379,12 +398,26 @@ public class HarvesterDialog extends CDefaultDialog {
 								        metadata.removeChild("dc", Common.xmlns_oai_dc);
 										metadata.addContent(uwm.cloneContent());																				
 									}
-									Repository.modifyDatastream(pid, "URL", null, "R", path.getText());							
 									String buf =  outputter.outputString(em);
-									Repository.modifyDatastreamByValue(pid, "RECORD", "text/xml", buf);
-									createMapping(pid, buf);
+                                    String edm = null;                                     
+									Repository.modifyDatastream(pid, "URL", null, "R", path.getText());							
+									
+									JDOMSource in = new JDOMSource(em);
+		    		        		JDOMResult out = new JDOMResult();
+									
+			    		        	try {
+			    		        		System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
+			    		        		Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet))));
+			    		        		transformer.transform(in, out);
+			    		        		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
+			    		        	} catch (Exception e) {}
+			    		        	try {
+			    		        		Repository.modifyDatastreamByValue(pid, "RECORD", "text/xml", buf);
+			    		        		edm = outputter.outputString(out.getResult());
+			    		        		Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm);
+			    		        	} catch (Exception e) {}	
+									createMapping(pid, edm);
 								} catch (Exception eq) {
-									eq.printStackTrace();
 								}
 
 															
@@ -406,7 +439,6 @@ public class HarvesterDialog extends CDefaultDialog {
 									Repository.modifyDatastream(pid, "THUMBNAIL","image/jpeg", "M", thumbnail);
 									thumbnail.delete();									
 								} catch (Exception eq) {
-									eq.printStackTrace();
 								}
 							}
 						}	
@@ -434,7 +466,19 @@ public class HarvesterDialog extends CDefaultDialog {
 			Document mapping = parser.build(con.getInputStream());
 			MDMapper m = new MDMapper(pid,outputter.outputString(mapping));
 			
-			org.jdom.Document dc = parser.build( new StringReader (m.transform(parser.build(new StringReader(record)))));									
+			org.jdom.Document dc = parser.build( new StringReader (m.transform(parser.build(new StringReader(record)))));		
+			
+			XPath xpath = XPath.newInstance("//dc:title");
+			xpath.addNamespace(Common.xmlns_dc);
+			Element title = (Element) xpath.selectSingleNode(dc);
+			
+			if (title== null) {
+				title = new Element("title", Common.xmlns_dc);
+				title.setText("Untitled");
+				dc.getRootElement().addContent(title);
+			} else if (title.getTextTrim().isEmpty()) {
+				title.setText("Untitled");				
+			}
 
 			Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(dc));
 			

@@ -165,7 +165,7 @@ public class TEI {
 	    				XPath xpath = XPath.newInstance("//t:fileDesc/t:titleStmt/t:title");
 	    				xpath.addNamespace( Common.xmlns_tei_p5 );
 	    				Element title = (Element) xpath.selectSingleNode( tei );
-	    				if (title.getTextTrim().isEmpty()) title.setText("No Title");
+	    				if (title.getTextTrim().isEmpty()) title.setText("Untitled");
 
 	    				xpath = XPath.newInstance("//t:revisionDesc/t:listChange/t:change/t:name");
 	    				xpath.addNamespace( Common.xmlns_tei_p5 );
@@ -222,7 +222,7 @@ public class TEI {
 	    				XPath xpath = XPath.newInstance("//t:fileDesc/t:titleStmt/t:title");
 	    				xpath.addNamespace( Common.xmlns_tei_p5 );
 	    				Element title = (Element) xpath.selectSingleNode( tei );
-	    				if (title.getTextTrim().isEmpty()) title.setText("No Title");
+	    				if (title.getTextTrim().isEmpty()) title.setText("Untitled");
 
                         return true;		    				
                     } catch (Exception q){
