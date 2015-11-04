@@ -224,7 +224,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "loadprop"          , "Load application properties"          },
            { "sam"          , "Setup access manager"          },
            { "dam"          , "Setup dialogue manager"          },
-           { "notitle"          , "No title"          },
+           { "notitle"          , "Untitled"          },
            
            /* menu */
            { "file.edit"          , "Edit objects"          },

@@ -227,7 +227,7 @@ public class EditObjectDialog extends CDialog {
 				    				  }
 				    			  }
 				    		  }
-				    		  
+				    		  doc = Common.validate(doc);
 				    		  Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(doc));
 				    		  
 				    		  
@@ -1072,10 +1072,11 @@ public class EditObjectDialog extends CDialog {
 						getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					
 						TemplateSubsystem temps = (TemplateSubsystem) CServiceProvider.getService(ServiceNames.TEMPLATESUBSYSTEM);
-						temps.makeTemplate("cirilo:TEI", loDlg.getUser(), "$cirilo:TEI."+loDlg.getUser(), "No Title", "info:fedora/cm:TEI");
-						temps.makeTemplate("cirilo:LIDO", loDlg.getUser(), "$cirilo:LIDO."+loDlg.getUser(), "No Title", "info:fedora/cm:LIDO");
-						temps.makeTemplate("cirilo:Context", loDlg.getUser(), "$cirilo:Context."+loDlg.getUser(), "No Title", "info:fedora/cm:Content");
-						temps.makeTemplate("cirilo:Environment", loDlg.getUser(), "$cirilo:"+loDlg.getUser(), "No Title", "");
+						temps.makeTemplate("cirilo:TEI", loDlg.getUser(), "$cirilo:TEI."+loDlg.getUser(), "Untitled", "info:fedora/cm:TEI");
+						temps.makeTemplate("cirilo:LIDO", loDlg.getUser(), "$cirilo:LIDO."+loDlg.getUser(), "Untitled", "info:fedora/cm:LIDO");
+						temps.makeTemplate("cirilo:Context", loDlg.getUser(), "$cirilo:Context."+loDlg.getUser(), "Untitled", "info:fedora/cm:Content");
+						temps.makeTemplate("cirilo:OAIRecord", loDlg.getUser(), "$cirilo:OAIRecord."+loDlg.getUser(), "Untitled", "info:fedora/cm:OAIRecord");
+						temps.makeTemplate("cirilo:Environment", loDlg.getUser(), "$cirilo:"+loDlg.getUser(), "Untitled", "");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

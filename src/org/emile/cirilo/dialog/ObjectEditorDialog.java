@@ -353,7 +353,7 @@ public class ObjectEditorDialog extends CDialog {
 				dlg.open();
 			}  else  if (isText(mimetype)) {
 	        	TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-	        	dlg.set(pid, dsid, mimetype, group, location);
+	        	dlg.set(pid, dsid, mimetype, group, location, null);
 	        	dlg.open();
 			}  else if (isImage(mimetype)) {
 		        try {
@@ -407,7 +407,7 @@ public class ObjectEditorDialog extends CDialog {
 				dlg.open();			
 			}  else if  (isText(mimetype)) {
 	        	TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-	        	dlg.set(pid, dsid, mimetype, group, location);
+	        	dlg.set(pid, dsid, mimetype, group, location, model);
 	        	dlg.open();
 			}  else if (isImage(mimetype)) {
 		        try {
@@ -584,22 +584,37 @@ public class ObjectEditorDialog extends CDialog {
  				    	bibtex.delete();
 
  				    } else {
- 				    	
- 				    	Repository.modifyDatastream(pid, dsid, mimetype, controlgroup, selected);
- 				    	
+ 				    	 				    	
  				    	if (dsid.equals("ONTOLOGY")) {
+                          
+ 				    		File temp = selected;
+ 				    		
+                            if (model.contains("SKOS")) {
+                            	SkosifyFactory skosify = (SkosifyFactory) CServiceProvider.getService(ServiceNames.SKOSIFY_SERVICE);
+				    			temp = skosify.skosify(temp);
+				    			if (temp == null) {
+	     				    		temp = selected;
+				    			}	
+                            }
+
+                            Repository.modifyDatastream(pid, dsid, mimetype, controlgroup, temp);
 
  				    		try {
 								TripleStoreFactory tf = new TripleStoreFactory();
 								if (tf.getStatus()) {
-									tf.update(chooser.getSelectedFile(), pid);
+									tf.update(temp, pid);
 								}	
-								tf.close();								
+								tf.close();	
+								
  				    		} catch (Exception e) {
- 				    			e.printStackTrace();
  								JOptionPane.showMessageDialog(  getCoreDialog(), e.getMessage(), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE); 				    			
  				    		}
+ 				    		
+                            if (temp.getAbsolutePath().contains("tmp")) temp.delete();
+ 				    	} else {
+ 	 				    	Repository.modifyDatastream(pid, dsid, mimetype, controlgroup, selected);
  				    	}
+ 				    	
  				    	
  				    }	
 

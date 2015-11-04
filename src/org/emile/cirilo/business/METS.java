@@ -566,11 +566,14 @@ public class METS {
 			if (!onlyValidate){
 				byte[] url =  Repository.getDatastream(pid != null ? pid : this.PID, "DC_MAPPING" , "");
 
-				SAXBuilder builder = new SAXBuilder(); 						 
+				SAXBuilder builder = new SAXBuilder(); 		
 				URLConnection con = new URL (new String(url)).openConnection();
 				con.setUseCaches(false);
-		    	Document dc =builder.build(con.getInputStream());
-				MDMapper m = new MDMapper(this.PID,outputter.outputString(dc));
+				Document mapping = builder.build(con.getInputStream());
+				MDMapper m = new MDMapper(this.PID,outputter.outputString(mapping));
+				
+				org.jdom.Document dc = builder.build( new StringReader (m.transform(this.mets) ) );							
+				
 				
 				if (moGA != null)  {
 					Element root = dc.getRootElement();
@@ -593,13 +596,13 @@ public class METS {
 					}
 				}
 
-								
-				Repository.modifyDatastreamByValue(this.PID, "DC", "text/xml", m.transform( this.mets));
+				dc = Common.validate(dc);				
+				Repository.modifyDatastreamByValue(this.PID, "DC", "text/xml", outputter.outputString(dc));
 				
 				url =  Repository.getDatastream(pid != null ? pid : this.PID, "BIBTEX_MAPPING" , "");
 				con = new URL (new String(url)).openConnection();
 				con.setUseCaches(false);
-		    	Document mapping = builder.build(con.getInputStream());
+		    	mapping = builder.build(con.getInputStream());
 				m = new MDMapper(this.PID,outputter.outputString(mapping));
 				Repository.modifyDatastreamByValue(this.PID, "BIBTEX", "text/xml", m.transform( this.mets));
 

@@ -81,5 +81,9 @@ public class ServiceNames {
 	 *  Description of the Field
 	 */	
 	public final static CServiceName I3F_SERVICE        = new CServiceName("I3F_Service");
+	/**
+	 *  Description of the Field
+	 */	
+	public final static CServiceName SKOSIFY_SERVICE        = new CServiceName("Skosify_Service");
 
 }

@@ -468,18 +468,7 @@ public class HarvesterDialog extends CDefaultDialog {
 			
 			org.jdom.Document dc = parser.build( new StringReader (m.transform(parser.build(new StringReader(record)))));		
 			
-			XPath xpath = XPath.newInstance("//dc:title");
-			xpath.addNamespace(Common.xmlns_dc);
-			Element title = (Element) xpath.selectSingleNode(dc);
-			
-			if (title== null) {
-				title = new Element("title", Common.xmlns_dc);
-				title.setText("Untitled");
-				dc.getRootElement().addContent(title);
-			} else if (title.getTextTrim().isEmpty()) {
-				title.setText("Untitled");				
-			}
-
+			dc = Common.validate(dc);
 			Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(dc));
 			
 				
@@ -491,7 +480,7 @@ public class HarvesterDialog extends CDefaultDialog {
 	public void handleShowLogfileButton(ActionEvent e) 
 	throws Exception {
 		TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-		dlg.set(logfile, null, "text/log", "R", null);
+		dlg.set(logfile, null, "text/log", "R", null, null);
 		dlg.open();
 	}	
 

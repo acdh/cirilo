@@ -97,7 +97,7 @@ public class ImportDialog extends CDialog {
 	public void handleShowlogButton(ActionEvent e)
 		throws Exception {
 			TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-			dlg.set(logfile, null, "text/log", "R", null);
+			dlg.set(logfile, null, "text/log", "R", null, null);
 			dlg.open();
 	}	
 

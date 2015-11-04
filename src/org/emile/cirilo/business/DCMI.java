@@ -175,6 +175,8 @@ public class DCMI {
 			format.setOmitEncoding(true);
 			XMLOutputter outputter = new XMLOutputter(format);
 
+			
+			doc = Common.validate(doc);
 			Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(doc));
 			
 			

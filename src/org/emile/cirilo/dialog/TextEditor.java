@@ -48,6 +48,7 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.*;
+
 import com.asprise.util.ui.progress.ProgressDialog;
 
 import jsyntaxpane.DefaultSyntaxKit;
@@ -83,12 +84,13 @@ public class TextEditor extends CDialog {
 
 	public TextEditor() {}
 
-	public void set (String pid, String dsid, String mimetype, String group, String location) {
+	public void set (String pid, String dsid, String mimetype, String group, String location, String model) {
 		this.pid = pid;
 		this.dsid = dsid;
 		this.mimetype = mimetype;
 		this.group = group;
 		this.location = location;
+		this.model = model;
 	}
 
 	/**
@@ -219,8 +221,10 @@ public class TextEditor extends CDialog {
 		    	    		    			Object[] args = {"LIDO_SOURCE"}; 		    		
 		    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 		    	            		   }
-
-	    	            		   
+	    	            	   } else if (dsid.equals("DC") && !pid.startsWith("cirilo:")) {
+	    	            		   DC d = new DC(null,false,true);
+	    	            		   d.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
+  				  		   		   Repository.modifyDatastreamByValue(pid, dsid, mimetype, new String(d.toString().getBytes("UTF-8"),"UTF-8"));	    	            		   
 	    	            	   } else {   
 	    	            		   SAXBuilder builder = new SAXBuilder();
 	    	            		   try {
@@ -241,10 +245,18 @@ public class TextEditor extends CDialog {
 		  	    				  	   if (dsid.equals("ONTOLOGY")) {
 
 		  	 	 				    		try {
-		  	 					           		File temp = File.createTempFile("tmp","xml");
+			  	 				    			if (model != null && model.contains("SKOS")) {
+			  	 				    				SkosifyFactory skosify = (SkosifyFactory) CServiceProvider.getService(ServiceNames.SKOSIFY_SERVICE);
+			  	 				    				String skos = skosify.skosify(new String(jebEditorPane.getText().getBytes("UTF-8")));
+			  	 				    				if (!skos.isEmpty()) jebEditorPane.setText(skos);
+			  	 				    			} 
+			  	 				    			
+
+		  	 	 				    			File temp = File.createTempFile("tmp","xml");
 		  	 					           		FileOutputStream fos = new FileOutputStream(temp);
 		  	 					           		fos.write(jebEditorPane.getText().getBytes("UTF-8"));
 		  	 					           		fos.close();
+
 		  	 									TripleStoreFactory tf = new TripleStoreFactory();
 		  	 									if (tf.getStatus()) {
 		  	 										tf.update(temp, pid);
@@ -312,5 +324,6 @@ public class TextEditor extends CDialog {
 	private String mimetype;
 	private String group;
 	private String location;
+	private String model;
 }
 

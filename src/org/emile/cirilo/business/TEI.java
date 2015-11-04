@@ -1402,7 +1402,6 @@ public class TEI {
 					con.setUseCaches(false);
 					Document mapping = builder.build(con.getInputStream());
 					MDMapper m = new MDMapper(this.PID,outputter.outputString(mapping));
-					builder = new SAXBuilder();
 					
 					org.jdom.Document dc = builder.build( new StringReader (m.transform(this.tei) ) );							
 				
@@ -1426,7 +1425,8 @@ public class TEI {
 							}
 						}
 					}
-									
+						
+    				dc = Common.validate(dc);
 					Repository.modifyDatastreamByValue(this.PID, "DC", "text/xml", outputter.outputString(dc));
 					
 				}

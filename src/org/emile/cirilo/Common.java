@@ -35,7 +35,10 @@ import net.glxn.qrgen.image.ImageType;
 
 import org.emile.cirilo.User;
 import org.emile.cirilo.ecm.repository.Repository;
+import org.jdom.Document;
+import org.jdom.Element;
 import org.jdom.Namespace;
+import org.jdom.xpath.XPath;
 
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
@@ -204,7 +207,7 @@ public class Common {
    
     public final static String INFO_FEDORA ="info:fedora/";
     
-    public final static String UNTITLED = "Ohne Titel";
+    public final static String UNTITLED = "Untitled";
     
     public final static String LOCAL_FEDORA_HOST = "glossa.uni-graz.at:80";
 
@@ -302,6 +305,22 @@ public class Common {
 		return urn;
 	}
 
+	public static Document validate( Document dc) {
+		try {			
+			XPath xpath = XPath.newInstance("//dc:title");
+			xpath.addNamespace( Common.xmlns_dc );
+			Element title = (Element) xpath.selectSingleNode( dc );			
+			if (title == null) {
+				title = new Element ("title", Common.xmlns_dc);
+				title.setText("Untitled");
+				dc.getRootElement().addContent(title);
+			} else {
+				if (title.getTextTrim().isEmpty()) title.setText("Untitled");
+			}	
+		} catch (Exception e) {}
+		return dc;
+	}
+	
 	
 	   public static void genQR (User user, String pid) {	
 	    	try { 

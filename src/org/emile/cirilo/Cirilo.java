@@ -294,6 +294,9 @@ class CiriloWindow extends JPanel {
 				
 	            IIIFFactory i3f = new IIIFFactory();
 	            CServiceProvider.addService(i3f, ServiceNames.I3F_SERVICE);
+
+	            SkosifyFactory skosify = new SkosifyFactory();
+	            CServiceProvider.addService(skosify, ServiceNames.SKOSIFY_SERVICE);
 	   			
 			}
 			catch (Exception ex) {

@@ -620,7 +620,8 @@ public class LIDO {
 						}
 					}
 				}
-								
+				
+				dc = Common.validate(dc);				
 				Repository.modifyDatastreamByValue(this.PID, "DC", "text/xml", outputter.outputString(dc));
 				
 			}
