@@ -162,7 +162,10 @@ public class TextEditor extends CDialog {
 			  
 		  se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
 	      user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
-		  
+	      
+	      props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
+
+	      
 		  CDialogTools.createButtonListener(this, "jbClose", "handleCancelButton");
 		  	  
 		  JMenuItem jmiSave = (JMenuItem) getGuiComposite().getWidget("jmiSave");
@@ -245,7 +248,9 @@ public class TextEditor extends CDialog {
 		  	    				  	   if (dsid.equals("ONTOLOGY")) {
 
 		  	 	 				    		try {
-			  	 				    			if (model != null && model.contains("SKOS")) {
+		  	 	 				    			
+		  	 	 				    			String pr = props.getProperty("user", "SKOS.IFY"); 
+			  	 				    			if (model != null && model.contains("SKOS") && pr != null && pr.equals("1") ) {
 			  	 				    				SkosifyFactory skosify = (SkosifyFactory) CServiceProvider.getService(ServiceNames.SKOSIFY_SERVICE);
 			  	 				    				String skos = skosify.skosify(new String(jebEditorPane.getText().getBytes("UTF-8")));
 			  	 				    				if (!skos.isEmpty()) jebEditorPane.setText(skos);
@@ -316,6 +321,7 @@ public class TextEditor extends CDialog {
 	 }
 
 	private User user;
+	private CPropertyService props;
 	private ArrayList<String> groups;
 	private ResourceBundle res;
 	private Session se;

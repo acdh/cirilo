@@ -90,6 +90,8 @@ public class OptionsDialog extends CDialog {
 			set("OnlyGeonameID","LIDO");
 
 			set("RefreshSource","METS");
+			
+			set("IFY","SKOS");
 
 		   	
 			try {
@@ -184,7 +186,8 @@ public class OptionsDialog extends CDialog {
 
 			get("RefreshSource","METS");
 
-			
+			get("IFY","SKOS");
+		
 			try {
 	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbTEICustomization");
 	    		cb.setSelected(props.getProperty("user", "TEI.Customization").equals("1"));

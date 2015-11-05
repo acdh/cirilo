@@ -29,6 +29,7 @@ import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
 
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.utils.ImagePreviewPanel;
@@ -588,8 +589,9 @@ public class ObjectEditorDialog extends CDialog {
  				    	if (dsid.equals("ONTOLOGY")) {
                           
  				    		File temp = selected;
- 				    		
-                            if (model.contains("SKOS")) {
+
+ 				    		String pr = props.getProperty("user", "SKOS.IFY"); 
+                            if (model.contains("SKOS") && pr != null && pr.equals("1") ) {
                             	SkosifyFactory skosify = (SkosifyFactory) CServiceProvider.getService(ServiceNames.SKOSIFY_SERVICE);
 				    			temp = skosify.skosify(temp);
 				    			if (temp == null) {
