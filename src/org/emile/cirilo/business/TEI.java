@@ -170,9 +170,12 @@ public class TEI {
 	    				xpath = XPath.newInstance("//t:revisionDesc/t:listChange/t:change/t:name");
 	    				xpath.addNamespace( Common.xmlns_tei_p5 );
 	    				Element name = (Element) xpath.selectSingleNode( tei );
-
+                        
+	    				
 	    				if (name != null && name.getText().toLowerCase().contains("cantus")) {
-	    				   CantusConverter cc = new CantusConverter();
+	    				   String variant = name.getText();
+	    				   if (variant.contains(":")) variant = variant.substring(variant.indexOf(":")+1); else variant ="";
+	    				   CantusConverter cc = new CantusConverter(variant);
 	    				   this.intermedidate = cc.transform(this.tei);
 	    				   if (this.intermedidate != null) {
 	    					  this.intermedidate.getRootElement().addNamespaceDeclaration(Common.xmlns_cantus);  					  	    					  
@@ -181,10 +184,10 @@ public class TEI {
 	    			          transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(Common.stylesheet)));
 	    				      in = new JDOMSource(this.intermedidate);
 	    				      out = new JDOMResult();
-	    				      transformer.transform(in, out);	    				        		        
-	    				      this.tei = builder.build( new StringReader( outputter.outputString(out.getResult())
-	    				    		.replaceAll(" </seg>","</seg> ").replaceAll("</seg> ,","</seg>,").replaceAll("</seg> \\.","</seg>.")
-	    			           		.replaceAll("</seg>([a-z])", "</seg> $1")));
+	    				      transformer.transform(in, out);	    				      
+	    				      this.tei = builder.build( new StringReader(outputter.outputString(out.getResult())
+		    				    		.replaceAll(" </seg>","</seg> ").replaceAll("</seg> ,","</seg>,").replaceAll("</seg> \\.","</seg>.")
+		    			           		.replaceAll("</seg>([a-z])", "</seg> $1")));
 	    				        		        
 	    		        	  System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
 	    				   }	  
@@ -192,6 +195,7 @@ public class TEI {
 	    					    				
                         return true;		    				
                     } catch (Exception q){
+                    	q.printStackTrace();
                         Common.log(logger,q);
                     	return false;
                     }   

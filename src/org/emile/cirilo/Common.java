@@ -232,22 +232,26 @@ public class Common {
         
     public final static String TEXT_MIMETYPES = "text/plain|text/css|application/javascript|application/sparql-query";
     
-	public final static String stylesheet = "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.tei-c.org/ns/1.0\" "+
-		     "xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:l=\"http://cantus.oeaw.ac.at\" exclude-result-prefixes=\"xs l\" version=\"2.0\">"+
-		     "<xsl:template match=\"*|@*|text()\"> <xsl:copy><xsl:apply-templates select=\"*|@*|text()\"/></xsl:copy></xsl:template>"+
-		     "<xsl:template match=\"t:seg[@ana='#strikethrough']\"><xsl:element name=\"del\" namespace=\"http://www.tei-c.org/ns/1.0\"><xsl:apply-templates select=\"*|text()\"/></xsl:element></xsl:template>"+   		    
-		     "<xsl:template match=\"l:*\">"+
-		     "<xsl:element name=\"seg\"><xsl:if test=\"not(@type)\"><xsl:attribute name=\"type\"><xsl:value-of select=\"'incipit'\"/></xsl:attribute></xsl:if>"+
-	         "<xsl:if test=\"string-length(name())=6\"><xsl:attribute name=\"rend\"><xsl:value-of select=\"concat('#', substring(name(), 3, 2))\"/></xsl:attribute></xsl:if>"+		    
-		     "<xsl:attribute name=\"ana\"><xsl:choose><xsl:when test=\"contains(name(),'_')\"><xsl:value-of select=\"concat('#',substring(name(),4))\"></xsl:value-of></xsl:when>"+
-             "<xsl:when test=\"string-length(name())=6\"><xsl:value-of select=\"concat('#', substring(name(), 5))\"/></xsl:when>"+	         
-		     "<xsl:otherwise><xsl:value-of select=\"concat('#',substring(name(),3))\"/></xsl:otherwise></xsl:choose></xsl:attribute>"+
-	         "<xsl:if test=\"contains(name(),'_')\"><xsl:attribute name=\"corresp\"><xsl:value-of select=\"concat('#./preceding-sibling::',substring(name(),4),'[1]')\"/></xsl:attribute></xsl:if>"+   
-		     "<xsl:apply-templates select=\"*|@*|text()\"/>"+            
-		     "</xsl:element></xsl:template>"+
-		     "<xsl:template match=\"t:publicationStmt\">"+
-		     "<xsl:copy><authority>Cantus</authority><xsl:apply-templates select=\".//t:idno\"/>"+
-		     "</xsl:copy></xsl:template></xsl:stylesheet>";
+	 public final static String stylesheet = "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.tei-c.org/ns/1.0\" "+
+	         "xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:l=\"http://cantus.oeaw.ac.at\" exclude-result-prefixes=\"xs l\" version=\"2.0\">"+
+	         "<xsl:template match=\"*|@*|text()\"> <xsl:copy><xsl:apply-templates select=\"*|@*|text()\"/></xsl:copy></xsl:template>"+
+	         "<xsl:template match=\"t:seg[@ana='#strikethrough']\"><xsl:element name=\"del\" namespace=\"http://www.tei-c.org/ns/1.0\"><xsl:apply-templates select=\"*|text()\"/></xsl:element></xsl:template>"+                       
+	         "<xsl:template match=\"l:*\">"+
+	         "<xsl:element name=\"seg\"><xsl:if test=\"not(@type)\"><xsl:attribute name=\"type\"><xsl:value-of select=\"'incipit'\"/></xsl:attribute></xsl:if>"+
+	         "<xsl:if test=\"string-length(name())=6\"><xsl:attribute name=\"rend\"><xsl:value-of select=\"concat('#', substring(name(), 3, 2))\"/></xsl:attribute></xsl:if>"+
+	         "<xsl:if test=\"string-length(name())=7\"><xsl:attribute name=\"rend\"><xsl:value-of select=\"concat('#', substring(name(), 3, 2))\"/></xsl:attribute></xsl:if>"+
+	         "<xsl:if test=\"string-length(name())=8\"><xsl:attribute name=\"rend\"><xsl:value-of select=\"concat('#', substring(name(), 3, 3))\"/></xsl:attribute></xsl:if>"+                    
+	         "<xsl:attribute name=\"ana\"><xsl:choose><xsl:when test=\"contains(name(),'_')\"><xsl:value-of select=\"concat('#',substring(name(),4))\"></xsl:value-of></xsl:when>"+
+			 "<xsl:when test=\"string-length(name())=6\"><xsl:value-of select=\"concat('#', substring(name(), 5))\"/></xsl:when>"+
+			 "<xsl:when test=\"string-length(name())=7\"><xsl:value-of select=\"concat('#', substring(name(), 5))\"/></xsl:when>"+  
+	 		 "<xsl:when test=\"string-length(name())=8\"><xsl:value-of select=\"concat('#', substring(name(), 6))\"/></xsl:when>"+               
+	         "<xsl:otherwise><xsl:value-of select=\"concat('#',substring(name(),3))\"/></xsl:otherwise></xsl:choose></xsl:attribute>"+
+	     	 "<xsl:if test=\"contains(name(),'_')\"><xsl:attribute name=\"corresp\"><xsl:value-of select=\"concat('#./preceding-sibling::',substring(name(),4),'[1]')\"/></xsl:attribute></xsl:if>"+   
+	         "<xsl:apply-templates select=\"*|@*|text()\"/>"+            
+	         "</xsl:element></xsl:template>"+
+	         "<xsl:template match=\"t:publicationStmt\">"+
+	         "<xsl:copy><authority>Cantus</authority><xsl:apply-templates select=\".//t:idno\"/>"+
+	         "</xsl:copy></xsl:template></xsl:stylesheet>";
 
     public final static int INFO = 0;
     public final static int WARN = 1;

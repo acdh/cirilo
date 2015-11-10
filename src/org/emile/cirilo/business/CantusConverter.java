@@ -18,7 +18,7 @@ import org.jdom.xpath.XPath;
 public class CantusConverter {
 	 
 	 
-	 public enum Types { EOT, TYPUS, TIMETERM_1, TIMETERM_2, TEXT, CANTO, NEUME, PAGE, WHITESPACE, DOT, COMMA, PERSON, PLACE, FUNCTION, RASUR, RUSUR, MASUR, EOA, EOI, CHOICE, DEL, INS, MARGINAL, COMMENT};
+	 public enum Types { EOT, TYPUS, TIMETERM_1, TIMETERM_2, TEXT, CANTO, NEUME, PAGE, WHITESPACE, DOT, COMMA, PERSON, PLACE, FUNCTION, RASUR, RUSUR, MASUR, EOA, EOI, CHOICE, DEL, INS, MARGINAL, COMMENT, BVARIANT, EVARIANT}; 
 	 EnumSet<Types> Typus = EnumSet.of(Types.CANTO, Types.NEUME, Types.TYPUS, Types.WHITESPACE);
 	 EnumSet<Types> Emendations = EnumSet.of(Types.RASUR, Types.RUSUR, Types.MASUR);
 	 EnumSet<Types> Entities = EnumSet.of(Types.PERSON, Types.PLACE, Types.FUNCTION, Types.DEL);
@@ -41,7 +41,11 @@ public class CantusConverter {
      private Element currSegment_2;
      private Element ins;
   
-     public CantusConverter() {			
+	 private String VARIANT = "";
+     private int varno = 0;
+     
+     public CantusConverter(String VARIANT) {
+    	this.VARIANT = VARIANT; 
 	  	this.readConfig();
      }
 	  
@@ -56,7 +60,21 @@ public class CantusConverter {
 				format.setEncoding("UTF-8");
 				op = new XMLOutputter(format);
 				
-				XPath xPath = XPath.newInstance("//t:body/t:div");								
+				XPath xPath = XPath.newInstance("//t:editionStmt/t:edition"); 							
+				xPath.addNamespace(Common.xmlns_tei_p5);
+				if (!VARIANT.isEmpty()) {
+					Element edition = (Element) xPath.selectSingleNode(target);
+					edition.removeChildren("date",Common.xmlns_tei_p5);
+					Element witDetail = new Element("witDetail",Common.xmlns_tei_p5);
+					witDetail.setAttribute("wit",VARIANT);
+					edition.addContent(witDetail);
+				}	
+				xPath = XPath.newInstance("//t:titleStmt"); 							
+				xPath.addNamespace(Common.xmlns_tei_p5);
+				Element ts = (Element) xPath.selectSingleNode(target);
+				ts.removeChildren("author",Common.xmlns_tei_p5);
+
+                xPath = XPath.newInstance("//t:body/t:div");								
 				xPath.addNamespace(Common.xmlns_tei_p5);
 	  	        List <Element> divs = xPath.selectNodes(tei);
 
@@ -102,6 +120,7 @@ public class CantusConverter {
 	  	  	  		        	.replaceAll("[\n\r]","")
 	  	        				.replaceAll("[{]","!")
 	  	        				.replaceAll("[}]","|")
+	  	        				.replaceAll("#", "~") 
 	  	        				.replaceAll("<hi rend=\"italic strikethrough.*?>.+?</hi>","")
 	  	        				.replaceAll("<hi rend=\"strikethrough.*?>","ü")
 	  	        				.replaceAll("<hi rend=\"Person.*?>","Ö")
@@ -131,6 +150,30 @@ public class CantusConverter {
 	  	        				.replaceAll("  "," ")
 	  	        		        .replaceAll("§<", "§ <");
 
+	  	        		if (!VARIANT.isEmpty()) {
+	  	        			Pattern p0 = Pattern.compile("(//)(.*?)(//)");
+	  	        			Matcher m0 = p0.matcher(buf);
+	  	        			StringBuffer sb = new StringBuffer();
+  	  						  	  				
+	  	        			while (m0.find())  {
+	  	        				String variant = "";
+	  	        				String s = m0.group();
+	  	        				s = s.substring(2,s.length()-1);
+	  	        				Pattern p1 = Pattern.compile("(.*?)~(.*?)/");
+  		  	  					Matcher m1 = p1.matcher(s);
+  		  	  					while (m1.find()) {
+  		  	  						String[] a = m1.group().substring(0, m1.group().length()-1).split("~");
+  		  	  						if (a[0].contains(VARIANT)) {
+  		  	  							variant = a[1];
+  		  	  							break;
+  		  	  						}
+  		  	  					}  	  						
+  		  	  					m0.appendReplacement(sb,"%"+ variant+"~");
+	  	        			}
+	  	        			m0.appendTail(sb);
+	  	        			buf = sb.toString();
+	  	        		}
+  	  					  	  					
 	  	        		ArrayList<String> segs = new ArrayList<String>();
 	  	        		String line = "";
 	  	        		boolean inline = false;
@@ -230,6 +273,20 @@ public class CantusConverter {
                                     if (parser.getMarginalMode()) currSegment_2.setAttribute("subtype","marginal");                                
                                     currSegment_1.addContent(currSegment_2);
                                     mode = true;
+	  	        				}
+	  	        				
+	  	        				if (q == parser.types.BVARIANT) { 
+	  	        					Element ms = new Element("milestone",Common.xmlns_ntei_p5);
+	  	        					ms.setAttribute("type", "variant");
+	  	        					ms.setAttribute("id", "V."+new Integer(++varno).toString(),Common.xmlns_xml);  	        					
+                                    if (currSegment_2 == null) currSegment_1.addContent(ms); else currSegment_2.addContent(ms);
+                                    continue;
+	  	        				}
+
+	  	        				if (q == parser.types.EVARIANT) { 
+	  	        					Element ms = new Element("milestone",Common.xmlns_ntei_p5);
+                                    if (currSegment_2 == null) currSegment_1.addContent(ms); else currSegment_2.addContent(ms);
+	  	        					continue;
 	  	        				}
 	  	        				
 	  	        				if (q == parser.types.INS) {
@@ -343,12 +400,26 @@ public class CantusConverter {
 	  	        	}
 	  	        }
 	  		
-	  	        target = builder.build( new StringReader(op.outputString(target).replaceAll("[\n\r]","").replaceAll("°",".")
-	           			.replaceAll("<ab> </ab>","")
-	  	        		.replaceAll("[+]","<unclear />")));	
-
+      			Pattern p0 = Pattern.compile("<seg ana=\"#strikethrough\">([A-Z]{2,6})</seg>\\s+<l:NO xmlns:l=\"http://cantus.oeaw.ac.at\">([A-Za-z\\. ]*)</l:NO>\\s+<seg ana=\"#strikethrough\"></seg>(\\.{0,1})");
+       			Matcher m0 = p0.matcher(op.outputString(target).replaceAll("\\s"," ").replaceAll("°",".")
+		     			.replaceAll("<milestone (type=\"variant\" xml:id=\"V\\.[0-9]*\") />","<seg $1>")
+		       			.replaceAll("<milestone />","</seg>")
+		     			.replaceAll("ö\\+","<seg subtype=\"supplied\">")
+		     			.replaceAll("\\+ö","</seg>")
+		     			.replaceAll("<ab> </ab>","")
+		        		.replaceAll("[+]","<unclear />"));
+       			
+       			StringBuffer sb = new StringBuffer();
+						  	  				
+       			while (m0.find())  {        				
+ 					m0.appendReplacement(sb,"<del><l:"+m0.group(1)+" xmlns:l=\"http://cantus.oeaw.ac.at\">"+m0.group(2)+"</l:"+m0.group(1)+">"+ (m0.groupCount() > 2 ? "." : "")+"</del>");
+       			}
+       			m0.appendTail(sb);
+	  	        
+      			target = builder.build(new StringReader(sb.toString()));
+	  	        
 	        } catch (Exception e) {
-	        	e.printStackTrace();	       	
+	        	e.printStackTrace();
 	        }
 	        return target;
 
@@ -711,7 +782,7 @@ public class CantusConverter {
 			
 		  public Types types;
 		  
-		  public static final String SEPARATOR = " ,.$§(";
+		  public static final String SEPARATOR = " ,.$§(%~";
 		  		  
 		  private String buf;
 		  private String entity;
@@ -761,6 +832,12 @@ public class CantusConverter {
 			  if (ch.equals(".")) {
 				  entity = ".";
 				  return log(types.DOT);
+			  } else if (ch.equals("%")) { 
+				  entity = "";
+				  return log(types.BVARIANT); 
+			  } else if (ch.equals("~")) {  
+				  entity = "";
+				  return log(types.EVARIANT);
 			  } else if (ch.equals(",")) { 
 				  entity = ",";
 				  return log(types.COMMA);
@@ -888,6 +965,8 @@ public class CantusConverter {
 				  if (TYPES.contains(entity)) {
 						 return log(types.TYPUS);				  
 				  }
+				  
+				  entity = entity.replaceAll("\\[","ö+").replaceAll("\\]","+ö");
 				  return log(types.TEXT);
 			  }
 		  	
