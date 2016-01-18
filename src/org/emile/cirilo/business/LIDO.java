@@ -56,15 +56,6 @@ import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
 
-import java.io.*;
-
-import javax.xml.transform.Source;
-import javax.xml.validation.*;
-
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-
 public class LIDO {
 
     private static int cc = 0;

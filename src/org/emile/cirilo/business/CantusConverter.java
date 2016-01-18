@@ -400,11 +400,11 @@ public class CantusConverter {
 	  	        	}
 	  	        }
 	  		
-      			Pattern p0 = Pattern.compile("<seg ana=\"#strikethrough\">([A-Z]{2,6})</seg>\\s+<l:NO xmlns:l=\"http://cantus.oeaw.ac.at\">([A-Za-z\\. ]*)</l:NO>\\s+<seg ana=\"#strikethrough\"></seg>(\\.{0,1})");
+      			Pattern p0 = Pattern.compile("<seg ana=\"#strikethrough\">([A-Z]{2,6})</seg>\\s+<l:NO xmlns:l=\"http://cantus.oeaw.ac.at\">([A-Za-z\\. ]*)</l:NO>\\s+<seg ana=\"#strikethrough\">[\\.¬]{0,1}</seg>[\\.¬]{0,1}");
        			Matcher m0 = p0.matcher(op.outputString(target).replaceAll("\\s"," ").replaceAll("°",".")
 		     			.replaceAll("<milestone (type=\"variant\" xml:id=\"V\\.[0-9]*\") />","<seg $1>")
 		       			.replaceAll("<milestone />","</seg>")
-		     			.replaceAll("ö\\+","<seg subtype=\"supplied\">")
+		     			.replaceAll("ö\\+","<seg type=\"supplied\">")
 		     			.replaceAll("\\+ö","</seg>")
 		     			.replaceAll("<ab> </ab>","")
 		        		.replaceAll("[+]","<unclear />"));
@@ -412,11 +412,11 @@ public class CantusConverter {
        			StringBuffer sb = new StringBuffer();
 						  	  				
        			while (m0.find())  {        				
- 					m0.appendReplacement(sb,"<del><l:"+m0.group(1)+" xmlns:l=\"http://cantus.oeaw.ac.at\">"+m0.group(2)+"</l:"+m0.group(1)+">"+ (m0.groupCount() > 2 ? "." : "")+"</del>");
+ 					m0.appendReplacement(sb,"<del><l:"+m0.group(1)+" xmlns:l=\"http://cantus.oeaw.ac.at\">"+m0.group(2)+"</l:"+m0.group(1)+">"+ (m0.groupCount() > 2 ? m0.group(3) : "")+"</del>");
        			}
        			m0.appendTail(sb);
 	  	        
-      			target = builder.build(new StringReader(sb.toString()));
+      			target = builder.build(new StringReader(sb.toString().replaceAll("¬", "")));
 	  	        
 	        } catch (Exception e) {
 	        	e.printStackTrace();
@@ -782,7 +782,7 @@ public class CantusConverter {
 			
 		  public Types types;
 		  
-		  public static final String SEPARATOR = " ,.$§(%~";
+		  public static final String SEPARATOR = " ,.$§(%~¬";
 		  		  
 		  private String buf;
 		  private String entity;
@@ -829,8 +829,8 @@ public class CantusConverter {
 			  ch = String.valueOf(buf.charAt(bp++));
 			  conjecture = false;
 			  
-			  if (ch.equals(".")) {
-				  entity = ".";
+			  if (ch.equals(".") || ch.equals("¬")) {
+				  entity = ch;
 				  return log(types.DOT);
 			  } else if (ch.equals("%")) { 
 				  entity = "";

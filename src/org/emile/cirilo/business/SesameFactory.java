@@ -27,12 +27,12 @@ public class SesameFactory {
 	public SesameFactory () {
 		try {
 			CPropertyService props=(CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);	
-			String ses = (String) props.getProperty("user", "sesame.server");
 			User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
+			String ses = user.getSesameUrl();
 			String host = user.getUrl();						
 			sparqlEndPoint = host.substring(0,host.lastIndexOf("/")+1)+"openrdf-sesame";
 			this.manager = new RemoteRepositoryManager(sparqlEndPoint);
-			this.manager.setUsernameAndPassword(user.getUser(), user.getPasswd());
+			this.manager.setUsernameAndPassword(user.getSesameUser(), user.getSesamePasswd());
 			this.manager.initialize();	 				           	
 			this.repository = this.manager.getRepository("FEDORA"); 	
 			this.repository.initialize(); 	       	

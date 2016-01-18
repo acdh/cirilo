@@ -35,6 +35,9 @@ import org.emile.cirilo.Common;
 import java.awt.event.*;
 import java.io.File;
 
+import javax.naming.Context;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 import javax.swing.*;
 
 import java.util.*;
@@ -115,6 +118,34 @@ public class HandleDialog extends CDialog {
  				  if (resolver.checkAuthentication(auth)) {
  					  Handles hdl = (Handles) CServiceProvider.getService( ServiceNames.HANDLESCLASS );
  					  hdl.setHandleKey(buf);
+ 					  
+ 						User user = (User) CServiceProvider.getService( ServiceNames.CURRENT_USER );
+
+ 						if (user.viaLDAP()) {
+ 							Properties cprops = new Properties();
+ 							cprops.load(Cirilo.class.getResourceAsStream("cirilo.properties"));
+
+ 							String repository = user.getRepository();
+ 							Hashtable env = new Hashtable();
+ 							env.put( Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory" );
+ 							env.put( Context.PROVIDER_URL, cprops.getProperty( repository + ".ldap.providerURL" ) );
+ 							env.put( Context.SECURITY_PRINCIPAL, "cn=" + user.getUser() + "," + cprops.getProperty(repository + ".ldap.userDN" ) + "," + cprops.getProperty(repository + ".ldap.baseDN" ) );
+ 							env.put( Context.SECURITY_CREDENTIALS, user.getPasswd() );
+ 							if ( cprops.getProperty(repository + ".ldap.providerURL" ).startsWith( "ldaps://" ) ) {
+ 								env.put( "java.naming.ldap.factory.socket", "org.emile.cirilo.utils.CiriloSocketFactory" );
+ 							}
+ 							else {
+ 								env.put( Context.SECURITY_AUTHENTICATION, "simple" );
+ 							}
+
+ 							DirContext ctx = new InitialDirContext( env );
+ 							
+ 							String dns = "cn=handles," + cprops.getProperty( repository + ".ldap.objectDN" ) + "," + cprops.getProperty( repository + ".ldap.baseDN" );
+ 							ctx.rebind( dns, hdl );
+ 							ctx.close();
+ 						}	
+
+ 					  
  					  JOptionPane.showMessageDialog (getCoreDialog(),res.getString("hdlvalid"));
  				  } 
  			  } catch (Exception q)	  {

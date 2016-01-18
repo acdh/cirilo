@@ -27,6 +27,8 @@ import org.emile.cirilo.utils.Split;
 import org.emile.cirilo.business.*;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.dialog.DialogNames;
+import org.emile.cirilo.dialog.LDAPLoginDialog;
+import org.emile.cirilo.dialog.LoginDialog;
 import org.emile.cirilo.dialog.MakeEnvironmentDialog;
 import org.emile.cirilo.dialog.OptionsDialog;
 import org.emile.cirilo.business.IIIFFactory;
@@ -40,8 +42,7 @@ import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
 import voodoosoft.jroots.core.CPropertyService;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import com.asprise.util.ui.progress.ProgressDialog;
 
@@ -56,6 +57,7 @@ import java.io.OutputStreamWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.naming.*;
@@ -70,7 +72,9 @@ import javax.swing.*;
  * @created 15.März 2011
  */
 public class CiriloFrame extends JFrame implements IEventHandler {
-    private static final Log LOG = LogFactory.getLog(CiriloFrame.class);
+
+	private static Logger log = Logger.getLogger(CiriloFrame.class);
+
     
 	/**
 	 *Constructor for the CiriloFrame object
@@ -234,12 +238,14 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 				saveProperties("harvester",se.getHarvesterDialogProperties());
 				saveProperties("templater",se.getTemplaterDialogProperties());
 				saveProperties("options",se.getOptionsDialogProperties());
-
+    
 				IIIFFactory i3f = (IIIFFactory) CServiceProvider.getService(ServiceNames.I3F_SERVICE);
 			    i3f.close();
   
 			    SkosifyFactory skosify = (SkosifyFactory) CServiceProvider.getService(ServiceNames.SKOSIFY_SERVICE);
     			skosify.close();
+
+    			log.info("Program terminated normally");
 
 			}
 			catch ( Exception ex ) {
@@ -346,21 +352,27 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 	public void handleLogin(ActionEvent e) {
 
 		try {
-			LoginDialog loLogin;
-
-
-			loLogin = (LoginDialog) CServiceProvider.getService(DialogNames.LOGIN_DIALOG);
-			loLogin.set(false);
-			loLogin.open();
 			
-			if (!loLogin.isConnected()) {
-				try {
-					Repository.getUser();
-				} catch (Exception ex) {
+			User user = (User) CServiceProvider.getService( ServiceNames.CURRENT_USER );
+			
+			if (!user.viaLDAP()) {
+				LoginDialog loLogin;				
+				loLogin = (LoginDialog) CServiceProvider.getService(DialogNames.LOGIN_DIALOG);
+				loLogin.set(false);
+				loLogin.open();
+				if (!loLogin.isConnected()) {
 					System.exit(-1);
 				}
-			}
-
+			} else {					
+				LDAPLoginDialog loLDAPLogin;
+				loLDAPLogin = (LDAPLoginDialog) CServiceProvider.getService(DialogNames.LDAPLOGIN_DIALOG);
+				loLDAPLogin.set(false);
+				loLDAPLogin.open();
+				if (loLDAPLogin.isCanceled()) {
+					System.exit(-1);
+				}
+			}	
+						
 			EditObjectDialog dlg = (EditObjectDialog) CServiceProvider.getService(DialogNames.EDITOBJECT_DIALOG);
 			dlg.refresh();
 

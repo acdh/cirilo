@@ -59,6 +59,8 @@ import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
 import org.jdom.filter.ElementFilter;
 import org.jdom.Document;
@@ -167,6 +169,7 @@ public class EditObjectDialog extends CDialog {
 				    		  if(pd.isCanceled()) {break;}		
 				    		  String pid =(String)loTable.getValueAt(selected[i],0);
 				    		  String model =(String)loTable.getValueAt(selected[i],2);
+				    		  String xuser =(String)loTable.getValueAt(selected[i],4);
 
 							  logger.write( new java.util.Date()  +" " + pid + " ");									                                    	
 				    		  
@@ -179,15 +182,42 @@ public class EditObjectDialog extends CDialog {
 				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
 					    					 if (!pid.contains("cirilo:") && model.contains("cm:TEI")) { 
 					    						org.jdom.Document tei = db.build (Repository.getDatastream(pid, "TEI_SOURCE"));
-	  			    	            		   	TEI t = new TEI(null,false,true);
+	  			    	            		   	TEI t = new TEI(null,false,false);
 	  			    	            		   	t.set(outputter.outputString(tei));
 	  			    	            		   	t.setPID(pid);
 	  			    	            		   	t.validate(null, null);
 	   	    				  		   		   	Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", new String(t.toString().getBytes("UTF-8"),"UTF-8"));
 	  				    					 }   
+							    			  if (!pid.contains("cirilo:") && model.contains("cm:OAIRecord")) {
+							    					byte[] stylesheet = null;
+							    		        	try {
+							    			        	stylesheet =  Repository.getDatastream("cirilo:"+xuser, "RECORDtoEDM" , "");
+							    			        } catch (Exception ex) {
+						    			           		try { 
+						    			           			stylesheet =  Repository.getDatastream("cirilo:Backbone", "RECORDtoEDM" , "");
+						    			        		} catch (Exception q) {
+						    			        			q.printStackTrace();
+						    			        			continue;
+						    			        		}
+							    		          	}
+							    		        	try {					    		        	
+							    		        		JDOMSource in = new JDOMSource(builder.build(new StringReader(new String(Repository.getDatastream(pid, "RECORD","")))));
+							    		        		JDOMResult out = new JDOMResult();
+													
+							    		        		System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
+							    		        		Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet))));
+							    		        		transformer.transform(in, out);
+							    		        		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
+							    		        		String edm = outputter.outputString(out.getResult());
+							    		        		Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm);
+							    		        	} catch (Exception e) {
+							    		        		e.printStackTrace();
+							    		        		continue;
+							    		        	}	
+							    			 }					    					 
 					    					 if (!pid.contains("cirilo:") && model.contains("cm:LIDO")) { 
 				    						    org.jdom.Document lido = db.build (Repository.getDatastream(pid, "LIDO_SOURCE"));
-	  			    	            		   	LIDO l = new LIDO(null,false,true);
+	  			    	            		   	LIDO l = new LIDO(null,false,false);
 	  			    	            		   	l.set(outputter.outputString(lido));
 	  			    	            		   	l.setPID(pid);
 	  			    	            		   	l.validate(null, null);

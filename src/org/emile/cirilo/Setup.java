@@ -98,7 +98,7 @@ public class Setup {
 		ReplaceDialog loReplaceDialog;
 		SelectLayoutDialog loSelectLayoutDialog;;
 		LoginDialog loLoginDialog;
-		LoginIIPSDialog loLoginIIPSDialog;
+		LDAPLoginDialog loLDAPLoginDialog;
 		CreateDatastreamDialog loCreateDatastreamDialog;
 		LoginExistDialog loLoginExistDialog;
 		IngestExcelDialog loIngestExcelDialog;
@@ -198,10 +198,10 @@ public class Setup {
 		loLoginDialog.setGuiManager(aoGuiMan);
 		CServiceProvider.addService(loLoginDialog, DialogNames.LOGIN_DIALOG);
 
-		// LoginIIPSDialog
-		loLoginIIPSDialog = (LoginIIPSDialog) loDialogCreator.createDialog(LoginIIPSDialog.class, "GuiLoginIIPSDialog", res.getString("loginiips"), DialogNames.LOGINIIPS_DIALOG);
-		loLoginIIPSDialog.setGuiManager(aoGuiMan);
-		CServiceProvider.addService(loLoginIIPSDialog, DialogNames.LOGINIIPS_DIALOG);
+		// LDAPLoginDialog
+		loLDAPLoginDialog = (LDAPLoginDialog) loDialogCreator.createDialog(LDAPLoginDialog.class, "GuiLDAPLoginDialog", res.getString("login"), DialogNames.LDAPLOGIN_DIALOG);
+		loLDAPLoginDialog.setGuiManager(aoGuiMan);
+		CServiceProvider.addService(loLDAPLoginDialog, DialogNames.LDAPLOGIN_DIALOG);
 		
 		// OptionsDialog
 		loOptionsDialog = (OptionsDialog) loDialogCreator.createDialog(OptionsDialog.class, "GuiOptionsDialog", res.getString("preferences"), DialogNames.OPTIONS_DIALOG);
@@ -291,7 +291,7 @@ public class Setup {
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiIngestExcelDialog", "GuiIngestExcelDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiTextEditor", "GuiTextEditor");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiLoginDialog", "GuiLoginDialog");
-		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiLoginIIPSDialog", "GuiLoginIIPSDialog");
+		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiLDAPLoginDialog", "GuiLDAPLoginDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiCreateDatastreamDialog", "GuiCreateDatastreamDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiLoginExistDialog", "GuiLoginExistDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiMakeEnvironmentDialog", "GuiMakeEnvironmentDialog");

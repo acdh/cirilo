@@ -161,6 +161,9 @@ public class ImportDialog extends CDialog {
 					int ff = 0;
 					String cm = null;
 					try {
+
+			            System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
+						
 						CPropertyService props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
 						res =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
 						TemplateSubsystem temps = (TemplateSubsystem) CServiceProvider.getService(ServiceNames.TEMPLATESUBSYSTEM);
@@ -400,6 +403,7 @@ public class ImportDialog extends CDialog {
 					} catch (Exception ex) {
 					}
 					finally {
+		        		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");
 						getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					}
 			

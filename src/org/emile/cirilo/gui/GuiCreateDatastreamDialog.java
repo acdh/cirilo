@@ -226,6 +226,12 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 			if ( ch >= 'A' && ch <= 'Z' ) {
 				return;
 			}
+			if ( ch == 't' ) {
+				return;
+			}
+			if ( ch == 'o' ) {
+				return;
+			}
 			if ( ch >= 'a' && ch <= 'z' ) {
 				e.setKeyChar( (char) ( ch - 32 ) );
 				return;

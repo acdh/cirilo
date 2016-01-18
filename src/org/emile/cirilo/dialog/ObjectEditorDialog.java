@@ -564,6 +564,16 @@ public class ObjectEditorDialog extends CDialog {
 								Repository.modifyDatastreamByValue(pid, "LIDO_SOURCE", "text/xml", l.toString());
 							    refresh(true);
 							} else { ret = false; }
+ 		    		} else if (dsid.equals("STORY")) {
+		    				STORY s = new STORY(null,false,true);
+		    				s.setUser(this.owner);
+		    				s.set(chooser.getSelectedFile().getAbsolutePath(), false);
+		    				if (s.isValid()) {
+		    					s.setPID(pid);
+		    					s.validate(null, null);
+		    					Repository.modifyDatastreamByValue(pid, "STORY", "text/xml", s.toString());
+		    					refresh(true);
+		    				} else { ret = false; }
  				    } else if (dsid.equals("METS_SOURCE")) {
 						METS m = new METS(null,false,true);
 						m.setUser(this.owner);

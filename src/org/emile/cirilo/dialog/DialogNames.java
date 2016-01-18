@@ -42,7 +42,7 @@ public class DialogNames {
 	public final static CServiceName LOCATION_DIALOG = new CServiceName("LocationDialog");
 	public final static CServiceName TEXTEDITOR = new CServiceName("TextEditor");
 	public final static CServiceName LOGIN_DIALOG = new CServiceName("LoginDialog");
-	public final static CServiceName LOGINIIPS_DIALOG = new CServiceName("LoginIIPSDialog");
+	public final static CServiceName LDAPLOGIN_DIALOG = new CServiceName("LDAPLoginDialog");
 	public final static CServiceName LOGIN_EXISTDIALOG = new CServiceName("LoginExistDialog");
 	public final static CServiceName MAKEENVIRONMENT_DIALOG = new CServiceName("MakeEnvironmentDialog");
 	public final static CServiceName TRANSFORM_DIALOG = new CServiceName("TransformDialog");

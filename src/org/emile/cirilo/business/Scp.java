@@ -59,8 +59,10 @@ public class Scp {
 			   user    = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
 			   
 			   
-			   LoginIIPSDialog loLoginIIPS;
-			   loLoginIIPS = (LoginIIPSDialog) CServiceProvider.getService(DialogNames.LOGINIIPS_DIALOG);
+/*
+			   LDAPLoginDialog loLoginIIPS;
+ 
+			   loLoginIIPS = (LDAPLoginDialog) CServiceProvider.getService(DialogNames.LOGINIIPS_DIALOG);
 
 			   while (true) {
 				   
@@ -77,14 +79,16 @@ public class Scp {
                         } catch (Exception q) {}
                         
     				    loLoginIIPS.open();
-                        if (loLoginIIPS.isCanceled()) break;
+                      if (loLoginIIPS.isCanceled()) break;
 
 			   }	   
+			  */ 
                         
 		   } catch (Exception e){
 			   return false;
 		   }
 		   return false;
+
 		   
 	   }
 	

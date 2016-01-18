@@ -127,9 +127,7 @@ public class LoginDialog extends CDialog {
 		ArrayList groups = new ArrayList(16);
 		ArrayList member = new ArrayList(16);
 
-		try {
-			props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
-			
+		try {			
 			protocol = (String) ((JComboBox) getGuiComposite().getWidget("jcbProtocol")).getSelectedItem();
 			passwd = (String) moGA.getInput("jpfPassword");
 			user = (String) moGA.getInput("jtfUserID");
@@ -138,12 +136,13 @@ public class LoginDialog extends CDialog {
 			group = "";
 								
   		    try {
+			    props.setProperty("user", "last.repository", server);
 			    props.setProperty("user", "current.owner", user);
 			    props.setProperty("user", "fedora.server", server);
 			    props.setProperty("user", "fedora.protocol", protocol);			    
 			    props.setProperty("user", "fedora.context", context);
 			    String sesame = props.getProperty("user", "sesame.server");
-			    if (sesame == null) props.setProperty("user", "sesame.server", "http://"+server+"/openrdf-sesame");
+			    if (sesame == null) props.setProperty("user", "sesame.server", "http://"+server+"/bigdata");
 				props.saveProperties("user");
 
   		    } catch (Exception e) {}
@@ -178,7 +177,9 @@ public class LoginDialog extends CDialog {
                 member.add("editor");			            	
             }
             
-			User us = new User(user, passwd, server);
+			User us = new User(user, passwd, user, passwd, server, "");
+		    us.setSesameAuth(user, passwd, props.getProperty("user", "sesame.server"));
+
 			
 			try {
 				CServiceProvider.removeService(ServiceNames.CURRENT_USER);
@@ -251,7 +252,7 @@ public class LoginDialog extends CDialog {
 
 			String user = "";
 			// setup widgets
-			CPropertyService props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
+			props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
 			try {
 				user = props.getProperty("user", "current.owner");
 				server = props.getProperty("user", "fedora.server");

@@ -40,7 +40,6 @@ import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
 
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
-import javax.xml.xpath.XPathFactoryConfigurationException;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -51,12 +50,7 @@ import org.jdom.input.DOMBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import java.io.*;
 
-import javax.xml.parsers.*;
-
-import org.w3c.dom.*;
-import org.xml.sax.*;
 
 
 /**

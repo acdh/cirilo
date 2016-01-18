@@ -35,6 +35,29 @@ public class Handles implements java.io.Serializable {
        
     public byte[] getHandleKey() { return HandleKey; }
     public void setHandleKey(byte[] key) { HandleKey = key; }
+    
+    /**
+	 *  Description of the Method
+	 *
+	 * @param  inputStream                 Description of the Parameter
+	 * @exception  ClassNotFoundException  Description of the Exception
+	 * @exception  IOException             Description of the Exception
+	 */
+	private void readObject(ObjectInputStream inputStream)
+		throws ClassNotFoundException, IOException {
+		inputStream.defaultReadObject();
+	}
+
+	/**
+	 *  Description of the Method
+	 *
+	 * @param  outputStream     Description of the Parameter
+	 * @exception  IOException  Description of the Exception
+	 */
+	private void writeObject(ObjectOutputStream outputStream)
+		throws IOException {
+		outputStream.defaultWriteObject();
+	}
 
 }
 

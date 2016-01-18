@@ -41,11 +41,11 @@ public class BlazeGraphFactory {
 	  try {	
 		CPropertyService props=(CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
 		User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
-		String host = user.getUrl();						
+		String host = user.getSesameUrl();						
 		sparqlEndPoint = host.substring(0,host.lastIndexOf("/")+1)+"bigdata";
 		client = new HttpClient();
 		AuthenticationStore auth = client.getAuthenticationStore();
-		auth.addAuthentication(new BasicAuthentication(new java.net.URI(sparqlEndPoint), BLAZEGRAPH, user.getUser(), user.getPasswd()));		    		   			
+		auth.addAuthentication(new BasicAuthentication(new java.net.URI(sparqlEndPoint), BLAZEGRAPH, user.getSesameUser(), user.getSesamePasswd()));		    		   			
 		this.client.start();
 		this.repository = new RemoteRepositoryManager(sparqlEndPoint, false, client, null);
 	  } catch (Exception e) {		  
@@ -122,11 +122,8 @@ public class BlazeGraphFactory {
 
 	public boolean update(File fp, String context) {
 		try {
-			RemoveOp ro = new RemoveOp(null,null,null,new org.openrdf.model.impl.URIImpl(context));
-			AddOp ao= new AddOp(fp, RDFFormat.RDFXML);
-			ao.setContext(new org.openrdf.model.impl.URIImpl(context));			
-			this.repository.getRepositoryForDefaultNamespace().remove(ro);		
-			this.repository.getRepositoryForDefaultNamespace().add(ao);
+			remove(context);
+			insert(fp, context);
 		} catch (Exception e) {
             return  false;
 		}    

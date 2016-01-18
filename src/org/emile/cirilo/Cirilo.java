@@ -22,22 +22,12 @@ package org.emile.cirilo;
 import org.emile.cirilo.gui.*;
 import org.emile.cirilo.dialog.*;
 import org.emile.cirilo.business.Session;
-import org.emile.cirilo.ecm.repository.FedoraSoapImpl;
-import org.emile.cirilo.ecm.repository.FedoraUserToken;
-import org.emile.cirilo.ecm.repository.Repository;
-import org.emile.cirilo.ecm.templates.TemplateSubsystem;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.business.*;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
 
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.*;
@@ -47,37 +37,20 @@ import voodoosoft.jroots.gui.CGuiManager;
 
 import com.digitprop.tonic.*;
 
-import fedora.client.FedoraClient;
-
 import javax.swing.JFrame;
-import javax.swing.UIManager;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import java.applet.*;
 
 import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import java.net.URL;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-import org.apache.sanselan.*;
-import org.apache.sanselan.common.*;
-import org.geonames.*;
-
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
 
 
 /**
@@ -139,7 +112,9 @@ class CiriloApplet extends JApplet {
  * @created 07. September 2006
  */
 class CiriloWindow extends JPanel {
-	static final long serialVersionUID = 3L;
+
+    private static Logger log = Logger.getLogger(CiriloWindow.class);
+	private static final long serialVersionUID = 3L;
 
 	/**
 	 *Constructor for the CiriloWindow object
@@ -175,6 +150,7 @@ class CiriloWindow extends JPanel {
 	 */
 	public class CiriloApp extends CApplication {
 
+		
 		private ArrayList<String> files;
 
 		/**
@@ -192,8 +168,16 @@ class CiriloWindow extends JPanel {
 
 			try {
 			
+			    PropertyConfigurator.configure(Cirilo.class.getResource("log4j.properties"));
+				
+			    log.info("Program started");
+			    
 				Properties p = new Properties();
-				p.load(Cirilo.class.getResourceAsStream("cirilo.ini"));
+				p.load(Cirilo.class.getResourceAsStream("cirilo.properties"));
+				String s = p.getProperty("authentication.method");
+				String lang =  p.getProperty("interface.language");
+				boolean ldap = s != null && s.contains("ldap");
+				
 				CPropertyService props = new CPropertyService();
 				props.cacheProperties(p, "system");
 				String home = System.getenv("USERPROFILE");	
@@ -219,11 +203,13 @@ class CiriloWindow extends JPanel {
 					props.cacheProperties(home, "user");
 				} catch (Exception e) {}
 				
-				CServiceProvider.addService(props, ServiceNames.PROPERTIES);
-				
-				String lang =props.getProperty("user","interface.language");
-				if (lang == null) lang = "en";
-
+				CServiceProvider.addService(props, ServiceNames.PROPERTIES);				
+				s  = props.getProperty("user","interface.language");
+				if (s != null) {
+					lang = s;
+				}
+				if (lang == null || !lang.equals("de")) lang = "en";
+			
 				ResourceBundle  res = Common.getResourceBundle(lang);				
 				CServiceProvider.addService(res,ServiceNames.RESOURCES);
 					
@@ -253,18 +239,26 @@ class CiriloWindow extends JPanel {
 				
 				CServiceProvider.addService(preallocations, ServiceNames.DCMI_PREALLOCATIONS);
 
-				
-				LoginDialog loLogin;
-				
-				loLogin = (LoginDialog) CServiceProvider.getService(DialogNames.LOGIN_DIALOG);
-				loLogin.set(true);
-				loLogin.open();
+				if (!ldap) {
+					LoginDialog loLogin;				
+					loLogin = (LoginDialog) CServiceProvider.getService(DialogNames.LOGIN_DIALOG);
+					loLogin.set(true);
+					loLogin.open();
+					loSplash.dispose();
+					if (!loLogin.isConnected()) {
+						System.exit(-1);
+					}
+				} else {					
+					LDAPLoginDialog loLDAPLogin;
+					loLDAPLogin = (LDAPLoginDialog) CServiceProvider.getService(DialogNames.LDAPLOGIN_DIALOG);
+					loLDAPLogin.set(true);
+					loLDAPLogin.open();
+					loSplash.dispose();
+					if (loLDAPLogin.isCanceled()) {
+						System.exit(-1);
+					}
+				}	
 
-				
-				loSplash.dispose();
-				if (!loLogin.isConnected()) {
-					System.exit(-1);
-				}
 				
 				// finish
 
@@ -272,7 +266,7 @@ class CiriloWindow extends JPanel {
 				JFrame loFrame = (JFrame) CServiceProvider.getService(ServiceNames.FRAME_WINDOW);
 				loFrame.setVisible(true);
 				loFrame.toFront();				
-				loFrame.setTitle(title);
+				loFrame.setTitle(title + " - "+ props.getProperty("user", "last.repository"));
 
 				CEventListener.setBlocked(false);
 

@@ -344,6 +344,7 @@ public class HarvesterDialog extends CDefaultDialog {
 						xpath.addNamespace(Common.xmlns_dc);
 						xpath.addNamespace(Common.xmlns_oai);
 						xpath.addNamespace(Common.xmlns_edm);
+						xpath.addNamespace(Common.xmlns_europeana);
 						xpath.addNamespace(Common.xmlns_tei_p5);
 						xpath.addNamespace(Common.xmlns_dcterms);
 						xpath.addNamespace(Common.xmlns_lido);
@@ -356,6 +357,7 @@ public class HarvesterDialog extends CDefaultDialog {
 							vpath.addNamespace(Common.xmlns_dc);
 							vpath.addNamespace(Common.xmlns_oai);
 							vpath.addNamespace(Common.xmlns_edm);
+							vpath.addNamespace(Common.xmlns_europeana);
 							vpath.addNamespace(Common.xmlns_tei_p5);
 							vpath.addNamespace(Common.xmlns_dcterms);
 							vpath.addNamespace(Common.xmlns_lido);

@@ -181,7 +181,7 @@ public class TextEditor extends CDialog {
 	    				  JEditorPane jebEditorPane = (JEditorPane) getGuiComposite().getWidget("jebEditorPane");
 	    	              try  {		
 	    	            	   if (dsid.equals("TEI_SOURCE") && !pid.startsWith("cirilo:")) {
-	    	            		   TEI t = new TEI(null,false,true);
+	    	            		   TEI t = new TEI(null,false,false);
 	    	            		   t.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
 	    	            		   t.setPID(pid);
 	    	            		   
@@ -200,11 +200,27 @@ public class TextEditor extends CDialog {
 	    	    		    			MessageFormat msgFmt = new MessageFormat(res.getString("parsererror"));
 	    	    		    			Object[] args = {"TEI_SOURCE"}; 		    		
 	    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
-	    	            		   }
-
+	    	            		   }		
+	    	            	   } else if (dsid.equals("STORY") && !pid.startsWith("cirilo:")) {
+		    	            		   STORY s = new STORY(null,false,false);
+		    	            		   s.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));    	            		   
+		    	            		   if (s.isValid()) {
+		    	            			   s.validate(null, null);
+		    	            			   s.setPID(pid);
+	  	    				  		       jebEditorPane.setText(s.toString());	  	    				  		       
+	  	    				  		   	   try {
+	  	    				  		   		   Repository.modifyDatastreamByValue(pid, dsid, mimetype, new String(s.toString().getBytes("UTF-8"),"UTF-8"));
+	  	    				  		   	   } catch (Exception ex) {
+	  		  	 								JOptionPane.showMessageDialog(  getCoreDialog(),  res.getString("xmlformat") , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE); 				    				    	            			   
+	  	    				  		   	   }
+		    	            		   } else {
+		    	    		    			MessageFormat msgFmt = new MessageFormat(res.getString("parsererror"));
+		    	    		    			Object[] args = {"STORY"}; 		    		
+		    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
+		    	            		   }
 	    	            		   
 	    	            	   } else if (dsid.equals("LIDO_SOURCE") && !pid.startsWith("cirilo:")) {
-		    	            		   LIDO l = new LIDO(null,false,true);
+		    	            		   LIDO l = new LIDO(null,false,false);
 		    	            		   l.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
 		    	            		   l.setPID(pid);
 		    	            		   

@@ -20,6 +20,8 @@
 
 package org.emile.cirilo;
 
+import org.emile.cirilo.utils.Decrypter;
+
 /**
  *  Description of the Class
  *
@@ -28,18 +30,24 @@ package org.emile.cirilo;
  */
 public class User {
 
+	private static boolean mode;
+	
 	private static String FedoraUser;
 	private static String FedoraPasswd;
 	private static String FedoraUrl;
+	private static String FedoraRepository;
+	private static String RootUser;
+	private static String RootPasswd;
+
+    private static String SesameUser;
+	private static String SesameUrl;
+	private static String SesamePasswd;
+	
 	private static String ExistUser ="admin";
 	private static String ExistPasswd ="kefalos";
 	private static String ExistUrl = "xmldb:exist://localhost:8080/exist/xmlrpc";
     private static String ExistHome ="";
-	private static String IIPSUser = null;
-	private static String IIPSUrl = "glossa.uni-graz.at";
-	private static String IIPSPasswd = null;
 
-	
 
 	/**
 	 *  Constructor for the User object
@@ -48,10 +56,15 @@ public class User {
 	 *@param  p  Description of the Parameter
 	 *@param  r  Description of the Parameter
 	 */
-	public User(String user, String passwd, String url ) {
+	public User(String user, String passwd, String rootuser, String rootpasswd, String url, String repository) {
+		mode =  !repository.isEmpty();
+		Decrypter q = new Decrypter();
 		FedoraUser = user;
-		FedoraPasswd = passwd;
+		FedoraPasswd =  passwd;
+		RootUser = rootuser;
+		RootPasswd = mode ? q.decrypt(rootpasswd) : rootpasswd;
 		FedoraUrl = url;
+		FedoraRepository = repository;
 	}
 
 
@@ -63,6 +76,9 @@ public class User {
 	public String getUser() {
 		return FedoraUser.trim();
 	}
+	public String getRootUser() {
+		return RootUser.trim();
+	}
 
 	/**
 	 *  Gets the passwd attribute of the User object
@@ -72,7 +88,13 @@ public class User {
 	public String getPasswd() {
 		return FedoraPasswd.trim();
 	}
+	public String getRootPasswd() {
+		return RootPasswd.trim();
+	}
 
+	public boolean viaLDAP() {
+		return mode;
+	}
 	/**
 	 *  Gets the repository attribute of the User object
 	 *
@@ -81,6 +103,28 @@ public class User {
 	public String getUrl() {
 		return FedoraUrl.trim();
 	}
+	public String getRepository() {
+		return FedoraRepository.trim();
+	}
+	
+	public void setSesameAuth(String user, String passwd, String url) {
+		SesameUser = user;
+		SesamePasswd =  passwd;
+		SesameUrl = url;
+	}
+
+	public String getSesameUrl() {
+		return SesameUrl.trim();
+	}
+	public String getSesameUser() {
+		return SesameUser.trim();
+	}
+	public String getSesamePasswd() {
+		return SesamePasswd.trim();
+	}
+
+
+	
 	
 	public String getExistUrl() {
 		return ExistUrl.trim();
@@ -93,29 +137,6 @@ public class User {
 	}
 	public String getExistPasswd() {
 		return ExistPasswd.trim();
-	}
-	public void setIIPSAuth(String u, String p, String url) {
-		IIPSUser = u;
-		IIPSPasswd = p;
-		IIPSUrl = url;
-	}
-	public String getIIPSUrl() {
-		return IIPSUrl.trim();
-	}
-	public String getIIPSUser() {
-		return IIPSUser.trim();
-	}
-	public String getIIPSPasswd() {
-		return IIPSPasswd.trim();
-	}	
-	public void setIIPSUrl(String s) {
-		IIPSUrl =s;
-	}
-	public void setIIPSUser(String s) {
-		IIPSUser=s;
-	}
-	public void setIIPSPasswd(String s) {
-		IIPSPasswd=s;
 	}
 	public void setExistUrl(String s) {
 		ExistUrl =s;

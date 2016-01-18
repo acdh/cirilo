@@ -379,6 +379,7 @@ public class TEI {
 			}
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
    			Common.log(logger, e);   		 
 			return false;}
 	}
@@ -398,10 +399,11 @@ public class TEI {
         		}
           	}
         	
+        	
         	if (new String(stylesheet).contains(":template")) {
         		System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
 
-        		Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet))));
+        		Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet, "UTF-8"))));
         	
         		JDOMSource in = new JDOMSource(this.tei);
         		JDOMResult out = new JDOMResult();
@@ -440,7 +442,9 @@ public class TEI {
   	    		}	
           		
         	}	
+
         } catch (Exception e) {
+        	e.printStackTrace();
         	Common.log(logger, e);
         }
         	
@@ -1569,19 +1573,14 @@ public class TEI {
 		}
   	  	
   	  	
-  	  	if (Repository.exists(this.PID,"METS_REF")) {
-    		Repository.modifyDatastreamByValue(this.PID, "METS_SOURCE", "text/xml", outputter.outputString(mets));                 							            	
-  	  	} else {
-			File file= File.createTempFile("temp", ".tmp");	    					
-			FileOutputStream fos = new FileOutputStream(file);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
-			bw.write(new String(outputter.outputString(mets).getBytes("UTF-8"),"UTF-8"));
-			bw.flush();
-			bw.close();
-			Repository.addDatastream(this.PID, "METS_SOURCE","METS Source",  "X", "text/xml", file);  	  		
-    		Repository.addDatastream(this.PID, "METS_REF",  "Reference to source stream", "text/xml", user.getUrl()+"/get/"+this.PID+"/METS_SOURCE");
-            file.delete();  		    
-  	  	}
+		File file= File.createTempFile("temp", ".tmp");	    					
+		FileOutputStream fos = new FileOutputStream(file);
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
+		bw.write(new String(outputter.outputString(mets).getBytes("UTF-8"),"UTF-8"));
+		bw.flush();
+		bw.close();
+		Repository.addDatastream(this.PID, "METS_SOURCE","METS Source",  "X", "text/xml", file);  	  		
+        file.delete();  		    
   	  	  	  	
 	  } catch (Exception ex0) {
 		  ex0.printStackTrace();
