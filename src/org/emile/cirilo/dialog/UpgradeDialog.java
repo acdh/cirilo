@@ -363,7 +363,20 @@ public class UpgradeDialog extends CDialog {
 												Repository.addDatastream(s, "HSSF_STYLESHEET",  "Stylesheet to generate HSSF stream", "text/xml", fedora+"/get/cirilo:Backbone/TEItoHSSF");
 											}	
 										}
-	 															
+										
+	 							
+										if (Repository.hasContentModel(s,"info:fedora/cm:dfgMETS")) {																			
+											if(!Repository.exists(s, "METS_REF")) {
+												Repository.addDatastream(s, "METS_REF",  "Reference to source stream", "text/xml", fedora+"/get/"+s+"/METS_SOURCE");
+											}	
+										}
+
+										if (Repository.hasContentModel(s,"info:fedora/cm:LIDO")) {																			
+											if(!Repository.exists(s, "SOURCE_REF")) {
+												Repository.addDatastream(s, "SOURCE_REF",  "Reference to source stream", "text/xml", fedora+"/get/"+s+"/LIDO_SOURCE");
+											}	
+										}
+								
 										if (Repository.hasContentModel(s,"info:fedora/cm:Context")) {	
 											if(!Repository.exists(s, "HSSF_STYLESHEET")) {										
 												Repository.addDatastream(s, "HSSF_STYLESHEET",  "Stylesheet to generate HSSF stream", "text/xml", fedora+"/get/cirilo:Backbone/HSSF_STYLESHEET");
