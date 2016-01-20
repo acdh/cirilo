@@ -40,8 +40,11 @@ import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 import org.emile.cirilo.ecm.repository.FedoraConnector.Relation;
 import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.utils.Split;
+import org.geonames.Toponym;
+import org.geonames.WebService;
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 import org.jdom.filter.ElementFilter;
@@ -240,7 +243,38 @@ public class TextEditor extends CDialog {
 		    	    		    			Object[] args = {"LIDO_SOURCE"}; 		    		
 		    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 		    	            		   }
-	    	            	   } else if (dsid.equals("DC") && !pid.startsWith("cirilo:")) {
+	    	             	   } else if (dsid.equals("EDM_STREAM") && !pid.startsWith("cirilo:")) {
+	    	    	  		   	    SAXBuilder builder = new SAXBuilder();
+	    	    	  				Document doc = builder.build(new StringReader(new String (jebEditorPane.getText())));
+		    		        		XPath upath = XPath.newInstance("//edm:Place");
+		    		        		upath.addNamespace(Common.xmlns_edm);
+		    		    			List places = (List) upath.selectNodes(doc);			    		    			
+		    		    			if (places.size() > 0) {
+		    		    		 		String account = props.getProperty("user","TEI.LoginName");
+		    		    		 	    WebService.setUserName(account);
+		    	    	  				Format format = Format.getRawFormat();
+		    	    	  				format.setEncoding("UTF-8");
+		    	    	  				XMLOutputter outputter = new XMLOutputter(format);
+		    		    				for (Iterator iter = places.iterator(); iter.hasNext();) {
+		    		    					Element el = (Element) iter.next();	
+		    		    					String id = el.getAttributeValue("about",Common.xmlns_rdf);
+		    		    					id = id.substring(id.indexOf("org/") + 4);
+		    		    					Toponym toponym = WebService.get(new Integer(id).intValue(), null, null);
+		    		    					el.getChild("lat",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLatitude()).toString());
+		    		    					el.getChild("long",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLongitude()).toString());
+		  	    				  		    jebEditorPane.setText(outputter.outputString(doc));	  	   
+		  	    				  		    try {
+		  	    				  		   	   Repository.modifyDatastreamByValue(pid, dsid, mimetype, outputter.outputString(doc));
+		  	    				  		   	} catch (Exception ex) {
+		  		  	 							JOptionPane.showMessageDialog(  getCoreDialog(),  res.getString("xmlformat") , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
+	  		  	 							}
+		    		    				}
+	    	            		   } else {
+	    	    		    			MessageFormat msgFmt = new MessageFormat(res.getString("parsererror"));
+	    	    		    			Object[] args = {"EDM_STREAM"}; 		    		
+	    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
+	    	            		   }
+    	       		       } else if (dsid.equals("DC") && !pid.startsWith("cirilo:")) {
 	    	            		   DC d = new DC(null,false,true);
 	    	            		   d.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
   				  		   		   Repository.modifyDatastreamByValue(pid, dsid, mimetype, new String(d.toString().getBytes("UTF-8"),"UTF-8"));	    	            		   

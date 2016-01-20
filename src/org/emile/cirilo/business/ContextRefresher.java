@@ -68,13 +68,15 @@ public class ContextRefresher {
 	    				
 	    				if (model.contains("cm:TEI")) { 
 	    					data= db.build (Repository.getDatastream(uri, "TEI_SOURCE"));
-		    				oPath = XPath.newInstance("//t:placeName[contains(@id,'GID.')]");
+		    				oPath = XPath.newInstance("//t:placeName[contains(@xml:id,'GID.')]");
 		    				oPath.addNamespace( Common.xmlns_tei_p5 );
+		    				oPath.addNamespace( Common.xmlns_xml );
 	    				}
 	    				if (model.contains("cm:LIDO")) { 
 	    					data= db.build (Repository.getDatastream(uri, "LIDO_SOURCE"));
-		    				oPath = XPath.newInstance("//t:item[contains(@id,'GID.')]");
+		    				oPath = XPath.newInstance("//t:item[contains(@xml:id,'GID.')]");
 		    				oPath.addNamespace(Common.xmlns_tei_p5);
+		    				oPath.addNamespace( Common.xmlns_xml );
 	    				}
 	    					 
 	    				List placeNames = (List) oPath.selectNodes( data );

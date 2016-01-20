@@ -70,6 +70,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 	JCheckBox jcbLIDOIngestImages;
 	JCheckBox jcbLIDORefreshSource;
 	JCheckBox jcbLIDOOnlyGeonameID;
+	JCheckBox jcbLIDOResolveSKOS;
 
 
 	/**
@@ -116,6 +117,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		setWidgetName(jcbLIDOCreateContexts, "jcbLIDOCreateContexts" );
 		setWidgetName(jcbLIDOResolveGeoIDs, "jcbLIDOResolveGeoIDs" );
 		setWidgetName(jcbLIDOIngestImages, "jcbLIDOIngestImages" );
+		setWidgetName(jcbLIDOResolveSKOS, "jcbLIDOResolveSKOS" );
 		setWidgetName(jcbLIDORefreshSource, "jcbLIDORefreshSource" );
 		setWidgetName(jcbLIDOOnlyGeonameID, "jcbLIDOOnlyGeonameID" );
 		setWidgetName(jcbSKOSIFY, "jcbSKOSIFY" );
@@ -161,7 +163,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		jcbLIDOResolveGeoIDs = new JCheckBox(res.getString("resolvegeoids"), true);
 		jcbLIDOIngestImages = new JCheckBox(res.getString("ingestimages"), true);
 		jcbLIDORefreshSource = new JCheckBox(res.getString("refreshsource"), false);
-		
+		jcbLIDOResolveSKOS = new JCheckBox(res.getString("resolveskos"), true);
 		jcbSKOSIFY = new JCheckBox(res.getString("skosify"), false);
 		
 		jtfTEILoginName = new JTextField();
@@ -208,6 +210,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		t3.add(jcbLIDOSEMExtraction, "wrap 5"); 
 		t3.add(jcbLIDOCreateContexts, "wrap 5"); 
 		t3.add(jcbLIDOIngestImages, "wrap 5"); 
+		t3.add(jcbLIDOResolveSKOS, "wrap 5"); 														
 		t3.add(jcbLIDOResolveGeoIDs, "wrap 5");	
 		t3.add(jcbLIDOOnlyGeonameID, "gapbefore 18px, wrap 5");
 

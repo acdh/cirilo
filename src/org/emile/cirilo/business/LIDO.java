@@ -427,8 +427,8 @@ public class LIDO {
     try {
 
     	
-	    String s = props.getProperty("user", "LIDO.OnlyGeonameID"); 
-		s = (s != null && s.equals("1")) ? "[contains(@lido:geographicalEntity,'geonameID')]" : "[not(@lido:geographicalEntity) or (@lido:geographicalEntity != 'cirilo:ignore')]";
+	    String s = props.getProperty("user", "LIDO.OnlyGeonameID"); 	    
+		s = (s != null && s.equals("1")) ? "[contains(lido:placeID/@lido:source,'geonames.org') or lido:placeID/@lido:source,'geonameID')]" : "[not(@lido:geographicalEntity) or (@lido:geographicalEntity != 'cirilo:ignore')]";
 
     	
 	    List places = getChildren("//lido:place"+s);
@@ -443,26 +443,19 @@ public class LIDO {
 		}
 	 	    
 	    if (places.size() > 0 && !onlyValidate) {
- 	 	    	int i =0;
 		        for (Iterator iter = places.iterator(); iter.hasNext();) 
 		        {
-		        		Element parent = (Element) iter.next();
-		        		
-		        		List namePlaceSet = parent.getChildren("namePlaceSet", Common.xmlns_lido);
-				        for (Iterator jter = namePlaceSet.iterator(); jter.hasNext();) 
-				        {
-		        		
-				         try {	
-				        	Element e = (Element) jter.next();
-				        	Element place = e.getChild("appellationValue", Common.xmlns_lido);
 				        	
-				        	Attribute key = parent.getAttribute("geographicalEntity",Common.xmlns_lido); 		        		
-				        	if (key == null || !key.getValue().startsWith("geonameID"))
-				        	{
+				         try {	
+				        	Element place = (Element) iter.next();
+				        	Element placeID = place.getChild("placeID", Common.xmlns_lido);
+				        	Element namePlaceSet = place.getChild("namePlaceSet", Common.xmlns_lido);
+				        	String appellationValue = namePlaceSet.getChildText("appellationValue", Common.xmlns_lido);
 
-				        		String placeName = place.getText();
-				        		if (!placeName.isEmpty()) {		        			
-				        			searchCriteria.setQ(placeName);
+				        	if (placeID == null )
+				        	{
+				        		if (!appellationValue.isEmpty()) {		        			
+				        			searchCriteria.setQ(appellationValue);
 				        			ToponymSearchResult searchResult = WebService.search(searchCriteria);
 				        			for (Toponym toponym : searchResult.getToponyms()) {
 				        				Topos t =  normdata.get(new Integer(toponym.getGeoNameId()));
@@ -477,16 +470,17 @@ public class LIDO {
 				        							);
 				        					normdata.put(new Integer(toponym.getGeoNameId()), t);
 				        				}
-				        				e.setAttribute("corresp","#"+t.getXMLID(), Common.xmlns_lido);
+				        				namePlaceSet.setAttribute("corresp","#"+t.getXMLID(), Common.xmlns_lido);
 				        				break;
 				        			}		
 				        		}
 				        	} else {
-				        		String[] geoNameID = key.getValue().split("[:]");
-				        		if (geoNameID.length>1) {
-				        			Topos t =  normdata.get(new Integer(geoNameID[1]));
+				        		String ns = placeID.getAttributeValue("source", Common.xmlns_lido);
+				        		if (ns.contains("geonameID") || ns.contains("geonames.org")) {
+					        		String geoNameID = placeID.getText();
+				        			Topos t =  normdata.get(new Integer(geoNameID));
 				        			if ( t == null) {
-				        				Toponym toponym = WebService.get(new Integer(geoNameID[1]).intValue(), null, null);
+				        				Toponym toponym = WebService.get(new Integer(geoNameID).intValue(), null, null);
 		    		        					t = new Topos(new Integer(toponym.getGeoNameId()).toString(),
 		    		        							toponym.getName(),
 		    		        							toponym.getCountryName(),
@@ -495,16 +489,15 @@ public class LIDO {
 		    		        		    				toponym.getFeatureCode(),
 		    		        		    				++cc
 		    		        							);
-	        		    		      normdata.put(new Integer(toponym.getGeoNameId()), t);
+		    		        					normdata.put(new Integer(toponym.getGeoNameId()), t);
 				        			}  
-			        				e.setAttribute("corresp", "#"+t.getXMLID(), Common.xmlns_lido);
+				        			namePlaceSet.setAttribute("corresp", "#"+t.getXMLID(), Common.xmlns_lido);
 				        		}
 				        	} 
 					       
 				         } catch (Exception o) {}   
 				        	
 				      }
-		        }
 		        		      
 	 	    } 
     		    	
@@ -523,15 +516,13 @@ public class LIDO {
 				Element descriptiveNoteValue = new Element("descriptiveNoteValue", Common.xmlns_lido);
 				objectDescriptionSet.addContent(descriptiveNoteValue);
 				
-				Element profileDesc = new Element("profileDesc", Common.xmlns_tei_p5);
 				Element textClass = new Element("textClass", Common.xmlns_tei_p5);
 				Element keywords = new Element("keywords", Common.xmlns_tei_p5);
 				Element list = new Element("list", Common.xmlns_tei_p5);
 				
 				keywords.addContent(list);
 				textClass.addContent(keywords);
-				profileDesc.addContent(textClass);
-				descriptiveNoteValue.addContent(profileDesc);
+				descriptiveNoteValue.addContent(textClass);
 			
 				
 				for (Topos t : normdata.values()) 
@@ -542,7 +533,7 @@ public class LIDO {
 				
 					Element name = new Element("name", Common.xmlns_tei_p5);
 					name.setAttribute("type","placeName");
-					name.setAttribute("ref","geonameID:"+t.getID());
+					name.setAttribute("ref","http://geonames.org/"+t.getID());
 					name.setText(t.getName());
 					
  					Element location = new Element("seg", Common.xmlns_tei_p5);
@@ -574,7 +565,134 @@ public class LIDO {
     
    }
 
+	public void interfereTerms() {
+		
+		URL url; 
+		try {
+									
+			XPath xpath = XPath.newInstance("//t:textClass/t:keywords[@scheme]");
+			xpath.addNamespace( Common.xmlns_tei_p5 );
+			List keywords = (List) xpath.selectNodes( this.lido );			
+						
+			for (Iterator thes = keywords.iterator(); thes.hasNext();) {
+				try
+				{
+				HashMap<String,String> CONCEPTS = new HashMap<String,String>();
+				Element o = (Element) thes.next();
+				String scheme = o.getAttributeValue("scheme");
+				scheme+=scheme.endsWith("/") ? "" : "/";
+				List namespaces = o.getAdditionalNamespaces();
+				
+				int cc = 0;
+				
+				Iterator ins = namespaces.iterator();
+				if (ins.hasNext()) 
+				{
+					Namespace n = (Namespace) ins.next();
+					String pre = n.getPrefix();
+					String uri = n.getURI();
+					
+					List elem = getChildren("//lido:conceptID[@lido:source='"+pre+"']");
+					for (Iterator jter = elem.iterator(); jter.hasNext();) {
+						try {
+							Element e = (Element) jter.next();
+							e.removeAttribute("type", Common.xmlns_lido);
+						} catch (Exception eq) {
+						}
+					}
+					elem = getChildren("//lido:conceptID[@lido:source='"+pre+"']");
+	      	    	o.removeChildren("term", Common.xmlns_ntei_p5);
 
+	      	        for (Iterator iter = elem.iterator(); iter.hasNext();) {
+	      	    	    Element e = (Element) iter.next();
+	      	    	    if (e instanceof Element) {
+	      	    	    	if (CONCEPTS.get(uri+e.getText()) == null) CONCEPTS.put(uri+e.getText(),pre.toUpperCase()+"."+new Integer(++cc).toString());
+	      	    	    	String id = CONCEPTS.get(uri+e.getText());
+	      	    	    	e.setAttribute("type", "#"+id, Common.xmlns_lido);
+	      	    	    }	      	    	    
+	      	        }    
+				}
+
+				
+	      	    for ( String el : CONCEPTS.keySet() ) {
+			      		  Element term = new Element("term",Common.xmlns_ntei_p5);
+			      		  term.setAttribute("ref",el);
+			      		  term.setAttribute("id", CONCEPTS.get(el));
+			      		  o.addContent(term);
+	      	    }
+			      	
+				XPath qpath = XPath.newInstance("t:term");
+				qpath.addNamespace(Common.xmlns_tei_p5);
+				List terms = (List) qpath.selectNodes( o );	      	    
+
+				if (terms != null) {
+	      	                 	
+		      	    	for (Iterator iter = terms.iterator(); iter.hasNext();) {
+		      	    		try {
+		      	    			Element e = (Element) iter.next();
+		      	    			getBroader(scheme, e.getAttributeValue("ref"), e);	
+		      	    		} catch (Exception ex) {
+		      	    			continue;	
+		      	    		}
+		      	    	}
+	      	    }	
+	      	    
+				} catch (Exception e) {}
+		   }	    
+
+		} catch (Exception eq) {
+		}
+	}
+	
+
+	private void getBroader (String scheme, String ref, Element root) {
+		String context = "";
+		String type;
+		try { 
+
+				XPath xpath = XPath.newInstance("//skos:Concept|//skos:TopConcept");
+				xpath.addNamespace( Common.xmlns_skos );
+
+				URL url = new URL(scheme + "methods/sdef:SKOS/getConceptByURI?uri=" + URLEncoder.encode(ref, "UTF-8"));
+
+				URLConnection con = url.openConnection();
+				con.setUseCaches(false);				
+				Document skos = builder.build (con.getInputStream()); 
+				Element concept = (Element) xpath.selectSingleNode(skos);
+				type = concept.getName();
+				xpath = XPath.newInstance("//skos:externalID");
+				concept = (Element) xpath.selectSingleNode(skos);
+                if (concept != null) {
+                	context = concept.getText(); 
+                }				
+                xpath = XPath.newInstance("//skos:prefLabel");
+				List prefLabels = (List) xpath.selectNodes(skos);
+				root.setAttribute("type","skos:"+type);
+				Boolean first = true;
+    	    	for (Iterator iter = prefLabels.iterator(); iter.hasNext();) {
+	    			Element s = (Element) iter.next();
+	    			Element prefLabel = new Element ("term", Common.xmlns_ntei_p5);
+	    			prefLabel.setText(s.getText());
+	    			prefLabel.setAttribute("type","skos:prefLabel");
+	    			prefLabel.setAttribute("lang",s.getAttributeValue("lang",Common.xmlns_xml), Common.xmlns_xml);
+	    			root.addContent(prefLabel);
+    	    	}
+				xpath = XPath.newInstance("//skos:broader|//skos:broaderGeneric|//skos:broaderInstantive|//skos:broaderPartitive");
+                List relations = (List) xpath.selectNodes(skos);
+    	    	for (Iterator iter = relations.iterator(); iter.hasNext();) {
+	    			Element s = (Element) iter.next();
+	    			Element term = new Element ("term", Common.xmlns_ntei_p5);
+	    			term.setAttribute("subtype","skos:"+s.getName());
+	    			term.setAttribute("type","skos:Concept");
+	    			term.setAttribute("ref", s.getAttributeValue("resource", Common.xmlns_rdf));
+	    			getBroader(scheme, s.getAttributeValue("resource", Common.xmlns_rdf), term );
+	    			root.addContent(term);
+    	    	}
+                			
+			} catch (Exception ex) {
+			}								
+	}
+		
 
    public void createMapping(String pid, CDefaultGuiAdapter moGA) 
 	{
@@ -716,7 +834,9 @@ public class LIDO {
 			p = props.getProperty("user", "LIDO.SEMExtraction"); 
 			if (p == null || p.equals("1")) createRELS_INT(null);
 		    write(p == null || p.equals("1"));
-
+			p = props.getProperty("user", "LIDO.ResolveSKOS"); 
+			if (p == null || p.equals("1")) interfereTerms();
+		    
 		} catch (Exception e) {
 		}
 	  		

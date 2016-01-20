@@ -861,7 +861,7 @@ public class TEI {
 	   
 	   	try { 			
 		    String s = props.getProperty("user", "TEI.OnlyGeonameID"); 
- 		    s = (s != null && s.equals("1")) ? "[contains(@ref,'geonameID') and (not(@type) or @type != 'cirilo:ignore')]" : "";
+ 		    s = (s != null && s.equals("1")) ? "[(contains(@ref,'geonameID') or contains(@ref,'geonames.org')) and (not(@type) or @type != 'cirilo:ignore')]" : "";
             s = s.isEmpty() ? "[not(@type) or @type != 'cirilo:ignore']" : s;
  		    
  		    Element place;
@@ -885,7 +885,7 @@ public class TEI {
 		        {
 		        		place = (Element) iter.next();
 		        		Attribute key = place.getAttribute("ref"); 		        		
-		        		if (key == null || !key.getValue().startsWith("geonameID"))
+		        		if (key == null)
 		        		{
 		        			Element settlement = place.getChild("settlement", Common.xmlns_tei_p5);
 		        			Element country = place.getChild("country", Common.xmlns_tei_p5);
@@ -918,8 +918,17 @@ public class TEI {
 			        			}		
 		        			}
 		        		} else {
-		        		    String[] geoNameID = key.getValue().split("[:]");
-		        		    if (geoNameID.length>1) {
+		        			String[] geoNameID = {"",""};
+		        			
+		        			if (key.getValue().startsWith("geonameID")) {
+		        				geoNameID = key.getValue().split("[:]");
+		        			}		        					
+		        			if (key.getValue().contains("geonames.org")) {
+		        				geoNameID[0] = key.getValue();
+		        				int pos = geoNameID[0].indexOf("org/");
+		        				geoNameID[1] = geoNameID[0].substring(pos+4);
+		        			}
+		        		    if (geoNameID.length>1 && !geoNameID[1].isEmpty()) {
 		        				Topos t =  normdata.get(new Integer(geoNameID[1]));
 		        				 if ( t == null) {
 		        					Toponym toponym = WebService.get(new Integer(geoNameID[1]).intValue(), null, null);
@@ -1002,7 +1011,7 @@ public class TEI {
  	 					placeName.addContent(region.setText(t.getName()));                       						
  					}
  					name.setAttribute("type","fcode:"+t.getFeature());
-					name.setAttribute("ref","geonameID:"+t.getID());
+					name.setAttribute("ref","http://geonames.org/"+t.getID());
  					placeName.addContent(name); 					
  					placeName.addContent(location);
  					placeName.setAttribute("id", t.getXMLID(), Common.xmlns_xml);

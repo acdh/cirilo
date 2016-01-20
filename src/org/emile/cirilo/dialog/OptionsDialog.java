@@ -84,6 +84,7 @@ public class OptionsDialog extends CDialog {
 			set("DCMapping","LIDO");
 			set("SEMExtraction","LIDO");
 			set("CreateContexts","LIDO");
+			set("ResolveSKOS","LIDO");
 			set("ResolveGeoIDs","LIDO");
 			set("IngestImages","LIDO");
 			set("RefreshSource","LIDO");
@@ -179,6 +180,7 @@ public class OptionsDialog extends CDialog {
 			get("DCMapping","LIDO");
 			get("SEMExtraction","LIDO");
 			get("CreateContexts","LIDO");
+			get("ResolveSKOS","LIDO");
 			get("ResolveGeoIDs","LIDO");
 			get("IngestImages","LIDO");
 			get("RefreshSource","LIDO");

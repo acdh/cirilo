@@ -116,6 +116,8 @@ public class Common {
 	public final static Namespace xmlns_dcterms = Namespace.getNamespace( "dcterms", "http://purl.org/dc/terms/");
 		
 	public final static Namespace xmlns_edm = Namespace.getNamespace( "edm", "http://www.europeana.eu/schemas/edm/");
+
+	public final static Namespace xmlns_wgs84_pos = Namespace.getNamespace( "wgs84_pos", "http://www.w3.org/2003/01/geo/wgs84_pos#");
 	
 	public final static Namespace xmlns_ns0 = Namespace.getNamespace( "ns0", "http://phaidra.univie.ac.at/XML/metadata/V1.0");
 
@@ -229,6 +231,8 @@ public class Common {
 												   "|THUMBNAIL|TEI_SOURCE|PDF_STREAM|URL|DC|BIBTEX|HTML_STREAM|ONTOLOGY|KML|KML_TEMPLATE|METS_SOURCE|TOMETS|";
 
     public final static String HANDLE_PREFIX = "0.NA/";
+    
+    public final static String UTF8 = "UTF-8";
         
     public final static String TEXT_MIMETYPES = "text/plain|text/css|application/javascript|application/sparql-query";
     

@@ -25,12 +25,16 @@ import org.emile.cirilo.*;
 import org.emile.cirilo.utils.*;
 import org.emile.cirilo.business.MDMapper;
 import org.emile.cirilo.business.Session;
+import org.emile.cirilo.business.Topos;
 import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.gui.jtable.HarvesterTableModel;
 import org.emile.cirilo.oai.*;
+import org.geonames.Toponym;
+import org.geonames.WebService;
 
 import voodoosoft.jroots.application.*;
+import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.core.gui.CMouseListener;
@@ -393,10 +397,10 @@ public class HarvesterDialog extends CDefaultDialog {
 								        }
 										Document uwm = parser.build(new StringReader(response.toString()));									
 
-										XPath qpath = XPath.newInstance("./oai:metadata");
-										qpath.addNamespace(Common.xmlns_oai);
+										XPath upath = XPath.newInstance("./oai:metadata");
+										upath.addNamespace(Common.xmlns_oai);
 										em.addNamespaceDeclaration(Common.xmlns_ns0);
-										Element metadata = (Element) qpath.selectSingleNode(em);																				
+										Element metadata = (Element) upath.selectSingleNode(em);																				
 								        metadata.removeChild("dc", Common.xmlns_oai_dc);
 										metadata.addContent(uwm.cloneContent());																				
 									}
@@ -416,7 +420,23 @@ public class HarvesterDialog extends CDefaultDialog {
 			    		        	try {
 			    		        		Repository.modifyDatastreamByValue(pid, "RECORD", "text/xml", buf);
 			    		        		edm = outputter.outputString(out.getResult());
-			    		        		Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm);
+
+			    		        		Document doc = parser.build(new StringReader(new String (edm)));
+			    		        		XPath upath = XPath.newInstance("//edm:Place");
+			    		        		upath.addNamespace(Common.xmlns_edm);
+			    		    			List places = (List) upath.selectNodes(doc);			    		    			
+			    		    			if (places.size() > 0) {
+			    		    				for (Iterator jter = places.iterator(); iter.hasNext();) {
+			    		    					Element e = (Element) jter.next();	
+			    		    					String id = e.getAttributeValue("about",Common.xmlns_rdf);
+			    		    					id = id.substring(id.indexOf("org/") + 4);
+			    		    					Toponym toponym = WebService.get(new Integer(id).intValue(), null, null);
+			    		    					e.getChild("lat",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLatitude()).toString());
+			    		    					e.getChild("long",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLongitude()).toString());
+			    		    				}
+			    		    				edm = outputter.outputString(doc);
+						    		    }	
+			    		    			Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm);
 			    		        	} catch (Exception e) {}	
 									createMapping(pid, edm);
 								} catch (Exception eq) {
@@ -575,7 +595,11 @@ public class HarvesterDialog extends CDefaultDialog {
 
 		try {
 			parser = new SAXBuilder();
-			
+
+			props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
+    		String account = props.getProperty("user","TEI.LoginName");
+	 	    WebService.setUserName(account);
+
 			temps = (TemplateSubsystem) CServiceProvider.getService(ServiceNames.TEMPLATESUBSYSTEM);
 			res =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
 			user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
@@ -597,6 +621,7 @@ public class HarvesterDialog extends CDefaultDialog {
 
 
 	private ResourceBundle res; 
+	private CPropertyService props;
 	private TemplateSubsystem  temps;
 	private ListRecords listRecords;
 	private String resumptionToken;
