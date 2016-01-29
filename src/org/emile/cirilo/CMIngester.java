@@ -2,7 +2,6 @@ package org.emile.cirilo;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,12 +14,6 @@ import org.emile.cirilo.ecm.repository.FedoraSoapImpl;
 import org.emile.cirilo.ecm.repository.FedoraUserToken;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.templates.TemplateSubsystem;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;

@@ -30,10 +30,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-
 import java.util.ResourceBundle;
 
 import voodoosoft.jroots.core.CPropertyService;
@@ -50,7 +46,6 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class LoginExistDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(LoginExistDialog.class);
     
 	/**
 	 *  Constructor for the LoginDialog object

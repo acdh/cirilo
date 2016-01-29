@@ -29,7 +29,6 @@ import org.jdom.xpath.XPath;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.*;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -74,6 +73,7 @@ public class MDMapper
 			initialize(s, false);
 			
 		} catch( Exception e) {
+			e.printStackTrace();
 		}
 		
 	}
@@ -91,6 +91,7 @@ public class MDMapper
 			initialize(s ,true);
 			
 		} catch( Exception e) {
+			e.printStackTrace();
 		}
 		
 	}
@@ -192,7 +193,6 @@ public class MDMapper
 	
 	public String transform(Document doc) {
 		try {
-			String xalan = System.getProperty("javax.xml.transform.TransformerFactory");
 	        System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
 
 	        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(stylesheet)));
@@ -202,7 +202,7 @@ public class MDMapper
 
 	        System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");  
 	        
-			String s = outputter.outputString(removeEmpty(out));			
+			String s = outputter.outputString(removeEmpty(out));		
 			return s;
 	     }
 	     catch (Exception e) {
@@ -213,7 +213,6 @@ public class MDMapper
 	public String transform(Element el) {
 		
 		try {
-			String xalan = System.getProperty("javax.xml.transform.TransformerFactory");
 	        System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
 
 	        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(stylesheet)));

@@ -1,11 +1,6 @@
 package org.emile.cirilo.business;
 
 import java.io.File;
-
-import javax.swing.JOptionPane;
-import java.awt.Component;
-
-import org.emile.cirilo.Common;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.jdom.input.DOMBuilder;
 import org.jdom.Document;

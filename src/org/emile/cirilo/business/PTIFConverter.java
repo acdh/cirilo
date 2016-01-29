@@ -1,6 +1,5 @@
 package org.emile.cirilo.business;
 
-import java.io.IOException;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageTypeSpecifier;
@@ -16,7 +15,6 @@ import com.sun.media.jai.codec.TIFFEncodeParam;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.awt.image.renderable.ParameterBlock;
 
 
 public class PTIFConverter {

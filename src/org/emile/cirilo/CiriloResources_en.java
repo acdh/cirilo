@@ -120,7 +120,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "skosify", "Normalize SKOS datastreams via Skosify"},
            { "createfromjpeg", "Create METS documents from image directories without XML metadata "},
            { "geonameslogin", "Geonames webservice login name"},
-           { "onlygeonameids", "Accept elements with geonameID exclusively"},
+           { "onlygeonameids", "Accept elements with geonames.org ID exclusively"},
    
           
            /* dialog */

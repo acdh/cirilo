@@ -30,8 +30,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.net.URL;
 
-import org.emile.cirilo.Common;
-
 /**
  *  Description of the Class
  *

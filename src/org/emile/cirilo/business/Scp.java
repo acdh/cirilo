@@ -31,7 +31,6 @@ import com.jcraft.jsch.*;
 
 
 import org.emile.cirilo.ServiceNames;
-import org.emile.cirilo.dialog.*;
 
 
 

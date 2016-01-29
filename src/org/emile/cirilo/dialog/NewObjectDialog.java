@@ -26,8 +26,6 @@ import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.core.gui.CItemListener;
 import voodoosoft.jroots.dialog.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.ecm.templates.*;
@@ -55,7 +53,6 @@ import java.awt.Color;
  * @created    10.3.2011
  */
 public class NewObjectDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(NewObjectDialog.class);
 
 	/**
 	 *  Constructor for the LoginDialog object

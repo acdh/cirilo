@@ -1,6 +1,5 @@
 package org.emile.cirilo.dialog;
 
-
 /*
  *  -----------------------------------------------------------------------------
  *
@@ -26,8 +25,6 @@ import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.dialog.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.business.*;
 import org.emile.cirilo.*;
 import org.emile.cirilo.Common;
@@ -35,12 +32,7 @@ import org.emile.cirilo.Common;
 import java.awt.event.*;
 import java.io.File;
 
-import javax.naming.Context;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
 import javax.swing.*;
-
-import java.util.*;
 
 import net.handle.hdllib.*;
 
@@ -55,8 +47,7 @@ import java.io.*;
  * @created    10.3.2011
  */
 public class HandleDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(HandleDialog.class);
-
+ 
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -91,12 +82,11 @@ public class HandleDialog extends CDialog {
 		
 		try {
 			  CPropertyService props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);			
-			  ResourceBundle res =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
-				 
+			 
 			  JFileChooser chooser = new JFileChooser(props.getProperty("user", "export.path"));
 			  
-			  chooser.setDialogTitle(res.getString("hdlsel"));
-			  if (chooser.showDialog(getCoreDialog(), res.getString("choose")) != JFileChooser.APPROVE_OPTION) {
+			  chooser.setDialogTitle("Schlüsseldatei wählen");
+			  if (chooser.showDialog(getCoreDialog(), "Auswählen") != JFileChooser.APPROVE_OPTION) {
 				  return;
 			  }
 			  File fp = chooser.getSelectedFile();
@@ -114,43 +104,14 @@ public class HandleDialog extends CDialog {
  				  byte passphrase[] = null;
  				  buf = Util.decrypt(buf, passphrase);
  	 			  Resolver resolver = new Resolver();
- 	 			  AuthenticationInfo   auth = new PublicKeyAuthenticationInfo(Util.encodeString(Common.HANDLE_PREFIX+((JTextField) getGuiComposite().getWidget("jtfHandlePrefix")).getText()), 300, Util.getPrivateKeyFromBytes(buf, 0));					
+ 	 			  AuthenticationInfo   auth = new PublicKeyAuthenticationInfo(Util.encodeString(Common.HANDLE_PREFIX), 300, Util.getPrivateKeyFromBytes(buf, 0));					
  				  if (resolver.checkAuthentication(auth)) {
  					  Handles hdl = (Handles) CServiceProvider.getService( ServiceNames.HANDLESCLASS );
  					  hdl.setHandleKey(buf);
- 					  
- 						User user = (User) CServiceProvider.getService( ServiceNames.CURRENT_USER );
-
- 						if (user.viaLDAP()) {
- 							Properties cprops = new Properties();
- 							cprops.load(Cirilo.class.getResourceAsStream("cirilo.properties"));
-
- 							String repository = user.getRepository();
- 							Hashtable env = new Hashtable();
- 							env.put( Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory" );
- 							env.put( Context.PROVIDER_URL, cprops.getProperty( repository + ".ldap.providerURL" ) );
- 							env.put( Context.SECURITY_PRINCIPAL, "cn=" + user.getUser() + "," + cprops.getProperty(repository + ".ldap.userDN" ) + "," + cprops.getProperty(repository + ".ldap.baseDN" ) );
- 							env.put( Context.SECURITY_CREDENTIALS, user.getPasswd() );
- 							if ( cprops.getProperty(repository + ".ldap.providerURL" ).startsWith( "ldaps://" ) ) {
- 								env.put( "java.naming.ldap.factory.socket", "org.emile.cirilo.utils.CiriloSocketFactory" );
- 							}
- 							else {
- 								env.put( Context.SECURITY_AUTHENTICATION, "simple" );
- 							}
-
- 							DirContext ctx = new InitialDirContext( env );
- 							
- 							String dns = "cn=handles," + cprops.getProperty( repository + ".ldap.objectDN" ) + "," + cprops.getProperty( repository + ".ldap.baseDN" );
- 							ctx.rebind( dns, hdl );
- 							ctx.close();
- 						}	
-
- 					  
- 					  JOptionPane.showMessageDialog (getCoreDialog(),res.getString("hdlvalid"));
+ 					  JOptionPane.showMessageDialog (getCoreDialog(),"Schüssel aus Datei <"+fp.getAbsolutePath().trim()+"> steht für Authentifizierung am Handle Server dauerhaft zur Verfügung");			  
  				  } 
  			  } catch (Exception q)	  {
-				  q.printStackTrace();
-				  JOptionPane.showMessageDialog (getCoreDialog(),res.getString("hdlauthfailed"));			  
+ 				  JOptionPane.showMessageDialog (getCoreDialog(),"Datei <"+fp.getAbsolutePath().trim()+"> enthält keinen gültigen Handle-Schlüssel.");			  
 			  }
 				  
 			
@@ -211,8 +172,6 @@ public class HandleDialog extends CDialog {
 	public void show()
 	 throws CShowFailedException {
 		try {
-			CPropertyService props = (CPropertyService) CServiceProvider.getService( ServiceNames.PROPERTIES );
-			((JTextField) getGuiComposite().getWidget("jtfHandlePrefix")).setText(props.getProperty("user", "OAI.Prefix"));
 		} catch (Exception e) {		
 		}
 	}

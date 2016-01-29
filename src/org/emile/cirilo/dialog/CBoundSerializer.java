@@ -24,7 +24,6 @@ import java.awt.Dimension;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
-import javax.swing.table.*;
 
 public class CBoundSerializer {
 	

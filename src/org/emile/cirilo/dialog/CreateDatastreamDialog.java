@@ -40,7 +40,6 @@ package org.emile.cirilo.dialog;
 
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
-import org.emile.cirilo.User;
 
 import java.awt.event.*;
 import javax.swing.*;

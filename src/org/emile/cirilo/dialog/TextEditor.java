@@ -22,41 +22,18 @@ package org.emile.cirilo.dialog;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.gui.CEventListener;
-import voodoosoft.jroots.core.gui.CItemListener;
-import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
-import voodoosoft.jroots.exception.CException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
-import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.business.*;
-import org.emile.cirilo.*;
-import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
-import org.emile.cirilo.ecm.repository.FedoraConnector.Relation;
-import org.emile.cirilo.utils.ImageTools;
-import org.emile.cirilo.utils.Split;
-import org.geonames.Toponym;
-import org.geonames.WebService;
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
-import org.jdom.filter.ElementFilter;
 import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.input.*;
 
-import com.asprise.util.ui.progress.ProgressDialog;
-
-import jsyntaxpane.DefaultSyntaxKit;
-
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.*;
 
@@ -64,12 +41,8 @@ import javax.swing.*;
 
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.io.*;
 import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilderFactory;
 
 
 /**
@@ -79,7 +52,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
  * @created    10.3.2011
  */
 public class TextEditor extends CDialog {
-    private static final Log LOG = LogFactory.getLog(TextEditor.class);
  
 	/**
 	 *  Constructor for the TextEditor object
@@ -244,33 +216,12 @@ public class TextEditor extends CDialog {
 		    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 		    	            		   }
 	    	             	   } else if (dsid.equals("EDM_STREAM") && !pid.startsWith("cirilo:")) {
-	    	    	  		   	    SAXBuilder builder = new SAXBuilder();
-	    	    	  				Document doc = builder.build(new StringReader(new String (jebEditorPane.getText())));
-		    		        		XPath upath = XPath.newInstance("//edm:Place");
-		    		        		upath.addNamespace(Common.xmlns_edm);
-		    		    			List places = (List) upath.selectNodes(doc);			    		    			
-		    		    			if (places.size() > 0) {
-		    		    		 		String account = props.getProperty("user","TEI.LoginName");
-		    		    		 	    WebService.setUserName(account);
-		    	    	  				Format format = Format.getRawFormat();
-		    	    	  				format.setEncoding("UTF-8");
-		    	    	  				XMLOutputter outputter = new XMLOutputter(format);
-		    		    				for (Iterator iter = places.iterator(); iter.hasNext();) {
-		    		    					Element el = (Element) iter.next();	
-		    		    					String id = el.getAttributeValue("about",Common.xmlns_rdf);
-		    		    					id = id.substring(id.indexOf("org/") + 4);
-		    		    					Toponym toponym = WebService.get(new Integer(id).intValue(), null, null);
-		    		    					el.getChild("lat",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLatitude()).toString());
-		    		    					el.getChild("long",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLongitude()).toString());
-		  	    				  		    jebEditorPane.setText(outputter.outputString(doc));	  	   
-		  	    				  		    try {
-		  	    				  		   	   Repository.modifyDatastreamByValue(pid, dsid, mimetype, outputter.outputString(doc));
-		  	    				  		   	} catch (Exception ex) {
-		  		  	 							JOptionPane.showMessageDialog(  getCoreDialog(),  res.getString("xmlformat") , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
-	  		  	 							}
-		    		    				}
-	    	            		   } else {
-	    	    		    			MessageFormat msgFmt = new MessageFormat(res.getString("parsererror"));
+	    	             		    EDM edm = new EDM (jebEditorPane.getText());
+	    	    		  		    jebEditorPane.setText(edm.toString());	  	   
+  	    				  		    try {
+  	    				  		   	   Repository.modifyDatastreamByValue(pid, dsid, mimetype, edm.toString());
+  	    				  		   	} catch (Exception ex) {
+  		  	 							MessageFormat msgFmt = new MessageFormat(res.getString("parsererror"));
 	    	    		    			Object[] args = {"EDM_STREAM"}; 		    		
 	    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 	    	            		   }

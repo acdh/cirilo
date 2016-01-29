@@ -29,11 +29,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.*;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
@@ -48,7 +43,6 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class IngestExcelDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(IngestExcelDialog.class);
     
 	/**
 	 *  Constructor for the LoginDialog object

@@ -21,9 +21,7 @@
 package org.emile.cirilo.dialog;
 
 import voodoosoft.jroots.core.CServiceProvider;
-import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.gui.CEventListener;
-import voodoosoft.jroots.core.gui.CItemListener;
 import voodoosoft.jroots.dialog.*;
 
 
@@ -32,28 +30,19 @@ import org.apache.commons.logging.LogFactory;
 
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
-import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.business.*;
-import org.emile.cirilo.utils.*;
 import org.emile.cirilo.*;
 
-import com.asprise.util.ui.progress.ProgressDialog;
 
 import org.jdom.input.DOMBuilder;
-import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
-import org.jdom.output.*;
-import org.jdom.input.*;
 import org.jdom.*;
 
-import java.awt.Cursor;
 import java.awt.event.*;
 import javax.swing.*;
 
 import java.util.*;
-import java.io.*;
-import java.awt.Color;
 
 
 

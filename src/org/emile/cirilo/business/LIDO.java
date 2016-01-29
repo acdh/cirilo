@@ -1,7 +1,6 @@
 package org.emile.cirilo.business;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,16 +12,11 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageOutputStream;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.log4j.Logger;
 import org.emile.cirilo.business.MDMapper;
 import org.emile.cirilo.business.Topos;
 import org.emile.cirilo.Common;
@@ -57,6 +51,8 @@ import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
 
 public class LIDO {
+
+    private static Logger log = Logger.getLogger(LIDO.class);
 
     private static int cc = 0;
 	private Document lido;
@@ -359,7 +355,7 @@ public class LIDO {
 	        HashMap<String,String> IsMemberOf = new HashMap<String,String> ();  
 		    SAXBuilder parser = new SAXBuilder();
 		    try {
-		         Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/STYLESHEETS/content");
+		 	     Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/STYLESHEETS/content");
  		    	 XPath xPath = XPath.newInstance( "/stylesheets/stylesheet[@type='STYLESHEET' and @model='cm:Context' and @state='default' and @owner='"+xuser+"']" );
  		   	     List stylesheets = (List) xPath.selectNodes( doc );	        		 	     
  		    	 if (stylesheets != null) {	        			    		 
@@ -369,7 +365,7 @@ public class LIDO {
  		    	 }    
     	     } catch (Exception e0){} 	        		  	        					        				
              try {
-	            Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/"+xuser.toUpperCase()+"/content");
+             	Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/"+xuser.toUpperCase()+"/content");
  	            XPath xPath = XPath.newInstance( "/stylesheets/stylesheet[@type='STYLESHEET' and @model='cm:Context' and @state='default']" );
  	            List stylesheets = (List) xPath.selectNodes( doc );	        		 	     
            	    if (stylesheets != null) {	        			    		 
@@ -377,33 +373,34 @@ public class LIDO {
  	            	Element el = (Element) jter.next();
  	       			href = el.getAttributeValue("href");
  	            }
-		    } catch (Exception e0){} 	        		  	        					        				
+		    } catch (Exception e0){} 
+             
+            String context =  "info:fedora/cirilo:Context" + (Repository.exist("cirilo:Context."+xuser) ? "."+xuser : "");
 	        for (Iterator iter = contexts.iterator(); iter.hasNext();) {
 	        	try {
 	        		Element e = (Element) iter.next();
 	        		String target = e.getAttributeValue("label",Common.xmlns_lido);
 	        		target = target.startsWith(Common.INFO_FEDORA) ? target.substring(12) : target; 
-	        		if (!Repository.exist(target)) {  				
+        			log.debug("Creating "+target);
+        			if (!Repository.exist(target)) {  				
 	        			String title = Common.itrim(e.getText()); 	
-	        			if (Repository.exist("cirilo:Context."+xuser)) {
-	        				temps.cloneTemplate("info:fedora/cirilo:Context."+xuser, account, target, title);	        				
-	        			} else {	        			
-	        				temps.cloneTemplate("info:fedora/cirilo:Context", account, target, title);
-           				    if (href != null) Repository.modifyDatastream (target, "STYLESHEET", null, "R", href);
-	        			}	
-	        			Common.log(logger, "Context-Objekt '"+target+ "' wurde erstellt\n");
+	        			temps.cloneTemplate(context, account, target, title);	        	
+	    			    Common.genQR(user, target);
+	    			} else {
+	        			log.debug("Context already exists");
 	        		}
 	        		IsMemberOf.put(target,target);
-				    Common.genQR(user, target);
 	        	} catch (Exception e) { 
 	        		continue;	
 	        	}
 	        }
             if (IsMemberOf.size() > 0) {
     			java.util.List  <org.emile.cirilo.ecm.repository.FedoraConnector.Relation>relations = Repository.getRelations(this.PID,Common.isMemberOf);						
-    	        for (Relation r : relations) {
+                log.debug("Deleting object relations");
+    			for (Relation r : relations) {
   				    Repository.purgeRelation(Common.INFO_FEDORA+this.PID,Common.isMemberOf, r.getTo());
     	        }	   
+                log.debug("Inserting object relations");
             	for ( String ct : IsMemberOf.values() ) {						
             		Repository.addRelation(Common.INFO_FEDORA+this.PID, Common.isMemberOf, Common.INFO_FEDORA+ct);
                	}
@@ -428,7 +425,7 @@ public class LIDO {
 
     	
 	    String s = props.getProperty("user", "LIDO.OnlyGeonameID"); 	    
-		s = (s != null && s.equals("1")) ? "[contains(lido:placeID/@lido:source,'geonames.org') or lido:placeID/@lido:source,'geonameID')]" : "[not(@lido:geographicalEntity) or (@lido:geographicalEntity != 'cirilo:ignore')]";
+		s = (s != null && s.equals("1")) ? "[contains(lido:placeID/@lido:source,'geonames.org') or contains(lido:placeID/@lido:source,'geonameID')]" : "[not(@lido:geographicalEntity) or (@lido:geographicalEntity != 'cirilo:ignore')]";
 
     	
 	    List places = getChildren("//lido:place"+s);
@@ -495,7 +492,9 @@ public class LIDO {
 				        		}
 				        	} 
 					       
-				         } catch (Exception o) {}   
+				         } catch (Exception o) {
+				        	 o.printStackTrace();
+				         }   
 				        	
 				      }
 		        		      
@@ -821,22 +820,31 @@ public class LIDO {
 		try {
 			String p;  
 			String account;
+			
+			log.debug("Enter saving LIDO Object");
 			if(this.PID != null && this.PID.startsWith("cirilo:")) return;
+			log.debug("Creating contexts");
 			p = props.getProperty("user", "LIDO.CreateContexts"); 
 			if (p == null || p.equals("1")) createContexts(this.xuser);
+			log.debug("Ingesting images");
 			p = props.getProperty("user", "LIDO.IngestImages"); 
 			if (p == null || p.equals("1")) ingestImages(); 
+			log.debug("Creating DC Mapping");
 			p = props.getProperty("user", "LIDO.DCMapping"); 
 			if (p == null || p.equals("1")) createMapping(pid, moGA);
+			log.debug("Resolving geonames.org ids");
 			p = props.getProperty("user", "LIDO.ResolveGeoIDs"); 
 			account = props.getProperty("user", "TEI.LoginName"); 
 			if (p == null || p.equals("1")) resolveGeoNameID(account);
+			log.debug("Extracting RDF triples");
 			p = props.getProperty("user", "LIDO.SEMExtraction"); 
 			if (p == null || p.equals("1")) createRELS_INT(null);
 		    write(p == null || p.equals("1"));
+		    log.debug("Resolving SKOS concepts");
 			p = props.getProperty("user", "LIDO.ResolveSKOS"); 
 			if (p == null || p.equals("1")) interfereTerms();
-		    
+			log.debug("Finish saving LIDO Object");
+			    
 		} catch (Exception e) {
 		}
 	  		

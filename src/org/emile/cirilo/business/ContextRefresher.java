@@ -74,13 +74,13 @@ public class ContextRefresher {
 	    				}
 	    				if (model.contains("cm:LIDO")) { 
 	    					data= db.build (Repository.getDatastream(uri, "LIDO_SOURCE"));
-		    				oPath = XPath.newInstance("//t:item[contains(@xml:id,'GID.')]");
+		    				oPath = XPath.newInstance("//t:item[contains(@id,'GID.')]");
 		    				oPath.addNamespace(Common.xmlns_tei_p5);
-		    				oPath.addNamespace( Common.xmlns_xml );
+		    				oPath.addNamespace(Common.xmlns_lido);
+		    				oPath.addNamespace(Common.xmlns_xml );
 	    				}
 	    					 
 	    				List placeNames = (List) oPath.selectNodes( data );
-
 
 	    				if (placeNames.size() > 0) {
 	    					int i=0;
@@ -116,6 +116,7 @@ public class ContextRefresher {
 	 
 	    				
 					} catch (Exception q) {
+						q.printStackTrace();
 					}
 	                
 	    		}		

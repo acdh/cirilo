@@ -27,8 +27,6 @@ import org.emile.cirilo.dialog.CWindowsProperties;
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 
-import java.io.*;
-
 /**
  *  Description of the Class
  *

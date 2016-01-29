@@ -32,8 +32,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import net.miginfocom.swing.*;
-
 /**
  *  Description of the Class
  *

@@ -22,17 +22,8 @@ package org.emile.cirilo.dialog;
 
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
-import org.emile.cirilo.User;
 import org.emile.cirilo.business.TripleStoreFactory;
 import org.emile.cirilo.ecm.repository.Repository;
-import org.emile.cirilo.ecm.templates.TemplateSubsystem;
-
-
-
-
-
-
-import org.xml.sax.InputSource;
 
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -40,9 +31,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import javax.swing.*;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.asprise.util.ui.progress.ProgressDialog;
 
@@ -63,7 +51,6 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class ReorganizeDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(ReorganizeDialog.class);
         
 	/**
 	 *  Constructor for the LoginDialog object

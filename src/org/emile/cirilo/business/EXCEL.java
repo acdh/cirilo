@@ -1,12 +1,8 @@
 package org.emile.cirilo.business;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.util.*;
 import java.text.*;
 import java.util.regex.Matcher;
@@ -19,14 +15,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.ss.usermodel.*;
 
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.Attribute; 
-import org.jdom.Namespace;
-import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;

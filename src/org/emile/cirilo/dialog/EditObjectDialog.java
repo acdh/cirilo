@@ -22,7 +22,6 @@ package org.emile.cirilo.dialog;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.gui.CEventListener;
-import voodoosoft.jroots.core.gui.CItemListener;
 import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
@@ -46,14 +45,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
-import org.emile.cirilo.dialog.ObjectEditorDialog.PopupoListener;
 import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.business.*;
-import org.emile.cirilo.*;
 import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 import org.emile.cirilo.ecm.repository.FedoraConnector.Relation;
-import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.utils.Split;
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
@@ -66,15 +62,9 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Attribute;
-import org.jdom.input.*;
 
 import com.asprise.util.ui.progress.ProgressDialog;
 
-import fedora.server.access.FedoraAPIA;
-import fedora.server.management.FedoraAPIM;
-import fedora.server.utilities.StreamUtility;
-
-import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.business.MDMapper;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.business.IIIFFactory;
@@ -89,11 +79,9 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
-import java.net.URL;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
@@ -148,7 +136,7 @@ public class EditObjectDialog extends CDialog {
 					  int deleted = 0;
 					  
 					  MessageFormat msgFmt = new MessageFormat(res.getString("objmod"));
-	 					Object[] args = {new Integer(selected.length).toString()};
+	 				  Object[] args = {new Integer(selected.length).toString()};
 	 					
 				      int liChoice = JOptionPane.showConfirmDialog(null, msgFmt.format(args), res.getString("replaceobjc"), JOptionPane.YES_NO_OPTION,
 				    		  						JOptionPane.QUESTION_MESSAGE);
@@ -188,7 +176,7 @@ public class EditObjectDialog extends CDialog {
 	  			    	            		   	t.validate(null, null);
 	   	    				  		   		   	Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", new String(t.toString().getBytes("UTF-8"),"UTF-8"));
 	  				    					 }   
-							    			  if (!pid.contains("cirilo:") && model.contains("cm:OAIRecord")) {
+							    			 if (!pid.contains("cirilo:") && model.contains("cm:OAIRecord")) {
 							    					byte[] stylesheet = null;
 							    		        	try {
 							    			        	stylesheet =  Repository.getDatastream("cirilo:"+xuser, "RECORDtoEDM" , "");
@@ -200,6 +188,7 @@ public class EditObjectDialog extends CDialog {
 						    			        			continue;
 						    			        		}
 							    		          	}
+
 							    		        	try {					    		        	
 							    		        		JDOMSource in = new JDOMSource(builder.build(new StringReader(new String(Repository.getDatastream(pid, "RECORD","")))));
 							    		        		JDOMResult out = new JDOMResult();
@@ -278,6 +267,7 @@ public class EditObjectDialog extends CDialog {
 				    			  }
 				    		  }
 				    		  
+	
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
 					    		  if (p.substring(0,1).equals(Common.HSSF_LAYOUT)) {
@@ -337,18 +327,49 @@ public class EditObjectDialog extends CDialog {
 				    			  
 				    		  }
  				    		  
-				    		  				    		  
-				    		  
-				    		  try {
-    						  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
+				    			  String p = (String) substitutions.get(j);
+				    			  if (p.substring(0,1).equals(Common.XSLT)) {
+				    				  if (p.substring(1,2).equals(Common.ADD)){			
+				    				      if (p.contains("r2d2")) {
+				    				    	  try {
+    			    					   	   Repository.modifyDatastream (pid, "METADATA", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
+				    				    	  } catch (Exception q) {				    				    		  
+				    				    	  }
+				    				      } else {
+				    					  
+				    				    	  try {
+				    				    		  Split param = new Split(p.substring(2));
+				    				    		  os = new ByteArrayOutputStream();
+				    				    		  if (i == 0 ) {
+				    				    			  xsltSource = new StreamSource(new File(param.get(0)));
+				    				    			  trans = transFact.newTransformer(xsltSource);
+				    				    			  trans.setParameter("pid", pid);
+				    				    		  }					    				  
+				    				    		  DOMSource domSource=new DOMSource(Repository.getDatastream(pid, param.get(1)));
+			    						  
+				    				    		  trans.transform(domSource, new StreamResult(os));
+				    				    		  if (p.substring(1,2).equals(Common.SIMULATE)) {
+				    				    			  logger.write("\n"+new String(os.toByteArray(),"UTF-8")+"\n" );
+				    				    		  }	  
+				    				    		  else if (p.substring(1,2).equals(Common.ADD)) {
+				    				    			  Repository.modifyDatastreamByValue(pid, param.get(1), "text/xml", new String(os.toByteArray(),"UTF-8") );
+				    				    		  }	  
+				    				    	  } catch (Exception q) {}
+				    				      }  
+				    				  }  
+				    			  }  
+				    		  }
+				    		  				    		  
+/*				    		  
+  			    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
 				    			  if (p.substring(0,1).equals(Common.XSLT)) {
 				    				 
 				    				  if (!p.substring(0,1).equals("0")){
 				    					  try {
-				    					  if (! p.substring(1,2).equals(Common.VOYANT)) { 
-				    						  Split param = new Split(p.substring(2));
+				    					  if (!p.substring(1,2).equals(Common.VOYANT)) { 
+				    					    Split param = new Split(p.substring(2));
 				    					  	os = new ByteArrayOutputStream();
 				    					  	if (i == 0 ) {
 				    						  	xsltSource = new StreamSource(new File(param.get(0)));
@@ -368,12 +389,15 @@ public class EditObjectDialog extends CDialog {
 				    					  if ( p.substring(1,2).equals(Common.VOYANT)) {
 				    						  Repository.addDatastream(pid, "VOYANT",  "Reference to Voyant Tools", "text/xml", "http://voyant-tools.org?input=http://gams.uni-graz.at/archive/objects/"+pid+"/datastreams/TEI_SOURCE/content");
 				    					  }
-				    					 } catch (Exception q) {}  
+				    					 } catch (Exception q) {
+				    						 q.printStackTrace();
+				    					 }  
 				    				  }
 				    			  }
-				    		  }
-				    		  } catch (Exception eq) {}
+				    			  
+				    		  } */
 				    		  
+				    		  				    		  
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
 					    		  if (p.substring(0,1).equals(Common.FO_LAYOUT)) {
@@ -457,7 +481,7 @@ public class EditObjectDialog extends CDialog {
 					    		  pd.worked(1);
 				    		  }
 				    	}	
-				    	   msgFmt = new MessageFormat(res.getString("objmodsuc"));
+				    	msgFmt = new MessageFormat(res.getString("objmodsuc"));
 		 				Object[] args0 = {new Integer(fi).toString()}; 		    		
 		 					JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args0), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 						
@@ -486,7 +510,8 @@ public class EditObjectDialog extends CDialog {
       	  if (p.substring(1,2).equals(Common.REPLACE)) {
       		  Repository.modifyDatastream (pid, dsid , null, "R", p.substring(2));
       	  }
-		} catch (Exception q) {			
+		} catch (Exception q) {	
+			q.printStackTrace();
 		}
         
        try {
@@ -496,7 +521,9 @@ public class EditObjectDialog extends CDialog {
 	   } catch (Exception q) {			
 			 try {
 	      		  Repository.modifyDatastream (pid, dsid , null, "R", p.substring(2));
-			 } catch (Exception e) {}  
+			 } catch (Exception e) {
+				 e.printStackTrace();
+			 }  
 	   }
 	}      
 	

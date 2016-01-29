@@ -20,10 +20,8 @@
 package org.emile.cirilo;
 
 import org.emile.cirilo.dialog.*;
-import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.templates.TemplateSubsystem;
 import org.emile.cirilo.gui.*;
-import org.emile.cirilo.utils.Split;
 import org.emile.cirilo.business.*;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.dialog.DialogNames;
@@ -32,9 +30,11 @@ import org.emile.cirilo.dialog.LoginDialog;
 import org.emile.cirilo.dialog.MakeEnvironmentDialog;
 import org.emile.cirilo.dialog.OptionsDialog;
 import org.emile.cirilo.business.IIIFFactory;
+import org.emile.cirilo.User;
+import org.emile.cirilo.business.Handles;
+import org.emile.cirilo.business.Session;
 
 import voodoosoft.jroots.application.*;
-import voodoosoft.jroots.business.CBusinessFactory;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.gui.*;
 import voodoosoft.jroots.core.gui.*;
@@ -44,25 +44,15 @@ import voodoosoft.jroots.core.CPropertyService;
 
 import org.apache.log4j.Logger;
 
-import com.asprise.util.ui.progress.ProgressDialog;
-
+import java.util.Hashtable;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.OutputStreamWriter;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
+import javax.swing.*;
 import javax.naming.*;
 import javax.naming.directory.*;
-import javax.swing.*;
 
 
 /**
@@ -244,6 +234,33 @@ public class CiriloFrame extends JFrame implements IEventHandler {
   
 			    SkosifyFactory skosify = (SkosifyFactory) CServiceProvider.getService(ServiceNames.SKOSIFY_SERVICE);
     			skosify.close();
+
+    			CPropertyService props = (CPropertyService) CServiceProvider.getService( ServiceNames.PROPERTIES );
+    			
+    			if (props.getProperty("user", "authentication.method").equals("ldap")) {
+    				User user = (User) CServiceProvider.getService( ServiceNames.CURRENT_USER );
+
+    				String repository = user.getRepository();
+    				Hashtable env = new Hashtable();
+    				env.put( Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory" );
+    				env.put( Context.PROVIDER_URL, props.getProperty( "system", repository + ".ldap.providerURL" ) );
+    				env.put( Context.SECURITY_PRINCIPAL, "cn=" + user.getUser() + "," + props.getProperty( "system", repository + ".ldap.userDN" ) + "," + props.getProperty( "system", repository + ".ldap.baseDN" ) );
+    				env.put( Context.SECURITY_CREDENTIALS, user.getPasswd() );
+    				if ( props.getProperty( "system", repository + ".ldap.providerURL" ).startsWith( "ldaps://" ) ) {
+    					env.put( "java.naming.ldap.factory.socket", "org.emile.cirilo.utils.CiriloSocketFactory" );
+    				}
+    				else {
+    					env.put( Context.SECURITY_AUTHENTICATION, "simple" );
+    				}
+
+    				DirContext ctx = new InitialDirContext( env );
+    				
+    				String dns = "cn=handles," + props.getProperty( "system", repository + ".ldap.objectDN" ) + "," + props.getProperty( "system", repository + ".ldap.baseDN" );
+
+    				Handles hdl = (Handles) CServiceProvider.getService( ServiceNames.HANDLESCLASS );
+    				ctx.rebind( dns, hdl );
+    				ctx.close();
+    			}
 
     			log.info("Program terminated normally");
 

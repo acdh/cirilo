@@ -26,8 +26,6 @@ import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.core.gui.CItemListener;
 import voodoosoft.jroots.dialog.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
@@ -71,7 +69,6 @@ import org.exist.xmldb.EXistResource;
  * @created    10.3.2011
  */
 public class IngestObjectDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(IngestObjectDialog.class);
 
 	/**
 	 *  Constructor for the LoginDialog object

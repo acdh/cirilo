@@ -34,15 +34,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import java.net.*;
-import java.io.*;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import fedora.client.FedoraClient;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -62,7 +56,6 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class LoginDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(LoginDialog.class);
     private boolean mode;
     
 	/**

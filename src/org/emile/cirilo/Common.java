@@ -171,7 +171,7 @@ public class Common {
     
     public final static String OWNER = "6";    
     
-    public final static String XSLT = "7";
+    public final static String XSLT = "X";
 
     public final static String DCMAPPING = "8";
 

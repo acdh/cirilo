@@ -199,8 +199,8 @@ class CiriloWindow extends JPanel {
 				home = home + System.getProperty("file.separator")+ "cirilo.ini";
 				try {
 					File fp = new File(home );
-					fp.createNewFile();
 					props.cacheProperties(home, "user");
+					props.setProperty("user", "authentication.method", p.getProperty("authentication.method"));
 				} catch (Exception e) {}
 				
 				CServiceProvider.addService(props, ServiceNames.PROPERTIES);				

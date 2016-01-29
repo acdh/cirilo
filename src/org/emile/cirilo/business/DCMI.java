@@ -19,12 +19,8 @@
  */
 package org.emile.cirilo.business;
 
-import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.dialog.*;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
@@ -48,7 +44,6 @@ import org.jdom.xpath.XPath;
  * @created 10.3.2011
  */
 public class DCMI {
-	private static final Log LOG = LogFactory.getLog(DCMI.class);
 
 	private Document rules;
 	private Document dcms;

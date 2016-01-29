@@ -23,15 +23,8 @@ package org.emile.cirilo.dialog;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.gui.CEventListener;
-import voodoosoft.jroots.core.gui.CItemListener;
 import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
-import voodoosoft.jroots.exception.CException;
-
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.utils.ImagePreviewPanel;
 import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.Common;
@@ -81,7 +74,6 @@ import java.text.MessageFormat;
  * @created    10.3.2011
  */
 public class ObjectEditorDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(ObjectEditorDialog.class);
 
 	/**
 	 *  Constructor for the LoginDialog object

@@ -20,30 +20,21 @@
 
 package org.emile.cirilo.dialog;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.emile.cirilo.*;
-import org.emile.cirilo.utils.*;
 import org.emile.cirilo.business.MDMapper;
 import org.emile.cirilo.business.Session;
-import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.ecm.repository.FedoraConnector.Relation;
-import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.CServiceProvider;
-import voodoosoft.jroots.core.gui.CEventListener;
-import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -53,18 +44,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Vector;
-import java.net.URL;
-import java.io.*;
 
 import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import java.util.regex.*;
-
-import javax.swing.*;
-
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -73,8 +55,6 @@ import org.jdom.xpath.XPath;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-
-import com.asprise.util.ui.progress.ProgressDialog;
 
 public class TemplaterDialog extends CDefaultDialog {
 	/**

@@ -26,9 +26,7 @@ public class SesameFactory {
 
 	public SesameFactory () {
 		try {
-			CPropertyService props=(CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);	
 			User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
-			String ses = user.getSesameUrl();
 			String host = user.getUrl();						
 			sparqlEndPoint = host.substring(0,host.lastIndexOf("/")+1)+"openrdf-sesame";
 			this.manager = new RemoteRepositoryManager(sparqlEndPoint);

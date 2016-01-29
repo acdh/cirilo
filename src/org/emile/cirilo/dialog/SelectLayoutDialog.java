@@ -20,7 +20,6 @@
 
 package org.emile.cirilo.dialog;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.emile.cirilo.*;
 import org.emile.cirilo.utils.*;
 import org.emile.cirilo.business.Session;
@@ -39,8 +38,6 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 
 import javax.swing.JTable;
-
-import java.util.regex.*;
 
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;

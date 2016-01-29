@@ -18,7 +18,7 @@
  */
 
 package org.emile.cirilo;
-
+/*
 import java.io.FileInputStream;
 import java.io.StringReader;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ import edu.harvard.hul.ois.mets.DmdSec;
 import edu.harvard.hul.ois.mets.Mets;
 import edu.harvard.hul.ois.mets.helper.MetsReader;
 import edu.harvard.hul.ois.mets.helper.MetsWriter;
-
+*/
 public class metsAPI {
 	/*
 	try {

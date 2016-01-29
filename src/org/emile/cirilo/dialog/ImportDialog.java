@@ -45,9 +45,6 @@ import java.util.Iterator;
 
 import javax.swing.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.asprise.util.ui.progress.ProgressDialog;
 
 import fedora.client.FedoraClient;
@@ -70,7 +67,6 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class ImportDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(ImportDialog.class);
     
 	/**
 	 *  Constructor for the LoginDialog object

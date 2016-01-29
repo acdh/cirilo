@@ -20,10 +20,8 @@
 package org.emile.cirilo.utils;
 
 import javax.swing.*;
-import javax.swing.filechooser.*;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.beans.*;
 import java.io.File;
 

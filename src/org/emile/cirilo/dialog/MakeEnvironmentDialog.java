@@ -21,29 +21,12 @@
 package org.emile.cirilo.dialog;
 
 import org.emile.cirilo.*;
-import org.emile.cirilo.business.*;
-import org.emile.cirilo.ecm.repository.FedoraSoapImpl;
-import org.emile.cirilo.ecm.repository.FedoraUserToken;
-import org.emile.cirilo.ecm.repository.Repository;
-import org.emile.cirilo.ecm.templates.TemplateSubsystem;
 import org.emile.cirilo.ServiceNames;
-import org.emile.cirilo.User;
 
 import java.awt.event.*;
 import javax.swing.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import fedora.client.FedoraClient;
-
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
-
-import javax.naming.*;
-import javax.naming.directory.*;
 
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
@@ -59,8 +42,6 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class MakeEnvironmentDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(MakeEnvironmentDialog.class);
-    private boolean mode;
 	/**
 	 *  Constructor for the LoginDialog object
 	 */

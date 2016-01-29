@@ -19,13 +19,10 @@
 
 package org.emile.cirilo;
 
-import org.emile.cirilo.business.Session;
 import org.emile.cirilo.dialog.*;
 
 import voodoosoft.jroots.application.*;
-import voodoosoft.jroots.business.*;
 import voodoosoft.jroots.core.*;
-import voodoosoft.jroots.data.*;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.gui.*;
 

@@ -23,27 +23,14 @@ package org.emile.cirilo.dialog;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.gui.CEventListener;
-import voodoosoft.jroots.core.gui.CItemListener;
-import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
-import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.utils.Split;
 import org.emile.cirilo.business.*;
 import org.emile.cirilo.*;
-
-import com.asprise.util.ui.progress.ProgressDialog;
-
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
-import org.jdom.output.*;
-import org.jdom.input.*;
-import org.jdom.*;
 
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -52,7 +39,6 @@ import javax.swing.*;
 
 import java.util.*;
 import java.io.*;
-import java.awt.Color;
 
 
 
@@ -63,7 +49,6 @@ import java.awt.Color;
  * @created    10.3.2011
  */
 public class ReplaceDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(ReplaceDialog.class);
 
 	/**
 	 *  Constructor for the LoginDialog object

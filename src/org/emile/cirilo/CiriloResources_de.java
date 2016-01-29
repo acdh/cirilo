@@ -117,7 +117,7 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "customization", "TEI-Customization ausführen"},
                 { "createfromjpeg", "METS-Objekte aus Bildverzeichnissen erstellen"},
                 { "geonameslogin", "Geonames Webservice Login-Name"},
-                { "onlygeonameids", "Nur Elemente mit geonameID berücksichtigen"},
+                { "onlygeonameids", "Nur Elemente mit geonames.org ID berücksichtigen"},
                                                    
                 /* dialog */
                 { "import"          , "Importieren"          },

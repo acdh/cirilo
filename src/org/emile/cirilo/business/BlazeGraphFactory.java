@@ -6,11 +6,9 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
-import com.bigdata.rdf.sail.webapp.SD;
 import com.bigdata.rdf.sail.webapp.client.ConnectOptions;
 import com.bigdata.rdf.sail.webapp.client.JettyResponseListener;
 import com.bigdata.rdf.sail.webapp.client.RemoteRepository;
-import com.bigdata.rdf.sail.webapp.client.RemoteRepository.AddOp;
 import com.bigdata.rdf.sail.webapp.client.RemoteRepository.RemoveOp;
 import com.bigdata.rdf.sail.webapp.client.RemoteRepositoryManager;
 
@@ -21,8 +19,6 @@ import org.eclipse.jetty.client.api.AuthenticationStore;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
-import org.openrdf.model.Statement;
-import org.openrdf.query.GraphQueryResult;
 import org.openrdf.rio.RDFFormat;
 
 import voodoosoft.jroots.core.CPropertyService;
@@ -35,11 +31,9 @@ public class BlazeGraphFactory {
 	private String sparqlEndPoint;
 	private RemoteRepositoryManager repository;
 	private HttpClient client;
-	private User user;
-
+	
 	public BlazeGraphFactory () {
 	  try {	
-		CPropertyService props=(CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
 		User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
 		String host = user.getSesameUrl();						
 		sparqlEndPoint = host.substring(0,host.lastIndexOf("/")+1)+"bigdata";

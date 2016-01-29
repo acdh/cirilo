@@ -23,8 +23,6 @@ package org.emile.cirilo.dialog;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
-import org.emile.cirilo.business.TEI;
-import org.emile.cirilo.business.LIDO;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.templates.TemplateSubsystem;
 import org.jdom.Document;
@@ -34,44 +32,19 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.DOMOutputter;
 import org.jdom.output.XMLOutputter;
 import org.jdom.output.Format;
-
 import org.jdom.xpath.*;
-import org.xml.sax.InputSource;
 
-
-
-
-
-
-import org.xml.sax.InputSource;
 
 import java.awt.Cursor;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.StringReader;
-import java.io.FilenameFilter;
-import java.io.StringWriter;
-import java.util.List;
-import java.util.Iterator;
 
 import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.asprise.util.ui.progress.ProgressDialog;
 
 import fedora.client.FedoraClient;
-
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -89,7 +62,6 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class UpgradeDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(UpgradeDialog.class);
     private static final String CIRILO_BACKBONE = "cirilo:Backbone";
     private static final String CIRILO_ENVIRONMENT = "cirilo:Environment";
        
