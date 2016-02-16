@@ -39,8 +39,12 @@ import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.dialog.*;
 
+import org.apache.log4j.Logger;
+
 
 public class LocationDialog extends CDialog {
+
+	private static Logger log = Logger.getLogger(LocationDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */

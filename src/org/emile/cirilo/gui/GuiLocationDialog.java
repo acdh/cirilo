@@ -30,6 +30,8 @@ import org.emile.cirilo.ServiceNames;
 
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 
 /**
  *  Description of the Class
@@ -39,7 +41,9 @@ import java.util.ResourceBundle;
  */
 public class GuiLocationDialog extends CGuiComposite {
 
-	Container container;
+	private static Logger log = Logger.getLogger(GuiLocationDialog.class);
+
+	protected Container container;
 	/**
 	 *  Description of the Field
 	 */
@@ -70,7 +74,7 @@ public class GuiLocationDialog extends CGuiComposite {
 			setup();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

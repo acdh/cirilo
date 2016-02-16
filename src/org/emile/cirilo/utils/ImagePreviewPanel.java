@@ -25,6 +25,8 @@ import java.awt.*;
 import java.beans.*;
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -33,6 +35,8 @@ import java.io.File;
  */
 public class ImagePreviewPanel extends JPanel
 		 implements PropertyChangeListener {
+
+	private static Logger log = Logger.getLogger(ImagePreviewPanel.class);
 
 	static final long serialVersionUID = 0L;
 	private int width, height;

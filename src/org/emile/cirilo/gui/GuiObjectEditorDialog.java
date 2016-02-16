@@ -21,12 +21,17 @@ package org.emile.cirilo.gui;
 
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.gui.CGuiComposite; 
+
 import java.awt.*;
 
 import org.emile.cirilo.ServiceNames;
+
 import java.util.ResourceBundle;
+
 import javax.swing.*;
 import javax.swing.border.*;
+
+import org.apache.log4j.Logger;
 
 /**
  *  Description of the Class
@@ -37,33 +42,35 @@ import javax.swing.border.*;
 public class GuiObjectEditorDialog extends CGuiComposite {
 
 	
-	Container container;
-
-	JTabbedPane tpPane;
+	private static Logger log = Logger.getLogger(GuiObjectEditorDialog.class);
 	
-	JTable jtDatastreams;
-	JTable jtMetadata;
-	JList jtRelations;
-	JList jtNonRelations;
-	JButton jbClose;
-	JButton jbSave;
-	JButton jbAddRelation;
-	JButton jbRemoveRelation;
-	JButton jbSaveRelations;
-	JTextField jtfIdentifier;
-	JComboBox jcbState;
-	JTextField jtfLabel;
-	JComboBox jcbUser;
-	JButton jboUpload;
-	JButton jbmUpload;
-	JButton jboDownload;
-	JButton jbmDownload;
-	JButton jbNew;
-	JButton jbDel;
-	JButton jboEdit;
-	JButton jbmEdit;
-	JButton jbSeek;
-    JTextField jtfSeek;
+	protected Container container;
+
+	protected JTabbedPane tpPane;
+	
+	protected JTable jtDatastreams;
+	protected JTable jtMetadata;
+	protected JList jtRelations;
+	protected JList jtNonRelations;
+	protected JButton jbClose;
+	protected JButton jbSave;
+	protected JButton jbAddRelation;
+	protected JButton jbRemoveRelation;
+	protected JButton jbSaveRelations;
+	protected JTextField jtfIdentifier;
+	protected JComboBox jcbState;
+	protected JTextField jtfLabel;
+	protected JComboBox jcbUser;
+	protected JButton jboUpload;
+	protected JButton jbmUpload;
+	protected JButton jboDownload;
+	protected JButton jbmDownload;
+	protected JButton jbNew;
+	protected JButton jbDel;
+	protected JButton jboEdit;
+	protected JButton jbmEdit;
+	protected JButton jbSeek;
+	protected JTextField jtfSeek;
 
 	/**
 	 *  Constructor for the GuiObjectEditorDialog  object
@@ -76,7 +83,7 @@ public class GuiObjectEditorDialog extends CGuiComposite {
 			setRootComponent(container);
 			setup();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

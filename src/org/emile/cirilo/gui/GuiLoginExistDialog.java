@@ -22,15 +22,15 @@ package org.emile.cirilo.gui;
 
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.gui.CGuiComposite;
-import javax.swing.*;
 
+import javax.swing.*;
 
 import org.emile.cirilo.ServiceNames;
 
 import java.util.ResourceBundle;
-
 import java.awt.*;
-import java.awt.Dimension;
+
+import org.apache.log4j.Logger;
 
 /**
  *  Description of the Class
@@ -41,7 +41,9 @@ import java.awt.Dimension;
 public class GuiLoginExistDialog extends CGuiComposite {
 
 	
-	Container container;
+	private static Logger log = Logger.getLogger(GuiLoginExistDialog.class);
+
+	protected Container container;
 		
 	/**
 	 *  Description of the Field
@@ -98,7 +100,7 @@ public class GuiLoginExistDialog extends CGuiComposite {
 			setup(); 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

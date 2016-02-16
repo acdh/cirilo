@@ -30,6 +30,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 
 import com.asprise.util.ui.progress.ProgressDialog;
@@ -52,6 +54,7 @@ import voodoosoft.jroots.dialog.*;
  */
 public class ReorganizeDialog extends CDialog {
         
+	private static Logger log = Logger.getLogger(ReorganizeDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -200,7 +203,7 @@ public class ReorganizeDialog extends CDialog {
 						}
 					    
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							log.error(ex.getLocalizedMessage(),ex);	
 						}
 						finally {
 						}

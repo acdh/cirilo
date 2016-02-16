@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.*;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
@@ -86,7 +87,9 @@ public class LIDO {
 			this.mode = mode;	
 			this.builder = new SAXBuilder();
 			this.xuser = user.getUser();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
+		}
 	}
 
 
@@ -112,7 +115,7 @@ public class LIDO {
     	        return true;
     		}
 		} catch (Exception e) { 
-			e.printStackTrace();
+		  	log.error(e.getLocalizedMessage(),e);		  
 			return false;
 		}
 	}
@@ -125,7 +128,7 @@ public class LIDO {
 			this.PID = "";
    	        return true;
 		} catch (Exception e) { 
-			e.printStackTrace();
+		  	log.error(e.getLocalizedMessage(),e);		  
 			return false;
 		}
 	}
@@ -137,7 +140,7 @@ public class LIDO {
 			this.PID = pid;
    	        return true;
 		} catch (Exception e) { 
-			e.printStackTrace();
+		  	log.error(e.getLocalizedMessage(),e);		  
 			return false;
 		}
 	}
@@ -149,7 +152,10 @@ public class LIDO {
 	public String getName() { 
 		try {
 			return !this.collection.isEmpty() ? this.collection : this.file.getCanonicalPath();
-		} catch (Exception e) { return ""; }
+		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
+		  	return "";
+		}
 	}
 	
 	public String getPID() { 
@@ -161,7 +167,10 @@ public class LIDO {
 				String s = idno.getTextNormalize();
 	            this.PID = s.startsWith(Common.INFO_FEDORA) ? s.substring(Common.INFO_FEDORA.length()) : s;
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
+		  	return "";
+		}
 		return this.PID;
 	}
 	
@@ -186,7 +195,9 @@ public class LIDO {
 			this.raw = outputter.outputString(this.lido);
 			this.PID = pid;
 			
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
+		}
 	}
 
 		
@@ -204,6 +215,7 @@ public class LIDO {
 				return true;
 		
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  		
 			return false; 
 		}
 	}
@@ -234,7 +246,9 @@ public class LIDO {
 				}
 			}
 			return true;			
-		} catch (Exception e) {return false;}
+		} catch (Exception e) { 
+			return false;
+		}
 	}	
 	
 	public void ingestImages() {	
@@ -334,13 +348,14 @@ public class LIDO {
 				           }
 					     }
 		    			} catch (Exception eq) {
+		    			  	log.error(eq.getLocalizedMessage(),eq);		  
 		    				Common.log(logger, eq);
 		    				return;
 		    			}
 		    		}
 		    	}
 			  } catch (Exception e) {
-				  e.printStackTrace();
+				log.error(e.getLocalizedMessage(),e);		  
 			  }	     
 		   }
 
@@ -363,7 +378,9 @@ public class LIDO {
  	   				 Element el = (Element) jter.next();
  	   				 href = el.getAttributeValue("href");
  		    	 }    
-    	     } catch (Exception e0){} 	        		  	        					        				
+    	     } catch (Exception q){
+    			 log.error(q.getLocalizedMessage(),q);		  
+    	     } 	        		  	        					        				
              try {
              	Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/"+xuser.toUpperCase()+"/content");
  	            XPath xPath = XPath.newInstance( "/stylesheets/stylesheet[@type='STYLESHEET' and @model='cm:Context' and @state='default']" );
@@ -373,7 +390,9 @@ public class LIDO {
  	            	Element el = (Element) jter.next();
  	       			href = el.getAttributeValue("href");
  	            }
-		    } catch (Exception e0){} 
+		    } catch (Exception q){
+			  	log.error(q.getLocalizedMessage(),q);		     	
+		    } 
              
             String context =  "info:fedora/cirilo:Context" + (Repository.exist("cirilo:Context."+xuser) ? "."+xuser : "");
 	        for (Iterator iter = contexts.iterator(); iter.hasNext();) {
@@ -390,7 +409,8 @@ public class LIDO {
 	        			log.debug("Context already exists");
 	        		}
 	        		IsMemberOf.put(target,target);
-	        	} catch (Exception e) { 
+	        	} catch (Exception q) { 
+	    		  	log.error(q.getLocalizedMessage(),q);		  
 	        		continue;	
 	        	}
 	        }
@@ -408,6 +428,7 @@ public class LIDO {
  	    }
    	 } catch (Exception e) {
 	   try {
+		   log.error(e.getLocalizedMessage(),e);		  		   
 		   Common.log(logger, e);
   	   } catch (Exception eq) {
   	   }            
@@ -435,7 +456,8 @@ public class LIDO {
 			try {
 				Attribute at = (Attribute) jter.next();
 				at.getParent().removeAttribute("corresp", Common.xmlns_lido);
-			} catch (Exception eq) {
+			} catch (Exception q) {
+			  	log.error(q.getLocalizedMessage(),q);		  
 			}
 		}
 	 	    
@@ -493,7 +515,7 @@ public class LIDO {
 				        	} 
 					       
 				         } catch (Exception o) {
-				        	 o.printStackTrace();
+				 		  	log.error(o.getLocalizedMessage(),o);		  
 				         }   
 				        	
 				      }
@@ -559,7 +581,7 @@ public class LIDO {
 			}
 
     	} catch (Exception e) {
-	   		 e.printStackTrace();
+		  	log.error(e.getLocalizedMessage(),e);		  
 	   	 }	   
     
    }
@@ -596,7 +618,8 @@ public class LIDO {
 						try {
 							Element e = (Element) jter.next();
 							e.removeAttribute("type", Common.xmlns_lido);
-						} catch (Exception eq) {
+						} catch (Exception q) {
+						  	log.error(q.getLocalizedMessage(),q);		  
 						}
 					}
 					elem = getChildren("//lido:conceptID[@lido:source='"+pre+"']");
@@ -636,10 +659,14 @@ public class LIDO {
 		      	    	}
 	      	    }	
 	      	    
-				} catch (Exception e) {}
+				} catch (Exception q) {
+				  	log.error(q.getLocalizedMessage(),q);		  
+			
+				}
 		   }	    
 
-		} catch (Exception eq) {
+		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  			
 		}
 	}
 	
@@ -688,7 +715,8 @@ public class LIDO {
 	    			root.addContent(term);
     	    	}
                 			
-			} catch (Exception ex) {
+			} catch (Exception e) {
+			  	log.error(e.getLocalizedMessage(),e);		  			
 			}								
 	}
 		
@@ -735,7 +763,7 @@ public class LIDO {
 			}
 					
 		} catch (Exception e) {
-			e.printStackTrace();
+		  	log.error(e.getLocalizedMessage(),e);		  
 		}
        finally {
         }
@@ -762,7 +790,7 @@ public class LIDO {
 					con.setUseCaches(false);
 		    		Document doc =builder.build(con.getInputStream());
                     rdfs = outputter.outputString(doc);					
-				} catch (Exception ex0) {
+				} catch (Exception e) {
 					try {
 						Document doc  =builder.build(new StringReader(new String(Repository.getDatastream("cirilo:"+this.xuser, "LIDOtoRDF",""))));
                         rdfs = outputter.outputString(doc);
@@ -770,7 +798,9 @@ public class LIDO {
 						try {
 							Document doc  =builder.build(new StringReader(new String(Repository.getDatastream("cirilo:Backbone", "LIDOtoRDF",""))));
 							rdfs = outputter.outputString(doc);
-						} catch (Exception ex2) {}
+						} catch (Exception ex2) {
+						  	log.error(ex2.getLocalizedMessage(),ex2);		  
+						}
 					}	
 				}		
 
@@ -805,8 +835,8 @@ public class LIDO {
 
 						temp.delete();
 					}
-			     } catch (Exception ex) {
-			    	 ex.printStackTrace();
+			     } catch (Exception e) {
+					 log.error(e.getLocalizedMessage(),e);		  
 			     }		
   	}
  
@@ -846,6 +876,7 @@ public class LIDO {
 			log.debug("Finish saving LIDO Object");
 			    
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  			
 		}
 	  		
 		
@@ -858,6 +889,7 @@ public class LIDO {
 			createContexts(this.xuser);
 			createRELS_INT(null);
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  			
 		}	    
 	 }	
 		

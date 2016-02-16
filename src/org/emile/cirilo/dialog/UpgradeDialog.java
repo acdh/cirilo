@@ -33,7 +33,7 @@ import org.jdom.output.DOMOutputter;
 import org.jdom.output.XMLOutputter;
 import org.jdom.output.Format;
 import org.jdom.xpath.*;
-
+import org.apache.log4j.Logger;
 
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -42,9 +42,11 @@ import java.io.FileOutputStream;
 import java.io.StringReader;
 
 import javax.swing.*;
+
 import com.asprise.util.ui.progress.ProgressDialog;
 
 import fedora.client.FedoraClient;
+
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -62,7 +64,10 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class UpgradeDialog extends CDialog {
-    private static final String CIRILO_BACKBONE = "cirilo:Backbone";
+  
+	private static Logger log = Logger.getLogger(UpgradeDialog.class);
+
+	private static final String CIRILO_BACKBONE = "cirilo:Backbone";
     private static final String CIRILO_ENVIRONMENT = "cirilo:Environment";
        
     Document properties; 
@@ -402,7 +407,7 @@ public class UpgradeDialog extends CDialog {
 	     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml")) {
 	     		entries.add(file.getAbsolutePath());
 	     	}
-		  } catch (Exception e) {e.printStackTrace();}	
+		  } catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
 	  	}	
 
 	

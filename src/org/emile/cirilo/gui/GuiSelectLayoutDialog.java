@@ -29,6 +29,8 @@ import java.util.ResourceBundle;
 
 import javax.swing.*;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -37,11 +39,13 @@ import javax.swing.*;
  */
 public class GuiSelectLayoutDialog extends CGuiComposite {
 
-	Container container;
+	private static Logger log = Logger.getLogger(GuiSelectLayoutDialog.class);
+	
+	protected Container container;
 
-	JTable jtLayouts;
-	JButton jbSelect;
-	JButton jbClose;
+	protected JTable jtLayouts;
+	protected JButton jbSelect;
+	protected JButton jbClose;
 
 
 	/**
@@ -55,7 +59,7 @@ public class GuiSelectLayoutDialog extends CGuiComposite {
 			setRootComponent(container);
 			setup();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

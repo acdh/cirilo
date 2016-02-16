@@ -23,12 +23,18 @@ import com.digitprop.tonic.*;
 
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CGuiTools;
+
 import org.emile.cirilo.ServiceNames;
+
 import java.util.ResourceBundle;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.net.URL;
+
+import org.apache.log4j.Logger;
 
 /**
  *  Description of the Class
@@ -38,11 +44,13 @@ import java.net.URL;
  */
 public class HelpFrame extends JWindow {
 	
-	JPanel panel             = new JPanel();
-	JLabel logo              = new JLabel();
-	JTextArea log            = new JTextArea();
-	JScrollPane scrollPanel  = new JScrollPane();
-	JButton jbCancel;
+	private static Logger log = Logger.getLogger(HelpFrame.class);
+	
+	private JPanel panel             = new JPanel();
+	private JLabel logo              = new JLabel();
+	private JTextArea jta            = new JTextArea();
+	private JScrollPane scrollPanel  = new JScrollPane();
+	private JButton jbCancel;
 
 
 	/**
@@ -57,16 +65,16 @@ public class HelpFrame extends JWindow {
 			logo.setOpaque(false); 
 			logo.setIcon(new ImageIcon(url));
 
-			log.setFont(new Font("SansSerif", java.awt.Font.PLAIN, 9));
+			jta.setFont(new Font("SansSerif", java.awt.Font.PLAIN, 9));
 
-			log.append("Cirilo\nAn application for data curation and content preservation\nin FEDORA based repositories\n");
-			log.append("\nAuthor: Johannes H. Stigler, (c)  2011 - 2015\n");
-			log.append("Documentation: Elisabeth Steiner\n");
-			log.append("Version 2.4.0.5 (build 2015-11-25)\n");
-			log.append("Used third-party libraries:\n");
-			log.append("JRoots 1.5.0 (c) 2002-2003, by Stefan Wischnewski\n");
-			log.append("This product includes software developed by the\n");
-			log.append("Apache Software Foundation (http://www.apache.org/).");
+			jta.append("Cirilo\nAn application for data curation and content preservation\nin FEDORA based repositories\n");
+			jta.append("\nAuthor: Johannes H. Stigler, (c)  2011 - 2015\n");
+			jta.append("Documentation: Elisabeth Steiner\n");
+			jta.append("Version 2.4.0.5 (build 2015-11-25)\n");
+			jta.append("Used third-party libraries:\n");
+			jta.append("JRoots 1.5.0 (c) 2002-2003, by Stefan Wischnewski\n");
+			jta.append("This product includes software developed by the\n");
+			jta.append("Apache Software Foundation (http://www.apache.org/).");
 
 			jbCancel.addActionListener(
 				new ActionListener() {
@@ -79,7 +87,7 @@ public class HelpFrame extends JWindow {
 			CGuiTools.center(this);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 
@@ -118,8 +126,8 @@ public class HelpFrame extends JWindow {
 		panel.setBorder(BorderFactory.createEtchedBorder());
 		panel.setPreferredSize(new Dimension(400, 450));
 		panel.setLayout(new GridBagLayout());
-		log.setBorder(null);
-		log.setEditable(false);
+		jta.setBorder(null);
+		jta.setEditable(false);
 
 		logo.setPreferredSize(new Dimension(350, 200));
 		logo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -139,7 +147,7 @@ public class HelpFrame extends JWindow {
 		panel.add(box, new GridBagConstraints(0, 2, 1, 1, 1.0, 0, GridBagConstraints.CENTER,
 			GridBagConstraints.HORIZONTAL, new Insets(10, 10, 10, 10), 0, 0));
 
-		scrollPanel.getViewport().add(log, null);
+		scrollPanel.getViewport().add(jta, null);
 
 		this.getContentPane().add(panel, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
 			GridBagConstraints.CENTER,

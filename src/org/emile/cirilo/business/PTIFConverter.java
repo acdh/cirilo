@@ -5,8 +5,9 @@ import javax.imageio.IIOImage;
 import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.metadata.IIOMetadata;
-
 import javax.media.jai.*;
+
+import org.apache.log4j.Logger;
 
 import com.sun.media.imageio.plugins.tiff.TIFFImageWriteParam;
 import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriter;
@@ -18,6 +19,8 @@ import java.awt.image.RenderedImage;
 
 
 public class PTIFConverter {
+
+	private static Logger log = Logger.getLogger(PTIFConverter.class);
 
 	private static final RenderingHints RH_BORDER_REFLECT = new RenderingHints(JAI.KEY_BORDER_EXTENDER,
             BorderExtender.createInstance(BorderExtender.BORDER_REFLECT));
@@ -52,7 +55,7 @@ public class PTIFConverter {
 			writer.endWriteSequence();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 			
 	}      

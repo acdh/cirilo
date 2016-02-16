@@ -21,17 +21,18 @@
 package org.emile.cirilo.dialog;
 
 import org.emile.cirilo.*;
-import org.emile.cirilo.ServiceNames;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
-
 import voodoosoft.jroots.dialog.*;
 
 /**
@@ -42,6 +43,9 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class MakeEnvironmentDialog extends CDialog {
+
+	private static Logger log = Logger.getLogger(MakeEnvironmentDialog.class);
+
 	/**
 	 *  Constructor for the LoginDialog object
 	 */

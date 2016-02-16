@@ -29,6 +29,8 @@ import java.util.ResourceBundle;
 
 import javax.swing.*;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -36,11 +38,14 @@ import javax.swing.*;
  * @created    07. September 2006
  */
 public class GuiHarvesterDialog extends CGuiComposite {
-	Container container;
-	JTable jtRepositories;
-	JButton jbStart;
-	JButton jbClose;
-	JButton jbShowLogfile;
+
+	private static Logger log = Logger.getLogger(GuiHarvesterDialog.class);
+
+	protected Container container;
+	protected JTable jtRepositories;
+	protected JButton jbStart;
+	protected JButton jbClose;
+	protected JButton jbShowLogfile;
 
 
 	/**
@@ -54,7 +59,7 @@ public class GuiHarvesterDialog extends CGuiComposite {
 			setRootComponent(container);
 			setup();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

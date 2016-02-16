@@ -24,10 +24,14 @@ import java.awt.Dimension;
 
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.gui.CGuiComposite;
+
 import javax.swing.*;
 
 import org.emile.cirilo.ServiceNames;
+
 import java.util.ResourceBundle;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -38,8 +42,9 @@ import java.util.ResourceBundle;
 */
 public class GuiMakeEnvironmentDialog extends CGuiComposite {
 
+	private static Logger log = Logger.getLogger(GuiMakeEnvironmentDialog.class);
 	
-	Container container;
+	protected Container container;
 
 	protected JLabel user;
 	/**
@@ -68,7 +73,7 @@ public class GuiMakeEnvironmentDialog extends CGuiComposite {
 			setup();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

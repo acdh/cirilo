@@ -172,7 +172,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 			
 		} 
 		catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			throw ex;
 		}
 
@@ -186,9 +186,9 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 					try {
 						close();
 					}
-					catch (Exception e1) {
+					catch (Exception q) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						log.error(q.getLocalizedMessage(),q);	
 					}
 				}
 			});
@@ -266,7 +266,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 
 			}
 			catch ( Exception ex ) {
-				ex.printStackTrace();
+				log.error(ex.getLocalizedMessage(),ex);	
 			}
 
 			try {
@@ -298,7 +298,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
             
 		}
 		catch ( Exception ex ) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 		
 	}
@@ -474,7 +474,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 						temps.makeTemplate("cirilo:OAIRecord", loDlg.getUser(), "$cirilo:OAIRecord."+loDlg.getUser(), "Untitled", "info:fedora/cm:OAIRecord");
 						temps.makeTemplate("cirilo:Environment", loDlg.getUser(), "$cirilo:"+loDlg.getUser(), "Untitled", "");
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					log.error(ex.getLocalizedMessage(),ex);	
 				}
 				finally {
 					this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -512,7 +512,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 			dlg = (ImportDialog) CServiceProvider.getService(DialogNames.IMPORT_DIALOG);
 			dlg.open();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 	}	
 
@@ -524,7 +524,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 			dlg = (UpgradeDialog) CServiceProvider.getService(DialogNames.UPGRADE_DIALOG);
 			dlg.open();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 	}	
 	
@@ -536,7 +536,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 			dlg = (ReorganizeDialog) CServiceProvider.getService(DialogNames.REORGANIZE_DIALOG);
 			dlg.open();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 	}	
 	

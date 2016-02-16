@@ -24,22 +24,18 @@ import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.dialog.*;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import org.apache.log4j.Logger;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.business.*;
 import org.emile.cirilo.*;
-
-
 import org.jdom.input.DOMBuilder;
 import org.jdom.xpath.XPath;
 import org.jdom.*;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import java.util.*;
@@ -53,7 +49,8 @@ import java.util.*;
  * @created    10.3.2011
  */
 public class EditDCDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(EditDCDialog.class);
+
+	private static Logger log = Logger.getLogger(EditDCDialog.class);
 
 	/**
 	 *  Constructor for the LoginDialog object
@@ -187,7 +184,7 @@ public class EditDCDialog extends CDialog {
 			jcbUser.setEnabled(false);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			throw new COpenFailedException(ex);
 		}
 	}

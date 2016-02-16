@@ -27,12 +27,13 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
-
 import voodoosoft.jroots.dialog.*;
 
 /**
@@ -44,6 +45,7 @@ import voodoosoft.jroots.dialog.*;
  */
 public class IngestExcelDialog extends CDialog {
     
+	private static Logger log = Logger.getLogger(IngestExcelDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -126,7 +128,7 @@ public class IngestExcelDialog extends CDialog {
 			
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 
 	}
@@ -148,7 +150,7 @@ public class IngestExcelDialog extends CDialog {
 			
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 
 	}

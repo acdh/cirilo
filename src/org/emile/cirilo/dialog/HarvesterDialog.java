@@ -28,12 +28,14 @@ import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.gui.jtable.HarvesterTableModel;
 import org.emile.cirilo.oai.*;
+import org.emile.cirilo.utils.ImageTools;
 
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.FileWriter;
@@ -66,6 +68,7 @@ import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.Attribute;
 
 import com.asprise.util.ui.progress.ProgressDialog;
 
@@ -202,7 +205,7 @@ public class HarvesterDialog extends CDefaultDialog {
 						}
 	         
 					} catch (Exception ex) {
-						ex.printStackTrace();
+						log.error(ex.getLocalizedMessage(),ex);	
 					}
 					finally {
 						getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -281,6 +284,13 @@ public class HarvesterDialog extends CDefaultDialog {
 			xpath.addNamespace(Common.xmlns_tei_p5);
 			xpath.addNamespace(Common.xmlns_dcterms);
 			xpath.addNamespace(Common.xmlns_lido);
+			xpath.addNamespace(Common.xmlns_skos);
+			xpath.addNamespace(Common.xmlns_rdf);
+			xpath.addNamespace(Common.xmlns_ore);
+			xpath.addNamespace(Common.xmlns_owl);
+			xpath.addNamespace(Common.xmlns_rdaGr2);
+			xpath.addNamespace(Common.xmlns_wgs84_pos);
+			
 			
 			
 			byte[] stylesheet = null;
@@ -350,7 +360,14 @@ public class HarvesterDialog extends CDefaultDialog {
 						xpath.addNamespace(Common.xmlns_tei_p5);
 						xpath.addNamespace(Common.xmlns_dcterms);
 						xpath.addNamespace(Common.xmlns_lido);
-						Element path = (Element) xpath.selectSingleNode(em);
+						xpath.addNamespace(Common.xmlns_skos);
+						xpath.addNamespace(Common.xmlns_rdf);
+						xpath.addNamespace(Common.xmlns_ore);
+						xpath.addNamespace(Common.xmlns_owl);
+						xpath.addNamespace(Common.xmlns_rdaGr2);
+						xpath.addNamespace(Common.xmlns_wgs84_pos);
+						
+						Object path =  xpath.selectSingleNode(em);
 						
 						if (path != null) {							
 							
@@ -363,11 +380,25 @@ public class HarvesterDialog extends CDefaultDialog {
 							vpath.addNamespace(Common.xmlns_tei_p5);
 							vpath.addNamespace(Common.xmlns_dcterms);
 							vpath.addNamespace(Common.xmlns_lido);
-							Element object = (Element) vpath.selectSingleNode(em);
+							vpath.addNamespace(Common.xmlns_skos);
+							vpath.addNamespace(Common.xmlns_rdf);
+							vpath.addNamespace(Common.xmlns_ore);
+							vpath.addNamespace(Common.xmlns_owl);
+							vpath.addNamespace(Common.xmlns_rdaGr2);
+							vpath.addNamespace(Common.xmlns_wgs84_pos);
+							
+							Object object =  vpath.selectSingleNode(em);
 
 							if (object != null) {
 
-								String iconref = object.getText();
+								String iconref = null;
+								if (object instanceof Element) {
+									iconref = ((Element) object).getText();
+								}
+								if (object instanceof Attribute) {
+									iconref = ((Attribute) object).getValue();
+								}
+								
 								String uwmetadata = null;
 								
                                 String server;
@@ -403,7 +434,15 @@ public class HarvesterDialog extends CDefaultDialog {
 										metadata.addContent(uwm.cloneContent());																				
 									}
 									String buf =  outputter.outputString(em);
-									Repository.modifyDatastream(pid, "URL", null, "R", path.getText());							
+									
+									String objref = null;
+									if (path instanceof Element) {
+										objref = ((Element) path).getText();
+									}
+									if (path instanceof Attribute) {
+										objref = ((Attribute) path).getValue();
+									}									
+									Repository.modifyDatastream(pid, "URL", null, "R", objref);							
 									
 									JDOMSource in = new JDOMSource(em);
 		    		        		JDOMResult out = new JDOMResult();
@@ -436,22 +475,27 @@ public class HarvesterDialog extends CDefaultDialog {
 
 															
 								try {
-									File thumbnail = File.createTempFile("temp",".tmp");
+									File image = File.createTempFile("temp",".tmp");
 									URL ref = new URL(iconref);
 
 									InputStream is = ref.openStream();
-									OutputStream os = new FileOutputStream(thumbnail.getAbsoluteFile());
-
+									OutputStream os = new FileOutputStream(image.getAbsoluteFile());
+									
 									byte[] b = new byte[2048];
 									int length;
 									while ((length = is.read(b)) != -1) {
 										os.write(b, 0, length);
 									}
 									is.close();
-									os.close();
+									os.close();									
+									
+							    	File thumbnail = File.createTempFile( "temp", ".tmp" );			    
+							    	ImageTools.createThumbnail( image, thumbnail, 300, 240, Color.lightGray );
 									
 									Repository.modifyDatastream(pid, "THUMBNAIL","image/jpeg", "M", thumbnail);
-									thumbnail.delete();									
+									thumbnail.delete();	
+									image.delete();
+									
 									log.debug("Updating thumbnail of object "+pid+ " was successful" );
 								} catch (Exception eq) {
 									log.debug("Updating thumbnail of object "+pid+ " was not successful" );
@@ -463,14 +507,14 @@ public class HarvesterDialog extends CDefaultDialog {
 						}	
 	
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e.getLocalizedMessage(),e);	
 					}
 				}
 
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 
 		return true;
@@ -492,7 +536,7 @@ public class HarvesterDialog extends CDefaultDialog {
 			
 				
 	} catch (Exception e) {
-		e.printStackTrace();
+		log.error(e.getLocalizedMessage(),e);	
 	}
     }
 	

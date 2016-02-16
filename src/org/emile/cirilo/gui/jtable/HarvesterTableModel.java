@@ -2,7 +2,6 @@ package org.emile.cirilo.gui.jtable;
 
 import java.util.*;
 
-import javax.swing.*;
 import javax.swing.table.*;
  
 public class HarvesterTableModel  extends AbstractTableModel  {

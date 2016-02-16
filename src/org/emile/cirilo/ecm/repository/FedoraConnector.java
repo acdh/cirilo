@@ -31,9 +31,6 @@ import java.io.File;
 
 import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 
-import fedora.server.types.gen.ObjectProfile;
-
-
 
 /**
  * This is the interface to the underlying repository system. The purpose

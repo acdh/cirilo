@@ -21,14 +21,15 @@ package org.emile.cirilo.gui;
 
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.gui.CGuiComposite;
-import javax.swing.*;
 
+import javax.swing.*;
 
 import org.emile.cirilo.ServiceNames;
 
 import java.util.ResourceBundle;
-
 import java.awt.*;
+
+import org.apache.log4j.Logger;
 
 /**
  *  Description of the Class
@@ -38,8 +39,9 @@ import java.awt.*;
  */
 public class GuiImportDialog extends CGuiComposite {
 
+	private static Logger log = Logger.getLogger(GuiImportDialog.class);
 	
-	Container container;
+	protected Container container;
 		
 	/**
 	 *  Description of the Field
@@ -71,7 +73,7 @@ public class GuiImportDialog extends CGuiComposite {
 			setup(); 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

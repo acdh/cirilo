@@ -40,6 +40,8 @@ import fedora.client.FedoraClient;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 import javax.naming.*;
 import javax.naming.directory.*;
 
@@ -56,7 +58,10 @@ import voodoosoft.jroots.dialog.*;
  * @version    1.1
  */
 public class LoginDialog extends CDialog {
-    private boolean mode;
+
+	private static Logger log = Logger.getLogger(LoginDialog.class);
+
+	private boolean mode;
     
 	/**
 	 *  Constructor for the LoginDialog object
@@ -201,7 +206,7 @@ public class LoginDialog extends CDialog {
             }
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			JOptionPane.showMessageDialog(null, res.getString("invalauthent"), Common.WINDOW_HEADER, JOptionPane.WARNING_MESSAGE);
 		}
 

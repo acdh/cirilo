@@ -1,11 +1,15 @@
 package org.emile.cirilo.business;
 
 import java.io.File;
+
 import org.emile.cirilo.ecm.repository.Repository;
 import org.jdom.input.DOMBuilder;
 import org.jdom.Document;
+import org.apache.log4j.Logger;
 
 public class TripleStoreFactory {
+
+	private static Logger log = Logger.getLogger(TripleStoreFactory.class);
 
 	private Object triplestore;
 	private String TTType;
@@ -21,6 +25,7 @@ public class TripleStoreFactory {
 			else triplestore = null;
 			
 		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   
 			triplestore = null;
 		}
 	}

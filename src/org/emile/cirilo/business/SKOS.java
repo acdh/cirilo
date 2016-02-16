@@ -7,15 +7,14 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.repository.FedoraConnector.Relation;
-
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.DOMBuilder;
@@ -25,6 +24,8 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
 public class SKOS {
+
+	  private static Logger log = Logger.getLogger(SKOS.class);
 
 	  public SKOS() {};
 	  
@@ -69,7 +70,9 @@ public class SKOS {
 	 		 						try {
 	 		 							Namespace node = (Namespace) jter.next();
 	 		 							e.addNamespaceDeclaration(node);	   				
-	 		 						} catch (Exception ex) {}		
+	 		 						} catch (Exception ex) {
+	 		 				      		log.error(ex.getLocalizedMessage(),ex);				      					   	 							
+	 		 						}		
 	 		 				    }										
 
 	 			        		String about = e.getAttributeValue("about",Common.xmlns_rdf);
@@ -118,11 +121,13 @@ public class SKOS {
                                         }
 	         			        		         			        		
 	         			            } catch (Exception ex) { 
+	         				      		log.error(ex.getLocalizedMessage(),ex);				      					            			            	
 	         			        		continue;	
 	         			        	}
 	         			        }                                                        
 	 			        			        		
-	 			            } catch (Exception ex) { 
+	 			            } catch (Exception e) { 
+	 				      		log.error(e.getLocalizedMessage(),e);				      					   
 	 			        		continue;	
 	 			        	}
 	 			        }
@@ -159,7 +164,7 @@ public class SKOS {
 	 					 				
 	 					
 	 		} catch (Exception e) {
-	 			e.printStackTrace();
+	 			log.error(e.getLocalizedMessage(),e);	
 	 		} finally {
 	 		}
 

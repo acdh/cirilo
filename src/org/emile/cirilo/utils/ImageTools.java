@@ -29,6 +29,7 @@ import java.io.*;
 
 import javax.imageio.*;
 
+import org.apache.log4j.Logger;
 import org.emile.cirilo.ecm.exceptions.*;
 
 /**
@@ -39,6 +40,7 @@ import org.emile.cirilo.ecm.exceptions.*;
  */
 public class ImageTools {
 
+	private static Logger log = Logger.getLogger(ImageTools.class);
 	/**
 	 * Description of the Method
 	 *
@@ -76,6 +78,7 @@ public class ImageTools {
 			}
 			return;
 		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);				
 			throw new OutOfMemoryException();
 		}
 	}
@@ -104,6 +107,7 @@ public class ImageTools {
 			}
 			return;
 		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);				
 			throw new OutOfMemoryException();
 		}
 	}
@@ -129,6 +133,7 @@ public class ImageTools {
 			}
 			return;
 		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);				
 			throw new OutOfMemoryException();
 		}
 	}

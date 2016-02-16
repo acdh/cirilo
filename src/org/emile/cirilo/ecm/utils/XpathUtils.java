@@ -29,10 +29,13 @@ import javax.xml.xpath.XPathFactoryConfigurationException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Collections;
+
+import org.apache.log4j.Logger;
 
 /**
  * Utilities for performing Xpath operations in the ECM context. Already defines
@@ -40,6 +43,7 @@ import java.util.Collections;
  */
 public class XpathUtils {
 
+	private static Logger log = Logger.getLogger(XpathUtils.class);
 
     private static final String[][] NAMESPACE_TABLE
             = {{XMLConstants.XML_NS_PREFIX, XMLConstants.XML_NS_URI},

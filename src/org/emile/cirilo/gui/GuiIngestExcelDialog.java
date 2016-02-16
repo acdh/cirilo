@@ -29,6 +29,7 @@ import voodoosoft.jroots.gui.CGuiComposite;
 import javax.swing.*;
 
 import org.emile.cirilo.ServiceNames;
+import org.apache.log4j.Logger;
 
 
 
@@ -40,7 +41,9 @@ import org.emile.cirilo.ServiceNames;
  */
 public class GuiIngestExcelDialog extends CGuiComposite {
 
-	Container container;
+	private static Logger log = Logger.getLogger(GuiIngestExcelDialog.class);
+
+	protected Container container;
 	/**
 	 *  Description of the Field
 	 */
@@ -69,7 +72,7 @@ public class GuiIngestExcelDialog extends CGuiComposite {
 			setup();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

@@ -15,17 +15,17 @@ import com.bigdata.rdf.sail.webapp.client.RemoteRepositoryManager;
 import org.eclipse.jetty.client.*;
 import org.eclipse.jetty.client.util.BasicAuthentication;
 import org.eclipse.jetty.client.api.AuthenticationStore;
-
+import org.apache.log4j.Logger;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
 import org.openrdf.rio.RDFFormat;
 
-import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 
 public class BlazeGraphFactory {
 	
+    private static Logger log = Logger.getLogger(BlazeGraphFactory.class);
 	final private String BLAZEGRAPH = "Blazegraph";
 	
 	private String sparqlEndPoint;
@@ -42,7 +42,8 @@ public class BlazeGraphFactory {
 		auth.addAuthentication(new BasicAuthentication(new java.net.URI(sparqlEndPoint), BLAZEGRAPH, user.getSesameUser(), user.getSesamePasswd()));		    		   			
 		this.client.start();
 		this.repository = new RemoteRepositoryManager(sparqlEndPoint, false, client, null);
-	  } catch (Exception e) {		  
+	  } catch (Exception e) {	
+	  	log.error(e.getLocalizedMessage(),e);		  
 	  }	
 	}
 
@@ -50,7 +51,9 @@ public class BlazeGraphFactory {
 		try {
 			this.client.stop();
 			this.repository.close();
-		} catch (Exception e) {}	
+		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
+		}	
 	}
 	
 	public boolean getStatus() {
@@ -62,6 +65,7 @@ public class BlazeGraphFactory {
 			      final JettyResponseListener response = this.repository.doConnect(opts);
 			      this.repository.checkResponseCode(response); // can throw HttpException
 			   } catch (Exception e) {
+			   	  log.error(e.getLocalizedMessage(),e);		  
                   ret = false;
 			   } finally {
 				  if (!ret) show();
@@ -80,7 +84,9 @@ public class BlazeGraphFactory {
     		MessageFormat msgFmt = new MessageFormat(res.getString("triplestoreerror"));
     		Object[] args = {BLAZEGRAPH}; 		    		
     		JOptionPane.showMessageDialog(null, msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.ERROR_MESSAGE);
-    	} catch (Exception e) {}
+    	} catch (Exception e) {
+	  		log.error(e.getLocalizedMessage(),e);		      		
+    	}
     }
 
 	public boolean insert(File fp, String context) {
@@ -89,6 +95,7 @@ public class BlazeGraphFactory {
 			ao.setContext(new org.openrdf.model.impl.URIImpl(context));		
 			this.repository.getRepositoryForDefaultNamespace().add(ao);
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  		
             return  false;
 		}    
 		return true;
@@ -99,6 +106,7 @@ public class BlazeGraphFactory {
 			RemoveOp ro = new RemoveOp(null,null,null);			
 			this.repository.getRepositoryForDefaultNamespace().remove(ro);		
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
             return  false;
 		}    
 		return true;
@@ -109,6 +117,7 @@ public class BlazeGraphFactory {
 			RemoveOp ro = new RemoveOp(null,null,null,new org.openrdf.model.impl.URIImpl(context));			
 			this.repository.getRepositoryForDefaultNamespace().remove(ro);		
 		} catch (Exception e) {
+		   log.error(e.getLocalizedMessage(),e);		  
 		   return false;
 		}    
 		return true;
@@ -119,6 +128,7 @@ public class BlazeGraphFactory {
 			remove(context);
 			insert(fp, context);
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  		
             return  false;
 		}    
 		return true;

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.net.URLConnection;
 
+import org.apache.log4j.Logger;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.jdom.Element;
@@ -17,7 +18,8 @@ import org.jdom.xpath.XPath;
 
 public class ContextRefresher {
 
-	
+    private static Logger log = Logger.getLogger(ContextRefresher.class);
+
 	public ContextRefresher() {};
 	
 	
@@ -109,14 +111,14 @@ public class ContextRefresher {
      		    				    }
     		    					Folder.addContent((Element)Placemark.getRootElement().clone());
 	    		    			} catch (Exception r) {
-	    		    				r.printStackTrace();
+	    						  	log.error(r.getLocalizedMessage(),r);		  
 	    		    			}
 	    		    		}	
 	    				}
 	 
 	    				
 					} catch (Exception q) {
-						q.printStackTrace();
+					  	log.error(q.getLocalizedMessage(),q);		  
 					}
 	                
 	    		}		
@@ -129,6 +131,7 @@ public class ContextRefresher {
 		   	return false;
 		   	
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
 			return false;
 		}
 		

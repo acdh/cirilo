@@ -30,6 +30,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import org.apache.log4j.Logger;
+
 /**
  * Description of the Class
  * 
@@ -38,65 +40,67 @@ import javax.swing.*;
  */
 public class GuiReplaceDialog extends CGuiComposite {
 
-	Container container;
-	JTextField jtfTitle;
-	JTextField jtfSubject;
-	JTextField jtfDescription;
-	JTextField jtfCreator;
-	JTextField jtfPublisher;
-	JTextField jtfContributor;
-	JTextField jtfDate;
-	JTextField jtfType;
-	JTextField jtfFormat;
-	JTextField jtfSource;
-	JTextField jtfLanguage;
-	JTextField jtfRelation;
-	JTextField jtfCoverage;
-	JTextField jtfRights;
-	JTextField jtfReferences;
-	JComboBox jcbTitle;
-	JComboBox jcbSubject;
-	JComboBox jcbDescription;
-	JComboBox jcbCreator;
-	JComboBox jcbPublisher;
-	JComboBox jcbContributor;
-	JComboBox jcbDate;
-	JComboBox jcbType;
-	JComboBox jcbFormat;
-	JComboBox jcbSource;
-	JComboBox jcbLanguage;
-	JComboBox jcbRelation;
-	JComboBox jcbCoverage;
-	JComboBox jcbRights;
-	JComboBox jcbQueries;
-	JCheckBox jcbOAIProvider;
-	JCheckBox jcbDCMIMapping;
-	JComboBox jcbOAI;
-	JComboBox jcbRels;
-	JComboBox jcbOwner;
-	JComboBox jcbUser;
-	JComboBox jcbDCMapping;
-	JComboBox jcbReferences;
-	JComboBox jcbMReferences;
+	private static Logger log = Logger.getLogger(GuiReplaceDialog.class);
+	
+	protected Container container;
+	protected JTextField jtfTitle;
+	protected JTextField jtfSubject;
+	protected JTextField jtfDescription;
+	protected JTextField jtfCreator;
+	protected JTextField jtfPublisher;
+	protected JTextField jtfContributor;
+	protected JTextField jtfDate;
+	protected JTextField jtfType;
+	protected JTextField jtfFormat;
+	protected JTextField jtfSource;
+	protected JTextField jtfLanguage;
+	protected JTextField jtfRelation;
+	protected JTextField jtfCoverage;
+	protected JTextField jtfRights;
+	protected JTextField jtfReferences;
+	protected JComboBox jcbTitle;
+	protected JComboBox jcbSubject;
+	protected JComboBox jcbDescription;
+	protected JComboBox jcbCreator;
+	protected JComboBox jcbPublisher;
+	protected JComboBox jcbContributor;
+	protected JComboBox jcbDate;
+	protected JComboBox jcbType;
+	protected JComboBox jcbFormat;
+	protected JComboBox jcbSource;
+	protected JComboBox jcbLanguage;
+	protected JComboBox jcbRelation;
+	protected JComboBox jcbCoverage;
+	protected JComboBox jcbRights;
+	protected JComboBox jcbQueries;
+	protected JCheckBox jcbOAIProvider;
+	protected JCheckBox jcbDCMIMapping;
+	protected JComboBox jcbOAI;
+	protected JComboBox jcbRels;
+	protected JComboBox jcbOwner;
+	protected JComboBox jcbUser;
+	protected JComboBox jcbDCMapping;
+	protected JComboBox jcbReferences;
+	protected JComboBox jcbMReferences;
 
 	
-	JList jtRelations;
-	JList jtNonRelations;
-	JTextField jtfXSLStylesheet;
-	JComboBox jcbXSLStylesheet;
-	JComboBox jcbDatastreams;
+	protected JList jtRelations;
+	protected JList jtNonRelations;
+	protected JTextField jtfXSLStylesheet;
+	protected JComboBox jcbXSLStylesheet;
+	protected JComboBox jcbDatastreams;
 	
 	
-	JButton jbXSLStylesheet; 
-	JButton jbAddRelation;
-	JButton jbRemoveRelation;
-	JTextArea jtaQueries;
-	JButton jbReferences;
+	protected JButton jbXSLStylesheet; 
+	protected JButton jbAddRelation;
+	protected JButton jbRemoveRelation;
+	protected JTextArea jtaQueries;
+	protected JButton jbReferences;
 
-	JButton jbReplace;
-	JButton jbClose;
-	JButton jbSeek;
-    JTextField jtfSeek;
+	protected JButton jbReplace;
+	protected JButton jbClose;
+	protected JButton jbSeek;
+	protected JTextField jtfSeek;
 
 	/**
 	 * Constructor for the GuiNewObjectDialog object
@@ -108,7 +112,7 @@ public class GuiReplaceDialog extends CGuiComposite {
 			setRootComponent(container);
 			setup();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

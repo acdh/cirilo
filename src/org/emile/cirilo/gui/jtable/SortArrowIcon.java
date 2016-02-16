@@ -22,7 +22,6 @@ package org.emile.cirilo.gui.jtable;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
-
 import javax.swing.Icon;
 
 

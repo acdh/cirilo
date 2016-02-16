@@ -17,10 +17,15 @@
  *  -------------------------------------------------------------------------
  */
 
+
 package org.emile.cirilo.dialog;
+
+import org.apache.log4j.Logger;
 
 public class CWindowsProperties  {
 	
+	private static Logger log = Logger.getLogger(CWindowsProperties.class);
+
 	private  int x = 0;
 	private  int y = 0;
 	private  int width = 0; 

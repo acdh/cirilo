@@ -8,8 +8,10 @@ import java.util.*;
 import java.util.regex.*;
 import java.net.*;
 
-import org.jdom.Document;
+import org.apache.log4j.Logger;
+ 
 import org.jdom.Element;
+import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -17,10 +19,11 @@ import org.jdom.xpath.XPath;
 
 public class CantusConverter {
 	 
-	 
-	 public enum Types { EOT, TYPUS, TIMETERM_1, TIMETERM_2, TEXT, CANTO, NEUME, PAGE, WHITESPACE, DOT, COMMA, PERSON, PLACE, FUNCTION, RASUR, RUSUR, MASUR, EOA, EOI, CHOICE, DEL, INS, MARGINAL, COMMENT, BVARIANT, EVARIANT}; 
+     private static Logger log = Logger.getLogger(CantusConverter.class);
+
+	 public enum Types { EOT, TYPUS, TIMETERM_1, TIMETERM_2, TEXT, CANTO, NEUME, PAGE, WHITESPACE, DOT, COMMA, PERSON, PLACE, FUNCTION, RASUR, XASUR, RUSUR, MASUR, EOA, EOI, CHOICE, DEL, INS, MARGINAL, COMMENT, BVARIANT, EVARIANT}; 
 	 EnumSet<Types> Typus = EnumSet.of(Types.CANTO, Types.NEUME, Types.TYPUS, Types.WHITESPACE);
-	 EnumSet<Types> Emendations = EnumSet.of(Types.RASUR, Types.RUSUR, Types.MASUR);
+	 EnumSet<Types> Emendations = EnumSet.of(Types.RASUR, Types.RUSUR, Types.MASUR, Types.XASUR);
 	 EnumSet<Types> Entities = EnumSet.of(Types.PERSON, Types.PLACE, Types.FUNCTION, Types.DEL);
 	 EnumSet<Types> Description = EnumSet.of(Types.TEXT, Types.DOT, Types.COMMA, Types.WHITESPACE, Types.PAGE);
      EnumSet<Types> Text = EnumSet.of(Types.PERSON, Types.PLACE, Types.FUNCTION, Types.TEXT, Types.WHITESPACE, Types.TYPUS, Types.DOT);
@@ -42,11 +45,17 @@ public class CantusConverter {
      private Element ins;
   
 	 private String VARIANT = "";
+	 private boolean urtext;
      private int varno = 0;
      
      public CantusConverter(String VARIANT) {
-    	this.VARIANT = VARIANT; 
-	  	this.readConfig();
+     	this.VARIANT = VARIANT;
+     	this.urtext = this.VARIANT.contains(":"); 
+         if (this.urtext) {
+             String v[] = this.VARIANT.split(":");
+             this.VARIANT = v[1];
+         }	
+ 	  	this.readConfig();
      }
 	  
 	 public org.jdom.Document transform(org.jdom.Document tei) {
@@ -74,6 +83,14 @@ public class CantusConverter {
 				Element ts = (Element) xPath.selectSingleNode(target);
 				ts.removeChildren("author",Common.xmlns_tei_p5);
 
+			
+                xPath = XPath.newInstance("//t:hi[@rend='Incipit' and t:seg[@rend='strikethrough']]");								
+				xPath.addNamespace(Common.xmlns_tei_p5);
+	  	        List <Element> his = xPath.selectNodes(tei);
+	  	        for (Element hi: his) {
+	  	        	hi.setAttribute("rend", "strikethrough");
+	  	        }
+				
                 xPath = XPath.newInstance("//t:body/t:div");								
 				xPath.addNamespace(Common.xmlns_tei_p5);
 	  	        List <Element> divs = xPath.selectNodes(tei);
@@ -82,6 +99,7 @@ public class CantusConverter {
 				qPath.addNamespace(Common.xmlns_tei_p5);
 	  	        Element body = (Element) qPath.selectSingleNode(target);
                 body.removeChildren("div", Common.xmlns_tei_p5);
+                body.setAttribute("space","preserve",Common.xmlns_xml);
 	  	        
 	  	        for (Element div: divs) {
 		  	        List<Element> ps = div.getChildren("p",  Common.xmlns_tei_p5);
@@ -115,6 +133,7 @@ public class CantusConverter {
 	        		  	
 	  	        	for (Element p: ps) {
 	  	        		String buf = op.outputString(p)
+	  	        				.replaceAll("/!", "/µ")
 	  	        			    .replaceAll("[?]","+")	       		
 	  	        			    .replaceAll("[|]","§")	  	        		
 	  	  	  		        	.replaceAll("[\n\r]","")
@@ -140,7 +159,7 @@ public class CantusConverter {
 	  	        				.replaceAll("\\[[ ]*\\]","")
 	  	        				.replaceAll("[.][ ]*[.]",".")
 	  	        				.replaceAll("[.]\\}","}.")
-	  	        				.replaceAll("\\}(\\W)","} $1")
+	  	        			//	.replaceAll("\\}(\\W)","} $1")
 	  	        				.replaceAll("\\} ([.,§$])","}$1")
 	  	        				.replaceAll("[.](\\w)",". $1")
 	  	        		        .replaceAll("      "," ")	  	        		
@@ -148,8 +167,12 @@ public class CantusConverter {
 	  	        		        .replaceAll("    "," ")	  	        		
 	  	        		        .replaceAll("   "," ")	  	        		
 	  	        				.replaceAll("  "," ")
-	  	        		        .replaceAll("§<", "§ <");
-
+	  	        		        .replaceAll("§<", "§ <")
+	  	        				.replaceAll("\\$", "¥")
+	  	        				.replaceAll("\\} #", "\\}#")
+	  	        				.replaceAll("\\*", "")
+	        					.replaceAll("\\[KOMMENTAR\\]", "KOMMENTAR");
+	  	        		
 	  	        		if (!VARIANT.isEmpty()) {
 	  	        			Pattern p0 = Pattern.compile("(//)(.*?)(//)");
 	  	        			Matcher m0 = p0.matcher(buf);
@@ -157,23 +180,29 @@ public class CantusConverter {
   	  						  	  				
 	  	        			while (m0.find())  {
 	  	        				String variant = "";
-	  	        				String s = m0.group();
+	  	        				String s = m0.group();	  	        				
 	  	        				s = s.substring(2,s.length()-1);
-	  	        				Pattern p1 = Pattern.compile("(.*?)~(.*?)/");
+	  	        				log.info(s);
+	  	        				boolean test = this.urtext && s.contains("µ");
+	  	        				Pattern p1 = Pattern.compile("("+(test ? "µ" : "")+".*?)~(.*?)/");
   		  	  					Matcher m1 = p1.matcher(s);
   		  	  					while (m1.find()) {
   		  	  						String[] a = m1.group().substring(0, m1.group().length()-1).split("~");
-  		  	  						if (a[0].contains(VARIANT)) {
+  		  	  						if (test || a[0].contains(VARIANT)) {
   		  	  							variant = a[1];
   		  	  							break;
   		  	  						}
-  		  	  					}  	  						
-  		  	  					m0.appendReplacement(sb,"%"+ variant+"~");
+  		  	  					}  	  		
+  		  	  					try {
+  		  	  						m0.appendReplacement(sb,"%"+ variant+"¦");
+  		  	  					} catch (Exception qe) {
+  		  	  						qe.printStackTrace();
+  		  	  					}
 	  	        			}
 	  	        			m0.appendTail(sb);
 	  	        			buf = sb.toString();
 	  	        		}
-  	  					  	  					
+  	  					 
 	  	        		ArrayList<String> segs = new ArrayList<String>();
 	  	        		String line = "";
 	  	        		boolean inline = false;
@@ -196,6 +225,7 @@ public class CantusConverter {
         					segs.add(line);
         				}
 
+        				/*
 	                    Element stream = new Element("quote",Common.xmlns_ntei_p5);
 	  	        		for (String s: segs) {
 		                    Element l = new Element("l",Common.xmlns_ntei_p5);
@@ -203,7 +233,8 @@ public class CantusConverter {
                             stream.addContent(l);
 	  	        		}   	  	        			
 	                    currSegment_1.addContent(stream);
-                    
+                        */
+        				
 	          			boolean mode = false;        				
 		  	        	Parser parser = new Parser();	
 	  	        		lastdiv = null;
@@ -276,15 +307,15 @@ public class CantusConverter {
 	  	        				}
 	  	        				
 	  	        				if (q == parser.types.BVARIANT) { 
-	  	        					Element ms = new Element("milestone",Common.xmlns_ntei_p5);
-	  	        					ms.setAttribute("type", "variant");
+	  	        					Element ms = new Element("metamark",Common.xmlns_ntei_p5);
+	  	        					ms.setAttribute("function","variant");
 	  	        					ms.setAttribute("id", "V."+new Integer(++varno).toString(),Common.xmlns_xml);  	        					
                                     if (currSegment_2 == null) currSegment_1.addContent(ms); else currSegment_2.addContent(ms);
                                     continue;
 	  	        				}
 
 	  	        				if (q == parser.types.EVARIANT) { 
-	  	        					Element ms = new Element("milestone",Common.xmlns_ntei_p5);
+	  	        					Element ms = new Element("metamark",Common.xmlns_ntei_p5);
                                     if (currSegment_2 == null) currSegment_1.addContent(ms); else currSegment_2.addContent(ms);
 	  	        					continue;
 	  	        				}
@@ -307,10 +338,12 @@ public class CantusConverter {
 	  	        				    continue;
 	  	        				}
 
-	  	        				if (q == parser.types.RASUR || q == parser.types.MASUR) {
+	  	        				if (q == parser.types.RASUR || q == parser.types.MASUR | q == parser.types.XASUR) {
                                     Element del = new Element("del",Common.xmlns_ntei_p5);	 
                                     del.setAttribute("type","rasur");
-                                    if (q == parser.types.MASUR) del.setAttribute("subtype","marginal"); else del.setAttribute("subtype","signingover");
+                                    if (q == parser.types.RASUR) del.setAttribute("subtype","signingover");
+                                    if (q == parser.types.XASUR) del.setAttribute("subtype","deciphered");
+                                    if (q == parser.types.MASUR) del.setAttribute("subtype","marginal");
 	  	        					
                                     Element add = new Element("add",Common.xmlns_ntei_p5);
                                     del.addContent(add);
@@ -402,8 +435,6 @@ public class CantusConverter {
 	  		
       			Pattern p0 = Pattern.compile("<seg ana=\"#strikethrough\">([A-Z]{2,6})</seg>\\s+<l:NO xmlns:l=\"http://cantus.oeaw.ac.at\">([A-Za-z\\. ]*)</l:NO>\\s+<seg ana=\"#strikethrough\">[\\.¬]{0,1}</seg>[\\.¬]{0,1}");
        			Matcher m0 = p0.matcher(op.outputString(target).replaceAll("\\s"," ").replaceAll("°",".")
-		     			.replaceAll("<milestone (type=\"variant\" xml:id=\"V\\.[0-9]*\") />","<seg $1>")
-		       			.replaceAll("<milestone />","</seg>")
 		     			.replaceAll("ö\\+","<seg type=\"supplied\">")
 		     			.replaceAll("\\+ö","</seg>")
 		     			.replaceAll("<ab> </ab>","")
@@ -415,13 +446,31 @@ public class CantusConverter {
  					m0.appendReplacement(sb,"<del><l:"+m0.group(1)+" xmlns:l=\"http://cantus.oeaw.ac.at\">"+m0.group(2)+"</l:"+m0.group(1)+">"+ (m0.groupCount() > 2 ? m0.group(3) : "")+"</del>");
        			}
        			m0.appendTail(sb);
+       			String buf = sb.toString().replaceAll("¬", "");
+       			
+       			p0 = Pattern.compile("<metamark (function=\"variant\" xml:id=\"V\\.[0-9]*\")[ ]*/>(.*?)<metamark [ ]*/>");
+	  	        m0 = p0.matcher(buf);
 	  	        
-      			target = builder.build(new StringReader(sb.toString().replaceAll("¬", "")));
-	  	        
+	  	        Document snippet = new Document();
+       			sb = new StringBuffer();
+       			
+	  	        while (m0.find()) {
+	  	        	String s = m0.group();
+	  	        	try {
+	  	        		snippet = builder.build(new StringReader("<root>"+s+"</root>"));
+	  	        		s = s.replaceAll("(xml:id=\"V\\.[0-9]*\")[ ]*/>","$1>").replaceAll("metamark[ ]*/", "/metamark");
+	  	        	} catch (Exception q) {
+	  	        		s = s.replaceAll("variant","milestone");	  	        		
+	  	        	};	
+	  	        	m0.appendReplacement(sb,s);
+	  	        }
+	  	        m0.appendTail(sb);       			
+       			target = builder.build(new StringReader(sb.toString().replaceAll("</ab><ab","</ab> <ab").replaceAll("<seg ana=\"#strikethrough\"></seg>","")));
+      			System.out.println(sb.toString().replaceAll("</ab><ab","</ab> <ab"));
 	        } catch (Exception e) {
-	        	e.printStackTrace();
+	        	log.error(e.getLocalizedMessage(),e);	
 	        }
-	        return target;
+	        return target;	
 
 	  }      
 
@@ -453,8 +502,8 @@ public class CantusConverter {
 				q= parser.next();
 				if (q == Types.NEUME) {
         			Element phr = new Element("phr",Common.xmlns_ntei_p5);
-					phr.setText(parser.getEntity().trim());
 					phr.setAttribute("type","neume"); 
+					parseEmendations(phr, parser.getEntity());
   					seg.addContent(phr);  	  	        							
 				} else {
 					parseEmendations(seg, parser.getEntity());
@@ -487,8 +536,8 @@ public class CantusConverter {
 			if (parser.getConjecture()) seg.setAttribute("subtype","supplied");
 			if (q == Types.NEUME) {
 					Element phr = new Element("phr",Common.xmlns_ntei_p5);
-					phr.setText(parser.getEntity().trim());
 					phr.setAttribute("type","neume"); 
+					parseEmendations(phr, parser.getEntity());
 					seg.addContent(phr);  	  	        							
 			} else {
 				parseEmendations(seg, parser.getEntity());
@@ -573,6 +622,22 @@ public class CantusConverter {
 						 del.addContent(add);
 						 seg.addContent(del);
 					 }
+				 } else if (s.substring(bp).startsWith("RE::")) {
+					 bp+=4;
+					 while (true) {
+						 ch = String.valueOf(s.charAt(bp++));
+						 if (ch.equals("§") || bp > s.length()-1) { break; };
+						 sp+=ch;
+					 }					 
+					 if (!sp.isEmpty()) {
+				       	 Element del = new Element("del",Common.xmlns_ntei_p5);	  	        										       
+				       	 Element add = new Element("add",Common.xmlns_ntei_p5);	  	        										       
+				  	     del.setAttribute("type","rasur");		  	       		  	 			       			       					 
+				  	     add.setAttribute("subtype","deciphered");		  	       		  	 			       			       					 
+						 add.setText(sp.trim());
+						 del.addContent(add);
+						 seg.addContent(del);
+					 }
 				 } else if (s.substring(bp).startsWith("M::")) {
 					 bp+=3;
 					 while (true) {
@@ -645,7 +710,7 @@ public class CantusConverter {
 	        	   note.setText(sp);
 	        	   note.setAttribute("type","supplied");
 		  	       seg.addContent(note);		  	       
-			  } else if (ch.equals("$")) {
+			  } else if (ch.equals("¥")) {
 				  if (!buf.isEmpty()) {
 					   seg.addContent(buf);
 					   buf = "";
@@ -654,14 +719,34 @@ public class CantusConverter {
 			      bp+=3;
 				  while (true) {
 					  ch = String.valueOf(s.charAt(bp++));
-					  if (ch.equals("$") || bp > s.length()-1) break;	
+					  if (ch.equals("¥") || bp > s.length()-1) break;	
 					  sp+=ch;
 				   }
 	        	   Element add = new Element("add",Common.xmlns_ntei_p5);	  	        										       
 	        	   add.setText(sp);
-	  	       seg.addContent(add);			  
+	        	   seg.addContent(add);			  
 			  } else {
- 				  buf+=ch;
+    				if (ch.equals("%")) { 
+      					Element ms = new Element("metamark",Common.xmlns_ntei_p5);
+      					ms.setAttribute("function","variant");
+      					ms.setAttribute("id", "V."+new Integer(++varno).toString(),Common.xmlns_xml);  	        					
+      					if (!buf.isEmpty()) {
+      					  seg.addContent(buf);
+      					  buf = "";
+      					}
+      					seg.addContent(ms);	
+      				}
+
+    				else  if (ch.equals("¦"))  { 
+      					Element ms = new Element("metamark",Common.xmlns_ntei_p5);
+      					if (!buf.isEmpty()) {
+        					  seg.addContent(buf);
+        					  buf = "";
+        				}
+      					seg.addContent(ms);	
+      				} else {
+      					buf+=ch;
+      				}	
  			  }
 		  }
 		  if (!buf.isEmpty()) {
@@ -708,7 +793,7 @@ public class CantusConverter {
 	   	         for (HashEntry s: TIMETERMS_2) {temp.add(new HashEntry("["+s.getKey()+"]", s.getValue()));} 
 	   	         for (HashEntry s: temp) TIMETERMS_2.add(new HashEntry(s.getKey(), s.getValue()));	   	         
 	   		} catch (Exception e) {
-	   			e.printStackTrace();
+	   			log.error(e.getLocalizedMessage(),e);	
 	   		}
 		  
 	  }
@@ -749,7 +834,7 @@ public class CantusConverter {
 		   }
 		   
 		  } catch (Exception e) {
-		        e.printStackTrace();
+		        log.error(e.getLocalizedMessage(),e);	
 		  }  */
 		  		  
 		  return id;
@@ -765,7 +850,7 @@ public class CantusConverter {
 		        in = con.getInputStream();
 
 		    } catch (IOException e) {
-		        e.printStackTrace();
+		        log.error(e.getLocalizedMessage(),e);	
 		    }
 		    return in;
 		}
@@ -782,7 +867,7 @@ public class CantusConverter {
 			
 		  public Types types;
 		  
-		  public static final String SEPARATOR = " ,.$§(%~¬";
+		  public static final String SEPARATOR = " ,.$¥§(%~¦¬";
 		  		  
 		  private String buf;
 		  private String entity;
@@ -801,7 +886,7 @@ public class CantusConverter {
 			  rasur = false;
 			  marginal = false;
 			  
-			  if (s.startsWith("$E$")) {
+			  if (s.startsWith("¥E¥")) {
 				  addition = true;
 				  s = s.substring(3);
 			  }
@@ -835,7 +920,7 @@ public class CantusConverter {
 			  } else if (ch.equals("%")) { 
 				  entity = "";
 				  return log(types.BVARIANT); 
-			  } else if (ch.equals("~")) {  
+			  } else if (ch.equals("¦")) {  
 				  entity = "";
 				  return log(types.EVARIANT);
 			  } else if (ch.equals(",")) { 
@@ -851,7 +936,7 @@ public class CantusConverter {
 					  entity+=ch;
 				  }
 				  return log(types.CANTO);
-			  } else if (ch.equals("$")) {
+			  } else if (ch.equals("¥")) {
 				  if (buf.substring(bp).startsWith("E::")) {
 					bp+=3;
 				    return log(Types.INS);	 
@@ -867,6 +952,9 @@ public class CantusConverter {
 				  } else if (buf.substring(bp).startsWith("RM::")) {
 					 bp+=4;
 					 return log(types.MASUR);
+				  } else if (buf.substring(bp).startsWith("RE::")) {
+					 bp+=4;
+					 return log(types.XASUR);
 				  } else if (buf.substring(bp).startsWith("M::")) {
 					 bp+=3;
 					 return log(types.MARGINAL);					 
@@ -879,7 +967,7 @@ public class CantusConverter {
 						 if (bp > buf.length()-1) break;
 						 ch = String.valueOf(buf.charAt(bp++));
 						 if (ch.equals("§")) break;
-						 if (ch.equals("$")) {
+						 if (ch.equals("¥")) {
 		                	 bp = cp; // +1;
 	                    	 return log(types.EOA);						 
 						 }

@@ -22,7 +22,6 @@ package org.emile.cirilo.gui;
 import org.emile.cirilo.*;
 
 import java.util.ResourceBundle;
-
 import java.awt.Container;
 
 import voodoosoft.jroots.core.CServiceProvider;
@@ -32,6 +31,8 @@ import javax.swing.*;
 
 import jsyntaxpane.DefaultSyntaxKit;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -40,18 +41,16 @@ import jsyntaxpane.DefaultSyntaxKit;
  */
 public class GuiTextEditor extends CGuiComposite {
 
-	Container container;	
-	JEditorPane jebEditorPane;
-	JButton jbClose;
-	JMenuBar jmbMenu;
-	JMenu jmFile;
-//	JMenu jmEdit;
-    JMenuItem jmiSave;
-    JMenuItem jmiQuit;
-    JScrollPane scrPane;
-//    JMenuItem jmiCopy;
-//    JMenuItem jmiCut;
-//    JMenuItem jmiPaste;
+	private static Logger log = Logger.getLogger(GuiTextEditor.class);
+	
+	protected Container container;	
+	protected JEditorPane jebEditorPane;
+	protected JButton jbClose;
+	protected JMenuBar jmbMenu;
+	protected JMenu jmFile;
+	protected JMenuItem jmiSave;
+	protected  JMenuItem jmiQuit;
+	protected JScrollPane scrPane;
      
 	/**
 	 *Constructor for the GuiEditObject object
@@ -64,7 +63,7 @@ public class GuiTextEditor extends CGuiComposite {
 			setRootComponent(container);
 			setup();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

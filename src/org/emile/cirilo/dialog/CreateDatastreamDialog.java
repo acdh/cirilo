@@ -42,12 +42,10 @@ import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import org.apache.log4j.Logger;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -55,7 +53,6 @@ import java.util.ResourceBundle;
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
-
 import voodoosoft.jroots.dialog.*;
 
 /**
@@ -65,11 +62,10 @@ import voodoosoft.jroots.dialog.*;
  * @created    13. Februar 2005
  * @version    1.1
  */
-public class CreateDatastreamDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(CreateDatastreamDialog.class);
-    
+public class CreateDatastreamDialog extends CDialog {   
    
     
+	private static Logger log = Logger.getLogger(CreateDatastreamDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */

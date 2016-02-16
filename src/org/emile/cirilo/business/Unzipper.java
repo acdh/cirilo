@@ -11,8 +11,12 @@ import net.lingala.zip4j.io.ZipInputStream;
 import net.lingala.zip4j.model.FileHeader;
 import net.lingala.zip4j.unzip.UnzipUtil;
 
+import org.apache.log4j.Logger;
+
 public class Unzipper {
 	
+		private static Logger log = Logger.getLogger(Unzipper.class);
+		
 		private final int BUFF_SIZE = 4096;
 
 	    /**
@@ -89,7 +93,7 @@ public class Unzipper {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getLocalizedMessage(),e);	
 			} finally {
 				try {
 					if (os != null) {
@@ -101,6 +105,7 @@ public class Unzipper {
 						is = null;
 					}
 				} catch (IOException e) {
+		      		log.error(e.getLocalizedMessage(),e);				      					   
 				}
 			}
 	    }

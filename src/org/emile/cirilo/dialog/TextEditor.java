@@ -33,6 +33,7 @@ import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.jdom.Document;
+import org.apache.log4j.Logger;
 
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -53,6 +54,8 @@ import java.net.URL;
  */
 public class TextEditor extends CDialog {
  
+	private static Logger log = Logger.getLogger(TextEditor.class);
+
 	/**
 	 *  Constructor for the TextEditor object
 	 */
@@ -120,7 +123,7 @@ public class TextEditor extends CDialog {
   	     scrPane.setVisible(true);
  	     
 		 } catch (Exception e){
-			 e.printStackTrace();
+			 log.error(e.getLocalizedMessage(),e);	
 		 }
 		 finally {
 		 }
@@ -270,7 +273,7 @@ public class TextEditor extends CDialog {
 		  	 									tf.close();
 		  	 					           		temp.delete();
 		  	 				    		} catch (Exception ex) {
-		  	 				    			ex.printStackTrace();
+		  	 				    			log.error(ex.getLocalizedMessage(),ex);	
 		  	 								JOptionPane.showMessageDialog(  getCoreDialog(), ex.getMessage(), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE); 				    			
 		  	 				    		}
 		  	    				  	  }		
@@ -279,8 +282,8 @@ public class TextEditor extends CDialog {
 	    	            		   }
 		  	    				  	
 	    	            	   }
-	    	                } catch (Exception eq) {
-	    	                	eq.printStackTrace();
+	    	                } catch (Exception q) {
+	    	                	log.error(q.getLocalizedMessage(),q);	
 	    	                }
 
 	    			  }
@@ -290,7 +293,7 @@ public class TextEditor extends CDialog {
 	    				  
 	    			  }
 	    	     } catch (Exception ex) {
-	    	    	 ex.printStackTrace();
+	    	    	 log.error(ex.getLocalizedMessage(),ex);	
 	    	     }
 	 	  		 finally {
 	 	  			if (jmiSave!= null) jmiSave.setEnabled(!group.equals("R"));

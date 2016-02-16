@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
@@ -49,6 +51,9 @@ import org.emile.cirilo.ecm.repository.Repository;
  * @created 07. September 2006
  */
 public class OptionsDialog extends CDialog {
+
+	private static Logger log = Logger.getLogger(OptionsDialog.class);
+
 	/**
 	 *Constructor for the PropertyTableDialog object
 	 */

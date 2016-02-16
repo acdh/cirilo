@@ -21,13 +21,13 @@ package org.emile.cirilo.gui;
 
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.gui.CGuiComposite;
+
 import javax.swing.*;
 
-
-
+import org.apache.log4j.Logger;
 import org.emile.cirilo.ServiceNames;
-import java.util.ResourceBundle;
 
+import java.util.ResourceBundle;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -40,8 +40,9 @@ import java.awt.event.KeyListener;
  */
 public class GuiCreateDatastreamDialog extends CGuiComposite {
 
-	
-	Container container;
+	private static Logger log = Logger.getLogger(GuiCreateDatastreamDialog.class);
+
+	protected Container container;
 		
 	/**
 	 *  Description of the Field
@@ -101,7 +102,7 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 			setup();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

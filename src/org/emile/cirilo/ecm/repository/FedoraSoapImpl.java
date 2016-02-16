@@ -36,8 +36,7 @@ import org.emile.cirilo.ecm.exceptions.ObjectNotFoundException;
 import org.emile.cirilo.ecm.utils.Constants;
 import org.emile.cirilo.ecm.utils.DocumentUtils;
 import org.emile.cirilo.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.jrdf.graph.Node;
 import org.trippi.TrippiException;
 import org.trippi.TupleIterator;
@@ -49,6 +48,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import java.util.concurrent.TimeUnit;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -79,11 +79,12 @@ public class FedoraSoapImpl
 										  "TEItoHTML|TEItoFO|BIBTEXtoHTML|BIBTEXtoFO|PAGE-1|PAGE-2|TEItoDC_MAPPING|RDF_MAPPING|SKOStoHTML|SKOStoFO|"+
 										  "TEITOMETS|STYLESHEETS|BIBTEXtoHTML|BIBTEXtoFO|PAGE-1|PAGE-2|TEItoDC_MAPPING|RDF_MAPPING|SKOStoHTML|SKOStoFO|"+
 										  "LIDOtoDC_MAPPING|OAItoDC_MAPPING|LIDOtoHTML|LIDOtoFO|LIDOtoRDF|DATAPROVIDERS|MODStoDC_MAPPING|MODStoBIBTEX_MAPPING|PROPERTIES|"+
-										  "EDMtoHTML|EDMtoDC_MAPPING|RECORDtoEDM|STORYtoHTML|STORY2JSON|STORYtoDC_MAPPING|";
+										  "EDMtoHTML|EDMtoDC_MAPPING|RECORDtoEDM|STORYtoHTML|STORY2JSON|STORYtoDC_MAPPING|METS_REF|SOURCE_REF|";
     private final String DISSEMINATOR = "|PID|METADATA|METHODS|";
 	
 
-    private static final Log LOG = LogFactory.getLog(FedoraSoapImpl.class);
+    private static Logger log = Logger.getLogger(FedoraSoapImpl.class);
+    
     private FedoraUserToken token;
 
     //Do not get this directly, use the accessor
@@ -692,11 +693,11 @@ public class FedoraSoapImpl
     		temp.delete();
     		return getAPIM().modifyDatastreamByReference(pid, datastream, null, null, "text/plain", null, uploadURL, "DISABLED", "none", null, false);
     	} catch (RemoteException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
                                         e);
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
                     e);
 
@@ -718,11 +719,11 @@ public class FedoraSoapImpl
     	    		temp.delete();
     	    		return getAPIM().modifyDatastreamByReference(pid, datastream, null, null, mimetype, null, uploadURL, "DISABLED", "none", null, false);
     	    	} catch (RemoteException e) {
-    	    		e.printStackTrace();
+    	    		log.error(e.getLocalizedMessage(),e);	
     	            throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
     	                                        e);
     	    	} catch (IOException e) {
-    	    		e.printStackTrace();
+    	    		log.error(e.getLocalizedMessage(),e);	
     	            throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
     	                    e);
 
@@ -808,11 +809,11 @@ public class FedoraSoapImpl
     		}
        		return "Error ingesting datastream'" + datastream + "' from '" + pid + "'";     		
     	} catch (RemoteException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
                                         e);
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
                     e);
 
@@ -827,11 +828,11 @@ public class FedoraSoapImpl
     	try {
      	  	  return getAPIM().modifyDatastreamByReference(pid, datastream, null, null, mimetype, null, location , "DISABLED", "none", null, false);
     	} catch (RemoteException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
                                         e);
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
                     e);
     	}   		
@@ -846,11 +847,11 @@ public class FedoraSoapImpl
     	try {
     		return getAPIM().modifyDatastreamByValue(pid, datastream, null, null, mimetype, null, stream.getBytes("UTF-8"), "DISABLED", "none", null, false);
     	} catch (RemoteException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
                                         e);
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException("Error ingesting datastream'" + datastream + "' from '" + pid + "'",
                     e);
 
@@ -867,12 +868,15 @@ public class FedoraSoapImpl
 
     public boolean exists(String pid, String dsid)
     	    throws IllegalStateException, FedoraIllegalContentException, FedoraConnectionException {
-    	    	try {    	    	
-    		    	PidList list = query ("select $p from <#ri> where <info:fedora/"+pid+"> $p <info:fedora/"+pid+"/"+dsid+">");	  
-    		    	return (list.size() > 0);
-   	    	} catch (Exception e) {}
-    	   		return false;
-    	    }
+    	    try {
+   		    	PidList list = query ("select $p from <#ri> where <info:fedora/"+pid+"> $p <info:fedora/"+pid+"/"+dsid+">");
+   		    	if(list.size() > 0) return true;
+   		    	TimeUnit.SECONDS.sleep(1);
+                return false;
+   	    	} catch (Exception e) {
+   	    		throw new FedoraConnectionException("IO exception when communication with fedora", e);
+   	    	}
+      }
    
 
     
@@ -900,11 +904,18 @@ public class FedoraSoapImpl
 
     public boolean hasContentModel(String pid, String cmpid)
             throws FedoraIllegalContentException, FedoraConnectionException {
-        PidList contentmodels = query("select $object\n" + "from <#ri>\n" + "where\n <" + Repository.ensureURI(
-                pid) + "> <" + Constants.HAS_MODEL + "> " + "$object\n");
-        return contentmodels.contains(Repository.ensurePID(cmpid));
-
+    	
+    	try {    	    	
+   	        PidList contentmodels = query("select $object\n" + "from <#ri>\n" + "where\n <" + Repository.ensureURI(
+    	                pid) + "> <" + Constants.HAS_MODEL + "> " + "$object\n");
+   	        if(contentmodels.contains(Repository.ensurePID(cmpid))) return true;
+	    	TimeUnit.SECONDS.sleep(1);
+            return false;	    		
+    	} catch (Exception e) {
+    		throw new FedoraConnectionException("IO exception when communication with fedora", e);
+    	}
     }
+    	
 
 
     public boolean purgeObject(String pid)
@@ -932,7 +943,7 @@ public class FedoraSoapImpl
 
         PidList pidlist = new PidList();
 
-        LOG.trace("Entering query with this string \n'" + query + "'\n");
+        log.trace("Entering query with this string \n'" + query + "'\n");
         Map<String, String> map = new HashMap<String, String>();
         map.put("lang", "itql");
         map.put("query", query);
@@ -941,7 +952,7 @@ public class FedoraSoapImpl
         try {
             tupleIterator = getFedoraClient().getTuples(map);
         } catch (IOException e) {
-        	e.printStackTrace();
+        	log.error(e.getLocalizedMessage(),e);	
             throw new FedoraConnectionException(            	
                     "IO exception when communication with fedora",
                     e);
@@ -993,7 +1004,7 @@ public class FedoraSoapImpl
     public DefaultSortTableModel getObjects(String query, String[]columnNames)
     throws FedoraConnectionException, FedoraIllegalContentException {
 
- //   	LOG.trace("Entering query with this string \n'" + query + "'\n");
+ //   	log.trace("Entering query with this string \n'" + query + "'\n");
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("lang", "sparql");
     	map.put("query", query);
@@ -1002,7 +1013,7 @@ public class FedoraSoapImpl
     	try {
     		tupleIterator = getFedoraClient().getTuples(map);
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
     		throw new FedoraConnectionException(            	
     				"IO exception when communication with fedora",
     				e);
@@ -1056,7 +1067,7 @@ public class FedoraSoapImpl
     public java.util.ArrayList<String> getPidList(String query)
     throws FedoraConnectionException, FedoraIllegalContentException {
 
-    	LOG.trace("Entering query with this string \n'" + query + "'\n");
+    	log.trace("Entering query with this string \n'" + query + "'\n");
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("lang", "itql");
     	map.put("query", "select $pid from <#ri> where $object <dc:identifier> $pid");
@@ -1065,7 +1076,7 @@ public class FedoraSoapImpl
     	try {
     		tupleIterator = getFedoraClient().getTuples(map);
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
     		throw new FedoraConnectionException(            	
     				"IO exception when communication with fedora",
     				e);
@@ -1094,7 +1105,7 @@ public class FedoraSoapImpl
     public java.util.ArrayList<String> getTriples(String query)
     throws FedoraConnectionException, FedoraIllegalContentException {
 
-    	LOG.trace("Entering query with this string \n'" + query + "'\n");
+    	log.trace("Entering query with this string \n'" + query + "'\n");
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("lang", "sparql");
     	map.put("query", query);
@@ -1103,7 +1114,7 @@ public class FedoraSoapImpl
     	try {
     		tupleIterator = getFedoraClient().getTuples(map);
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
     		throw new FedoraConnectionException(            	
     				"IO exception when communication with fedora",
     				e);

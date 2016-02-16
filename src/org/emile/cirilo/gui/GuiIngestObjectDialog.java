@@ -32,6 +32,8 @@ import javax.swing.*;
 
 import java.awt.event.*;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -41,39 +43,41 @@ import java.awt.event.*;
 public class GuiIngestObjectDialog extends CGuiComposite
 {
 
-	Container container;
-	JTextField jtfIdentifier;
-	JTextField jtfPID;
-	JTextField jtfTitle;
-	JTextField jtfSubject;
-	JTextField jtfDescription;
-	JTextField jtfCreator;
-	JTextField jtfPublisher;
-	JTextField jtfContributor;
-	JTextField jtfDate;
-	JTextField jtfType;
-	JTextField jtfFormat;
-	JTextField jtfSource;
-	JTextField jtfLanguage;
-	JTextField jtfRelation;
-	JTextField jtfCoverage;
-	JTextField jtfRights;
-	JComboBox jcbStatus;
-	JComboBox jcbContentModel;
-	JComboBox jcbNamespace;
-	JComboBox jcbUser;
-	JCheckBox jcbOAIProvider;
-	JCheckBox jcbGenerated;
-	JCheckBox jcbSimulate;
+	private static Logger log = Logger.getLogger(GuiIngestObjectDialog.class);
 
-	JButton jbClose;
-	JButton jbReset;
-	JButton jbIngest;
-	JButton jbImport;
-	JButton jbEXCEL;
-	JButton jbShowLogfile;
+	protected Container container;
+	protected JTextField jtfIdentifier;
+	protected JTextField jtfPID;
+	protected JTextField jtfTitle;
+	protected JTextField jtfSubject;
+	protected JTextField jtfDescription;
+	protected JTextField jtfCreator;
+	protected JTextField jtfPublisher;
+	protected JTextField jtfContributor;
+	protected JTextField jtfDate;
+	protected JTextField jtfType;
+	protected JTextField jtfFormat;
+	protected JTextField jtfSource;
+	protected JTextField jtfLanguage;
+	protected JTextField jtfRelation;
+	protected JTextField jtfCoverage;
+	protected JTextField jtfRights;
+	protected JComboBox jcbStatus;
+	protected JComboBox jcbContentModel;
+	protected JComboBox jcbNamespace;
+	protected JComboBox jcbUser;
+	protected JCheckBox jcbOAIProvider;
+	protected JCheckBox jcbGenerated;
+	protected JCheckBox jcbSimulate;
 
-	Object[] namespaces = { "o:", "context:"};
+	protected JButton jbClose;
+	protected JButton jbReset;
+	protected JButton jbIngest;
+	protected JButton jbImport;
+	protected JButton jbEXCEL;
+	protected JButton jbShowLogfile;
+
+	protected Object[] namespaces = { "o:", "context:"};
 
 
 	/**
@@ -88,7 +92,7 @@ public class GuiIngestObjectDialog extends CGuiComposite
 			setup();
 		}
 		catch ( Exception e ) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

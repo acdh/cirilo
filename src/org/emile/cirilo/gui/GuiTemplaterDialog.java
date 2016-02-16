@@ -33,6 +33,8 @@ import javax.swing.*;
 
 import jsyntaxpane.DefaultSyntaxKit;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -40,17 +42,20 @@ import jsyntaxpane.DefaultSyntaxKit;
  * @created    07. September 2006
  */
 public class GuiTemplaterDialog extends CGuiComposite {
-	Container container;
-    JTextField jtfPID;
-    JEditorPane jtaTemplate;
-    JEditorPane jtaLog;
-    JEditorPane jtaResult;
-	JButton jbStart;
-	JButton jbClose;
-	JButton jbShow;
-    JScrollPane scrPaneTemplate;
-    JScrollPane scrPaneResult;
-    JScrollPane scrPaneLog;
+	
+	private static Logger log = Logger.getLogger(GuiTemplaterDialog.class);
+		
+	protected Container container;
+	protected JTextField jtfPID;
+	protected  JEditorPane jtaTemplate;
+	protected JEditorPane jtaLog;
+	protected JEditorPane jtaResult;
+	protected JButton jbStart;
+	protected JButton jbClose;
+	protected JButton jbShow;
+	protected JScrollPane scrPaneTemplate;
+	protected JScrollPane scrPaneResult;
+	protected JScrollPane scrPaneLog;
 
 
 	/**
@@ -64,7 +69,7 @@ public class GuiTemplaterDialog extends CGuiComposite {
 			setRootComponent(container);
 			setup();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

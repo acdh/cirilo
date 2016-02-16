@@ -45,8 +45,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.JEditorPane;
 import javax.swing.JTable;
+
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -57,6 +60,9 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 public class TemplaterDialog extends CDefaultDialog {
+
+	private static Logger log = Logger.getLogger(TemplaterDialog.class);
+
 	/**
 	 *  Constructor for the SelectLayoutDialog object
 	 */
@@ -101,7 +107,7 @@ public class TemplaterDialog extends CDefaultDialog {
 		   for(int i=0; i<triples.size();i++) {
 			   logm+=(String)triples.get(i)+"\n";
 		   }
-		   log.setText(logm);
+		   jep.setText(logm);
 		}
 
 	/**
@@ -121,7 +127,7 @@ public class TemplaterDialog extends CDefaultDialog {
 
 			    String pid = (String) moGA.getInput("jtfPID");
                 results.setText("");
-                log.setText("");
+                jep.setText("");
 			    
 			    logm = "";
 		 		try {
@@ -249,7 +255,7 @@ public class TemplaterDialog extends CDefaultDialog {
 	            	Logger(es);
 	 		}	
             finally {
-            	log.setText(logm);
+            	jep.setText(logm);
 				getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
            }
 	}
@@ -303,15 +309,15 @@ public class TemplaterDialog extends CDefaultDialog {
 			 res =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
 			 user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
 
-			se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
-			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getSelectDialogProperties(), (JTable) null);
+			 se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
+			 org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getSelectDialogProperties(), (JTable) null);
 
 			 template = (JEditorPane) getGuiComposite().getWidget("jtaTemplate");
 			 template.setContentType("text/xml");
 			 results = (JEditorPane) getGuiComposite().getWidget("jtaResult");
 			 results.setContentType("text/xml");
-			 log = (JEditorPane) getGuiComposite().getWidget("jtaLog");
-			 log.setContentType("text/plain");
+			 jep = (JEditorPane) getGuiComposite().getWidget("jtaLog");
+			 jep.setContentType("text/plain");
 
 			
 			CDialogTools.createButtonListener(this, "jbClose", "handleCloseButton");
@@ -334,7 +340,7 @@ public class TemplaterDialog extends CDefaultDialog {
 	private Format format;
 	private JEditorPane template;
 	private JEditorPane results;
-	private JEditorPane log;
+	private JEditorPane jep;
 	private String logm;
 }
 

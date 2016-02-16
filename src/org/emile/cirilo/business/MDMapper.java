@@ -34,11 +34,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.emile.cirilo.Common;
 
 /**
@@ -49,8 +45,9 @@ import org.emile.cirilo.Common;
  */
 
 public class MDMapper 
-{
-	private static final Log LOG = LogFactory.getLog(MDMapper.class);
+{ 
+	private static Logger log = Logger.getLogger(MDMapper.class);
+
     private static String stylesheet = null;
 	
     private XMLOutputter outputter;
@@ -73,7 +70,7 @@ public class MDMapper
 			initialize(s, false);
 			
 		} catch( Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 		
 	}
@@ -91,7 +88,7 @@ public class MDMapper
 			initialize(s ,true);
 			
 		} catch( Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 		
 	}

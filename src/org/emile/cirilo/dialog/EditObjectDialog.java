@@ -39,8 +39,7 @@ import net.handle.hdllib.PublicKeyAuthenticationInfo;
 import net.handle.hdllib.Resolver;
 import net.handle.hdllib.Util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
@@ -99,8 +98,8 @@ import javax.xml.transform.Transformer;
  * @created    10.3.2011
  */
 public class EditObjectDialog extends CDialog {
-    private static final Log LOG = LogFactory.getLog(EditObjectDialog.class);
 
+	private static Logger log = Logger.getLogger(EditObjectDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -184,8 +183,8 @@ public class EditObjectDialog extends CDialog {
 						    			           		try { 
 						    			           			stylesheet =  Repository.getDatastream("cirilo:Backbone", "RECORDtoEDM" , "");
 						    			        		} catch (Exception q) {
-						    			        			q.printStackTrace();
-						    			        			continue;
+														 log.error(q.getLocalizedMessage(),q);	
+					    			        			 continue;
 						    			        		}
 							    		          	}
 
@@ -200,7 +199,7 @@ public class EditObjectDialog extends CDialog {
 							    		        		String edm = outputter.outputString(out.getResult());
 							    		        		Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm);
 							    		        	} catch (Exception e) {
-							    		        		e.printStackTrace();
+							    		        		log.error(e.getLocalizedMessage(),e);	
 							    		        		continue;
 							    		        	}	
 							    			 }					    					 
@@ -333,7 +332,13 @@ public class EditObjectDialog extends CDialog {
 				    				  if (p.substring(1,2).equals(Common.ADD)){			
 				    				      if (p.contains("r2d2")) {
 				    				    	  try {
-    			    					   	   Repository.modifyDatastream (pid, "METADATA", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
+				    				    		  
+												if(!Repository.exists(pid, "METS_REF")) {
+													Repository.addDatastream(pid, "METS_REF",  "Reference to mets stream", "text/xml", "http://glossa.uni-graz.at/"+pid+"/METS_SOURCE");
+												}	
+ 
+				    				    		  
+    			    					  // 	   Repository.modifyDatastream (pid, "", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
 				    				    	  } catch (Exception q) {				    				    		  
 				    				    	  }
 				    				      } else {
@@ -390,7 +395,8 @@ public class EditObjectDialog extends CDialog {
 				    						  Repository.addDatastream(pid, "VOYANT",  "Reference to Voyant Tools", "text/xml", "http://voyant-tools.org?input=http://gams.uni-graz.at/archive/objects/"+pid+"/datastreams/TEI_SOURCE/content");
 				    					  }
 				    					 } catch (Exception q) {
-				    						 q.printStackTrace();
+				    						 log.error(q.getLocalizedMessage(),q);	
+
 				    					 }  
 				    				  }
 				    			  }
@@ -489,7 +495,7 @@ public class EditObjectDialog extends CDialog {
 
  					
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					log.error(ex.getLocalizedMessage(),ex);	
 				}
 				finally {
 					getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -511,7 +517,8 @@ public class EditObjectDialog extends CDialog {
       		  Repository.modifyDatastream (pid, dsid , null, "R", p.substring(2));
       	  }
 		} catch (Exception q) {	
-			q.printStackTrace();
+			log.error(q.getLocalizedMessage(),q);	
+
 		}
         
        try {
@@ -522,7 +529,7 @@ public class EditObjectDialog extends CDialog {
 			 try {
 	      		  Repository.modifyDatastream (pid, dsid , null, "R", p.substring(2));
 			 } catch (Exception e) {
-				 e.printStackTrace();
+				 log.error(e.getLocalizedMessage(),e);	
 			 }  
 	   }
 	}      
@@ -716,8 +723,9 @@ public class EditObjectDialog extends CDialog {
 
 				    		  try {Thread.sleep(5);} catch (Exception e) {}	
 				    		  
-				    		  } catch (Exception eq) {
-				    			  eq.printStackTrace();
+				    		  } catch (Exception q) {
+				    			 log.error(q.getLocalizedMessage(),q);	
+
 				    		  }
 				    		  finally {
 					    		  pd.worked(1);
@@ -817,7 +825,7 @@ public class EditObjectDialog extends CDialog {
 			 				Object[] args0 = {new Integer(deleted).toString()};
 					       	JOptionPane.showMessageDialog( null, msgFmt.format(args0), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 				   		}
-				    } catch (Exception ex) {ex.printStackTrace();}					  
+				    } catch (Exception ex) {log.error(ex.getLocalizedMessage(),ex);	}					  
 				}
 			}.start();	 
 	}
@@ -915,7 +923,7 @@ public class EditObjectDialog extends CDialog {
 				       	
 			   		}
 			    } catch (Exception ex) {
-			    	ex.printStackTrace();
+			    	log.error(ex.getLocalizedMessage(),ex);	
 			    }					  
 			}
 		}.start();	 
@@ -1022,7 +1030,7 @@ public class EditObjectDialog extends CDialog {
 		  String pid =(String)loTable.getValueAt(selected[0],0);	
 		  Repository.addRelation("info:fedora/"+pid,"http://ecm.sourceforge.net/relations/0/2/#isTemplateFor","info:fedora/cm:DefaultContentModel");
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 
 	}			
@@ -1135,7 +1143,7 @@ public class EditObjectDialog extends CDialog {
 						temps.makeTemplate("cirilo:OAIRecord", loDlg.getUser(), "$cirilo:OAIRecord."+loDlg.getUser(), "Untitled", "info:fedora/cm:OAIRecord");
 						temps.makeTemplate("cirilo:Environment", loDlg.getUser(), "$cirilo:"+loDlg.getUser(), "Untitled", "");
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					log.error(ex.getLocalizedMessage(),ex);	
 				}
 				finally {
 					getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

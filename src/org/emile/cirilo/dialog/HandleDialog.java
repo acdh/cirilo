@@ -32,6 +32,8 @@ import org.emile.cirilo.Common;
 import java.awt.event.*;
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 
 import net.handle.hdllib.*;
@@ -48,6 +50,7 @@ import java.io.*;
  */
 public class HandleDialog extends CDialog {
  
+	private static Logger log = Logger.getLogger(HandleDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */

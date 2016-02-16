@@ -27,7 +27,11 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Database;
 
 import java.awt.event.*;
+
 import javax.swing.*;
+
+import org.apache.log4j.Logger;
+
 
 
 import java.util.ResourceBundle;
@@ -35,7 +39,6 @@ import java.util.ResourceBundle;
 import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.core.gui.CEventListener;
-
 import voodoosoft.jroots.dialog.*;
 
 /**
@@ -47,6 +50,7 @@ import voodoosoft.jroots.dialog.*;
  */
 public class LoginExistDialog extends CDialog {
     
+	private static Logger log = Logger.getLogger(LoginExistDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -123,7 +127,7 @@ public class LoginExistDialog extends CDialog {
 			close();
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			
 			JOptionPane.showMessageDialog(null, res.getString("invalauthent"), Common.WINDOW_HEADER, JOptionPane.WARNING_MESSAGE);
 		}

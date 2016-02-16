@@ -31,10 +31,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -42,6 +45,8 @@ import java.io.StringWriter;
  */
 public class DocumentUtils {
 
+	private static Logger log = Logger.getLogger(DocumentUtils.class);
+	   
     /** A default document builder, namespace aware. */
     public static final DocumentBuilder DOCUMENT_BUILDER;
     static {

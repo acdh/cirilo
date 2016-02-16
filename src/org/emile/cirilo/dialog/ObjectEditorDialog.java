@@ -25,38 +25,22 @@ import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
+
 import org.emile.cirilo.utils.ImagePreviewPanel;
 import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
-import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.ecm.repository.FedoraConnector.Relation;
 import org.emile.cirilo.business.*;
 import org.emile.cirilo.utils.*;
-import org.emile.cirilo.*;
-import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 import org.emile.cirilo.business.IIIFFactory;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.input.DOMBuilder;
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
-
-import com.asprise.util.ui.progress.ProgressDialog;
+import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.net.*;
-import java.nio.charset.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageOutputStream;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -75,6 +59,7 @@ import java.text.MessageFormat;
  */
 public class ObjectEditorDialog extends CDialog {
 
+	private static Logger log = Logger.getLogger(ObjectEditorDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -118,7 +103,7 @@ public class ObjectEditorDialog extends CDialog {
 			    		this.label,
 						(String)((JComboBox) getGuiComposite().getWidget("jcbUser")).getSelectedItem()); 
 		  }  catch (Exception ex) {
-			  ex.printStackTrace();
+			  log.error(ex.getLocalizedMessage(),ex);	
 		   }					  
 			finally {
 				getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -278,7 +263,7 @@ public class ObjectEditorDialog extends CDialog {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 	}
 
@@ -314,7 +299,7 @@ public class ObjectEditorDialog extends CDialog {
 			}		
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 	}
 
@@ -364,14 +349,14 @@ public class ObjectEditorDialog extends CDialog {
 					}
 	  			  	ij.ImagePlus ip = new ij.ImagePlus(dsid, image);
 					ip.show("Statuszeile");
-		        } catch (IOException eq) {
-		        	eq.printStackTrace();
+		        } catch (IOException q) {
+		        	log.error(q.getLocalizedMessage(),q);	
 		        }
 		    } else {
 				JOptionPane.showMessageDialog(  getCoreDialog(), res.getString("noedit"), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE );	        	
 	        }
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 		finally {
 		    getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));				
@@ -418,14 +403,14 @@ public class ObjectEditorDialog extends CDialog {
 					}
 	  			  	ij.ImagePlus ip = new ij.ImagePlus(dsid, image);
 					ip.show("Statuszeile");
-		        } catch (IOException eq) {
-		        	eq.printStackTrace();
+		        } catch (IOException q) {
+		        	log.error(q.getLocalizedMessage(),q);	
 		        }
 	        } else {
 				JOptionPane.showMessageDialog(  getCoreDialog(), res.getString("noedit"), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE );	        	
 	        }
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 		}
 		finally {
 			    getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));				
@@ -526,7 +511,7 @@ public class ObjectEditorDialog extends CDialog {
  		    				 return;
  		    			} */
  		    		}
- 		    		if (mimetype.toLowerCase().equals("image/jpeg") || mimetype.toLowerCase().equals("image/tiff")) {
+ 		    		if (Repository.exists(pid, "THUMBNAIL") && (mimetype.toLowerCase().equals("image/jpeg") || mimetype.toLowerCase().equals("image/tiff"))) {
 						File thumb = File.createTempFile( "temp", ".tmp" );
 						ImageTools.createThumbnail( chooser.getSelectedFile(), thumb, 100, 80, Color.lightGray );
 				    	Repository.modifyDatastream(pid, "THUMBNAIL", "image/jpeg", "M", thumb);
@@ -1003,7 +988,7 @@ public class ObjectEditorDialog extends CDialog {
 			tpPane.setSelectedIndex(2);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			throw new COpenFailedException(ex);
 		}
 	}

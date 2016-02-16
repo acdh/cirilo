@@ -33,7 +33,7 @@ import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.business.*;
 import org.emile.cirilo.utils.*;
 import org.emile.cirilo.*;
-
+import org.apache.log4j.Logger;
 
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -54,6 +54,7 @@ import java.awt.Color;
  */
 public class NewObjectDialog extends CDialog {
 
+	private static Logger log = Logger.getLogger(NewObjectDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -358,7 +359,7 @@ public class NewObjectDialog extends CDialog {
 			jcbUser.setSelectedItem(user);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			throw new COpenFailedException(ex);
 		}
 	}

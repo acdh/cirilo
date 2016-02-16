@@ -10,11 +10,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.log4j.Logger;
+
 import org.emile.cirilo.ecm.repository.FedoraSoapImpl;
 import org.emile.cirilo.ecm.repository.FedoraUserToken;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.templates.TemplateSubsystem;
-
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -22,8 +23,9 @@ import fedora.client.FedoraClient;
 
 
 public class CMIngester {
-	
-	private ArrayList<String> files;
+
+	  private static Logger log = Logger.getLogger(CMIngester.class);	
+	  private ArrayList<String> files;
 
 	  
 	  protected CMIngester()
@@ -82,12 +84,12 @@ public class CMIngester {
 					doc = builder.parse(is);
 					Repository.ingestDocument(doc,  format, "Object ingested by Cirilo");
 				  } catch (Exception e) {
-					  e.printStackTrace();
+					  log.error(e.getLocalizedMessage(),e);	
 				  }	
 				}		
 			}
-		} catch (Exception s) {
-			s.printStackTrace();
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);	
 		}
 		
 		
@@ -103,7 +105,7 @@ public class CMIngester {
 	     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml")) {
 	     		files.add(file.getAbsolutePath());
 	     	}
-		  } catch (Exception e) {e.printStackTrace();}	
+		  } catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
 	  }	
 
 	  public static void main (String args[])

@@ -18,6 +18,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.log4j.Logger;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
@@ -44,6 +45,7 @@ import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
 
 public class METS {
 
+	private static Logger log = Logger.getLogger(METS.class);
 	private Document mets;
 	private Document viewer;
 	private File file;
@@ -74,7 +76,9 @@ public class METS {
 			this.onlyValidate = validate;
 			this.mode = mode;
 			this.xuser = null;
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);				
+		}
 	}
 
 	public void setUser (String u) {this.xuser = u;}
@@ -100,7 +104,10 @@ public class METS {
     	        this.collection = file;
     	        return true;
     		}
-		} catch (Exception e) { return false;}
+		} catch (Exception e) { 
+			log.error(e.getLocalizedMessage(),e);	
+			return false;
+		}
 	}
   
     public boolean set (String stream) {
@@ -112,7 +119,7 @@ public class METS {
 			this.PID = "";
    	        return true;
 		} catch (Exception e) { 
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 			return false;
 		}
 	}
@@ -124,7 +131,10 @@ public class METS {
 	public String getName() { 
 		try {
 			return !this.collection.isEmpty() ? this.collection : this.file.getCanonicalPath();
-		} catch (Exception e) { return ""; }
+		} catch (Exception e) { 
+			log.error(e.getLocalizedMessage(),e);	
+			return "";
+		}
 	}
 	
 	public String getPID() { 
@@ -136,7 +146,9 @@ public class METS {
 				String s = idno.getTextNormalize();
 	            this.PID = s.startsWith(Common.INFO_FEDORA) ? s.substring(Common.INFO_FEDORA.length()) : s;
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);			
+		}
 		return this.PID;
 	}
 
@@ -160,7 +172,9 @@ public class METS {
 					this.PID = pid;
 				}
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);				
+		}
 	}
 		
 	public boolean isValid() {
@@ -181,7 +195,9 @@ public class METS {
 		    			}
 		    			structure.addContent(div);
 		    		}
-		    	} catch (Exception s) {}	
+		    	} catch (Exception s) {
+		    		log.error(s.getLocalizedMessage(),s);	
+		    	}	
 
 		    	this.viewer = this.mets;
 		    	
@@ -212,7 +228,9 @@ public class METS {
 			if ( xpath.selectSingleNode( this.mets ) == null) return false;
 			return true;
 		} catch (Exception e) {
-			return false;}
+			log.error(e.getLocalizedMessage(),e);			
+			return false;
+		}
 	}
 
 	public List getChildren(String path) {
@@ -221,7 +239,10 @@ public class METS {
 			xpath.addNamespace( Common.xmlns_mets );
 			List nodes = (List) xpath.selectNodes( this.mets );
 			return nodes;
-		} catch (Exception e) { return null;}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);	
+			return null;
+		}
 	}
  	
 
@@ -234,7 +255,10 @@ public class METS {
 			child.setText(text);
 			anchor.addContent(child);
 			return true;			
-		} catch (Exception e) {return false;}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);	
+			return false;
+		}
 	}
 
 	public boolean write() {
@@ -272,7 +296,10 @@ public class METS {
 	    		os.close();		
 		    }		    
 			return true;
-		} catch (Exception e) {return false;}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);	
+			return false;
+		}
 	}	
 
 
@@ -430,6 +457,7 @@ public class METS {
 	      						}					      											      						
 				      		}				      		
 				      	} catch (Exception eq) {
+				      		log.error(eq.getLocalizedMessage(),eq);	 		
 				      		Common.log(logger, eq);				      	}
 		    		}
 		    		if (thumbs.size() == 0) {
@@ -524,6 +552,7 @@ public class METS {
 				      			}	
 				      		}				      		
 				      	} catch (Exception eq) {
+				      		log.error(eq.getLocalizedMessage(),eq);				      		
 				      		Common.log(logger, eq);
 				      	}
 		    		}
@@ -544,13 +573,13 @@ public class METS {
 		    				String href = flocat.getAttributeValue("href",Common.xmlns_xlink);
 		    				if (e.getAttributeValue("CONTENTIDS") == null) e.setAttribute("CONTENTIDS", href);
 		    			} catch (Exception eq) {
-		    				eq.printStackTrace();
+				      		log.error(eq.getLocalizedMessage(),eq);				      		
 		    			}
 		    		}	
 		    	}
 
 		    } catch (Exception e) {
-		    	e.printStackTrace();
+		    	log.error(e.getLocalizedMessage(),e);	
 		    }    
    }	
 	
@@ -603,6 +632,7 @@ public class METS {
 			}
 					
 		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      		
 		}
 
 	}

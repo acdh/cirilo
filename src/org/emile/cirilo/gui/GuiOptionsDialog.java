@@ -30,6 +30,7 @@ import voodoosoft.jroots.gui.CGuiComposite;
 import javax.swing.*;
 
 import org.emile.cirilo.ServiceNames;
+import org.apache.log4j.Logger;
 
 /**
 *  Description of the Class
@@ -39,38 +40,39 @@ import org.emile.cirilo.ServiceNames;
 */
 public class GuiOptionsDialog extends CGuiComposite {
 
-	
-	ResourceBundle res;
-	Container container;
+	private static Logger log = Logger.getLogger(GuiOptionsDialog.class);
+		
+	protected ResourceBundle res;
+	protected Container container;
 
-	JButton jbSave;
-	JButton jbClose;
-	JCheckBox jcbTEIDCMapping;
-	JCheckBox jcbTEISEMExtraction;
-	JCheckBox jcbTEIRemoveEmpties;
-	JCheckBox jcbTEICreateContexts;
-	JCheckBox jcbTEIResolveRegex;
-	JCheckBox jcbTEIResolveGeoIDs;
-	JTextField jtfTEILoginName;
-	JTextField jtfOAIPrefix;
-	JCheckBox jcbTEIResolveSKOS;
-	JCheckBox jcbTEIIngestImages;
-	JCheckBox jcbTEIRefreshSource;
-	JCheckBox jcbTEIOnlyGeonameID;
-	JCheckBox jcbTEICustomization;
-	JCheckBox jcbTEItoMETS;
-	JCheckBox jcbMETSRefreshSource;
-	JCheckBox jcbSKOSIFY;
-	JComboBox jcbGeneralDefaultCM;
+	protected JButton jbSave;
+	protected JButton jbClose;
+	protected JCheckBox jcbTEIDCMapping;
+	protected JCheckBox jcbTEISEMExtraction;
+	protected JCheckBox jcbTEIRemoveEmpties;
+	protected JCheckBox jcbTEICreateContexts;
+	protected JCheckBox jcbTEIResolveRegex;
+	protected JCheckBox jcbTEIResolveGeoIDs;
+	protected JTextField jtfTEILoginName;
+	protected JTextField jtfOAIPrefix;
+	protected JCheckBox jcbTEIResolveSKOS;
+	protected JCheckBox jcbTEIIngestImages;
+	protected JCheckBox jcbTEIRefreshSource;
+	protected JCheckBox jcbTEIOnlyGeonameID;
+	protected JCheckBox jcbTEICustomization;
+	protected JCheckBox jcbTEItoMETS;
+	protected JCheckBox jcbMETSRefreshSource;
+	protected JCheckBox jcbSKOSIFY;
+	protected JComboBox jcbGeneralDefaultCM;
 
-	JCheckBox jcbLIDODCMapping;
-	JCheckBox jcbLIDOSEMExtraction;
-	JCheckBox jcbLIDOCreateContexts;
-	JCheckBox jcbLIDOResolveGeoIDs;
-	JCheckBox jcbLIDOIngestImages;
-	JCheckBox jcbLIDORefreshSource;
-	JCheckBox jcbLIDOOnlyGeonameID;
-	JCheckBox jcbLIDOResolveSKOS;
+	protected JCheckBox jcbLIDODCMapping;
+	protected JCheckBox jcbLIDOSEMExtraction;
+	protected JCheckBox jcbLIDOCreateContexts;
+	protected JCheckBox jcbLIDOResolveGeoIDs;
+	protected JCheckBox jcbLIDOIngestImages;
+	protected JCheckBox jcbLIDORefreshSource;
+	protected JCheckBox jcbLIDOOnlyGeonameID;
+	protected JCheckBox jcbLIDOResolveSKOS;
 
 
 	/**
@@ -84,7 +86,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 			setRootComponent(container);
 			setup();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

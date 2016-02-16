@@ -31,6 +31,7 @@ import voodoosoft.jroots.gui.CGuiComposite;
 import javax.swing.*;
 
 import org.emile.cirilo.ServiceNames;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -41,7 +42,9 @@ import org.emile.cirilo.ServiceNames;
  */
 public class GuiHandleDialog extends CGuiComposite {
 
-	Container container;
+	private static Logger log = Logger.getLogger(GuiHandleDialog.class);
+
+	protected Container container;
 	
 	protected JTextField jtfHandlePrefix;
 	protected JTextField jtfProjectPrefix;
@@ -65,7 +68,7 @@ public class GuiHandleDialog extends CGuiComposite {
 			setup();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

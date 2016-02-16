@@ -29,6 +29,8 @@ import org.emile.cirilo.ecm.exceptions.FedoraConnectionException;
 
 import java.util.*;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.JTextField;
 
 import org.jdom.*;
@@ -44,6 +46,8 @@ import org.jdom.xpath.XPath;
  * @created 10.3.2011
  */
 public class DCMI {
+	
+    private static Logger log = Logger.getLogger(DCMI.class);
 
 	private Document rules;
 	private Document dcms;
@@ -84,6 +88,7 @@ public class DCMI {
 				jtfDCMI.setText((String) preallocations.get(i));
 			}
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  			
 		}
 
 	}
@@ -101,6 +106,7 @@ public class DCMI {
 			}
 
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  			
 		}
 
 	}
@@ -119,6 +125,7 @@ public class DCMI {
 					ServiceNames.DCMI_PREALLOCATIONS);
 
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
 		}
 
 	}
@@ -207,6 +214,7 @@ public class DCMI {
 			}
 */
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
 			throw new FedoraConnectionException(
 					"Something went wrong in the connection with fedora", e);
 		}
@@ -253,6 +261,7 @@ public class DCMI {
 				}
 			}
 		} catch (Exception e) {
+		  	log.error(e.getLocalizedMessage(),e);		  
 		}
 
 		return dcms;

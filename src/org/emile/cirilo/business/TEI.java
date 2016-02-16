@@ -26,6 +26,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.apache.log4j.Logger;
+
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
@@ -59,6 +61,8 @@ import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
 import org.geonames.*;
 
 public class TEI {
+
+	private static Logger log = Logger.getLogger(TEI.class);
 
     private static int cc = 0;
 	private Document tei;
@@ -97,7 +101,9 @@ public class TEI {
 			this.raw = null;
 			this.xuser = user.getUser();
 			this.intermedidate = null;
-	} catch (Exception e) {}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);				      					   		
+		}
 	}
 
 	public void setUser (String u) {this.xuser = u;}
@@ -180,7 +186,7 @@ public class TEI {
 	    				      transformer.transform(in, out);	    				      
 	    				      this.tei = builder.build( new StringReader(outputter.outputString(out.getResult())
 		    				    		.replaceAll(" </seg>","</seg> ").replaceAll("</seg> ,","</seg>,").replaceAll("</seg> \\.","</seg>.")
-		    			           		.replaceAll("</seg>([a-z])", "</seg> $1")));
+		    			           		.replaceAll("</seg>([a-z])", "</seg> $1").replaceAll("<del></del>","").replaceAll("<del/>","")));
 	    				        		        
 	    		        	  System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
 	    				   }	  
@@ -188,8 +194,8 @@ public class TEI {
 	    					    				
                         return true;		    				
                     } catch (Exception q){
-                    	q.printStackTrace();
-                        Common.log(logger,q);
+        	      		log.error(q.getLocalizedMessage(),q);				      					   
+        	      		Common.log(logger,q);
                     	return false;
                     }   
     			} else if (file.toLowerCase().contains(".odt")) {
@@ -223,6 +229,7 @@ public class TEI {
 
                         return true;		    				
                     } catch (Exception q){
+                    	log.error(q.getLocalizedMessage(),q);				      					   
                         Common.log(logger,q);
                     	return false;
                     }                                            
@@ -243,7 +250,9 @@ public class TEI {
     	        return true;
     		}
 		} catch (Exception e) { 
-			return false;}
+      		log.error(e.getLocalizedMessage(),e);				      					   			
+			return false;
+		}
 	}
   
   
@@ -256,6 +265,7 @@ public class TEI {
 			this.PID = pid;
    	        return true;
 		} catch (Exception e) { 
+      		log.error(e.getLocalizedMessage(),e);				      					   
             Common.log(logger,e);
 			return false;
 		}
@@ -270,6 +280,7 @@ public class TEI {
 			this.PID = "";
    	        return true;
 		} catch (Exception e) { 
+      		log.error(e.getLocalizedMessage(),e);				      					   
             Common.log(logger,e);
 			return false;
 		}
@@ -283,7 +294,10 @@ public class TEI {
 	public String getName() { 
 		try {
 			return !this.collection.isEmpty() ? this.collection : this.file.getCanonicalPath();
-		} catch (Exception e) { return ""; }
+		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   
+      		return "";
+      	}
 	}
 	
 	public String getPID() { 
@@ -308,7 +322,9 @@ public class TEI {
                 	this.PID =pid;
               }   
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   			
+		}
 		return this.PID;
 	}
 
@@ -338,7 +354,9 @@ public class TEI {
 			}
 			this.PID = pid;
 
-		} catch (Exception e) {}
+		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   			
+		}
 	}
 		
 	public boolean isValid() {
@@ -372,7 +390,7 @@ public class TEI {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
    			Common.log(logger, e);   		 
 			return false;}
 	}
@@ -387,7 +405,8 @@ public class TEI {
            		try { 
         		stylesheet =  Repository.getDatastream("cirilo:Backbone", "TOTEI" , "");
         		} catch (Exception q) {
-           			Common.log(logger, q);   		 
+    	      		log.error(q.getLocalizedMessage(),q);				      					   
+         			Common.log(logger, q);   		 
         			return false;
         		}
           	}
@@ -429,7 +448,8 @@ public class TEI {
   	    				parent = e.getParentElement();
   	    				int index = parent.indexOf(e);
   	    				parent.setContent(index, a);
-  	    			} catch (Exception e) {  	    				
+  	    			} catch (Exception q) {  	
+  	    				log.error(q.getLocalizedMessage(),q);				      					   
  	    				parent.removeChild("include", Common.xmlns_xinc);
  	    			}
   	    		}	
@@ -437,7 +457,7 @@ public class TEI {
         	}	
 
         } catch (Exception e) {
-        	e.printStackTrace();
+        	log.error(e.getLocalizedMessage(),e);	
         	Common.log(logger, e);
         }
         	
@@ -451,7 +471,10 @@ public class TEI {
 			xpath.addNamespace( Common.xmlns_tei_p5 );
 			List nodes = (List) xpath.selectNodes( this.tei );
 			return nodes;
-		} catch (Exception e) { return null;}
+		} catch (Exception e) { 
+      		log.error(e.getLocalizedMessage(),e);				      					   
+			return null;
+		}
 	}
  	
 
@@ -464,7 +487,10 @@ public class TEI {
 			child.setText(text);
 			anchor.addContent(child);
 			return true;			
-		} catch (Exception e) {return false;}
+		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   
+			return false;
+		}
 	}
 
 	public boolean write(boolean mode) {
@@ -492,7 +518,10 @@ public class TEI {
 				}
 			}
 			return true;			
-		} catch (Exception e) {return false;}
+		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   
+			return false;
+		}
 	}	
 
 	public boolean regexer() {
@@ -546,7 +575,8 @@ public class TEI {
 		        }
 		    }
            			
-        } catch (Exception ex) {       	
+        } catch (Exception e) { 
+      		log.error(e.getLocalizedMessage(),e);				      					          	
         }
 		return true;
 		
@@ -595,7 +625,10 @@ public class TEI {
 				}
 			}			
 			return true;			
-		} catch (Exception e) {return false;}
+		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   
+      		return false;
+		}
 	}	
 	
 	
@@ -691,8 +724,9 @@ public class TEI {
 		  	  		    Common.log(logger, msgFmt.format(args0)+"\n");
 		           }
 			     }
-    			} catch (Exception eq) {
-    				Common.log(logger, eq);
+    			} catch (Exception q) {
+    	      		log.error(q.getLocalizedMessage(),q);				      					   		
+    				Common.log(logger, q);
     				return;
     			}
     		}
@@ -766,14 +800,16 @@ public class TEI {
 						Common.log(logger,  msgFmt.format(args0)  ); 
 		           }
 			     }
-    			} catch (Exception eq) {
-    				Common.log(logger, eq);
+    			} catch (Exception q) {
+    	      		log.error(q.getLocalizedMessage(),q);				      					   
+    	      		Common.log(logger, q);
     				return;
     			}
     		}
     	}	
 
 	  } catch (Exception e) {
+    	  log.error(e.getLocalizedMessage(),e);				      					   
           Common.log(logger,e);
 	  }	     
    }
@@ -796,7 +832,9 @@ public class TEI {
  	   				 Element el = (Element) jter.next();
  	   				 href = el.getAttributeValue("href");
  		    	 }    
-    	     } catch (Exception e0){} 	        		  	        					        				
+    	     } catch (Exception q){
+ 	      		log.error(q.getLocalizedMessage(),q);				      					     	 
+    	     } 	        		  	        					        				
              try {
 	            Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/"+xuser.toUpperCase()+"/content");
  	            XPath xPath = XPath.newInstance( "/stylesheets/stylesheet[@type='STYLESHEET' and @model='cm:Context' and @state='default']" );
@@ -806,7 +844,9 @@ public class TEI {
  	            	Element el = (Element) jter.next();
  	       			href = el.getAttributeValue("href");
  	            }
-		    } catch (Exception e0){} 	        		  	        					        				
+		    } catch (Exception q){
+ 	      		log.error(q.getLocalizedMessage(),q);				      					     	 	
+		    } 	        		  	        					        				
 	        for (Iterator iter = contexts.iterator(); iter.hasNext();) {
 	        	try {
 	        		Element e = (Element) iter.next();
@@ -826,7 +866,8 @@ public class TEI {
 	        		e.setAttribute("target", Common.INFO_FEDORA+target);
 	        		IsMemberOf.put(target,target);
 				    Common.genQR(user, target);
-	        	} catch (Exception e) { 
+	        	} catch (Exception e) {  	      		
+	        		log.error(e.getLocalizedMessage(),e);				      					             		
 	        		continue;	
 	        	}
 	        }
@@ -842,6 +883,7 @@ public class TEI {
  	    }
    	 } catch (Exception e) {
 	   try {
+   		   log.error(e.getLocalizedMessage(),e);				      					             		
 		   Common.log(logger, e);
   	   } catch (Exception eq) {
   	   }            
@@ -867,7 +909,8 @@ public class TEI {
 				try {
 					Attribute at = (Attribute) jter.next();
 					at.getParent().removeAttribute("key");
-				} catch (Exception eq) {
+				} catch (Exception q) {
+					log.error(q.getLocalizedMessage(),q);				      					             		
 				}
 			}
 	 	    
@@ -1015,7 +1058,8 @@ public class TEI {
 	 	    }
 	   	 } catch (Exception e) {
 		   try {
-			   Common.log(logger, e); 
+       	 	 log.error(e.getLocalizedMessage(),e);				      					             		
+			 Common.log(logger, e); 
 	  	   } catch (Exception eq) {
 	  	   }            
 	   	 }	   
@@ -1056,7 +1100,8 @@ public class TEI {
 						try {
 							Attribute at = (Attribute) jter.next();
 							at.getParent().removeAttribute("id", Common. xmlns_xml );
-						} catch (Exception eq) {
+						} catch (Exception q) {
+			        		log.error(q.getLocalizedMessage(),q);				      					             								
 						}
 					}
  			    	
@@ -1068,7 +1113,9 @@ public class TEI {
  		 						try {
  		 							Namespace node = (Namespace) jter.next();
  		 							e.addNamespaceDeclaration(node);	   				
- 		 						} catch (Exception ex) {}		
+ 		 						} catch (Exception q) {
+ 					        		log.error(q.getLocalizedMessage(),q);				      					             										 							
+ 		 						}		
  		 				    }										
 
  			        		String about = e.getAttributeValue("about",Common.xmlns_rdf);
@@ -1101,12 +1148,14 @@ public class TEI {
          			        		}         			        		
          			        		root.removeNamespaceDeclaration(Common.xmlns_tei_p5);
          			        		stream +=outputter.outputString(r).substring(39);
-         			            } catch (Exception ex) { 
-         			        		continue;	
+         			            } catch (Exception q) { 
+        			        		log.error(q.getLocalizedMessage(),q);				      					             								
+        			        		continue;	
          			        	}
          			        }                                                        
  			        			        		
- 			            } catch (Exception ex) { 
+ 			            } catch (Exception e) { 
+			        		log.error(e.getLocalizedMessage(),e);				      					             								
  			        		continue;	
  			        	}
  			        }
@@ -1190,15 +1239,17 @@ public class TEI {
 						
 						temp.delete();
 					}	
-			     } catch (Exception ex) {
-			    	 Common.log(logger, ex);
+			     } catch (Exception q) {
+		        	 log.error(q.getLocalizedMessage(),q);				      					             								
+			    	 Common.log(logger, q);
 			     }
 			      
 		    }					 				
  					
  		} catch (Exception e) {
  			try {
- 				Common.log(logger, e);
+        		log.error(e.getLocalizedMessage(),e);				      					             								
+				Common.log(logger, e);
  			} catch (Exception q) {} 	 
  		} finally {
  			this.PID =currPID;
@@ -1222,7 +1273,8 @@ public class TEI {
       	    	}
       	    }			
 			} catch (Exception e) {
-		}
+			  log.error(e.getLocalizedMessage(),e);				      					             											
+			}
 	}
 
 	
@@ -1258,7 +1310,8 @@ public class TEI {
 						try {
 							Attribute at = (Attribute) jter.next();
 							at.getParent().removeAttribute("corresp");
-						} catch (Exception eq) {
+						} catch (Exception q) {
+			        		log.error(q.getLocalizedMessage(),q);				      					             								
 						}
 					}
 					attr = getChildren("//t:body//@*[contains(.,'"+pre+":')]");
@@ -1295,13 +1348,16 @@ public class TEI {
 		      	    		try {
 		      	    			Element e = (Element) iter.next();
 		      	    			getBroader(scheme, e.getAttributeValue("ref"), e);	
-		      	    		} catch (Exception ex) {
+		      	    		} catch (Exception q) {
+				        		log.error(q.getLocalizedMessage(),q);				      					             								
 		      	    			continue;	
 		      	    		}
 		      	    	}
 	      	    }	
 	      	    
-				} catch (Exception e) {}
+				} catch (Exception e) {
+	        		log.error(e.getLocalizedMessage(),e);				      					             													
+				}
 		   }	    
 
 		} catch (Exception eq) {
@@ -1353,7 +1409,8 @@ public class TEI {
 	    			root.addContent(term);
     	    	}
                 			
-			} catch (Exception ex) {
+			} catch (Exception e) {
+        		log.error(e.getLocalizedMessage(),e);				      					             												
 			}								
 	}
 		
@@ -1370,6 +1427,7 @@ public class TEI {
         		temps.cloneTemplate("info:fedora/cirilo:Context", xuser, pid, name);
         	} 
         } catch (Exception e) {
+    		log.error(e.getLocalizedMessage(),e);				      					             								     	
         }
         		
   	    List categories = (List) leaf.getChildren("category", Common.xmlns_tei_p5);
@@ -1393,7 +1451,8 @@ public class TEI {
         		} catch (org.emile.cirilo.ecm.exceptions.ObjectNotFoundException e) {
          				continue;
         		} catch (Exception e) {
-        				break;
+	        		log.error(e.getLocalizedMessage(),e);				      					             								
+    				break;
         		}
         	}  
         }
@@ -1442,6 +1501,7 @@ public class TEI {
 				}
 						
 			} catch (Exception e) {
+        		log.error(e.getLocalizedMessage(),e);				      					             								
                 Common.log(logger,e);
 			}
 	       finally {
@@ -1466,7 +1526,9 @@ public class TEI {
 										}
 									}
 								}
-							} catch (Exception ex) {}		
+							} catch (Exception ex) {
+				        		log.error(ex.getLocalizedMessage(),ex);				      					             															
+							}		
 				}			
 		} 
 	
@@ -1498,6 +1560,7 @@ public class TEI {
 		p = props.getProperty("user", "TEI.RefreshSource"); 
 		write(p != null && p.equals("1"));
 		} catch (Exception e) {
+    		log.error(e.getLocalizedMessage(),e);				      					             											
 		}
 
 		if (this.intermedidate != null) {
@@ -1514,13 +1577,17 @@ public class TEI {
  				}
 				temp.delete();
  				
- 			} catch (Exception e) {}
+ 			} catch (Exception e) {
+        		log.error(e.getLocalizedMessage(),e);				      					             												
+ 			}
  		}
 		
 		try {
 			String p = props.getProperty("user", "TEI.toMETS"); 
 			if (p != null && p.equals("1")) createMETS();
-		} catch (Exception e) {}	
+		} catch (Exception e) {
+    		log.error(e.getLocalizedMessage(),e);				      					             											
+		}	
 
 	}
 	
@@ -1531,9 +1598,11 @@ public class TEI {
 		try {
 			Document doc  = builder.build(new StringReader(new String(Repository.getDatastream("cirilo:"+xuser, "TEITOMETS",""))));
             xsl = outputter.outputString(doc);
+            log.debug("Getting TEITOMETS from cirilo:"+xuser);
 		} catch (Exception ex1) {
 			Document doc  = builder.build(new StringReader(new String(Repository.getDatastream("cirilo:Backbone", "TEITOMETS",""))));
             xsl = outputter.outputString(doc);
+            log.debug("Getting TEITOMETS from cirilo:Backbone");
 		}
 
         System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
@@ -1548,7 +1617,7 @@ public class TEI {
 
   	    Document mets = builder.build(new StringReader(outputter.outputString(out.getResult())));
 		XPath xpath = XPath.newInstance("//mets:fileGrp[@USE='DEFAULT']/mets:file");
-		xpath.addNamespace( Common.xmlns_mets);
+		xpath.addNamespace(Common.xmlns_mets);
 
    	    List images = xpath.selectNodes(mets);
    	    
@@ -1571,7 +1640,9 @@ public class TEI {
 	    			xmldata.addContent(x);
 	    			fcontent.addContent(xmldata);  									
 	    			e.addContent(fcontent);
-	    		} catch (Exception q) {}
+	    		} catch (Exception q) {
+	                log.error(q.getLocalizedMessage(),q);
+	    		}
 		}
   	  	
   	  	
@@ -1581,11 +1652,20 @@ public class TEI {
 		bw.write(new String(outputter.outputString(mets).getBytes("UTF-8"),"UTF-8"));
 		bw.flush();
 		bw.close();
-		Repository.addDatastream(this.PID, "METS_SOURCE","METS Source",  "X", "text/xml", file);  	  		
-        file.delete();  		    
+		try {
+			Repository.addDatastream(this.PID, "METS_SOURCE","METS Source",  "X", "text/xml", file);
+		} catch (Exception e) {
+    		Repository.modifyDatastreamByValue(this.PID, "METS_SOURCE", "text/xml", outputter.outputString(mets));                 							            		
+		}
+		try {
+			Repository.addDatastream(this.PID, "METS_REF",  "Reference to mets stream", "text/xml", user.getUrl()+"/get/"+this.PID+"/METS_SOURCE");
+		} catch (Exception e) {
+		}	
+		log.debug("Creating METS_SOURCE finished normally");
+		file.delete();  		    
   	  	  	  	
-	  } catch (Exception ex0) {
-		  ex0.printStackTrace();
+	  } catch (Exception e) {
+          log.error(e.getLocalizedMessage(),e);
 	  }
 
 	}
@@ -1602,6 +1682,7 @@ public class TEI {
 		p = props.getProperty("user", "TEI.SEMExtraction"); 
 		if (p == null || p.equals("1")) createRELS_INT(null);
 		} catch (Exception e) {
+	          log.error(e.getLocalizedMessage(),e);
 		}	    
 	 }	
 

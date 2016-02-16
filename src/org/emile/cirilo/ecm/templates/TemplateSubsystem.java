@@ -28,8 +28,6 @@ import org.emile.cirilo.ecm.repository.PidList;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.emile.cirilo.ecm.utils.Constants;
 import org.emile.cirilo.ecm.utils.XpathUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -40,6 +38,8 @@ import voodoosoft.jroots.dialog.CDefaultGuiAdapter;
 
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
+
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -58,7 +58,9 @@ import org.jdom.output.XMLOutputter;
  */
 public class TemplateSubsystem {
 
-    private static final Log LOG = LogFactory.getLog(TemplateSubsystem.class);
+	private static Logger log = Logger.getLogger(TemplateSubsystem.class);
+
+	
     private static final String FOXML_DIGITAL_OBJECT_PID = "/foxml:digitalObject/@PID";
     private static final String RELSEXT_ABOUT = "/foxml:digitalObject/foxml:datastream[@ID='RELS-EXT']/"
                              + "foxml:datastreamVersion[position()=last()]/"
@@ -105,7 +107,7 @@ public class TemplateSubsystem {
             String cmpid)
             throws ObjectNotFoundException, FedoraConnectionException,
                    ObjectIsWrongTypeException, FedoraIllegalContentException {
-        LOG.trace("Entering markObjectAsTemplate with params: " + objpid + " and "+cmpid );
+        log.trace("Entering markObjectAsTemplate with params: " + objpid + " and "+cmpid );
         //Working
 
         if (!Repository.exist(cmpid)){
@@ -119,10 +121,10 @@ public class TemplateSubsystem {
 
 
         boolean added = Repository.addRelation(objpid, Constants.TEMPLATE_REL, cmpid);
-        LOG.info("Marked object '"+objpid+"' as template for '"+cmpid+"'");
+        log.info("Marked object '"+objpid+"' as template for '"+cmpid+"'");
         if (!added){
             //The object is already a template. Note this in the log, and do no more
-            LOG.info("Object '"+objpid+"' was already a template for '"+cmpid+"' so no change was performed");
+            log.info("Object '"+objpid+"' was already a template for '"+cmpid+"' so no change was performed");
         }
     }
 
@@ -134,7 +136,7 @@ public class TemplateSubsystem {
                    FedoraIllegalContentException,
                    ObjectIsWrongTypeException {
         //Working
-        LOG.trace("Entering findTemplatesFor with param '"+cmpid+"'");
+       log.trace("Entering findTemplatesFor with param '"+cmpid+"'");
 
         if (Repository.exist(cmpid)){
             if (Repository.isContentModel(cmpid)){
@@ -183,7 +185,7 @@ public class TemplateSubsystem {
     		cloneInternalTemplate(templatepid, ownerid, newPid, (String) null, false);
 			while (!Repository.exist(newPid.substring(1)));
     		markObjectAsTemplate(newPid.substring(1), cm);    		
-    	} catch (Exception e) {e.printStackTrace();}
+    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}
     	
     	return;    	    	
     }
@@ -206,7 +208,7 @@ public class TemplateSubsystem {
 
         //working
         templatepid = Repository.ensurePID(templatepid);
-        LOG.trace("Entering cloneTemplate with param '" + templatepid + "'");
+       log.trace("Entering cloneTemplate with param '" + templatepid + "'");
 
         if (!Repository.exist(templatepid)){
             throw new ObjectNotFoundException("The object (" + templatepid +
@@ -223,37 +225,37 @@ public class TemplateSubsystem {
 		newPid = newPid + (!newPid.contains("context:") && !newPid.contains("query:") && !newPid.startsWith("container:")  && !newPid.startsWith("$") ? "." + Repository.getNextPid().replaceAll("(.*):(.*)","$2") : "");
         newPid = (newPid.startsWith("$")  ? newPid.substring(1) : newPid);
 		        
-        LOG.trace("Generated new pid '" + newPid + "'");
+       log.trace("Generated new pid '" + newPid + "'");
 
         try {
         	removeOlderVersions(document);
         	
             removeAudit(document);
-            LOG.trace("Audit removed");
+           log.trace("Audit removed");
             removeDatastreamVersions(document);
-            LOG.trace("Datastreamsversions removed");
+           log.trace("Datastreamsversions removed");
 
             // Replace PID
             replacePid(document, templatepid, newPid);
-            LOG.trace("Pids replaced");
+           log.trace("Pids replaced");
 
             /** AAR Ext 1.0 **/
             replaceOwner(document, ownerid);
-            LOG.trace("Ownerid replaced");
+           log.trace("Ownerid replaced");
             
             removeDCidentifier(document);
-            LOG.trace("DC identifier removed");
+           log.trace("DC identifier removed");
 
             if (dctitle != null) setExpathList(document, DCTITLE, dctitle );
             
             removeCreated(document);
-            LOG.trace("CREATED removed");
+           log.trace("CREATED removed");
 
             removeLastModified(document);
-            LOG.trace("Last Modified removed");
+           log.trace("Last Modified removed");
 
             removeTemplateRelation(document);
-           LOG.trace("Template relation removed");
+          log.trace("Template relation removed");
                        
         } catch (XPathExpressionException e){
             throw new FedoraIllegalContentException(
@@ -306,7 +308,7 @@ public class TemplateSubsystem {
         	
 
         } catch (Exception e) {
-        	e.printStackTrace();
+        	log.error(e.getLocalizedMessage(),e);	
         }
         return stream;
     }
@@ -333,7 +335,7 @@ public class TemplateSubsystem {
 
     	//working
     	templatepid = Repository.ensurePID(templatepid);
-    	LOG.trace("Entering cloneTemplate with param '" + templatepid + "'");
+    	log.trace("Entering cloneTemplate with param '" + templatepid + "'");
 
     	if (!Repository.exist(templatepid)){
     		throw new ObjectNotFoundException("The object (" + templatepid +
@@ -352,35 +354,35 @@ public class TemplateSubsystem {
 		} catch (Exception ex) {	
 		}
      		
-    	LOG.trace("Generated new pid '" + newPid + "'");
+    	log.trace("Generated new pid '" + newPid + "'");
 
     	try {
         	removeOlderVersions(document);
 
         	removeAudit(document);
-    		LOG.trace("Audit removed");
+    		log.trace("Audit removed");
     		removeDatastreamVersions(document);
-    		LOG.trace("Datastreamsversions removed");
+    		log.trace("Datastreamsversions removed");
 
     		// Replace PID
     		replacePid(document, templatepid, newPid);
-    		LOG.trace("Pids replaced");
+    		log.trace("Pids replaced");
 
     		/** AAR Ext 1.0 **/
     		replaceOwner(document, ownerid);
-    		LOG.trace("Ownerid replaced");
+    		log.trace("Ownerid replaced");
     
     		removeDCidentifier(document);
-    		LOG.trace("DC identifier removed");
+    		log.trace("DC identifier removed");
 
     		removeCreated(document);
-    		LOG.trace("CREATED removed");
+    		log.trace("CREATED removed");
 
     		removeLastModified(document);
-    		LOG.trace("Last Modified removed");
+    		log.trace("Last Modified removed");
 
     		removeTemplateRelation(document);
-    		LOG.trace("Template relation removed");
+    		log.trace("Template relation removed");
     		
     		try {
     			JCheckBox jcbOAIProvider = (JCheckBox) moGA.getWidget("jcbOAIProvider");
@@ -391,7 +393,7 @@ public class TemplateSubsystem {
     		}
 
     		removeDCtitle(document);
-            LOG.trace("DC title removed");
+           log.trace("DC title removed");
     		
     		addDCMetadata(document, DC_DATASTREAM, moGA);
     		
@@ -442,7 +444,7 @@ public class TemplateSubsystem {
     private void replacePid(Document doc, String oldpid, String newpid)
             throws FedoraIllegalContentException, XPathExpressionException, XPathFactoryConfigurationException {
 
-        LOG.trace("Entering replacepid");
+       log.trace("Entering replacepid");
         substituteAttribute(doc, FOXML_DIGITAL_OBJECT_PID,
                 Repository.ensurePID(newpid));
         
@@ -658,7 +660,7 @@ NodeList nodes = XpathUtils.
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeCreated(Document doc) throws XPathExpressionException, XPathFactoryConfigurationException {
-        LOG.trace("Entering removeCreated");
+       log.trace("Entering removeCreated");
         removeAttribute(doc, DATASTREAM_CREATED,"CREATED");
 
         removeExpathList(doc, OBJECTPROPERTY_CREATED);

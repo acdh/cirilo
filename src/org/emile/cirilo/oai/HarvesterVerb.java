@@ -46,8 +46,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-
 import org.apache.xpath.XPathAPI;
+import org.emile.cirilo.utils.Decrypter;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author Jefffrey A. Young, OCLC Online Computer Library Center
  */
 public abstract class HarvesterVerb {
-    private static Logger logger = Logger.getLogger(HarvesterVerb.class);
+	  private static Logger log = Logger.getLogger(HarvesterVerb.class);
     
     /* Primary OAI namespaces */
     public static final String SCHEMA_LOCATION_V2_0 = "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";
@@ -122,7 +122,7 @@ public abstract class HarvesterVerb {
 	                "xmlns:oai11_ListSets",
 	        "http://www.openarchives.org/OAI/1.1/OAI_ListSets");
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		log.error(e.getLocalizedMessage(),e);	
     	}
     }
     
@@ -197,7 +197,7 @@ public abstract class HarvesterVerb {
     public void harvest(String requestURL) throws IOException,
     ParserConfigurationException, SAXException, TransformerException {
         this.requestURL = requestURL;
-        logger.debug("requestURL=" + requestURL);
+        log.debug("requestURL=" + requestURL);
         InputStream in = null;
         URL url = new URL(requestURL);
         HttpURLConnection con = null;
@@ -209,10 +209,10 @@ public abstract class HarvesterVerb {
             "compress, gzip, identify");
             try {
                 responseCode = con.getResponseCode();
-                logger.debug("responseCode=" + responseCode);
+                log.debug("responseCode=" + responseCode);
             } catch (FileNotFoundException e) {
                 // assume it's a 503 response
-                logger.info(requestURL, e);
+                log.info(requestURL, e);
                 responseCode = HttpURLConnection.HTTP_UNAVAILABLE;
             }
             
@@ -232,13 +232,13 @@ public abstract class HarvesterVerb {
                     try {
                         Thread.sleep(retrySeconds * 1000);
                     } catch (InterruptedException ex) {
-                        ex.printStackTrace();
+                        log.error(ex.getLocalizedMessage(),ex);	
                     }
                 }
             }
         } while (responseCode == HttpURLConnection.HTTP_UNAVAILABLE);
         String contentEncoding = con.getHeaderField("Content-Encoding");
-        logger.debug("contentEncoding=" + contentEncoding);
+        log.debug("contentEncoding=" + contentEncoding);
         if ("compress".equals(contentEncoding)) {
             ZipInputStream zis = new ZipInputStream(con.getInputStream());
             zis.getNextEntry();

@@ -21,13 +21,13 @@ package org.emile.cirilo.ecm.repository;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-
 
 /**
  * A class representing a collection of pids. Contains the jaxb annotations

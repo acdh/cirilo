@@ -25,8 +25,13 @@ import java.awt.Dimension;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
+import org.apache.log4j.Logger;
+import org.emile.cirilo.business.Unzipper;
+
 public class CBoundSerializer {
 	
+	private static Logger log = Logger.getLogger(CBoundSerializer.class);
+
 	public static void load (Container container, CWindowsProperties prop, Object table) {
 		Dimension screensize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();		
 
@@ -61,7 +66,7 @@ public class CBoundSerializer {
 	               }
 	        	} 
         } catch (Exception e) {
-	        	e.printStackTrace();
+	        	log.error(e.getLocalizedMessage(),e);	
         }
 	}
 	       
@@ -96,7 +101,7 @@ public class CBoundSerializer {
 	        	  
 	        	}	  
 	        } catch (Exception e) {
-	        	e.printStackTrace();
+	        	log.error(e.getLocalizedMessage(),e);	
 	        }
 	}
 

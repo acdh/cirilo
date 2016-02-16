@@ -32,6 +32,8 @@ import javax.swing.*;
 
 import java.awt.event.*;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -40,35 +42,36 @@ import java.awt.event.*;
  */
 public class GuiEditDCDialog extends CGuiComposite
 {
+	private static Logger log = Logger.getLogger(GuiEditDCDialog.class);
 
-	Container container;
-	JTextField jtfIdentifier;
-	JTextField jtfPID;
-	JTextField jtfTitle;
-	JTextField jtfSubject;
-	JTextField jtfDescription;
-	JTextField jtfCreator;
-	JTextField jtfPublisher;
-	JTextField jtfContributor;
-	JTextField jtfDate;
-	JTextField jtfType;
-	JTextField jtfFormat;
-	JTextField jtfSource;
-	JTextField jtfLanguage;
-	JTextField jtfRelation;
-	JTextField jtfCoverage;
-	JTextField jtfRights;
-	JComboBox jcbStatus;
-	JComboBox jcbNamespace;
-	JComboBox jcbUser;
-	JCheckBox jcbOAIProvider;
+	protected Container container;
+	protected JTextField jtfIdentifier;
+	protected JTextField jtfPID;
+	protected JTextField jtfTitle;
+	protected JTextField jtfSubject;
+	protected JTextField jtfDescription;
+	protected JTextField jtfCreator;
+	protected JTextField jtfPublisher;
+	protected JTextField jtfContributor;
+	protected JTextField jtfDate;
+	protected JTextField jtfType;
+	protected JTextField jtfFormat;
+	protected JTextField jtfSource;
+	protected JTextField jtfLanguage;
+	protected JTextField jtfRelation;
+	protected JTextField jtfCoverage;
+	protected JTextField jtfRights;
+	protected JComboBox jcbStatus;
+	protected JComboBox jcbNamespace;
+	protected JComboBox jcbUser;
+	protected JCheckBox jcbOAIProvider;
 
-	JButton jbSave;
-	JButton jbClose;
-	JButton jbEdit;
-	JButton jbIngest;
+	protected JButton jbSave;
+	protected JButton jbClose;
+	protected JButton jbEdit;
+	protected JButton jbIngest;
 
-	Object[] namespaces = { "o:", "context:", "container:"};
+	protected Object[] namespaces = { "o:", "context:", "container:"};
 
 
 	/**
@@ -83,7 +86,7 @@ public class GuiEditDCDialog extends CGuiComposite
 			setup();
 		}
 		catch ( Exception e ) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

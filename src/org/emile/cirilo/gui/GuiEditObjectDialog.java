@@ -30,6 +30,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -38,19 +40,21 @@ import javax.swing.*;
  */
 public class GuiEditObjectDialog extends CGuiComposite {
 
-	Container container;
-	JTable jtData;
-	JButton jbEdit;
-	JButton jbSeek;
-	JButton jbNew;
-	JButton jbDel;
-	JButton jbReplace;
-	JButton jbRefresh;
-	JButton jbAddGeo;
-	JButton jbExport;
-	JButton jbManage;
-	JButton jbClose;
-    JTextField jtfSeek;
+	private static Logger log = Logger.getLogger(GuiEditObjectDialog.class);
+
+	protected Container container;
+	protected JTable jtData;
+	protected JButton jbEdit;
+	protected JButton jbSeek;
+	protected JButton jbNew;
+	protected JButton jbDel;
+	protected JButton jbReplace;
+	protected JButton jbRefresh;
+	protected JButton jbAddGeo;
+	protected JButton jbExport;
+	protected JButton jbManage;
+	protected JButton jbClose;
+	protected JTextField jtfSeek;
 
 	/**
 	 *Constructor for the GuiEditObject object
@@ -63,7 +67,7 @@ public class GuiEditObjectDialog extends CGuiComposite {
 			setRootComponent(container);
 			setup();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

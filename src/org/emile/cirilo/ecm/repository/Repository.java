@@ -27,8 +27,6 @@ import org.emile.cirilo.ecm.exceptions.ObjectNotFoundException;
 import org.w3c.dom.Document;
 import org.emile.cirilo.gui.jtable.DefaultSortTableModel;
 
-import fedora.server.types.gen.ObjectProfile;
-
 import java.util.List;
 import java.io.File;
 /**

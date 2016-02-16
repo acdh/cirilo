@@ -29,7 +29,7 @@ import java.io.*;
 
 import com.jcraft.jsch.*;
 
-
+import org.apache.log4j.Logger;
 import org.emile.cirilo.ServiceNames;
 
 
@@ -42,10 +42,12 @@ import org.emile.cirilo.ServiceNames;
  */
 public class Scp {
 
-	   String host;
-	   String passwd;
-	   User user;
-	   com.jcraft.jsch.Session session;
+	   private static Logger log = Logger.getLogger(Scp.class);
+	   
+	   private String host;
+	   private String passwd;
+	   private User user;
+	   private com.jcraft.jsch.Session session;
 	   
 	   public Scp () {}
 	   
@@ -84,6 +86,7 @@ public class Scp {
 			  */ 
                         
 		   } catch (Exception e){
+	      	   log.error(e.getLocalizedMessage(),e);				      					   
 			   return false;
 		   }
 		   return false;
@@ -94,7 +97,9 @@ public class Scp {
 	   public void disconnect() {
 		   try {
 			   session.disconnect();
-		   } catch (Exception e) {}	   
+		   } catch (Exception e) {
+	      		log.error(e.getLocalizedMessage(),e);				      					   			   
+		   }	   
 			   
 	   }
 
@@ -131,13 +136,15 @@ public class Scp {
 				sftp.rm(pid);
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getLocalizedMessage(),e);	
 				return false;
 			}
 			finally {
 				try {
 					channel.disconnect();  
-				} catch(Exception q) {}
+				} catch(Exception q) {
+		      		log.error(q.getLocalizedMessage(),q);				      					   
+				}
 			}		
 			return true;
 			
@@ -177,12 +184,14 @@ public class Scp {
 				sftp.put(filename, pid);
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getLocalizedMessage(),e);	
 			}
 			finally {
 				try {
 					channel.disconnect();  
-				} catch(Exception q) {}
+				} catch(Exception q) {
+		      		log.error(q.getLocalizedMessage(),q);				      					   		
+				}
 			}		
 			return dir+pid;
 			

@@ -20,12 +20,16 @@
 package org.emile.cirilo.gui;
 
 import voodoosoft.jroots.core.gui.CGuiTools;
+
 import java.awt.*;
+
 import javax.swing.*;
 
 import org.emile.cirilo.Common;
 
 import java.net.URL;
+
+import org.apache.log4j.Logger;
 
 /**
  *  Description of the Class
@@ -35,11 +39,13 @@ import java.net.URL;
  */
 public class SplashFrame extends JWindow {
 
-	JPanel panel              = new JPanel();
-	JLabel logo               = new JLabel();
-	JTextArea log             = new JTextArea();
-	JScrollPane scrollPanel   = new JScrollPane();
-	JProgressBar progressBar;
+	private static Logger log = Logger.getLogger(SplashFrame.class);
+	
+	private JPanel panel              = new JPanel();
+	private JLabel logo               = new JLabel();
+	private JTextArea jta             = new JTextArea();
+	private JScrollPane scrollPanel   = new JScrollPane();
+	private JProgressBar progressBar;
 	private int miMaxSteps; 
 
 
@@ -63,7 +69,7 @@ public class SplashFrame extends JWindow {
 			CGuiTools.center(this);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 
@@ -75,12 +81,12 @@ public class SplashFrame extends JWindow {
 	 */
 	public void addLog(String asLog) {
 		if (progressBar.getValue() > 0) {
-			log.append("ok\n");
+			jta.append("ok\n");
 		} else {
-			log.append(Common.WINDOW_HEADER+"\n");
+			jta.append(Common.WINDOW_HEADER+"\n");
 		}
-		log.append(asLog + " ... ");
-		log.setCaretPosition(log.getDocument().getLength());
+		jta.append(asLog + " ... ");
+		jta.setCaretPosition(jta.getDocument().getLength());
 		progressBar.setValue(progressBar.getValue() + 1);
 	}
 	
@@ -112,8 +118,8 @@ public class SplashFrame extends JWindow {
 		panel.setBorder(BorderFactory.createEtchedBorder());
 		panel.setPreferredSize(new Dimension(400, 450));
 		panel.setLayout(new GridBagLayout());
-		log.setBorder(null);
-		log.setEditable(false);
+		jta.setBorder(null);
+		jta.setEditable(false);
 
 		logo.setPreferredSize(new Dimension(300, 200));
 		logo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,7 +134,7 @@ public class SplashFrame extends JWindow {
 		panel.add(progressBar, new GridBagConstraints(0, 2, 1, 1, 1.0, 0, GridBagConstraints.CENTER,
 			GridBagConstraints.HORIZONTAL, new Insets(10, 10, 10, 10), 0, 0));
 
-		scrollPanel.getViewport().add(log, null);
+		scrollPanel.getViewport().add(jta, null);
 
 		this.getContentPane().add(panel, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
 			GridBagConstraints.CENTER,

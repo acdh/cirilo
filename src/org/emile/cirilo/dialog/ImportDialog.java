@@ -43,6 +43,8 @@ import java.io.FilenameFilter;
 import java.util.List;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 
 import com.asprise.util.ui.progress.ProgressDialog;
@@ -68,6 +70,7 @@ import voodoosoft.jroots.dialog.*;
  */
 public class ImportDialog extends CDialog {
     
+	private static Logger log = Logger.getLogger(ImportDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -140,7 +143,7 @@ public class ImportDialog extends CDialog {
 			getGuiComposite().getWidget("jbShow").setEnabled(false);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			throw new COpenFailedException(ex);
 		}
 	}
@@ -364,7 +367,8 @@ public class ImportDialog extends CDialog {
 												fi++;
 												logger.write(" ... Ok");
 											} catch (Exception q) {
-												q.printStackTrace();
+												log.error(q.getLocalizedMessage(),q);	
+
 												ff++;
 												logger.write(" ... "+res.getString("ingfail"));										
 											}
@@ -379,7 +383,8 @@ public class ImportDialog extends CDialog {
 										ff++;
 									}	
 								} catch (Exception w) {
-									w.printStackTrace();									
+								  log.error(w.getLocalizedMessage(),w);	
+									
 								}
 				
 							}
@@ -419,7 +424,7 @@ public class ImportDialog extends CDialog {
 		     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml")) {
 		     		files.add(file.getAbsolutePath());
 		     	}
-			  } catch (Exception e) {e.printStackTrace();}	
+			  } catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
 		}	
 		
 		class XMLFilter implements FilenameFilter

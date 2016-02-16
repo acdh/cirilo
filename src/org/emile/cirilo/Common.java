@@ -146,7 +146,13 @@ public class Common {
 	public final static Namespace xmlns_ns12 = Namespace.getNamespace( "ns12", "http://phaidra.univie.ac.at/XML/metadata/digitalbook/V1.0");
 	
 	public final static Namespace xmlns_ns13 = Namespace.getNamespace( "ns13", "http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0");
-
+	
+	public final static Namespace xmlns_ore = Namespace.getNamespace( "ore", "http://www.openarchives.org/ore/terms/");
+	
+	public final static Namespace xmlns_owl = Namespace.getNamespace( "owl", "http://www.w3.org/2002/07/owl#");
+	
+	public final static Namespace xmlns_rdaGr2 = Namespace.getNamespace( "rdaGr2", "http://rdvocab.info/ElementsGr2/");
+	
 	public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
       	
     public final static String[] LANGUAGES ={"en", "de"};
@@ -265,7 +271,6 @@ public class Common {
     public static void log(FileWriter logger, Exception e) {
  	   try {
  		   if (logger != null) logger.write(new java.util.Date()  +" "+e.getLocalizedMessage()+"\n");
- 		   if (Common.LOGLEVEL==Common.DEBUG)  e.printStackTrace();
  	   } catch (Exception eq) {}	   
     }
       

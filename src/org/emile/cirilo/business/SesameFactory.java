@@ -13,12 +13,14 @@ import org.openrdf.model.impl.URIImpl;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
+import org.apache.log4j.Logger;
 
-import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 
 public class SesameFactory {
 	
+	private static Logger log = Logger.getLogger(SesameFactory.class);
+	   
 	private Repository repository;
 	private RemoteRepositoryManager manager;
 	private RepositoryConnection connection;
@@ -36,7 +38,7 @@ public class SesameFactory {
 			this.repository.initialize(); 	       	
 			this.connection = this.repository.getConnection();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 			this.connection = null;
 		}
 		
@@ -44,7 +46,9 @@ public class SesameFactory {
 	public void close() {
 		try {
 			this.connection.close();
-		} catch (Exception e) {}	
+		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   			
+		}	
 	}
 	
 	public boolean getStatus() {
@@ -61,13 +65,16 @@ public class SesameFactory {
     		MessageFormat msgFmt = new MessageFormat(res.getString("triplestoreerror"));
     		Object[] args = {"Sesame"}; 		    		
     		JOptionPane.showMessageDialog(null, msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.ERROR_MESSAGE);
-    	} catch (Exception e) {}
+    	} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					    		
+    	}
     }
 
 	public boolean removeAll() {
 		try {
 			this.connection.remove(new URIImpl(null),new URIImpl(null),new URIImpl(null)); 							 							  				
 		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   		
             return  false;
 		}    
 		return true;
@@ -77,6 +84,7 @@ public class SesameFactory {
 		try {
 			this.connection.add(fp, null, org.openrdf.rio.RDFFormat.RDFXML, new URIImpl(context));
 		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   		
 			show();
             return  false;
 		}    
@@ -87,6 +95,7 @@ public class SesameFactory {
 		try {
 			this.connection.clear(new URIImpl(context)); 							 							  				
 		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   		
 			show();
             return  false;
 		}    
@@ -99,6 +108,7 @@ public class SesameFactory {
 			this.connection.clear(new URIImpl(context)); 							 							  				
 			this.connection.add(fp, null, org.openrdf.rio.RDFFormat.RDFXML, new URIImpl(context));
 		} catch (Exception e) {
+      		log.error(e.getLocalizedMessage(),e);				      					   		
 			show();
             return  false;
 		}    

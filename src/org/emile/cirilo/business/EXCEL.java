@@ -11,12 +11,12 @@ import java.util.regex.Pattern;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.ss.usermodel.*;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -27,6 +27,8 @@ import org.emile.cirilo.*;
 
 public class EXCEL {
 	
+    private static Logger log = Logger.getLogger(EXCEL.class);
+
 	private final int MAXIT = 10000; 
 	
 	private  HashMap <Integer,String> fields = new HashMap <Integer,String>();
@@ -71,7 +73,7 @@ public class EXCEL {
 
     		return true;
     	} catch (Exception e) {
-    		e.printStackTrace();
+    	  	log.error(e.getLocalizedMessage(),e);		  
     		return false;
     	}    	
     }
@@ -79,7 +81,9 @@ public class EXCEL {
     public void destroy() {
     	try {
     		input.close();
-    	} catch (Exception e) {}
+    	} catch (Exception e) {
+    	  	log.error(e.getLocalizedMessage(),e);		  		
+    	}
     }
     
  	public String toString() {
@@ -91,6 +95,7 @@ public class EXCEL {
        	try {
     		return sheet.getLastRowNum();    		
     	} catch (Exception e) {
+    	  	log.error(e.getLocalizedMessage(),e);		   		
     		return 0;
     	}    	    	
     }
@@ -99,7 +104,8 @@ public class EXCEL {
        	try {
     		return (String) data.get(field);    		
     	} catch (Exception e) {
-    		return "null";
+    	  	log.error(e.getLocalizedMessage(),e);		  
+    	  	return "null";
     	}    	    	
     }
         
@@ -121,7 +127,9 @@ public class EXCEL {
 						break;
     			}
     		}    		
-    	} catch (Exception e) {}
+    	} catch (Exception e) {
+    	  	log.error(e.getLocalizedMessage(),e);		     		
+    	}
     	finally {
     		return f;
     	}
@@ -138,7 +146,9 @@ public class EXCEL {
     			getRow(currentRow);
     			return evaluate (data);
     		} 
-    	} catch (Exception e) {}
+    	} catch (Exception e) {
+    	  	log.error(e.getLocalizedMessage(),e);		   		
+    	}
     	return false;
     }
     
@@ -151,7 +161,9 @@ public class EXCEL {
     			currentRow++;
     			return true;
     		} 
-    	} catch (Exception e) {}
+    	} catch (Exception e) {
+    	  	log.error(e.getLocalizedMessage(),e);		    		
+    	}
     	return false;
     }
     
@@ -188,6 +200,7 @@ public class EXCEL {
 			}
 			return true;
     	} catch (Exception e) {
+    	  	log.error(e.getLocalizedMessage(),e);		  		
     		return false;
     	}
     }
@@ -241,6 +254,7 @@ public class EXCEL {
         						try {
         							m.appendReplacement(sb,"'"+new Integer(delta).toString()+"'");
         						} catch (Exception e) {	
+        						  	log.error(e.getLocalizedMessage(),e);		      							
         	        			}
         					} while (m.find());		
             				m.appendTail(sb);
@@ -263,6 +277,7 @@ public class EXCEL {
            				try {
            					result = (String) engine.eval( expr );
            				} catch (Exception e) {
+           				  	log.error(e.getLocalizedMessage(),e);		  
            				}	
            				at.setValue(result);					    
         			}
@@ -281,6 +296,7 @@ public class EXCEL {
         						try {
         							m.appendReplacement(sb,"'"+new Integer(delta).toString()+"'");
         						} catch (Exception e) {	
+        						  	log.error(e.getLocalizedMessage(),e);		     							
         	        			}
         					} while (m.find());		
             				m.appendTail(sb);
@@ -294,6 +310,7 @@ public class EXCEL {
         						try {
         							m.appendReplacement(sb,"'"+(get(m.group(1))).trim()+"'");
         						} catch (Exception e) {	
+        						  	log.error(e.getLocalizedMessage(),e);		      							
         	        			}
         					} while (m.find());		
             				m.appendTail(sb);
@@ -303,6 +320,7 @@ public class EXCEL {
            				try {
            					result = (String) engine.eval( expr );
            				} catch (Exception e) {
+           				  	log.error(e.getLocalizedMessage(),e);		  		
            				}	
 
            				Element pr = el.getParentElement();
@@ -354,6 +372,7 @@ public class EXCEL {
         						try {
         							m.appendReplacement(sb,"'"+new Integer(i).toString()+"'");
         						} catch (Exception e) {	
+        						  	log.error(e.getLocalizedMessage(),e);		     							
         	        			}
         					} while (m.find());		
             				m.appendTail(sb);
@@ -367,6 +386,7 @@ public class EXCEL {
         						try {
         							m.appendReplacement(sb,"'"+(get(m.group(1)+(m.group(2) != null  ? ":"+new Integer(i).toString() : ""))).trim()+"'");
         						} catch (Exception e) {
+        						  	log.error(e.getLocalizedMessage(),e);		     							
         							last = true;
         	        			}
         					} while (m.find());		
@@ -377,6 +397,7 @@ public class EXCEL {
            				try {
            					result = (String) engine.eval( expr );
            				} catch (Exception e) {
+           				  	log.error(e.getLocalizedMessage(),e);		            					
            				}	
            				at.setValue(result);					    
         			}
@@ -395,6 +416,7 @@ public class EXCEL {
         						try {
         							m.appendReplacement(sb,"'"+new Integer(i).toString()+"'");
         						} catch (Exception e) {	
+        						  	log.error(e.getLocalizedMessage(),e);		    							
         	        			}
         					} while (m.find());		
             				m.appendTail(sb);
@@ -408,6 +430,7 @@ public class EXCEL {
         						try {
            							m.appendReplacement(sb,"'"+(get(m.group(1)+(m.group(2) != null  ? ":"+new Integer(i).toString() : ""))).trim()+"'");
            						} catch (Exception e) {
+           						  	log.error(e.getLocalizedMessage(),e);		             							
            							last =true;
         	        			}
         					} while (m.find());		
@@ -418,6 +441,7 @@ public class EXCEL {
            				try {
            					result = (String) engine.eval( expr );
            				} catch (Exception e) {
+           				  	log.error(e.getLocalizedMessage(),e);		  
            				}	
 
            				Element pr = el.getParentElement();
@@ -455,6 +479,7 @@ public class EXCEL {
 						try {
 							m.appendReplacement(sb,"'"+(get(m.group(1))).trim()+"'");
 						} catch (Exception e) {	
+						  	log.error(e.getLocalizedMessage(),e);		  							
 						}
 					} while (m.find());		
 					m.appendTail(sb);			
@@ -462,6 +487,7 @@ public class EXCEL {
     				try {
     					result = (String) engine.eval( sb.toString() );
     				} catch (Exception e) {
+    				  	log.error(e.getLocalizedMessage(),e);		   					
     				}	
 					at.setValue(result);
 				}
@@ -480,6 +506,7 @@ public class EXCEL {
 						try {
 							m.appendReplacement(sb,"'"+(get(m.group(1))).trim()+"'");
 						} catch (Exception e) {	
+						  	log.error(e.getLocalizedMessage(),e);		  						
 	        			}
 					} while (m.find());		
 					m.appendTail(sb);			
@@ -488,6 +515,7 @@ public class EXCEL {
    				try {
    					result = (String) engine.eval( sb.toString() );
    				} catch (Exception e) {
+   				  	log.error(e.getLocalizedMessage(),e);		    					
    				}	
 				Element pr = el.getParentElement();
 				pr.removeChild("expr", Common.xmlns_mm);
@@ -497,7 +525,7 @@ public class EXCEL {
 			currentRow += delta-1;
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+		  	log.error(e.getLocalizedMessage(),e);		  
 			return false;
 		}
 

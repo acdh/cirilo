@@ -31,6 +31,7 @@ import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.utils.Split;
 import org.emile.cirilo.business.*;
 import org.emile.cirilo.*;
+import org.apache.log4j.Logger;
 
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -50,6 +51,7 @@ import java.io.*;
  */
 public class ReplaceDialog extends CDialog {
 
+	private static Logger log = Logger.getLogger(ReplaceDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -198,7 +200,7 @@ public class ReplaceDialog extends CDialog {
 			oParent.handleObjectReplace(substitutions);
 		}
 		catch ( Exception e ) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 	
@@ -396,7 +398,7 @@ public class ReplaceDialog extends CDialog {
 				});
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			throw new COpenFailedException(ex);
 		}
 	}

@@ -30,6 +30,8 @@ import org.emile.cirilo.ServiceNames;
 import java.util.ResourceBundle;
 import java.awt.*;
 
+import org.apache.log4j.Logger;
+
 /**
  *  Description of the Class
  *
@@ -39,7 +41,9 @@ import java.awt.*;
 public class GuiReorganizeDialog extends CGuiComposite {
 
 	
-	Container container;
+	private static Logger log = Logger.getLogger(GuiReorganizeDialog.class);
+	
+	protected Container container;
 		
 	/**
 	 *  Description of the Field
@@ -67,7 +71,7 @@ public class GuiReorganizeDialog extends CGuiComposite {
 			setup(); 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(),e);	
 		}
 	}
 

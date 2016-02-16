@@ -33,6 +33,8 @@ import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
 
+import org.apache.log4j.Logger;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -45,6 +47,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 public class SelectLayoutDialog extends CDefaultDialog {
+
+	private static Logger log = Logger.getLogger(SelectLayoutDialog.class);
 	/**
 	 *  Constructor for the SelectLayoutDialog object
 	 */

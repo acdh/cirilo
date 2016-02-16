@@ -35,11 +35,7 @@ import org.emile.cirilo.*;
 
 import com.asprise.util.ui.progress.ProgressDialog;
 
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
-import org.jdom.output.*;
-import org.jdom.input.*;
-import org.jdom.*;
+import org.apache.log4j.Logger;
 
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -49,17 +45,11 @@ import javax.swing.*;
 import java.text.MessageFormat;
 import java.util.*;
 import java.io.*;
-import java.net.URL;
 import java.awt.Color;
-import java.util.regex.*;
 
 import org.xmldb.api.base.*;
-import org.xmldb.api.modules.*;
 import org.xmldb.api.*;
 
-import javax.xml.transform.OutputKeys;
-
-import org.exist.xmldb.EXistResource;
 
 
 /**
@@ -70,6 +60,7 @@ import org.exist.xmldb.EXistResource;
  */
 public class IngestObjectDialog extends CDialog {
 
+	private static Logger log = Logger.getLogger(IngestObjectDialog.class);
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -392,7 +383,8 @@ public class IngestObjectDialog extends CDialog {
  							    try {														    
  							    	if (!onlyValidate) Repository.modifyDatastreamByValue(m.getPID(), "METS_SOURCE", "text/xml", m.toString());
  							    } catch (Exception q) {
- 							    	q.printStackTrace();
+ 							      log.error(q.getLocalizedMessage(),q);	
+
  							    }	
 
 							}
@@ -656,7 +648,7 @@ public class IngestObjectDialog extends CDialog {
 	 							    try {														    
 	 	 							   if (!onlyValidate) Repository.modifyDatastreamByValue(t.getPID(), "TEI_SOURCE", "text/xml", t.toString());
 	 							    } catch (Exception q) {
-	 							    	q.printStackTrace();
+	 							    	log.error(q.getLocalizedMessage(),q);	
 	 							    }	
 								
 
@@ -782,7 +774,7 @@ public class IngestObjectDialog extends CDialog {
 	 							    try {														    
 	 	 							   if (!onlyValidate) Repository.modifyDatastreamByValue(l.getPID(), "LIDO_SOURCE", "text/xml", l.toString());
 	 							    } catch (Exception q) {
-	 							    	q.printStackTrace();
+	 							    	log.error(q.getLocalizedMessage(),q);	
 	 							    }	
 								
 
@@ -1301,7 +1293,7 @@ public class IngestObjectDialog extends CDialog {
 			 set();
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getLocalizedMessage(),ex);	
 			throw new COpenFailedException(ex);
 		}
 	}
@@ -1329,7 +1321,7 @@ public class IngestObjectDialog extends CDialog {
 	     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml") || file.getAbsolutePath().toLowerCase().endsWith(".docx")|| file.getAbsolutePath().toLowerCase().endsWith(".odt")) {
 	     		files.add(file.getAbsolutePath());
 	     	}
-		  } catch (Exception e) {e.printStackTrace();}	
+		  } catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
 	}	
 
 
