@@ -33,7 +33,9 @@ import javax.swing.UIManager;
 import net.glxn.qrgen.QRCode;
 import net.glxn.qrgen.image.ImageType;
 
+import org.apache.log4j.Logger;
 import org.emile.cirilo.User;
+import org.emile.cirilo.business.MDMapper;
 import org.emile.cirilo.ecm.repository.Repository;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -44,7 +46,9 @@ import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 
 public class Common {
-	
+
+	private static Logger log = Logger.getLogger(Common.class);
+
 	public final static String[] DCMI = {"Title", "Description", "Subject", "Creator", "Publisher", "Contributor", "Language", "Date", "Type", "Format", "Source", "Relation", "Coverage", "Rights"};
 
 	public final static Namespace xmlns_dc = Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
@@ -330,7 +334,9 @@ public class Common {
 			} else {
 				if (title.getTextTrim().isEmpty()) title.setText("Untitled");
 			}	
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);
+		}
 		return dc;
 	}
 	

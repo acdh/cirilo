@@ -157,21 +157,18 @@ public class HarvesterDialog extends CDefaultDialog {
 				   		    	String metadataPrefix =(String) tb.getValueAt(x,3);
 				   		    	
 				   		    	try {
-				   		    		boolean mode = true;
 				   		    		
 				   		    		if (baseURL.startsWith("http")) {
-				   		    			
-				   		    			while (harvest (mode, metadataPrefix, baseURL, null, null)) {
+				   		    			if (harvest (metadataPrefix, baseURL, ((HarvesterTableModel) tb.getModel()).getRow(x)[6], null, null)) {
 				   		    				if(!addItems( ((HarvesterTableModel) tb.getModel()).getRow(x))) {
 				   		    					exit = true;
 				   		    					break;
 				   		    				}
-				   		    				mode = false;
 				   		    			}	
 				   		    			if (exit) break;
 				   		    		}	
 				   		    		if (baseURL.startsWith("file:///")) {
-				   		    			if (collect (mode, metadataPrefix, baseURL, null, null)) {
+				   		    			if (collect (metadataPrefix, baseURL, null, null)) {
 				   		    				if(!addItems( ((HarvesterTableModel) tb.getModel()).getRow(x))) {
 				   		    					exit = true;
 				   		    					break;
@@ -181,6 +178,7 @@ public class HarvesterDialog extends CDefaultDialog {
 				   		    		}	
 				   		    		
 				   		    	} catch (Exception ex) {	
+									log.error(ex.getLocalizedMessage(),ex);					   		    		
 				   		    	}
 				   		    	
 				   		    	XPath xPath = XPath.newInstance( "/dataproviders/repository[serviceprovider='"+baseURL+"']" );
@@ -191,10 +189,8 @@ public class HarvesterDialog extends CDefaultDialog {
 
 				   		    Repository.modifyDatastreamByValue("cirilo:Backbone", "DATAPROVIDERS", "text/xml", outputter.outputString(doc));
 
-				   		    msgFmt = new MessageFormat(res.getString("harvested"));
-				   		    Object[] argu = {};
 
-				   		    JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(argu) + res.getString("details")+logfile , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
+				   		    JOptionPane.showMessageDialog(  getCoreDialog(), res.getString("details")+logfile , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 				   		    
 				   		    logger.write("\n"+ new java.util.Date()  +res.getString("end")+" harvesting");									
 							logger.close();
@@ -215,7 +211,7 @@ public class HarvesterDialog extends CDefaultDialog {
 
 	}
 
-	public boolean collect(boolean mode, String metadataPrefix, String baseURL, String from, String until)  {
+	public boolean collect(String metadataPrefix, String baseURL, String from, String until)  {
 		try {
 			metadata = parser.build(new File(baseURL.substring(8)));	
 			return true;
@@ -227,35 +223,72 @@ public class HarvesterDialog extends CDefaultDialog {
 		}	
 	}
 	
-	public boolean harvest(boolean mode, String metadataPrefix, String baseURL, String from, String until) {
-		try {			
-			if (mode) {			
-	   			log.debug("REST request to "+baseURL+" with metadataPrefix "+metadataPrefix);
-				listRecords = new ListRecords(baseURL, from, until, null, metadataPrefix);
-			} else if (resumptionToken != null) {
-	   			log.debug("REST request to "+baseURL+" with resumptionToken "+resumptionToken);
-				listRecords = new ListRecords(baseURL, resumptionToken);			
-			} else {
-				return false;
-			}
-			NodeList errors = listRecords.getErrors();
-			if (errors != null && errors.getLength() > 0) {
-			   for (int i = 0; i< errors.getLength(); i++) {
-				   Node item = errors.item(i);
-				   logger.write("\n"+ new java.util.Date()  +" "+item.getTextContent());	
-			   }
-			   return false;
-			}
+	public boolean harvest(String metadataPrefix, String baseURL, String constraints, String from, String until) {
+		try {	
+			metadata = new Document();
+			root = new Element("OAI-PMH");
+			metadata.addContent(root);
+				
+			ListRecords listRecords = new ListRecords(baseURL, from, until, null, metadataPrefix);
+			String resumptionToken = null;
+            int i = 0;
 			
-			metadata = parser.build(new StringReader(listRecords.toString()));
-			resumptionToken = listRecords.getResumptionToken();
+			log.debug("REST request to "+baseURL+" with metadataPrefix "+metadataPrefix+" "+constraints);
+			
+	        do {
+				NodeList errors = listRecords.getErrors();
+				if (errors != null && errors.getLength() > 0) {
+				   for (int j = 0; i< errors.getLength(); j++) {
+					   Node item = errors.item(j);
+					   logger.write("\n"+ new java.util.Date()  +" "+item.getTextContent());	
+				   }
+				   return false;
+				}
+				
+				Document pass = parser.build(new StringReader(new String(listRecords.toString().getBytes(),"UTF-8")));
+				XPath xpath = XPath.newInstance("//oai:record"+(!constraints.isEmpty() ? "["+constraints+"]" : ""));
+				xpath.addNamespace(Common.xmlns_dc);
+				xpath.addNamespace(Common.xmlns_oai);
+				xpath.addNamespace(Common.xmlns_edm);
+				xpath.addNamespace(Common.xmlns_europeana);
+				xpath.addNamespace(Common.xmlns_tei_p5);
+				xpath.addNamespace(Common.xmlns_dcterms);
+				xpath.addNamespace(Common.xmlns_lido);
+				xpath.addNamespace(Common.xmlns_skos);
+				xpath.addNamespace(Common.xmlns_rdf);
+				xpath.addNamespace(Common.xmlns_ore);
+				xpath.addNamespace(Common.xmlns_owl);
+				xpath.addNamespace(Common.xmlns_rdaGr2);
+				xpath.addNamespace(Common.xmlns_wgs84_pos);
 
+				List records = (List) xpath.selectNodes(pass);
+							
+				if (records.size() > 0) {
+					for (Iterator iter = records.iterator(); iter.hasNext();) {
+						Element em = (Element) iter.next();
+						root.addContent((Element) em.clone());
+					}			
+				}
+
+        		resumptionToken = listRecords.getResumptionToken();
+        		
+	        	if (!resumptionToken.isEmpty()) {
+	        		listRecords = new ListRecords(baseURL, resumptionToken);
+		        	i++;		        	
+					log.debug("Pass "+i+" on "+baseURL+ " with resumptionToken "+resumptionToken);
+	        	} else {
+	        		break;
+	        	}
+	      
+	        } while (true);
+	        
 			log.debug("Building JDOM Document from harvested metadata was successful");
 			
-			return (metadata.getRootElement() != null);
+			return true;
 			
 		} catch (Exception e) {
 			try {
+				log.error(e.getLocalizedMessage(),e);
 				if (!e.getLocalizedMessage().contains("bad syntax")) logger.write("\n" + new java.util.Date() + e.getLocalizedMessage() );
 			} catch (Exception q) {} 	
 		}
@@ -276,11 +309,11 @@ public class HarvesterDialog extends CDefaultDialog {
 			String icon = par[7];
 			String owner = par[8];
 			
-			XPath xpath = XPath.newInstance("//oai:record"+(!constraints.isEmpty() ? "["+constraints+"]" : ""));
+			XPath xpath = XPath.newInstance("//oai:record");
 			xpath.addNamespace(Common.xmlns_dc);
 			xpath.addNamespace(Common.xmlns_oai);
-			xpath.addNamespace(Common.xmlns_europeana);
 			xpath.addNamespace(Common.xmlns_edm);
+			xpath.addNamespace(Common.xmlns_europeana);
 			xpath.addNamespace(Common.xmlns_tei_p5);
 			xpath.addNamespace(Common.xmlns_dcterms);
 			xpath.addNamespace(Common.xmlns_lido);
@@ -290,9 +323,7 @@ public class HarvesterDialog extends CDefaultDialog {
 			xpath.addNamespace(Common.xmlns_owl);
 			xpath.addNamespace(Common.xmlns_rdaGr2);
 			xpath.addNamespace(Common.xmlns_wgs84_pos);
-			
-			
-			
+								
 			byte[] stylesheet = null;
         	try {
 	        	stylesheet =  Repository.getDatastream("cirilo:"+owner, "RECORDtoEDM" , "");
@@ -305,6 +336,17 @@ public class HarvesterDialog extends CDefaultDialog {
 	        		}
           	}
         	
+    		System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
+    		Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet))));
+
+        	
+			URLConnection con = new URL (new String(Repository.getDatastream(model , "DC_MAPPING" , ""))).openConnection();
+			con.setUseCaches(false);
+			Document mapping = parser.build(con.getInputStream());			
+			MDMapper m = new MDMapper(model, outputter.outputString(mapping));
+			con = null;
+
+			
             log.debug("Reading stylesheet RECORDtoEDM was successful");
 			
 			List records = (List) xpath.selectNodes(metadata);
@@ -324,7 +366,8 @@ public class HarvesterDialog extends CDefaultDialog {
 
 				for (Iterator iter = records.iterator(); iter.hasNext();) {
 					Element em = (Element) iter.next();
-
+					
+					i++;
 					
 		    		if(progressDialog.isCanceled()) {
 		    			return false;
@@ -342,14 +385,18 @@ public class HarvesterDialog extends CDefaultDialog {
 								.replaceAll("info:fedora/oai:", "")
 								.replaceAll("o:", "")
 								.replaceAll("hdl:", "")
+								.replaceAll("[\\[({<>)}\\];#+~]", "")
 								.replaceAll("[:/]", ".");
+						
+						log.debug("Starting ingest of object "+i+" with PID "+pid);
+						
 						if (!Repository.exist(pid)) {
 							pid = temps.cloneTemplate("info:fedora/"+model,	owner, "$" + pid, (String) null);
-							log.debug("Creating object "+pid+ " was successful" );
+							log.debug("Creating the object "+pid+ " was successful" );
 							logger.write("\n" + new java.util.Date() + res.getString("creatingobject") + pid);
 						} else {
 							logger.write("\n" + new java.util.Date() + res.getString("updatingobject") + pid);
-							log.debug("Updating object "+pid+ " was successful" );
+							log.debug("Updating the object "+pid+ " was successful" );
 						}
 
 						xpath = XPath.newInstance(url);
@@ -370,7 +417,6 @@ public class HarvesterDialog extends CDefaultDialog {
 						Object path =  xpath.selectSingleNode(em);
 						
 						if (path != null) {							
-							
 							
 							XPath vpath = XPath.newInstance(icon);
 							vpath.addNamespace(Common.xmlns_dc);
@@ -448,13 +494,10 @@ public class HarvesterDialog extends CDefaultDialog {
 		    		        		JDOMResult out = new JDOMResult();
 									
 			    		        	try {
-			    		        		System.setProperty("javax.xml.transform.TransformerFactory",  "net.sf.saxon.TransformerFactoryImpl");  
-			    		        		Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet))));
 			    		        		transformer.transform(in, out);
-			    		        		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");
 										log.debug("Mapping metadata of object "+pid+ " was successful" );
 			    		        	} catch (Exception e) {
-										log.debug("Mapping metadata of object "+pid+ " was not successful" );			    		        		
+										log.error(e.getLocalizedMessage(),e);
 			    		        	}
 			    		        	try {
 			    		        		Repository.modifyDatastreamByValue(pid, "RECORD", "text/xml", buf);
@@ -462,21 +505,26 @@ public class HarvesterDialog extends CDefaultDialog {
 			    		    			Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm.toString());
 										log.debug("Updating metadata of object "+pid+ " was successful" );
 			    		        	} catch (Exception e) {
-										log.debug("Updating metadata of object "+pid+ " was not successful" );									
+										log.error(e.getLocalizedMessage(),e);
 			    		        	}	
 			    		        	finally {
 			    		        		in = null;
 			    		        		out = null;
 			    		        		buf = null;
 			    		        	}
-								    createMapping(pid, edm.toString());
+			    					org.jdom.Document dc = parser.build( new StringReader (m.transform(parser.build(new StringReader(edm.toString())))));					    					
+			    					dc = Common.validate(dc);
+			    					Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(dc));
 								} catch (Exception eq) {
+									log.error(eq.getLocalizedMessage(),eq);
 								}
 
 															
 								try {
 									File image = File.createTempFile("temp",".tmp");
-									URL ref = new URL(iconref);
+							    	File thumbnail = File.createTempFile( "temp", ".tmp" );			    
+
+							    	URL ref = new URL(iconref);
 
 									InputStream is = ref.openStream();
 									OutputStream os = new FileOutputStream(image.getAbsoluteFile());
@@ -489,56 +537,45 @@ public class HarvesterDialog extends CDefaultDialog {
 									is.close();
 									os.close();									
 									
-							    	File thumbnail = File.createTempFile( "temp", ".tmp" );			    
 							    	ImageTools.createThumbnail( image, thumbnail, 300, 240, Color.lightGray );
 									
 									Repository.modifyDatastream(pid, "THUMBNAIL","image/jpeg", "M", thumbnail);
+
 									thumbnail.delete();	
 									image.delete();
 									
 									log.debug("Updating thumbnail of object "+pid+ " was successful" );
 								} catch (Exception eq) {
-									log.debug("Updating thumbnail of object "+pid+ " was not successful" );
-								}
-								finally {
-									
+									log.error(eq.getLocalizedMessage(),eq);
 								}
 							}
-						}	
+							
+
+						}
+						
 	
 					} catch (Exception e) {
 						log.error(e.getLocalizedMessage(),e);	
 					}
+					finally {
+					}
 				}
 
+				MessageFormat msgFmt = new MessageFormat(res.getString("oaiok"));
+	 			Object[] args = {i, records.size(), serviceprovider};
+	 			JOptionPane.showMessageDialog (getCoreDialog(),msgFmt.format(args));			  
 			}
 
 		} catch (Exception ex) {
 			log.error(ex.getLocalizedMessage(),ex);	
 		}
+		finally {
+    		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");
+		}
 
 		return true;
 	}
-	
-    private void createMapping (String pid, String record) {	
-	try {
-			byte[] url =  Repository.getDatastream(pid , "DC_MAPPING" , "");
-		
-			URLConnection con = new URL (new String(url)).openConnection();
-			con.setUseCaches(false);
-			Document mapping = parser.build(con.getInputStream());
-			MDMapper m = new MDMapper(pid,outputter.outputString(mapping));
-			
-			org.jdom.Document dc = parser.build( new StringReader (m.transform(parser.build(new StringReader(record)))));		
-			
-			dc = Common.validate(dc);
-			Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(dc));
-			
-				
-	} catch (Exception e) {
-		log.error(e.getLocalizedMessage(),e);	
-	}
-    }
+
 	
 	public void handleShowLogfileButton(ActionEvent e) 
 	throws Exception {
@@ -659,10 +696,9 @@ public class HarvesterDialog extends CDefaultDialog {
 
 	private ResourceBundle res; 
 	private TemplateSubsystem  temps;
-	private ListRecords listRecords;
-	private String resumptionToken;
 	private Document doc;
 	private Document metadata;
+	private Element root;
 	private SAXBuilder parser;
 	private XMLOutputter outputter;
 	private Session se;

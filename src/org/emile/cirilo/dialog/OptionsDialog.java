@@ -260,6 +260,7 @@ public class OptionsDialog extends CDialog {
 			CDialogTools.createButtonListener(this, "jbClose", "handleCancelButton");
 			CDialogTools.createButtonListener(this, "jbSave", "handleSaveButton");
 
+			
 			// focus comments
 			moGA.requestFocus("jbClose");
 		}

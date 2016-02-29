@@ -170,9 +170,8 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "imported"          , " object(s) imported, "          },
            { "existed"          , " object(s) already exist(s) and "          },
            { "failed"          , " file(s) do(es) not have a valid FEDORA object schema."          },
-           { "harvested"          , "Harvesting process successful. "          },
            { "refreshed"          , " refreshed. "          },
-           { "details"          , "For details on the process please see the log at "          },
+           { "details"          , "For details on the harvesting process please see the log at "          },
            { "invalauthor"          , "Invalid authorisation!"          },
            { "invalauthent"          , "Invalid authentication!"          },
            { "double"          , "A data object with the persistent identifier {0} is already existing."          },
@@ -220,6 +219,13 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "ingestof",       "Ingesting file "},
            { "tei2mets",       "Create METS datastream"},
            { "nologdir",       "Log directory {0} couldn't found."},
+
+           { "novalidkey", "File {0} contains no valid handle key."},			  
+           { "keyok" , "Key from file {0} is permanently available for authentication on handle server."},			  
+		   { "selectkey", "Select key file"},
+           
+		   { "oaiok"         ,  "For {0} of total {1} entries from OAI-PMH source {2} harvesting objects could be created."},
+  
 
            
            /* cirilo */

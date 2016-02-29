@@ -37,6 +37,7 @@ import org.emile.cirilo.ecm.utils.Constants;
 import org.emile.cirilo.ecm.utils.DocumentUtils;
 import org.emile.cirilo.*;
 import org.apache.log4j.Logger;
+import org.jfree.report.util.Log;
 import org.jrdf.graph.Node;
 import org.trippi.TrippiException;
 import org.trippi.TupleIterator;
@@ -871,9 +872,10 @@ public class FedoraSoapImpl
     	    try {
    		    	PidList list = query ("select $p from <#ri> where <info:fedora/"+pid+"> $p <info:fedora/"+pid+"/"+dsid+">");
    		    	if(list.size() > 0) return true;
-   		    	TimeUnit.SECONDS.sleep(1);
+//   		    	TimeUnit.SECONDS.sleep(1);
                 return false;
    	    	} catch (Exception e) {
+   	    		Log.debug(e.getLocalizedMessage(),e);
    	    		throw new FedoraConnectionException("IO exception when communication with fedora", e);
    	    	}
       }
@@ -909,9 +911,10 @@ public class FedoraSoapImpl
    	        PidList contentmodels = query("select $object\n" + "from <#ri>\n" + "where\n <" + Repository.ensureURI(
     	                pid) + "> <" + Constants.HAS_MODEL + "> " + "$object\n");
    	        if(contentmodels.contains(Repository.ensurePID(cmpid))) return true;
-	    	TimeUnit.SECONDS.sleep(1);
+//	    	TimeUnit.SECONDS.sleep(1);
             return false;	    		
     	} catch (Exception e) {
+    		Log.debug(e.getLocalizedMessage(),e);
     		throw new FedoraConnectionException("IO exception when communication with fedora", e);
     	}
     }
@@ -993,6 +996,7 @@ public class FedoraSoapImpl
                 pidlist.add(subject);
             }
         } catch (TrippiException e) {
+        	Log.debug(e.getLocalizedMessage(),e);
             throw new FedoraIllegalContentException(
                     "Incorrect data was returned",
                     e);

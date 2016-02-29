@@ -208,7 +208,7 @@ public class TemplateSubsystem {
 
         //working
         templatepid = Repository.ensurePID(templatepid);
-       log.trace("Entering cloneTemplate with param '" + templatepid + "'");
+       log.debug("Entering cloneTemplate with param '" + templatepid + "'");
 
         if (!Repository.exist(templatepid)){
             throw new ObjectNotFoundException("The object (" + templatepid +
@@ -225,37 +225,37 @@ public class TemplateSubsystem {
 		newPid = newPid + (!newPid.contains("context:") && !newPid.contains("query:") && !newPid.startsWith("container:")  && !newPid.startsWith("$") ? "." + Repository.getNextPid().replaceAll("(.*):(.*)","$2") : "");
         newPid = (newPid.startsWith("$")  ? newPid.substring(1) : newPid);
 		        
-       log.trace("Generated new pid '" + newPid + "'");
+       log.debug("Generated new pid '" + newPid + "'");
 
         try {
         	removeOlderVersions(document);
         	
             removeAudit(document);
-           log.trace("Audit removed");
+           log.debug("Audit removed");
             removeDatastreamVersions(document);
-           log.trace("Datastreamsversions removed");
+           log.debug("Datastreamsversions removed");
 
             // Replace PID
             replacePid(document, templatepid, newPid);
-           log.trace("Pids replaced");
+           log.debug("Pids replaced");
 
             /** AAR Ext 1.0 **/
             replaceOwner(document, ownerid);
-           log.trace("Ownerid replaced");
+           log.debug("Ownerid replaced");
             
             removeDCidentifier(document);
-           log.trace("DC identifier removed");
+           log.debug("DC identifier removed");
 
             if (dctitle != null) setExpathList(document, DCTITLE, dctitle );
             
             removeCreated(document);
-           log.trace("CREATED removed");
+           log.debug("CREATED removed");
 
             removeLastModified(document);
-           log.trace("Last Modified removed");
+           log.debug("Last Modified removed");
 
             removeTemplateRelation(document);
-          log.trace("Template relation removed");
+          log.debug("Template relation removed");
                        
         } catch (XPathExpressionException e){
             throw new FedoraIllegalContentException(
@@ -323,7 +323,7 @@ public class TemplateSubsystem {
     	    }
         	
     	} catch (Exception e) {
-    		
+           	log.error(e.getLocalizedMessage(),e);	               		
     	}
     }
     
@@ -352,37 +352,38 @@ public class TemplateSubsystem {
 		try {
 			newPid = newPid + (!newPid.contains("context:") && !newPid.contains("query:") && !newPid.startsWith("container:") ? "." + Repository.getNextPid().replaceAll("(.*):(.*)","$2")  : "");
 		} catch (Exception ex) {	
+			log.error(ex.getLocalizedMessage(),ex);
 		}
      		
-    	log.trace("Generated new pid '" + newPid + "'");
+    	log.debug("Generated new pid '" + newPid + "'");
 
     	try {
         	removeOlderVersions(document);
 
         	removeAudit(document);
-    		log.trace("Audit removed");
+    		log.debug("Audit removed");
     		removeDatastreamVersions(document);
-    		log.trace("Datastreamsversions removed");
+    		log.debug("Datastreamsversions removed");
 
     		// Replace PID
     		replacePid(document, templatepid, newPid);
-    		log.trace("Pids replaced");
+    		log.debug("Pids replaced");
 
     		/** AAR Ext 1.0 **/
     		replaceOwner(document, ownerid);
-    		log.trace("Ownerid replaced");
+    		log.debug("Ownerid replaced");
     
     		removeDCidentifier(document);
-    		log.trace("DC identifier removed");
+    		log.debug("DC identifier removed");
 
     		removeCreated(document);
-    		log.trace("CREATED removed");
+    		log.debug("CREATED removed");
 
     		removeLastModified(document);
-    		log.trace("Last Modified removed");
+    		log.debug("Last Modified removed");
 
     		removeTemplateRelation(document);
-    		log.trace("Template relation removed");
+    		log.debug("Template relation removed");
     		
     		try {
     			JCheckBox jcbOAIProvider = (JCheckBox) moGA.getWidget("jcbOAIProvider");
@@ -393,7 +394,7 @@ public class TemplateSubsystem {
     		}
 
     		removeDCtitle(document);
-           log.trace("DC title removed");
+           log.debug("DC title removed");
     		
     		addDCMetadata(document, DC_DATASTREAM, moGA);
     		
@@ -411,7 +412,10 @@ public class TemplateSubsystem {
         	format.setEncoding("UTF-8");
         	XMLOutputter outputter = new XMLOutputter(format);
         	xmlSource = outputter.outputString(doc).replace("<oai_dc:dc ", "<oai_dc:dc xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
-    	} catch (Exception q) {}
+    	} catch (Exception q) {
+			log.error(q.getLocalizedMessage(),q);
+			
+    	}
 
         	//reingest the object
         String stream = Repository.ingestDocument(
@@ -426,7 +430,8 @@ public class TemplateSubsystem {
     		
     		byte[] buf = Repository.getDatastream(templatepid, "QUERY", (String) null);
         	Repository.modifyDatastream(newPid, "QUERY", "application/sparql-query", new String(buf).replaceAll("obj:self",newPid).getBytes("UTF-8"));
-    	} catch (Exception e) {        	
+    	} catch (Exception e) {    
+			log.error(e.getLocalizedMessage(),e);
     	}
     	return stream;
     }

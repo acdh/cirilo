@@ -255,7 +255,7 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 
     				DirContext ctx = new InitialDirContext( env );
     				
-    				String dns = "cn=handles," + props.getProperty( "system", repository + ".ldap.objectDN" ) + "," + props.getProperty( "system", repository + ".ldap.baseDN" );
+    				String dns = "cn=handles.cirilo," + props.getProperty( "system", repository + ".ldap.objectDN" ) + "," + props.getProperty( "system", repository + ".ldap.baseDN" );
 
     				Handles hdl = (Handles) CServiceProvider.getService( ServiceNames.HANDLESCLASS );
     				ctx.rebind( dns, hdl );

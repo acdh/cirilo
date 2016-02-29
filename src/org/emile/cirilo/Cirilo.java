@@ -171,7 +171,7 @@ class CiriloWindow extends JPanel {
 			    PropertyConfigurator.configure(Cirilo.class.getResource("log4j.properties"));
 				
 			    log.info("Program started");
-			    		    
+			    			    
 				Properties p = new Properties();
 				p.load(Cirilo.class.getResourceAsStream("cirilo.properties"));
 				String s = p.getProperty("authentication.method");

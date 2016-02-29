@@ -835,18 +835,6 @@ public class TEI {
     	     } catch (Exception q){
  	      		log.error(q.getLocalizedMessage(),q);				      					     	 
     	     } 	        		  	        					        				
-             try {
-	            Document doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/"+xuser.toUpperCase()+"/content");
- 	            XPath xPath = XPath.newInstance( "/stylesheets/stylesheet[@type='STYLESHEET' and @model='cm:Context' and @state='default']" );
- 	            List stylesheets = (List) xPath.selectNodes( doc );	        		 	     
-           	    if (stylesheets != null) {	        			    		 
- 	            	Iterator jter = stylesheets.iterator();
- 	            	Element el = (Element) jter.next();
- 	       			href = el.getAttributeValue("href");
- 	            }
-		    } catch (Exception q){
- 	      		log.error(q.getLocalizedMessage(),q);				      					     	 	
-		    } 	        		  	        					        				
 	        for (Iterator iter = contexts.iterator(); iter.hasNext();) {
 	        	try {
 	        		Element e = (Element) iter.next();

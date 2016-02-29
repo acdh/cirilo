@@ -173,6 +173,8 @@ public class CantusConverter {
 	  	        				.replaceAll("\\*", "")
 	        					.replaceAll("\\[KOMMENTAR\\]", "KOMMENTAR");
 	  	        		
+	  	        		log.debug(buf);
+	  	        		
 	  	        		if (!VARIANT.isEmpty()) {
 	  	        			Pattern p0 = Pattern.compile("(//)(.*?)(//)");
 	  	        			Matcher m0 = p0.matcher(buf);
@@ -466,7 +468,6 @@ public class CantusConverter {
 	  	        }
 	  	        m0.appendTail(sb);       			
        			target = builder.build(new StringReader(sb.toString().replaceAll("</ab><ab","</ab> <ab").replaceAll("<seg ana=\"#strikethrough\"></seg>","")));
-      			System.out.println(sb.toString().replaceAll("</ab><ab","</ab> <ab"));
 	        } catch (Exception e) {
 	        	log.error(e.getLocalizedMessage(),e);	
 	        }

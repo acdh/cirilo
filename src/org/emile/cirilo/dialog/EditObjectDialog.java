@@ -350,10 +350,10 @@ public class EditObjectDialog extends CDialog {
 				    				    			  xsltSource = new StreamSource(new File(param.get(0)));
 				    				    			  trans = transFact.newTransformer(xsltSource);
 				    				    			  trans.setParameter("pid", pid);
-				    				    		  }					    				  
+				    				    		  }					    			
+				    				    		  
 				    				    		  DOMSource domSource=new DOMSource(Repository.getDatastream(pid, param.get(1)));
-			    						  
-				    				    		  trans.transform(domSource, new StreamResult(os));
+			 	    				    		  trans.transform(domSource, new StreamResult(os));
 				    				    		  if (p.substring(1,2).equals(Common.SIMULATE)) {
 				    				    			  logger.write("\n"+new String(os.toByteArray(),"UTF-8")+"\n" );
 				    				    		  }	  

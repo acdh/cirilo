@@ -19,6 +19,8 @@
 
 package org.emile.cirilo;
 
+import javax.swing.JOptionPane;
+
 public class CiriloResources_de extends java.util.ListResourceBundle {
 
       public Object[][] getContents() { return contents; }
@@ -166,9 +168,8 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "imported"          , " Objekt(e) wurden importiert, "          },
                 { "existed"          , " Objekt(e) existieren bereits und "          },
                 { "failed"          ," Datei(en) enthalten kein valides FEDORA Objekt."},
-                { "harvested"          , "Metadaten-Harvesting wurde beendet. "          },
                 { "refreshed"          , " aktualisiert. "          },
-                { "details"          , "Näheres zum Vorgang entnehmen Sie bitte dem Ereignisprotokoll unter "          },
+                { "details"          , "Näheres zum Metadaten-Harvesting entnehmen Sie bitte dem Ereignisprotokoll unter "          },
                 { "invalauthor"          , "Ungültige Authorisierung!"          },
                 { "invalauthent"          , "Ungültige Authentifizierung!"          },
                 { "double"          , "Ein Datenobjekt mit dem Persistent Identifier {0} existiert bereits."          },
@@ -216,8 +217,13 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "ingestof",       "Ingest von Datei "},
                 { "tei2mets",       "METS Datenstrom erzeugen"},
                 { "nologdir",       "Log Verzeichnis {0} konnte nicht gefunden werden."},
-              
-                /* cirilo */
+
+                { "novalidkey", "Datei {0} enthält keinen gültigen Handle-Schlüssel."},			  
+                { "keyok" , "Schüssel aus Datei {0} steht für Authentifizierung am Handle Server dauerhaft zur Verfügung."},			  
+  			    { "selectkey", "Schlüsseldatei wählen"},
+   	            { "oaiok"         ,  "Für {0} von insgesamt {1} Einträgen aus OAI-PMH-Quelle {2} konnten Harvesting Objekte erstellt werden." },
+
+                 /* cirilo */
                 { "loadprop"          , "Einstellungen lesen"          },
                 { "sam"          , "Berechtigungsmanager initialisieren"          },
                 { "dam"          , "Dialogmanager initialisieren"          },

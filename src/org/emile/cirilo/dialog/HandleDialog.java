@@ -39,6 +39,8 @@ import javax.swing.*;
 import net.handle.hdllib.*;
 
 import java.io.*;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 
 
@@ -85,11 +87,12 @@ public class HandleDialog extends CDialog {
 		
 		try {
 			  CPropertyService props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);			
-			 
+			  ResourceBundle res=(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
+		 
 			  JFileChooser chooser = new JFileChooser(props.getProperty("user", "export.path"));
 			  
-			  chooser.setDialogTitle("Schlüsseldatei wählen");
-			  if (chooser.showDialog(getCoreDialog(), "Auswählen") != JFileChooser.APPROVE_OPTION) {
+			  chooser.setDialogTitle(res.getString("selectkey"));
+			  if (chooser.showDialog(getCoreDialog(), res.getString("choose")) != JFileChooser.APPROVE_OPTION) {
 				  return;
 			  }
 			  File fp = chooser.getSelectedFile();
@@ -107,14 +110,19 @@ public class HandleDialog extends CDialog {
  				  byte passphrase[] = null;
  				  buf = Util.decrypt(buf, passphrase);
  	 			  Resolver resolver = new Resolver();
- 	 			  AuthenticationInfo   auth = new PublicKeyAuthenticationInfo(Util.encodeString(Common.HANDLE_PREFIX), 300, Util.getPrivateKeyFromBytes(buf, 0));					
+ 	 			  AuthenticationInfo   auth = new PublicKeyAuthenticationInfo(Util.encodeString(Common.HANDLE_PREFIX+props.getProperty("user", "OAI.Prefix")), 300, Util.getPrivateKeyFromBytes(buf, 0));					
  				  if (resolver.checkAuthentication(auth)) {
  					  Handles hdl = (Handles) CServiceProvider.getService( ServiceNames.HANDLESCLASS );
  					  hdl.setHandleKey(buf);
- 					  JOptionPane.showMessageDialog (getCoreDialog(),"Schüssel aus Datei <"+fp.getAbsolutePath().trim()+"> steht für Authentifizierung am Handle Server dauerhaft zur Verfügung");			  
+					  MessageFormat msgFmt = new MessageFormat(res.getString("keyok"));
+		 			  Object[] args = {fp.getAbsolutePath().trim()};
+ 					  JOptionPane.showMessageDialog (getCoreDialog(),msgFmt.format(args));			  
  				  } 
  			  } catch (Exception q)	  {
- 				  JOptionPane.showMessageDialog (getCoreDialog(),"Datei <"+fp.getAbsolutePath().trim()+"> enthält keinen gültigen Handle-Schlüssel.");			  
+ 				  q.printStackTrace();
+				  MessageFormat msgFmt = new MessageFormat(res.getString("novalidkey"));
+	 			  Object[] args = {fp.getAbsolutePath().trim()};
+				  JOptionPane.showMessageDialog (getCoreDialog(), msgFmt.format(args));			  
 			  }
 				  
 			
@@ -191,6 +199,7 @@ public class HandleDialog extends CDialog {
 		try {
 
 			moGA = (CDefaultGuiAdapter)getGuiAdapter();									
+			props = (CPropertyService) CServiceProvider.getService( ServiceNames.PROPERTIES );
 
 			CDialogTools.createButtonListener(this, "jbGet", "handleGetButton");			
 			CDialogTools.createButtonListener(this, "jbCancel", "handleCancelButton");			
@@ -198,6 +207,8 @@ public class HandleDialog extends CDialog {
 			CDialogTools.createButtonListener(this, "jbShow", "handleShowButton");			
 			CDialogTools.createButtonListener(this, "jbGenerate", "handleGenerateButton");			
  			((JButton) getGuiComposite().getWidget("jbShow")).setEnabled(false);
+ 			
+ 			((JTextField) getGuiComposite().getWidget("jtfHandlePrefix")).setText(props.getProperty("user", "OAI.Prefix"));
 	
 			
 		} catch (Exception ex) {
@@ -208,6 +219,7 @@ public class HandleDialog extends CDialog {
 	
 	private CDefaultGuiAdapter moGA;
 	private EditObjectDialog oParent;
-	
+	private CPropertyService props;
+
 }
 
