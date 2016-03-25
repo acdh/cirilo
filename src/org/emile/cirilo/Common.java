@@ -157,6 +157,8 @@ public class Common {
 	
 	public final static Namespace xmlns_rdaGr2 = Namespace.getNamespace( "rdaGr2", "http://rdvocab.info/ElementsGr2/");
 	
+	public final static Namespace xmlns_gn = Namespace.getNamespace( "gn", "http://www.geonames.org/ontology#");
+	
 	public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
       	
     public final static String[] LANGUAGES ={"en", "de"};

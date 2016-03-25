@@ -74,7 +74,7 @@ public class MDMapper
 		}
 		
 	}
-
+	
 	public MDMapper (String p, String s, boolean mode) {
 		
 		try

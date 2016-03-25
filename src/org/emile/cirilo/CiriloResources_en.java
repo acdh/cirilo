@@ -135,7 +135,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "chooseedir"          , "Choose export directory"          }, 
            { "objexsuc"          , "{0} object(s) exported successfully."          },
            { "addcont"          , "Adding..."          },
-           { "geosuc"          , "Geo data of {0} object(s) updated successfully."          },
+           { "geosuc"          , "{0} context object(s) updated successfully."          },
            { "regsuc"          , "Index of {0} object(s) updated successfully."          },
            { "refresh"          , "Refresh"          },
            { "replaceobjc"          , "Replace object content"          },

@@ -29,8 +29,11 @@ import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.gui.jtable.HarvesterTableModel;
 import org.emile.cirilo.oai.*;
 import org.emile.cirilo.utils.ImageTools;
+import org.geonames.Toponym;
+import org.geonames.WebService;
 
 import voodoosoft.jroots.application.*;
+import voodoosoft.jroots.core.CPropertyService;
 import voodoosoft.jroots.core.CServiceProvider;
 import voodoosoft.jroots.dialog.*;
 import voodoosoft.jroots.exception.CException;
@@ -38,9 +41,13 @@ import voodoosoft.jroots.exception.CException;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +55,9 @@ import java.util.ResourceBundle;
 import java.net.URL;
 import java.net.URLConnection;
 import java.io.*;
+
+import org.json.JSONObject;
+import org.json.XML;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -60,6 +70,7 @@ import javax.xml.transform.Transformer;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -69,6 +80,8 @@ import org.jdom.xpath.XPath;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Attribute;
+import org.json.JSONObject;
+import org.json.XML;
 
 import com.asprise.util.ui.progress.ProgressDialog;
 
@@ -188,6 +201,8 @@ public class HarvesterDialog extends CDefaultDialog {
 				   		    }
 
 				   		    Repository.modifyDatastreamByValue("cirilo:Backbone", "DATAPROVIDERS", "text/xml", outputter.outputString(doc));
+				            if (persons != null) Repository.modifyDatastreamByValue("cirilo:Backbone", "PERSONS", "text/xml", outputter.outputString(persons));
+				            if (places != null) Repository.modifyDatastreamByValue("cirilo:Backbone", "PLACES", "text/xml", outputter.outputString(places));
 
 
 				   		    JOptionPane.showMessageDialog(  getCoreDialog(), res.getString("details")+logfile , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
@@ -343,7 +358,6 @@ public class HarvesterDialog extends CDefaultDialog {
 			URLConnection con = new URL (new String(Repository.getDatastream(model , "DC_MAPPING" , ""))).openConnection();
 			con.setUseCaches(false);
 			Document mapping = parser.build(con.getInputStream());			
-			MDMapper m = new MDMapper(model, outputter.outputString(mapping));
 			con = null;
 
 			
@@ -499,9 +513,13 @@ public class HarvesterDialog extends CDefaultDialog {
 			    		        	} catch (Exception e) {
 										log.error(e.getLocalizedMessage(),e);
 			    		        	}
+			    		        	
+			    		        	
 			    		        	try {
 			    		        		Repository.modifyDatastreamByValue(pid, "RECORD", "text/xml", buf);
 			    		        		edm.set(out.getDocument());
+			    		        		normalizePersons();
+			    		        		normalizePlaces();
 			    		    			Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm.toString());
 										log.debug("Updating metadata of object "+pid+ " was successful" );
 			    		        	} catch (Exception e) {
@@ -511,7 +529,8 @@ public class HarvesterDialog extends CDefaultDialog {
 			    		        		in = null;
 			    		        		out = null;
 			    		        		buf = null;
-			    		        	}
+			    		        	}                               	
+			    					MDMapper m = new MDMapper(pid, outputter.outputString(mapping));			
 			    					org.jdom.Document dc = parser.build( new StringReader (m.transform(parser.build(new StringReader(edm.toString())))));					    					
 			    					dc = Common.validate(dc);
 			    					Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(dc));
@@ -546,7 +565,6 @@ public class HarvesterDialog extends CDefaultDialog {
 									
 									log.debug("Updating thumbnail of object "+pid+ " was successful" );
 								} catch (Exception eq) {
-									log.error(eq.getLocalizedMessage(),eq);
 								}
 							}
 							
@@ -576,7 +594,131 @@ public class HarvesterDialog extends CDefaultDialog {
 		return true;
 	}
 
-	
+	private void normalizePersons() {
+		
+		String stream = null;
+		
+		if (persons == null) return;
+		
+		try {
+			XPath xpath = XPath.newInstance("//edm:Agent[contains(@rdf:about,'/gnd/')]");
+			xpath.addNamespace(Common.xmlns_edm);
+			xpath.addNamespace(Common.xmlns_skos);
+			xpath.addNamespace(Common.xmlns_rdf);
+			xpath.addNamespace(Common.xmlns_rdaGr2);
+			
+			List nodes = (List) xpath.selectNodes( edm.get() );
+
+			if (nodes.size() > 0) {
+				for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+					try {
+						Element e = (Element) iter.next();
+						String preferredName = null;
+						String id = e.getAttributeValue("about",Common.xmlns_rdf);
+						XPath qpath = XPath.newInstance("//person[@xml:id='"+id+"']");
+						qpath.addNamespace(Common.xmlns_xml);
+	    				Element person = (Element) qpath.selectSingleNode( persons );
+                        if (person == null) {
+        		    		char[] buff = new char[1024];
+                        	int n;
+        		    		StringWriter sw = new StringWriter();
+        		    		
+        		    		URL url = new URL("http://hub.culturegraph.org/entityfacts/"+id.substring(id.indexOf("gnd/")+4));
+        		    		try {
+        		    			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+        		    			try {
+        		    				while ((n = br.read(buff)) != -1) { sw.write(buff, 0, n); }
+        		    				stream = sw.toString();
+        		    			} catch (Exception io) {}
+        		    			finally {
+        		    				sw.close();
+        		    				br.close();
+        		    			}
+                                JSONObject json = new JSONObject(stream);
+                                preferredName = json.getString("preferredName");
+                                                         
+        		    		} catch (Exception p) {}        		    		
+                        	person = new Element ("person");                            
+                        	person.setAttribute("id", id, Common.xmlns_xml);
+                        	Element name = new Element ("name");
+                        	name.setAttribute("lang","de",Common.xmlns_xml);
+                        	name.setText(preferredName);
+                        	person.addContent(name);
+                        	persons.getRootElement().addContent(person);                        	
+                        } else {
+                        	preferredName = person.getChildText("name");	
+                        }
+                        e.getChild("prefLabel", Common.xmlns_skos).setText(preferredName);
+                        
+					} catch (Exception q) {log.debug(q.getLocalizedMessage(),q);}
+				}
+			}	
+			
+		} catch (Exception e) {}	
+		
+	}
+
+	private void normalizePlaces() {
+
+		if (places == null) return;
+		
+		try {
+			XPath xpath = XPath.newInstance("//edm:Place[contains(@rdf:about,'geonames.org')]");
+			xpath.addNamespace(Common.xmlns_edm);
+			xpath.addNamespace(Common.xmlns_skos);
+			xpath.addNamespace(Common.xmlns_rdf);
+			xpath.addNamespace(Common.xmlns_wgs84_pos);
+
+			List nodes = (List) xpath.selectNodes( edm.get() );
+
+			if (nodes.size() > 0) {
+				for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+					try {
+						Element e = (Element) iter.next();
+						String id = e.getAttributeValue("about",Common.xmlns_rdf).replaceAll("www\\.","") ;
+						XPath qpath = XPath.newInstance("//place[@xml:id='"+id+"']");
+						qpath.addNamespace(Common.xmlns_xml);
+						Element place = (Element) qpath.selectSingleNode( places );
+						if (place == null) {
+                        	place = new Element ("place");
+                        	place.setAttribute("id", id, Common.xmlns_xml);
+                        	Element name = new Element ("name");
+        					Document toponym  = parser.build(id+"/about.rdf");
+    						XPath tpath = XPath.newInstance("//gn:*[@xml:lang='de']");
+    						tpath.addNamespace(Common.xmlns_gn);
+    						Element alt = (Element) tpath.selectSingleNode( toponym );
+    						if (alt == null) {
+    							tpath = XPath.newInstance("//gn:name");
+        						tpath.addNamespace(Common.xmlns_gn);
+        						alt = (Element) tpath.selectSingleNode( toponym );
+    						} else {
+    							name.setAttribute("lang","de",Common.xmlns_xml);
+    						}
+    						if (alt != null) {
+    							name.setText(alt.getTextNormalize());    							
+    						} else {
+    							name.setText(e.getChildText("prefLabel",Common.xmlns_skos));
+    						}    						
+                        	place.addContent(name);
+                        	places.getRootElement().addContent(place);
+						} 
+                    	e.getChild("prefLabel", Common.xmlns_skos).setText(place.getChild("name").getText());
+                    	
+    					Toponym toponym = WebService.get(new Integer(id.substring(id.indexOf("org/") + 4)).intValue(), null, null);
+    					e.getChild("lat",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLatitude()).toString());
+    					e.getChild("long",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLongitude()).toString());
+ 
+                    	
+					} catch (Exception q) {
+					}
+				}
+			}	
+
+		
+		} catch (Exception e) {}	
+		
+	}
+		
 	public void handleShowLogfileButton(ActionEvent e) 
 	throws Exception {
 		TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
@@ -592,14 +734,14 @@ public class HarvesterDialog extends CDefaultDialog {
 	public void show()  throws CShowFailedException {
 	  try {
 
-		 String[] names ={res.getString("provider"),res.getString("updated"),res.getString("baseurl"),res.getString("prefix"),res.getString("shownat"), res.getString("cmodel"),"Constraints","Thumbnail", res.getString("owner")};
+         String[] names ={res.getString("provider"),res.getString("updated"),res.getString("baseurl"),res.getString("prefix"),res.getString("shownat"), res.getString("cmodel"),"Constraints","Thumbnail", res.getString("owner")};
 		  
 		 se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
 	     JTable tb = (JTable) getGuiComposite().getWidget("jtRepositories");
          List repositories = null;
          
 	     try {
-
+	    	 
 	    	 
 	    	 doc = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/DATAPROVIDERS/content");
    	         logdir = doc.getRootElement().getAttributeValue("logdir");
@@ -629,7 +771,7 @@ public class HarvesterDialog extends CDefaultDialog {
 	    			 } catch (Exception ex) {}
 	    		 }	  
 	    	 }
-	 	    	 
+	 	    	 	    	 
 	         tb.setModel(dm);
 	         tb.setRowSelectionInterval(0,0);
 			 org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getHarvesterDialogProperties(), tb);			
@@ -672,11 +814,23 @@ public class HarvesterDialog extends CDefaultDialog {
 	protected void opened() throws COpenFailedException {
 
 		try {
+			
+	        persons = null;
+            places = null;	             
+
 			parser = new SAXBuilder();
 
+			user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
 			temps = (TemplateSubsystem) CServiceProvider.getService(ServiceNames.TEMPLATESUBSYSTEM);
 			res =(ResourceBundle) CServiceProvider.getService(ServiceNames.RESOURCES);
-			user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
+			props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
+
+			WebService.setUserName(props.getProperty("user","TEI.LoginName"));
+
+			
+      	    try {persons = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/PERSONS/content");} catch (Exception q) {}
+	    	try {places = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/PLACES/content");} catch (Exception q) {}
+			
 			
    		    Format format = Format.getRawFormat();
    		    format.setEncoding("UTF-8");
@@ -696,8 +850,11 @@ public class HarvesterDialog extends CDefaultDialog {
 
 	private ResourceBundle res; 
 	private TemplateSubsystem  temps;
+	private CPropertyService props;
 	private Document doc;
 	private Document metadata;
+	private Document places;
+	private Document persons;
 	private Element root;
 	private SAXBuilder parser;
 	private XMLOutputter outputter;

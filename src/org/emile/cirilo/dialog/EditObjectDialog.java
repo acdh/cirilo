@@ -1057,13 +1057,19 @@ public class EditObjectDialog extends CDialog {
   				        		res.getString("geo"), JOptionPane.YES_NO_OPTION,
 					    		  						JOptionPane.QUESTION_MESSAGE);
 
+ 				       	Document pelagios;
+ 				       	Document cmif;
+
+ 				       	DOMBuilder db = new DOMBuilder();
+ 				       	
+
 						if (liChoice == 0) {
 
 							getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 							progressDialog.worked(1);
 							
-							ContextRefresher cr = new ContextRefresher();
+							AggregatorFactory af = new AggregatorFactory();
 							
  				    	    for (int i=0; i<selected.length; i++) 
  				    	    {
@@ -1072,10 +1078,42 @@ public class EditObjectDialog extends CDialog {
 					    		String cm =(String)loTable.getValueAt(selected[i],2);
 					    		
 					    		try {
-					    		
+					    			
 					    			if (cm.equals("cm:Context")) {
-					    				if (cr.refreshKML(pid, title))
-					    					fi++;
+					    				if (Repository.exists(pid, "KML")) af.aggregateKML(pid, title);
+					    				if (Repository.exists(pid, "PELAGIOS")) {					    					
+					  						byte[] stylesheet = null;
+					 				       	try {
+					 				       		stylesheet =  Repository.getDatastream("cirilo:"+user.getUser(), "PELAGIOS_STYLESHEET" , "");
+					  				       	} catch (Exception ex) {
+					  				       		stylesheet =  Repository.getDatastream("cirilo:Backbone", "PELAGIOS_STYLESHEET" , "");
+					  				        }
+					  				        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet, "UTF-8"))));					    					
+							    			try {
+					 							pelagios = db.build (Repository.getDatastream("cirilo:"+user.getUser(), "PELAGIOS_TEMPLATE"));
+					 						} catch (Exception ex) {
+					 							pelagios = db.build (Repository.getDatastream("cirilo:Backbone", "PELAGIOS_TEMPLATE"));
+					 						}
+					    					transformer.setParameter("context", pid);
+					    					af.aggregatePELAGIOS(pid, title, pelagios, transformer);
+					    				}
+					    				if (Repository.exists(pid, "CMIF")) {					    					
+					  						byte[] stylesheet = null;
+					 				       	try {
+					 				       		stylesheet =  Repository.getDatastream("cirilo:"+user.getUser(), "CMIF_STYLESHEET" , "");
+					  				       	} catch (Exception ex) {
+					  				       		stylesheet =  Repository.getDatastream("cirilo:Backbone", "CMIF_STYLESHEET" , "");
+					  				        }
+					  				        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet, "UTF-8"))));					    					
+							    			try {
+					 							cmif = db.build (Repository.getDatastream("cirilo:"+user.getUser(), "CMIF_TEMPLATE"));
+					 						} catch (Exception ex) {
+					 							cmif = db.build (Repository.getDatastream("cirilo:Backbone", "CMIF_TEMPLATE"));
+					 						}
+					    					transformer.setParameter("context", pid);
+					    					af.aggregateCMIF(pid, title, cmif, transformer);
+					    				}
+					    				fi++;
 					    			}
 					    		} catch (Exception r) {}
 
@@ -1092,8 +1130,8 @@ public class EditObjectDialog extends CDialog {
 									
  				    	    }
  				    	   msgFmt = new MessageFormat(res.getString("geosuc"));
- 		 					Object[] args1 = {new Integer(fi).toString()}; 		    		
- 		 					JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args1), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
+ 		 				   Object[] args1 = {new Integer(fi).toString()}; 		    		
+ 		 				   JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args1), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
  							
 						}
 						

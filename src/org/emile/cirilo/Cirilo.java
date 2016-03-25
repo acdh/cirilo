@@ -50,6 +50,7 @@ import java.net.URL;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 
 
 
@@ -167,7 +168,8 @@ class CiriloWindow extends JPanel {
 		public void begin() {
 
 			try {
-			
+				
+						
 			    PropertyConfigurator.configure(Cirilo.class.getResource("log4j.properties"));
 				
 			    log.info("Program started");
