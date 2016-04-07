@@ -140,7 +140,7 @@ public class UpgradeDialog extends CDialog {
 				int installed = new Integer(properties.getRootElement().getChild("ContentModels").getText());
 				int current = new Integer(Common.CM_VERSION);
 				
-				if (current >= installed) {
+				if (current == installed) {
 					jl.setText(hint);
 					JButton jb = (JButton) getGuiComposite().getWidget("jbOK");
 					jb.setEnabled(false);
@@ -160,8 +160,7 @@ public class UpgradeDialog extends CDialog {
 		}
 	}
 
-	public void handleOKButton(ActionEvent e) 
-			throws Exception {
+	public void handleOKButton(ActionEvent e) {
 			new Thread() {
 				public void run() {
 					ResourceBundle res = null;
@@ -202,7 +201,7 @@ public class UpgradeDialog extends CDialog {
 								progressDialog.millisToDecideToPopup = 1;
 								progressDialog.millisToPopup = 1;
 
-					   		    progressDialog.beginTask("Updating cirilo:Backbone ...", entries.size()+5, true);
+					   		    progressDialog.beginTask("Updating cirilo:Backbone ...", entries.size()+12, true);
 							
 					           	File temp = File.createTempFile("tmp","xml");
 								progressDialog.worked(1);
@@ -218,9 +217,93 @@ public class UpgradeDialog extends CDialog {
 						   		finally {}
 								progressDialog.worked(1);
 					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "PELAGIOS_TEMPLATE")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcmitype=\"http://purl.org/dc/dcmitype/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:ecrm=\"http://erlangen-crm.org/current/\" xmlns:europeana=\"http://www.europeana.eu/schemas/ese/\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\" xmlns:geo=\"http://www.w3.org/2003/01/geo/wgs84_pos#\" xmlns:nm=\"http://nomisma.org/id/\" xmlns:nmo=\"http://nomisma.org/ontology#\" xmlns:oa=\"http://www.w3.org/ns/oa#\" xmlns:owl=\"http://www.w3.org/2002/07/owl#\" xmlns:pelagios=\"http://pelagios.github.io/vocab/terms#\" xmlns:relations=\"http://pelagios.github.io/vocab/relations#\" xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\" xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:void=\"http://rdfs.org/ns/void#\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema#\" />".getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "PELAGIOS_TEMPLATE","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "PELAGIOS_STYLESHEET")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write(("<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcmitype=\"http://purl.org/dc/dcmitype/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:ecrm=\"http://erlangen-crm.org/current/\" xmlns:europeana=\"http://www.europeana.eu/schemas/ese/\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\" xmlns:geo=\"http://www.w3.org/2003/01/geo/wgs84_pos#\" xmlns:nm=\"http://nomisma.org/id/\" xmlns:nmo=\"http://nomisma.org/ontology#\" xmlns:oa=\"http://www.w3.org/ns/oa#\" xmlns:owl=\"http://www.w3.org/2002/07/owl#\" xmlns:pelagios=\"http://pelagios.github.io/vocab/terms#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:relations=\"http://pelagios.github.io/vocab/relations#\" xmlns:skos=\"http://www.w3.org/2004/02/skos/core#\" xmlns:t=\"http://www.tei-c.org/ns/1.0\" xmlns:void=\"http://rdfs.org/ns/void#\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema#\" exclude-result-prefixes=\"xs\" version=\"2.0\">"+
+		 								            "<xsl:param name=\"context\" /><xsl:param name=\"pid\" /><xsl:param name=\"model\" />"+
+		 								            "<xsl:template match=\"/\"><entry>"+
+		 								            "<pelagios:AnnotatedThing rdf:about=\""+host+"/{$context}/PELAGIOS#{$pid}\">"+
+		 								            "<foaf:homepage rdf:resource=\""+host+"/{$pid}\" />"+
+		 								            "</pelagios:AnnotatedThing>"+
+		 								            "<oa:Annotation rdf:about=\""+host+"/{$context}/PELAGIOS#{$pid}/annotations/01\">"+
+		 								            "<oa:hasTarget rdf:resource=\""+host+"/{$context}/PELAGIOS#{$pid}\"/>"+
+		 								            "<oa:hasBody rdf:resource=\"http://pleiades.stoa.org/places/\"/>"+
+		 								            "</oa:Annotation></entry></xsl:template></xsl:stylesheet>").getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "PELAGIOS_STYLESHEET","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}					   		    
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "CMIF_TEMPLATE")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write(("<TEI xmlns=\"http://www.tei-c.org/ns/1.0\">"+
+		 					           		"<teiHeader><fileDesc><titleStmt><title>Title</title></titleStmt>"+
+		 					                "<publicationStmt><p>Publication Information</p></publicationStmt>"+
+		 					                "<sourceDesc><p>Information about the source</p></sourceDesc>"+
+		 					                "</fileDesc></teiHeader>"+
+		 					                "<text><body><p>Some text here.</p></body></text>"+
+		 					                "</TEI>").getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "CMIF_TEMPLATE","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "CMIF_STYLESHEET")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write(("<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns=\"http://www.tei-c.org/ns/1.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" version=\"2.0\">"+
+		 								            "<xsl:param name=\"context\" /><xsl:param name=\"pid\" />"+
+		 								            "<xsl:template match=\"/\"><entry>"+
+		 								            "<correspDesc ref=\""+host+"/{$pid}\">"+
+		 					           	  			"<correspAction type=\"sent\"><persName ref=\"http://d-nb.info/gnd/\"/>"+
+		 					           	  			"<date when=\"1881-12\"/><placeName ref=\"http://www.geonames.org/\"/></correspAction>"+
+		 					           	  			"<correspAction type=\"received\"><persName ref=\"http://d-nb.info/gnd/\"/></correspAction></correspDesc>"+
+		 					           			    "</entry></xsl:template></xsl:stylesheet>").getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "CMIF_STYLESHEET","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}					   		    
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "MEItoRDF")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write(("<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns=\"http://www.tei-c.org/ns/1.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" version=\"2.0\"/>").getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "MEItoRDF","",  "X", "text/xml", temp);
+		 					           	  Repository.addDatastream(CIRILO_ENVIRONMENT, "MEItoRDF","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+								progressDialog.worked(1);
+					   		    try {
+						   		      if (!Repository.exists(CIRILO_BACKBONE, "MEItoHTML")) {	
+						   		    	  FileOutputStream fos = new FileOutputStream(temp);
+		 					           	  fos.write(("<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns=\"http://www.tei-c.org/ns/1.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" version=\"2.0\"/>").getBytes("UTF-8"));
+		 					           	  fos.close();
+		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "MEItoHMTL","",  "X", "text/xml", temp);
+		 					           	  Repository.addDatastream(CIRILO_ENVIRONMENT, "MEItoHMTL","",  "X", "text/xml", temp);
+						   		      }		
+						   		    }
+						   		finally {}
+								progressDialog.worked(1);
+					   		    try {
 						   		      if (!Repository.exists(CIRILO_BACKBONE, "OAItoDC_MAPPING")) {	
 						   		    	  FileOutputStream fos = new FileOutputStream(temp);
-		 					           	  fos.write("<mm:metadata-mapping xmlns:mm=\"http://mml.uni-graz.at/v1.0\"><oai_dc:dc xmlns:oai=\"http://www.openarchives.org/OAI/2.0/\" xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:europeana=\"http://www.europeana.eu/schemas/ese/\" /></mm:mapping>".getBytes("UTF-8"));
+		 					           	  fos.write("<mm:metadata-mapping xmlns:mm=\"http://mml.uni-graz.at/v1.0\"><oai_dc:dc xmlns:oai=\"http://www.openarchives.org/OAI/2.0/\" xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:europeana=\"http://www.europeana.eu/schemas/ese/\" /></mm:metadata-mapping>".getBytes("UTF-8"));
 		 					           	  fos.close();
 		 					           	  Repository.addDatastream(CIRILO_BACKBONE, "OAItoDC_MAPPING","",  "X", "text/xml", temp);
 		 					           	  Repository.addDatastream(CIRILO_ENVIRONMENT, "OAItoDC_MAPPING","",  "X", "text/xml", temp);
@@ -339,6 +422,9 @@ public class UpgradeDialog extends CDialog {
 											if(!Repository.exists(s, "HSSF_STYLESHEET")) {										
 												Repository.addDatastream(s, "HSSF_STYLESHEET",  "Stylesheet to generate HSSF stream", "text/xml", fedora+"/get/cirilo:Backbone/TEItoHSSF");
 											}	
+											if(!Repository.exists(s, "LATEX_STYLESHEET")) {										
+												Repository.addDatastream(s, "LATEX_STYLESHEET",  "Stylesheet to generate LaTeX PDF", "text/xml", host+"/tei/latex/latex.xsl");
+											}	
 										}
 										
 	 							
@@ -376,6 +462,7 @@ public class UpgradeDialog extends CDialog {
 							close();
 						}
 						} catch (Exception ex) {
+							ex.printStackTrace();
 						}
 						finally {
 							try {	

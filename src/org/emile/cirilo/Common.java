@@ -159,7 +159,13 @@ public class Common {
 	
 	public final static Namespace xmlns_gn = Namespace.getNamespace( "gn", "http://www.geonames.org/ontology#");
 	
-	public final static String TEIP5SCHEMA ="http://gams.uni-graz.at/tei/schema/P5/tei.xsd";  
+	public final static Namespace xmlns_mei = Namespace.getNamespace( "m", "http://www.music-encoding.org/ns/mei");
+	
+	public final static Namespace xmlns_nmei = Namespace.getNamespace( "", "http://www.music-encoding.org/ns/mei");
+	
+	public final static String TEIP5SCHEMA ="/tei/schema/P5/tei.xsd";  
+
+	public final static String MEISCHEMA ="/mei/schema/2015/mei.xsd";  
       	
     public final static String[] LANGUAGES ={"en", "de"};
     

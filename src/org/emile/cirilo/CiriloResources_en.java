@@ -98,6 +98,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "harvest", "Collect"},
            { "general", "General"},
            { "teiupload", "Upload of TEI documents"},
+           { "meiupload", "Upload of MEI documents"},
            { "metsupload", "Upload of METS documents"},
            { "skosupload", "Upload of SKOS documents"},
            { "lidoupload", "Upload of LIDO documents"},

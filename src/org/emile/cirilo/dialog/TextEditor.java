@@ -179,6 +179,27 @@ public class TextEditor extends CDialog {
 	    	    		    			Object[] args = {"TEI_SOURCE"}; 		    		
 	    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 	    	            		   }		
+	    	            	   } else if (dsid.equals("MEI_SOURCE") && !pid.startsWith("cirilo:")) {
+		    	            		   MEI m = new MEI(null,false,false);
+		    	            		   m.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
+		    	            		   m.setPID(pid);
+		    	            		   
+		    	            		   if (m.isValid()) {
+		    	            			   m.validate(null, null);
+	  	    				  		       jebEditorPane.setText( m.toString());
+
+	  	    				  		   	   SAXBuilder builder = new SAXBuilder();
+	  	    				  		   	   try {
+	  	    				  		   		   Document doc = builder.build(new StringReader(m.toString()));
+	  	    				  		   		   Repository.modifyDatastreamByValue(pid, dsid, mimetype, new String(m.toString().getBytes("UTF-8"),"UTF-8"));
+	  	    				  		   	   } catch (Exception ex) {
+	  		  	 								JOptionPane.showMessageDialog(  getCoreDialog(),  res.getString("xmlformat") , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE); 				    				    	            			   
+	  	    				  		   	   }
+		    	            		   } else {
+		    	    		    			MessageFormat msgFmt = new MessageFormat(res.getString("parsererror"));
+		    	    		    			Object[] args = {"MEI_SOURCE"}; 		    		
+		    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
+		    	            		   }		
 	    	            	   } else if (dsid.equals("STORY") && !pid.startsWith("cirilo:")) {
 		    	            		   STORY s = new STORY(null,false,false);
 		    	            		   s.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));    	            		   

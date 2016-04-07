@@ -86,6 +86,11 @@ public class OptionsDialog extends CDialog {
 			set("OnlyGeonameID","TEI");
 			set("toMETS","TEI");
 
+			set("DCMapping","MEI");
+			set("SEMExtraction","MEI");
+			set("RefreshSource","MEI");
+
+			
 			set("DCMapping","LIDO");
 			set("SEMExtraction","LIDO");
 			set("CreateContexts","LIDO");
@@ -103,6 +108,11 @@ public class OptionsDialog extends CDialog {
 			try {
 	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbTEICustomization");
 	    		props.setProperty("user", "TEI.Customization", cb.isSelected() ? "1" : "0");
+	    	} catch (Exception ex) {
+	    	}
+			try {
+	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbMEICustomization");
+	    		props.setProperty("user", "MEI.Customization", cb.isSelected() ? "1" : "0");
 	    	} catch (Exception ex) {
 	    	}
 				   		
@@ -182,6 +192,10 @@ public class OptionsDialog extends CDialog {
 			get("OnlyGeonameID","TEI");
 			get("toMETS","TEI");
 
+			get("DCMapping","MEI");
+			get("SEMExtraction","MEI");
+			get("RefreshSource","MEI");
+			
 			get("DCMapping","LIDO");
 			get("SEMExtraction","LIDO");
 			get("CreateContexts","LIDO");
@@ -198,6 +212,12 @@ public class OptionsDialog extends CDialog {
 			try {
 	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbTEICustomization");
 	    		cb.setSelected(props.getProperty("user", "TEI.Customization").equals("1"));
+	    	} catch (Exception e) {
+	    	}
+			
+			try {
+	    		JCheckBox cb = (JCheckBox) getGuiComposite().getWidget("jcbMEICustomization");
+	    		cb.setSelected(props.getProperty("user", "MEI.Customization").equals("1"));
 	    	} catch (Exception e) {
 	    	}
 			

@@ -377,7 +377,7 @@ public class TEI {
                 transform();				
 				isCustomized = true;
 				SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-				Schema schema = factory.newSchema(new URL(Common.TEIP5SCHEMA));
+				Schema schema = factory.newSchema(new URL(user.getUrl().substring(0,user.getUrl().lastIndexOf("/"))+Common.TEIP5SCHEMA));
 				Validator validator = schema.newValidator();
 				try {
 					validator.validate(new JDOMSource(this.tei));			        

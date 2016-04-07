@@ -531,16 +531,26 @@ public class ObjectEditorDialog extends CDialog {
 							Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", t.toString());
 						    refresh(true);
 						} else { ret = false; }
+ 		    		} else if (dsid.equals("MEI_SOURCE")) {
+		    			MEI m = new MEI(null,false,true);
+						m.setUser(this.owner);
+						m.set(chooser.getSelectedFile().getAbsolutePath(), false);
+						if (m.isValid()) {
+						    m.setPID(pid);
+						    m.validate(null, null);
+							Repository.modifyDatastreamByValue(pid, "MEI_SOURCE", "text/xml", m.toString());
+						    refresh(true);
+						} else { ret = false; }
  		    		} else if (dsid.equals("LIDO_SOURCE")) {
- 		    				LIDO l = new LIDO(null,false,true);
-							l.setUser(this.owner);
-							l.set(chooser.getSelectedFile().getAbsolutePath(), false);
-							if (l.isValid()) {
-							    l.setPID(pid);
-							    l.validate(null, null);
-								Repository.modifyDatastreamByValue(pid, "LIDO_SOURCE", "text/xml", l.toString());
-							    refresh(true);
-							} else { ret = false; }
+		    				LIDO l = new LIDO(null,false,true);
+						l.setUser(this.owner);
+						l.set(chooser.getSelectedFile().getAbsolutePath(), false);
+						if (l.isValid()) {
+						    l.setPID(pid);
+						    l.validate(null, null);
+							Repository.modifyDatastreamByValue(pid, "LIDO_SOURCE", "text/xml", l.toString());
+						    refresh(true);
+						} else { ret = false; }
  		    		} else if (dsid.equals("STORY")) {
 		    				STORY s = new STORY(null,false,true);
 		    				s.setUser(this.owner);

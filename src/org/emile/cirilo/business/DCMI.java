@@ -121,6 +121,8 @@ public class DCMI {
 						+ org.emile.cirilo.Common.DCMI[i]));
 					preallocations.set(i, jtfDCMI.getText());
 			}
+			
+			CServiceProvider.removeService(ServiceNames.DCMI_PREALLOCATIONS);
 			CServiceProvider.addService(preallocations,
 					ServiceNames.DCMI_PREALLOCATIONS);
 

@@ -175,6 +175,14 @@ public class EditObjectDialog extends CDialog {
 	  			    	            		   	t.validate(null, null);
 	   	    				  		   		   	Repository.modifyDatastreamByValue(pid, "TEI_SOURCE", "text/xml", new String(t.toString().getBytes("UTF-8"),"UTF-8"));
 	  				    					 }   
+					    					 if (!pid.contains("cirilo:") && model.contains("cm:MEI")) { 
+					    						org.jdom.Document mei = db.build (Repository.getDatastream(pid, "MEI_SOURCE"));
+	  			    	            		   	MEI n = new MEI(null,false,false);
+	  			    	            		   	n.set(outputter.outputString(mei));
+	  			    	            		   	n.setPID(pid);
+	  			    	            		   	n.validate(null, null);
+	   	    				  		   		   	Repository.modifyDatastreamByValue(pid, "MEI_SOURCE", "text/xml", new String(n.toString().getBytes("UTF-8"),"UTF-8"));
+	  				    					 }   
 							    			 if (!pid.contains("cirilo:") && model.contains("cm:OAIRecord")) {
 							    					byte[] stylesheet = null;
 							    		        	try {

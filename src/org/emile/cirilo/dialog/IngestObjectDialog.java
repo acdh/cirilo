@@ -124,7 +124,10 @@ public class IngestObjectDialog extends CDialog {
 			jcbNamespace.setEnabled(false);			
 		
 			String cm = jcbContentModel.getSelectedItem().toString().toLowerCase();
-
+			
+			JButton jbEXCEL = ((JButton) getGuiComposite().getWidget("jbEXCEL"));
+			jbEXCEL.setEnabled(!cm.contains("cirilo:mei"));
+			
 			if (cm.contains("context")) {
 				jcbNamespace.setSelectedIndex(1);
 			} else {
@@ -323,6 +326,72 @@ public class IngestObjectDialog extends CDialog {
 										
  							    try { 							    
  							    	if (!onlyValidate) Repository.modifyDatastreamByValue(t.getPID(), "TEI_SOURCE", "text/xml", t.toString()); 							    	
+ 							    } catch (Exception q) {}	
+
+							}
+
+
+							if (model.indexOf("MEI") > -1) {
+
+								MEI m = new MEI(logger, onlyValidate, true);
+								m.setUser((String)jcbUser.getSelectedItem());
+								m.set((String) files.get(i), false);
+								
+								if (!m.isValid()) {	
+									
+									msgFmt = new MessageFormat(res.getString("novalidtei"));
+									Object[] args0 = {new java.util.Date(), (String) files.get(i)}; 
+					  	  		    logger.write( msgFmt.format(args0)  ); 
+					 				continue;
+								}
+
+								Split pcm = new Split(model);
+												
+								if (m.getPID().isEmpty()) {		
+									if (!onlyValidate) {
+										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
+										m.setPID(pid);
+										while (!Repository.exist(pid));
+									} else {m.setPID("obj:generated");}
+									fi++;
+									msgFmt = new MessageFormat(res.getString("objing"));
+									Object[] args1 = {new java.util.Date(), pid, m.getName() };
+									
+									logger.write(msgFmt.format(args1) );									
+								} else {
+                                    if (!Repository.exist(m.getPID())) {
+    									if (!onlyValidate) {
+    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
+    										while (!Repository.exist(m.getPID()));
+    									}
+    									fi++;
+    									msgFmt = new MessageFormat(res.getString("objing"));
+    									Object[] args2 = {new java.util.Date(), m.getPID(), m.getName() };
+    									
+    									logger.write(msgFmt.format(args2));									                                    	
+                                    } else {
+                                    	if (m.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
+                                    		
+                                    		msgFmt = new MessageFormat(res.getString("objingrefr"));
+        									Object[] args3 = {new java.util.Date(), m.getPID(), m.getName() };
+                                    		logger.write( msgFmt.format(args3));
+                                    		fa++;
+                                    	} else {	
+                                    		msgFmt = new MessageFormat(res.getString("denied"));
+        									Object[] args4 = {new java.util.Date(), (String)jcbUser.getSelectedItem(), m.getPID() };
+                                    		
+                                    		logger.write( msgFmt.format(args4));
+                                    		continue;
+                                    	}	
+                                    }
+							    }
+								
+															    
+ 							    m.validate(pcm.get(), moGA);
+ 							    Common.genQR(user, m.getPID());
+										
+ 							    try { 							    
+ 							    	if (!onlyValidate) Repository.modifyDatastreamByValue(m.getPID(), "MEI_SOURCE", "text/xml", m.toString()); 							    	
  							    } catch (Exception q) {}	
 
 							}
@@ -654,6 +723,75 @@ public class IngestObjectDialog extends CDialog {
 
 								}
 
+
+								if (model.contains("MEI")) {
+
+									MEI m = new MEI(logger, onlyValidate, true);
+									m.setUser((String)jcbUser.getSelectedItem());
+									m.set((String) files.get(i), true);
+									
+									if (!m.isValid()) {	
+										 msgFmt = new MessageFormat(res.getString("novalidtei"));
+										Object[] args1 = {new java.util.Date(), (String) files.get(i)};
+										
+						  	  		    logger.write( msgFmt.format(args1)); 
+						 				continue;
+									}
+
+									Split pcm = new Split(model);
+									
+									if (m.getPID().isEmpty()) {	
+										if (!onlyValidate) {
+											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
+											m.setPID(pid);
+											while (!Repository.exist(pid));
+										} else {m.setPID("obj:generated");}
+										fi++;
+										msgFmt = new MessageFormat(res.getString("objing"));
+										Object[] args2 = {new java.util.Date(), pid, m.getName()};
+										
+										logger.write( msgFmt.format(args2));									
+									} else {
+	                                    if (!Repository.exist(m.getPID())) {
+	    									if (!onlyValidate) {
+	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
+	    										while (!Repository.exist(m.getPID()));
+	    									}
+	    									fi++;
+	    									
+	    									msgFmt = new MessageFormat(res.getString("objing"));
+											Object[] args3 = {new java.util.Date(), m.getPID(), m.getName()};
+	    									logger.write( msgFmt.format(args3));									                                    	
+	                                    } else {
+	                                    	if (m.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
+	                                    		msgFmt = new MessageFormat(res.getString("objingrefr"));
+												Object[] args4 = {new java.util.Date(), m.getPID(), m.getName()};
+	                                    		
+	                                    		logger.write( msgFmt.format(args4));
+	                                    		fa++;
+	                                    	} else {
+	                                    		msgFmt = new MessageFormat(res.getString("denied"));
+												Object[] args5 = {new java.util.Date(), (String)jcbUser.getSelectedItem(), m.getPID()};
+	                                    		
+	                                    		logger.write( msgFmt.format(args5));
+	                                    		continue;
+	                                    	}	
+	                                    }
+								    }
+									
+	 							    m.validate(pcm.get(), moGA);
+	 							    Common.genQR(user, m.getPID());
+	 							    
+	 							    try {														    
+	 	 							   if (!onlyValidate) Repository.modifyDatastreamByValue(m.getPID(), "MEI_SOURCE", "text/xml", m.toString());
+	 							    } catch (Exception q) {
+	 							    	log.error(q.getLocalizedMessage(),q);	
+	 							    }	
+								
+
+								}
+								
+								
 								if (model.contains("METS") ) {
 
 									METS m = new METS(logger, onlyValidate, true);
@@ -1230,6 +1368,7 @@ public class IngestObjectDialog extends CDialog {
 		    if (p != null) {
 		    	JComboBox jcbContentModel = ((JComboBox) getGuiComposite().getWidget("jcbContentModel"));
 		    	jcbContentModel.setSelectedItem(p);
+		    	set();
 		    }
 
 			} catch (Exception e) {		
@@ -1268,7 +1407,7 @@ public class IngestObjectDialog extends CDialog {
 	
 	        List<String> ds = Repository.getTemplates(user.getUser(),groups.contains("administrator"));                
 	        for (String s: ds) {
-	              if (!s.isEmpty() && (s.contains("TEI") || s.contains("METS") || s.contains("LIDO")  || s.contains("Resource") )) jcbContentModel.addItem(s);            	
+	              if (!s.isEmpty() && (s.contains("TEI") || s.contains("MEI")  || s.contains("METS") || s.contains("LIDO")  || s.contains("Resource") )) jcbContentModel.addItem(s);            	
 	         }
 	           
             boolean contains = false;

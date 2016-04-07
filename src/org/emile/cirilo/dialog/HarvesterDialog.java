@@ -431,33 +431,40 @@ public class HarvesterDialog extends CDefaultDialog {
 						Object path =  xpath.selectSingleNode(em);
 						
 						if (path != null) {							
+							Object object = null;
+							String iconref = null;
 							
-							XPath vpath = XPath.newInstance(icon);
-							vpath.addNamespace(Common.xmlns_dc);
-							vpath.addNamespace(Common.xmlns_oai);
-							vpath.addNamespace(Common.xmlns_edm);
-							vpath.addNamespace(Common.xmlns_europeana);
-							vpath.addNamespace(Common.xmlns_tei_p5);
-							vpath.addNamespace(Common.xmlns_dcterms);
-							vpath.addNamespace(Common.xmlns_lido);
-							vpath.addNamespace(Common.xmlns_skos);
-							vpath.addNamespace(Common.xmlns_rdf);
-							vpath.addNamespace(Common.xmlns_ore);
-							vpath.addNamespace(Common.xmlns_owl);
-							vpath.addNamespace(Common.xmlns_rdaGr2);
-							vpath.addNamespace(Common.xmlns_wgs84_pos);
+							if (icon.startsWith("$")) {
+								iconref = icon.substring(1);								
+							} else {							
+								XPath vpath = XPath.newInstance(icon);
+								vpath.addNamespace(Common.xmlns_dc);
+								vpath.addNamespace(Common.xmlns_oai);
+								vpath.addNamespace(Common.xmlns_edm);
+								vpath.addNamespace(Common.xmlns_europeana);
+								vpath.addNamespace(Common.xmlns_tei_p5);
+								vpath.addNamespace(Common.xmlns_dcterms);
+								vpath.addNamespace(Common.xmlns_lido);
+								vpath.addNamespace(Common.xmlns_skos);
+								vpath.addNamespace(Common.xmlns_rdf);
+								vpath.addNamespace(Common.xmlns_ore);
+								vpath.addNamespace(Common.xmlns_owl);
+								vpath.addNamespace(Common.xmlns_rdaGr2);
+								vpath.addNamespace(Common.xmlns_wgs84_pos);
 							
-							Object object =  vpath.selectSingleNode(em);
+								object =  vpath.selectSingleNode(em);
+							}	
 
-							if (object != null) {
+							if (object != null || iconref != null) {
 
-								String iconref = null;
-								if (object instanceof Element) {
-									iconref = ((Element) object).getText();
-								}
-								if (object instanceof Attribute) {
-									iconref = ((Attribute) object).getValue();
-								}
+                                if (iconref == null) {								
+                                	if (object instanceof Element) {
+                                		iconref = ((Element) object).getText();
+                                	}
+                                	if (object instanceof Attribute) {
+                                		iconref = ((Attribute) object).getValue();
+                                	}
+                                }
 								
 								String uwmetadata = null;
 								

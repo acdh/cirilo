@@ -65,6 +65,12 @@ public class GuiOptionsDialog extends CGuiComposite {
 	protected JCheckBox jcbSKOSIFY;
 	protected JComboBox jcbGeneralDefaultCM;
 
+	protected JCheckBox jcbMEIDCMapping;
+	protected JCheckBox jcbMEISEMExtraction;
+	protected JCheckBox jcbMEIRefreshSource;
+	protected JCheckBox jcbMEICustomization;
+
+	
 	protected JCheckBox jcbLIDODCMapping;
 	protected JCheckBox jcbLIDOSEMExtraction;
 	protected JCheckBox jcbLIDOCreateContexts;
@@ -124,6 +130,10 @@ public class GuiOptionsDialog extends CGuiComposite {
 		setWidgetName(jcbLIDOOnlyGeonameID, "jcbLIDOOnlyGeonameID" );
 		setWidgetName(jcbSKOSIFY, "jcbSKOSIFY" );
 
+		setWidgetName(jcbMEIDCMapping, "jcbMEIDCMapping");
+		setWidgetName(jcbMEISEMExtraction, "jcbMEISEMExtraction");
+		setWidgetName(jcbMEIRefreshSource, "jcbMEIRefreshSource");
+		setWidgetName(jcbMEICustomization, "jcbMEICustomization" );
 		
 	}
 
@@ -167,6 +177,12 @@ public class GuiOptionsDialog extends CGuiComposite {
 		jcbLIDORefreshSource = new JCheckBox(res.getString("refreshsource"), false);
 		jcbLIDOResolveSKOS = new JCheckBox(res.getString("resolveskos"), true);
 		jcbSKOSIFY = new JCheckBox(res.getString("skosify"), false);
+
+		jcbMEIDCMapping = new JCheckBox(res.getString("dcmapping"), true);
+		jcbMEISEMExtraction = new JCheckBox(res.getString("semextraction"), true);
+		jcbMEIRefreshSource = new JCheckBox(res.getString("refreshsource"), false);
+		jcbMEICustomization = new JCheckBox(res.getString("customization").replaceAll("TEI","MEI"), false);
+
 		
 		jtfTEILoginName = new JTextField();
 		jtfTEILoginName.setPreferredSize(new Dimension(100, jtfTEILoginName.getPreferredSize().height));
@@ -205,6 +221,13 @@ public class GuiOptionsDialog extends CGuiComposite {
 		t1.add(jcbTEIOnlyGeonameID, "gapbefore 18px, wrap 5");
 		t1.add(jcbTEIRemoveEmpties); 
 		
+		Container t5 = new Container();
+		t5.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
+		t5.add(jcbMEIRefreshSource, "wrap 5");
+		t5.add(jcbMEIDCMapping, "wrap 5"); 
+		t5.add(jcbMEISEMExtraction, "wrap 5"); 
+		t5.add(jcbMEICustomization, "wrap 5"); 
+
 		Container t3 = new Container();
 		t3.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
 		t3.add(jcbLIDORefreshSource, "wrap 5");
@@ -226,6 +249,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		
 		tp.addTab(res.getString("general"), t0);
 		tp.addTab(res.getString("teiupload"), t1);
+		tp.addTab(res.getString("meiupload"), t5);
 		tp.addTab(res.getString("lidoupload"), t3);
 		tp.addTab(res.getString("metsupload"), t2);
 		tp.addTab(res.getString("skosupload"), t4);

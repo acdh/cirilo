@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
+
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.*;
 import voodoosoft.jroots.core.gui.*;
@@ -200,9 +201,10 @@ class CiriloWindow extends JPanel {
 				System.setProperty("user.home",home);				
 				home = home + System.getProperty("file.separator")+ "cirilo.ini";
 				try {
-					File fp = new File(home );
+					File fp = new File(home);
 					props.cacheProperties(home, "user");
 					props.setProperty("user", "authentication.method", p.getProperty("authentication.method"));
+					props.saveProperties("user");
 				} catch (Exception e) {}
 				
 				CServiceProvider.addService(props, ServiceNames.PROPERTIES);				
@@ -294,6 +296,10 @@ class CiriloWindow extends JPanel {
 	            SkosifyFactory skosify = new SkosifyFactory();
 	            CServiceProvider.addService(skosify, ServiceNames.SKOSIFY_SERVICE);
 	   			
+	 			User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
+	 			System.out.println(user.getUrl().substring(0,user.getUrl().lastIndexOf("/")));						
+
+	            
 			}
 			catch (Exception ex) {
 				exit();
