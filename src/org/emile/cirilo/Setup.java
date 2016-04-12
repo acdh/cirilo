@@ -108,6 +108,7 @@ public class Setup {
 		HarvesterDialog loHarvesterDialog;
 		TemplaterDialog loTemplaterDialog;
 		OptionsDialog loOptionsDialog;
+		PropertyDialog loPropertyDialog;
 		TextEditor loTextEditor;
 		CiriloFrame loFrame;
 		CDialogManager loDialogManager;
@@ -172,7 +173,6 @@ public class Setup {
 		loDialogManager.registerPrototype(loReplaceDialog, true);
 		CServiceProvider.addService(loReplaceDialog, DialogNames.REPLACE_DIALOG);
 
-
 		// SelectLayoutDialog
 		loSelectLayoutDialog = (SelectLayoutDialog) loDialogCreator.createDialog(SelectLayoutDialog.class, "GuiSelectLayoutDialog", res.getString("choosestyle"), DialogNames.SELECTLAYOUT_DIALOG);
 		loSelectLayoutDialog.setGuiManager(aoGuiMan);
@@ -184,6 +184,19 @@ public class Setup {
 		loTextEditor.setGuiManager(aoGuiMan);
 		loDialogManager.registerPrototype(loTextEditor, true);
 		CServiceProvider.addService(loTextEditor, DialogNames.TEXTEDITOR);
+
+		// PropertyDialog
+		CPropertyService props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
+
+		loPropertyDialog = (PropertyDialog) loDialogCreator.createDialog(PropertyDialog.class, "GuiPropertyDialog", res.getString("sysprops"), DialogNames.PROPERTY_DIALOG);
+		loPropertyDialog.setGuiManager(aoGuiMan);
+		loPropertyDialog.hidePropertyValue("jdbc.passwd", "*");
+		loPropertyDialog.hidePropertyValue("mail.passwd", "*");
+		loPropertyDialog.addPropertySet(System.getProperties(), "system");
+		loPropertyDialog.addPropertySet(props.getProperties("system"), "system");
+		loDialogManager.registerPrototype(loPropertyDialog, true);
+		CServiceProvider.addService(loPropertyDialog, DialogNames.PROPERTY_DIALOG);
+
 		
 		// CreateDatastreamDialog
 		loCreateDatastreamDialog = (CreateDatastreamDialog) loDialogCreator.createDialog(CreateDatastreamDialog.class, "GuiCreateDatastreamDialog", res.getString("createstream"), DialogNames.CREATEDATASTREAM_DIALOG);
@@ -299,6 +312,7 @@ public class Setup {
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiHandleDialog", "GuiHandleDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiUpgradeDialog", "GuiUpgradeDialog");
 		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiReorganizeDialog", "GuiReorganizeDialog");
+		loGuiMan.addGuiComposite("org.emile.cirilo.gui.GuiPropertyDialog", "GuiPropertyDialog");
 
 		// build menu gui
 		loGuiMan.addGuiComposite(loFactory.createGuiFromXML(Cirilo.class.getResourceAsStream("menu.xml"), true), "FrameMenu");

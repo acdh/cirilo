@@ -294,6 +294,7 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "cmodel"  , "Inhaltsmodell"          },
 
                 { "triplestoreerror"  , "Fehler beim Übermitteln von Daten an den {0} Triplestore."          },
+                { "sysprops"  , "Systemeigenschaften"          },
 
              };    
 

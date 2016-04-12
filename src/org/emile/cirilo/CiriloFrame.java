@@ -135,8 +135,12 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 			new CActionListener(loItem, this, "handleReset");
 			
 			loItem = (JMenuItem) loMenu.getWidget("Infos.About");
-			loItem.setText(res.getString(loItem.getText()));
+			loItem.setText(res.getString(loItem.getText())+" ...");
 			new CActionListener(loItem, this, "handleAbout");
+
+			loItem = (JMenuItem) loMenu.getWidget("Infos.System");
+			loItem.setText(res.getString(loItem.getText())+" ...");
+			new CActionListener(loItem, this, "handleSystem");
 
 			loItem = (JMenuItem) loMenu.getWidget("Extras.Harvest");
 			loItem.setText(res.getString(loItem.getText()));
@@ -395,7 +399,6 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 
 		}
 		catch (Exception ex) {
-			CException.record(ex, this);
 		}
 	}
 
@@ -557,6 +560,18 @@ public class CiriloFrame extends JFrame implements IEventHandler {
 		}
 	}
 
+	public void handleSystem(ActionEvent e) {
+		
+		try {
+			PropertyDialog dlg;
+
+			dlg = (PropertyDialog) CServiceProvider.getService(DialogNames.PROPERTY_DIALOG);
+			dlg.open();
+		} catch (Exception ex) {
+		}
+	}	
+
+	
 
 	/**
 	 * Asks business factory to free objects that have been unused for more than

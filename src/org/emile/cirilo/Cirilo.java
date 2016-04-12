@@ -26,7 +26,9 @@ import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.business.*;
 
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.ResourceBundle;
+
 
 
 
@@ -177,37 +179,42 @@ class CiriloWindow extends JPanel {
 			    			    
 				Properties p = new Properties();
 				p.load(Cirilo.class.getResourceAsStream("cirilo.properties"));
+				
 				String s = p.getProperty("authentication.method");
 				String lang =  p.getProperty("interface.language");
 				boolean ldap = s != null && s.contains("ldap");
-				
+
 				CPropertyService props = new CPropertyService();
 				props.cacheProperties(p, "system");
-				String home = System.getenv("USERPROFILE");	
 				
+				String home = System.getenv("USERPROFILE");				
+
 				System.setProperty("file.encoding", "UTF-8");
-				
+												
 				if (System.getProperty("os.name").toLowerCase().indexOf("windows") >- 1) {
 					File file = new File ( home );
 					if (!file.canWrite()) { 
 						home = System.getenv("TEMP");
 						File temp = new File ( home );
-						if (!temp.canWrite()) { home = new File(System.getProperty("user.home")).getAbsolutePath(); }
+						if (!temp.canWrite()) { home =  new File(System.getProperty("user.home")).getAbsolutePath(); }
 					}
 				} else {
-			    	 home = new File(System.getProperty("user.home")).getAbsolutePath();
+			    	 home =  new File(System.getProperty("user.home")).getAbsolutePath();			
 				}
 								
-				System.setProperty("user.home",home);				
+				System.setProperty("user.home",home);
 				home = home + System.getProperty("file.separator")+ "cirilo.ini";
+				
 				try {
-					File fp = new File(home);
+					File fp = new File(home );
+					fp.createNewFile();
 					props.cacheProperties(home, "user");
 					props.setProperty("user", "authentication.method", p.getProperty("authentication.method"));
 					props.saveProperties("user");
 				} catch (Exception e) {}
+
+				CServiceProvider.addService(props, ServiceNames.PROPERTIES);
 				
-				CServiceProvider.addService(props, ServiceNames.PROPERTIES);				
 				s  = props.getProperty("user","interface.language");
 				if (s != null) {
 					lang = s;
@@ -297,11 +304,11 @@ class CiriloWindow extends JPanel {
 	            CServiceProvider.addService(skosify, ServiceNames.SKOSIFY_SERVICE);
 	   			
 	 			User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
-	 			System.out.println(user.getUrl().substring(0,user.getUrl().lastIndexOf("/")));						
 
 	            
 			}
 			catch (Exception ex) {
+				ex.printStackTrace();
 				exit();
 			}
 

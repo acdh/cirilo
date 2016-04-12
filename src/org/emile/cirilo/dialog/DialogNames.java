@@ -55,5 +55,6 @@ public class DialogNames {
 	public final static CServiceName HANDLE_DIALOG = new CServiceName("HandleDialog");
 	public final static CServiceName UPGRADE_DIALOG = new CServiceName("UpgradeDialog");
 	public final static CServiceName REORGANIZE_DIALOG = new CServiceName("ReorganizeDialog");
+	public final static CServiceName PROPERTY_DIALOG = new CServiceName("PropertyDialog");
 }
 

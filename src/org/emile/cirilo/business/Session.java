@@ -60,7 +60,6 @@ public class Session  {
     		EditDialogProperties.setY(new Integer(props.getProperty("user", "edit.dialog.y")).intValue());
     		getTableWidths(props, EditDialogProperties,  "edit");
     	} catch (Exception e) {
-      		log.error(e.getLocalizedMessage(),e);				      					    		
     	}	
     	return EditDialogProperties; 
     }    
@@ -74,7 +73,7 @@ public class Session  {
     		IngestDialogProperties.setHeight(new Integer(props.getProperty("user", "ingest.dialog.height")).intValue());
     		IngestDialogProperties.setX(new Integer(props.getProperty("user", "ingest.dialog.x")).intValue());
     		IngestDialogProperties.setY(new Integer(props.getProperty("user", "ingest.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}	
     	return IngestDialogProperties; 
     }
     public CWindowsProperties getIngestDialogProperties() { return IngestDialogProperties; }
@@ -87,7 +86,7 @@ public class Session  {
     		LocationDialogProperties.setHeight(new Integer(props.getProperty("user", "location.dialog.height")).intValue());
     		LocationDialogProperties.setX(new Integer(props.getProperty("user", "location.dialog.x")).intValue());
     		LocationDialogProperties.setY(new Integer(props.getProperty("user", "location.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}	
     	return LocationDialogProperties; 
     }
     public CWindowsProperties getLocationDialogProperties() { return LocationDialogProperties; }
@@ -100,7 +99,7 @@ public class Session  {
     		NewDialogProperties.setHeight(new Integer(props.getProperty("user", "new.dialog.height")).intValue());
     		NewDialogProperties.setX(new Integer(props.getProperty("user", "new.dialog.x")).intValue());
     		NewDialogProperties.setY(new Integer(props.getProperty("user", "new.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}
     	return NewDialogProperties; 
     }
     public CWindowsProperties getNewDialogProperties() { return NewDialogProperties; }
@@ -114,7 +113,7 @@ public class Session  {
     		ObjectDialogProperties.setX(new Integer(props.getProperty("user", "object.dialog.x")).intValue());
     		ObjectDialogProperties.setY(new Integer(props.getProperty("user", "object.dialog.y")).intValue());
     		getTableWidths(props, ObjectDialogProperties,  "object");
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}
     	return ObjectDialogProperties; 
     }
     public CWindowsProperties getObjectDialogProperties() { return ObjectDialogProperties; }
@@ -127,7 +126,7 @@ public class Session  {
     		ReplaceDialogProperties.setHeight(new Integer(props.getProperty("user", "replace.dialog.height")).intValue());
     		ReplaceDialogProperties.setX(new Integer(props.getProperty("user", "replace.dialog.x")).intValue());
     		ReplaceDialogProperties.setY(new Integer(props.getProperty("user", "replace.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}
     	return ReplaceDialogProperties; 
     }
     public CWindowsProperties getReplaceDialogProperties() { return ReplaceDialogProperties; }
@@ -141,7 +140,7 @@ public class Session  {
     		SelectDialogProperties.setHeight(new Integer(props.getProperty("user", "select.dialog.height")).intValue());
     		SelectDialogProperties.setX(new Integer(props.getProperty("user", "select.dialog.x")).intValue());
     		SelectDialogProperties.setY(new Integer(props.getProperty("user", "select.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}	
     	return SelectDialogProperties; 
     }
     public CWindowsProperties getSelectDialogProperties() { return SelectDialogProperties; }
@@ -154,7 +153,7 @@ public class Session  {
     		EditDCDialogProperties.setHeight(new Integer(props.getProperty("user", "dc.dialog.height")).intValue());
     		EditDCDialogProperties.setX(new Integer(props.getProperty("user", "dc.dialog.x")).intValue());
     		EditDCDialogProperties.setY(new Integer(props.getProperty("user", "dc.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}	
     	return EditDCDialogProperties; 
     }
     public CWindowsProperties getEditDCDialogProperties() { return EditDCDialogProperties; }
@@ -167,7 +166,7 @@ public class Session  {
     		TextEditorProperties.setHeight(new Integer(props.getProperty("user", "editor.dialog.height")).intValue());
     		TextEditorProperties.setX(new Integer(props.getProperty("user", "editor.dialog.x")).intValue());
     		TextEditorProperties.setY(new Integer(props.getProperty("user", "editor.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}	
     	return TextEditorProperties; 
     }
     public CWindowsProperties getTextEditorProperties() { return TextEditorProperties; }
@@ -180,7 +179,7 @@ public class Session  {
     		HarvesterDialogProperties.setHeight(new Integer(props.getProperty("user", "harvester.dialog.height")).intValue());
     		HarvesterDialogProperties.setX(new Integer(props.getProperty("user", "harvester.dialog.x")).intValue());
     		HarvesterDialogProperties.setY(new Integer(props.getProperty("user", "harvester.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}
     	return HarvesterDialogProperties; 
     }
     public CWindowsProperties getHarvesterDialogProperties() { return HarvesterDialogProperties; }
@@ -193,7 +192,7 @@ public class Session  {
     		TemplaterDialogProperties.setHeight(new Integer(props.getProperty("user", "templater.dialog.height")).intValue());
     		TemplaterDialogProperties.setX(new Integer(props.getProperty("user", "templater.dialog.x")).intValue());
     		TemplaterDialogProperties.setY(new Integer(props.getProperty("user", "templater.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}
     	return TemplaterDialogProperties; 
     }
     public CWindowsProperties getTemplaterDialogProperties() { return TemplaterDialogProperties; }
@@ -206,7 +205,7 @@ public class Session  {
     		OptionsDialogProperties.setHeight(new Integer(props.getProperty("user", "options.dialog.height")).intValue());
     		OptionsDialogProperties.setX(new Integer(props.getProperty("user", "options.dialog.x")).intValue());
     		OptionsDialogProperties.setY(new Integer(props.getProperty("user", "options.dialog.y")).intValue());
-    	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
+    	} catch (Exception e) {}
     	return OptionsDialogProperties; 
     }
     public CWindowsProperties getOptionsDialogProperties() { return OptionsDialogProperties; }

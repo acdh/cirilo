@@ -24,5 +24,6 @@
 	</Menu>
 	<Menu class="JMenu" text="Infos" mnemonic="I" name="Infos">
 		<MenuItem class="JMenuItem" text="about" mnemonic="A" enabled="true" name="About"/>
+		<MenuItem class="JMenuItem" text="sysprops" mnemonic="S" enabled="true" name="System"/>
 	</Menu>
 </MenuBar>
