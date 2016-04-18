@@ -298,6 +298,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "shownat"  , "Shown At"          },
            { "cmodel"  , "Content Model"          },
            
+           { "nonvalidrdf"  , "\n{0}. RDF stream from source {1} could not be validated correctly."          },
            { "triplestoreerror"  , "Error while sending data to {0} triplestore."          },
            { "sysprops"  , "System properties"          },
          

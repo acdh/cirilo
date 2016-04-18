@@ -26,6 +26,7 @@ import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.core.gui.CItemListener;
 import voodoosoft.jroots.dialog.*;
 
+import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.ecm.templates.*;
 import org.emile.cirilo.ecm.repository.*;
@@ -41,6 +42,15 @@ import java.awt.Cursor;
 import java.awt.event.*;
 
 import javax.swing.*;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Attribute; 
+import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.XPath;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -61,6 +71,7 @@ import org.xmldb.api.*;
 public class IngestObjectDialog extends CDialog {
 
 	private static Logger log = Logger.getLogger(IngestObjectDialog.class);
+	
 	/**
 	 *  Constructor for the LoginDialog object
 	 */
@@ -126,7 +137,7 @@ public class IngestObjectDialog extends CDialog {
 			String cm = jcbContentModel.getSelectedItem().toString().toLowerCase();
 			
 			JButton jbEXCEL = ((JButton) getGuiComposite().getWidget("jbEXCEL"));
-			jbEXCEL.setEnabled(!cm.contains("cirilo:mei"));
+			jbEXCEL.setEnabled(!(cm.contains("cirilo:mei") || cm.contains("cirilo:ontology")));
 			
 			if (cm.contains("context")) {
 				jcbNamespace.setSelectedIndex(1);
@@ -173,6 +184,7 @@ public class IngestObjectDialog extends CDialog {
 				
 				FileWriter logger = null;
 				String model = "";
+				
 				try {
 					CPropertyService props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
 					
@@ -200,11 +212,18 @@ public class IngestObjectDialog extends CDialog {
 					
 					getCoreDialog().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					
+					rdfs = new RDF();
+					
 					files = new ArrayList<String>();
-					treeWalk(fp,true);
+					pids = new ArrayList<String>();
+
+					treeWalk(fp,true, model);
+					if (model.contains("Ontology")) {
+						pids = rdfs.getPidList();
+					}	
 					
 					MessageFormat msgFmt = new MessageFormat(res.getString("objcrea"));
-					Object[] args = {new Integer(files.size()).toString(), model, fp.getAbsolutePath()};
+					Object[] args = {new Integer( pids.size() == 0 ? files.size() : pids.size() ).toString(), model, fp.getAbsolutePath()};
 		            
 					int liChoice = JOptionPane.showConfirmDialog(null, msgFmt.format(args) ,
 							Common.WINDOW_HEADER, JOptionPane.YES_NO_OPTION,
@@ -219,7 +238,7 @@ public class IngestObjectDialog extends CDialog {
 						progressDialog.millisToDecideToPopup = 1;
 						progressDialog.millisToPopup = 1;
 
-			   		    progressDialog.beginTask(res.getString("ingestcont"), files.size(), true);
+			   		    progressDialog.beginTask(res.getString("ingestcont"), pids.size() == 0 ? files.size() : pids.size(), true);
 						
 						
 			   		    int fa = 0;
@@ -236,14 +255,14 @@ public class IngestObjectDialog extends CDialog {
 						JCheckBox jcbGenerated = ((JCheckBox) getGuiComposite().getWidget("jcbGenerated"));
 						JTextField jtfPID = ((JTextField) getGuiComposite().getWidget("jtfPID"));
 						
-						for (int i = 0; i<files.size(); i++) {
+						for (int i = 0; i < (pids.size() == 0 ? files.size() : pids.size()); i++) {
 
 							String pid = (String)jcbNamespace.getSelectedItem()+(String)jcbUser.getSelectedItem();
 
-							progressDialog.setTaskName(res.getString("ingestof")+files.get(i)+" ...");
+							progressDialog.setTaskName(res.getString("ingestof")+ (pids.size() == 0 ? files.get(i) : pids.get(i)) +" ...");
 							if (jcbGenerated.isSelected() && !jtfPID.getText().isEmpty()) {
 							   pid = "o:"+jtfPID.getText();
-							   if (files.size() == 1) {
+							   if (files.size() == 1 || pids.size()==1) {
 								   if (Repository.exist(pid)) {
                                    	msgFmt = new MessageFormat(res.getString("double"));
    									Object[] args9 = {pid};
@@ -265,7 +284,7 @@ public class IngestObjectDialog extends CDialog {
 							} catch (InterruptedException e) {
 							}
 								
-							if (model.indexOf("TEI") > -1) {
+							if (model.contains("TEI")) {
 
 								TEI t = new TEI(logger, onlyValidate, true);
 								t.setUser((String)jcbUser.getSelectedItem());
@@ -331,7 +350,7 @@ public class IngestObjectDialog extends CDialog {
 							}
 
 
-							if (model.indexOf("MEI") > -1) {
+							if (model.contains("MEI")) {
 
 								MEI m = new MEI(logger, onlyValidate, true);
 								m.setUser((String)jcbUser.getSelectedItem());
@@ -458,7 +477,7 @@ public class IngestObjectDialog extends CDialog {
 
 							}
 
-							if (model.indexOf("LIDO") > -1) {
+							if (model.contains("LIDO")) {
 
 								LIDO l = new LIDO(logger, onlyValidate, true);
 								l.setUser((String)jcbUser.getSelectedItem());
@@ -511,9 +530,7 @@ public class IngestObjectDialog extends CDialog {
                                     		continue;
                                     	}	
                                     }
-							    }
-								
-		
+							    }	
 								
  							    l.validate(pcm.get(), moGA);
  							    
@@ -525,11 +542,65 @@ public class IngestObjectDialog extends CDialog {
 
 							}
 							
+							
+							if (model.contains("Ontology")) {	
+								String s;
+								if (pids.size() > 0) {
+									pid = pids.get(i);
+									s = rdfs.get(pid);
+								} else {
+									pid = "o:"+user.getUser();
+									rdfs.set(files.get(i));
+									s = rdfs.toString();
+								}
+								
+								if (!onlyValidate) {
+								  try{	
+ 	 	 				    		File temp = File.createTempFile("tmp","xml");
+  	 					           	FileOutputStream fos = new FileOutputStream(temp);
+  	 					           	fos.write(s.getBytes("UTF-8"));
+ 	 					           	fos.close();
+
+ 	 					           	Split pcm = new Split(model);
+									if (!Repository.exist(pid)) {
+										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), (pids.size()>0 ? "$":"")+pid.trim(), res.getString("notitle"));
+										while (!Repository.exist(pid));
+										fi++;
+ 										msgFmt = new MessageFormat(res.getString("objing"));
+ 										Object[] args6 = {new java.util.Date(), pid, (pids.size()>0 ? pids.get(i) : files.get(i)) };
+ 	 									logger.write( msgFmt.format(args6));				
+									} else {
+										fa++;
+ 										msgFmt = new MessageFormat(res.getString("objingrrefr"));
+ 										Object[] args6 = {new java.util.Date(), pid, (pids.size()>0 ? pids.get(i) : files.get(i)) };
+ 	 									logger.write( msgFmt.format(args6));				
+									}
+ 	 					           	  	 					           	
+  	 								TripleStoreFactory tf = new TripleStoreFactory();
+  	 								if (tf.getStatus()) {
+  	 									if (tf.update(temp, pid)) {
+  	 										if (pids.size() >0) rdfs.mapDC(pid);
+  	 										Repository.modifyDatastreamByValue(pid, "ONTOLOGY", "text/xml", rdfs.toString()); 	
+  	 										Common.genQR(user, pid);
+  	 									} else {
+  	 										msgFmt = new MessageFormat(res.getString("nonvalidrdf"));
+  	 										Object[] args6 = {new java.util.Date(), pid };
+  	 	 									logger.write( msgFmt.format(args6));
+  	 									}
+  	 								}	
+  	 								tf.close();
+                                    temp.delete();
+ 									
+								  } catch (Exception q) {}
+								}  
+
+								
+							}
+
 						}
 						
 						logger.write("\n" +res.getString("end")+simulate+res.getString("ofingest") + new java.util.Date() + ". " + new Integer(fi).toString().trim() + res.getString("ingested")+ new Integer(fa).toString().trim() + res.getString("refreshed"));									
 						logger.close();
-						
 						
 						JOptionPane.showMessageDialog(  getCoreDialog(), new Integer(fi).toString()+ res.getString("ingested")+ new Integer(fa).toString().trim() + res.getString("refreshed") + res.getString("details")+fp.getAbsolutePath()+System.getProperty( "file.separator" )+"ingest.log" , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 			        	logfile =fp.getAbsolutePath()+System.getProperty( "file.separator" )+"ingest.log"; 
@@ -1407,7 +1478,7 @@ public class IngestObjectDialog extends CDialog {
 	
 	        List<String> ds = Repository.getTemplates(user.getUser(),groups.contains("administrator"));                
 	        for (String s: ds) {
-	              if (!s.isEmpty() && (s.contains("TEI") || s.contains("MEI")  || s.contains("METS") || s.contains("LIDO")  || s.contains("Resource") )) jcbContentModel.addItem(s);            	
+	              if (!s.isEmpty() && (s.contains("TEI") || s.contains("MEI")  || s.contains("METS") || s.contains("LIDO")  || s.contains("Resource") || s.contains("cirilo:Ontology") )) jcbContentModel.addItem(s);            	
 	         }
 	           
             boolean contains = false;
@@ -1438,7 +1509,7 @@ public class IngestObjectDialog extends CDialog {
 	}
 
 
-	private void treeWalk(File file, boolean mode) {
+	private void treeWalk(File file, boolean mode, String model) {
 		   
 		  try {
 	 		if (file.isDirectory()) {
@@ -1455,10 +1526,14 @@ public class IngestObjectDialog extends CDialog {
 	 			}
 		 		File[] children = file.listFiles();
 		 		for (int i = 0; i < children.length; i++) {
-		 			treeWalk(children[i],false);
+		 			treeWalk(children[i],false, model);
 		 		}
 	     	} else if (file.getAbsolutePath().toLowerCase().endsWith(".xml") || file.getAbsolutePath().toLowerCase().endsWith(".docx")|| file.getAbsolutePath().toLowerCase().endsWith(".odt")) {
 	     		files.add(file.getAbsolutePath());
+	     		if (model.contains("Ontology")) {
+					rdfs.set(file.getAbsolutePath());				
+	     		}
+	     		
 	     	}
 		  } catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}	
 	}	
@@ -1507,6 +1582,8 @@ public class IngestObjectDialog extends CDialog {
 	 
 	private static String importpath; 
 	private static ArrayList<String> files;
+	private static ArrayList<String> pids;
+	private RDF rdfs;
 	private String logfile;
 	private static int fi;
 	private CDefaultGuiAdapter moGA;

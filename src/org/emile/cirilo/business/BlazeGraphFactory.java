@@ -126,11 +126,10 @@ public class BlazeGraphFactory {
 	public boolean update(File fp, String context) {
 		try {
 			remove(context);
-			insert(fp, context);
+			return insert(fp, context);
 		} catch (Exception e) {
 		  	log.error(e.getLocalizedMessage(),e);		  		
             return  false;
 		}    
-		return true;
 	}
 }

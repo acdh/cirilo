@@ -61,6 +61,10 @@ public class Common {
 
 	public final static Namespace xmlns_gams = Namespace.getNamespace("gams", "http://gams.uni-graz.at#");
 
+	public final static Namespace xmlns_aodl = Namespace.getNamespace("aodl", "http://pdr.bbaw.de/namespaces/aodl/");
+
+	public final static Namespace xmlns_g2o = Namespace.getNamespace("g2o", "http://gams.uni-graz.at/ontology/#");
+
 	public final static Namespace xmlns_tei_p5 = Namespace.getNamespace( "t", "http://www.tei-c.org/ns/1.0" );
 
 	public final static Namespace xmlns_ntei_p5 = Namespace.getNamespace( "", "http://www.tei-c.org/ns/1.0" );
