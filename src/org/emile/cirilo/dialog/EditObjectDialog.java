@@ -340,11 +340,7 @@ public class EditObjectDialog extends CDialog {
 				    				  if (p.substring(1,2).equals(Common.ADD)){			
 				    				      if (p.contains("r2d2")) {
 				    				    	  try {
-				    				    		  
-												if(!Repository.exists(pid, "METS_REF")) {
-													Repository.addDatastream(pid, "METS_REF",  "Reference to mets stream", "text/xml", "http://glossa.uni-graz.at/"+pid+"/METS_SOURCE");
-												}	
- 
+				    				    		Repository.purgeDatastream(pid, "KML_TEMPLATE")  ;
 				    				    		  
     			    					  // 	   Repository.modifyDatastream (pid, "", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
 				    				    	  } catch (Exception q) {				    				    		  
@@ -1067,6 +1063,7 @@ public class EditObjectDialog extends CDialog {
 
  				       	Document pelagios;
  				       	Document cmif;
+ 				       	Document kml;
 
  				       	DOMBuilder db = new DOMBuilder();
  				       	
@@ -1084,21 +1081,37 @@ public class EditObjectDialog extends CDialog {
 					    		String pid =(String)loTable.getValueAt(selected[i],0);
 					    		String title =(String)loTable.getValueAt(selected[i],1);
 					    		String cm =(String)loTable.getValueAt(selected[i],2);
+					    		String owner = (String)loTable.getValueAt(selected[i],4);
 					    		
 					    		try {
 					    			
 					    			if (cm.equals("cm:Context")) {
-					    				if (Repository.exists(pid, "KML")) af.aggregateKML(pid, title);
+					    				if (Repository.exists(pid, "KML")) {					    					
+					  						byte[] stylesheet = null;
+					 				       	try {
+					 				       		stylesheet =  Repository.getDatastream("cirilo:"+owner, "KML_STYLESHEET" , "");
+					  				       	} catch (Exception ex) {
+					  				       		stylesheet =  Repository.getDatastream("cirilo:Backbone", "KML_STYLESHEET" , "");
+					  				        }
+					  				        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet, "UTF-8"))));					    					
+							    			try {
+					 							kml = db.build (Repository.getDatastream("cirilo:"+owner, "KML_TEMPLATE"));
+					 						} catch (Exception ex) {
+					 							kml = db.build (Repository.getDatastream("cirilo:Backbone", "KML_TEMPLATE"));
+					 						}
+					    					transformer.setParameter("context", pid);
+					    					af.aggregateKML(pid, title, kml, transformer);
+					    				}
 					    				if (Repository.exists(pid, "PELAGIOS")) {					    					
 					  						byte[] stylesheet = null;
 					 				       	try {
-					 				       		stylesheet =  Repository.getDatastream("cirilo:"+user.getUser(), "PELAGIOS_STYLESHEET" , "");
+					 				       		stylesheet =  Repository.getDatastream("cirilo:"+owner, "PELAGIOS_STYLESHEET" , "");
 					  				       	} catch (Exception ex) {
 					  				       		stylesheet =  Repository.getDatastream("cirilo:Backbone", "PELAGIOS_STYLESHEET" , "");
 					  				        }
 					  				        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet, "UTF-8"))));					    					
 							    			try {
-					 							pelagios = db.build (Repository.getDatastream("cirilo:"+user.getUser(), "PELAGIOS_TEMPLATE"));
+					 							pelagios = db.build (Repository.getDatastream("cirilo:"+owner, "PELAGIOS_TEMPLATE"));
 					 						} catch (Exception ex) {
 					 							pelagios = db.build (Repository.getDatastream("cirilo:Backbone", "PELAGIOS_TEMPLATE"));
 					 						}
@@ -1108,13 +1121,13 @@ public class EditObjectDialog extends CDialog {
 					    				if (Repository.exists(pid, "CMIF")) {					    					
 					  						byte[] stylesheet = null;
 					 				       	try {
-					 				       		stylesheet =  Repository.getDatastream("cirilo:"+user.getUser(), "CMIF_STYLESHEET" , "");
+					 				       		stylesheet =  Repository.getDatastream("cirilo:"+owner, "CMIF_STYLESHEET" , "");
 					  				       	} catch (Exception ex) {
 					  				       		stylesheet =  Repository.getDatastream("cirilo:Backbone", "CMIF_STYLESHEET" , "");
 					  				        }
 					  				        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet, "UTF-8"))));					    					
 							    			try {
-					 							cmif = db.build (Repository.getDatastream("cirilo:"+user.getUser(), "CMIF_TEMPLATE"));
+					 							cmif = db.build (Repository.getDatastream("cirilo:"+owner, "CMIF_TEMPLATE"));
 					 						} catch (Exception ex) {
 					 							cmif = db.build (Repository.getDatastream("cirilo:Backbone", "CMIF_TEMPLATE"));
 					 						}

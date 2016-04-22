@@ -122,6 +122,8 @@ public class Common {
 	public final static Namespace xmlns_cantus = Namespace.getNamespace( "l", "http://cantus.oeaw.ac.at");
 
 	public final static Namespace xmlns_dcterms = Namespace.getNamespace( "dcterms", "http://purl.org/dc/terms/");
+	
+	public final static Namespace xmlns_void = Namespace.getNamespace( "void","http://rdfs.org/ns/void#");
 		
 	public final static Namespace xmlns_edm = Namespace.getNamespace( "edm", "http://www.europeana.eu/schemas/edm/");
 

@@ -145,6 +145,7 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 				"application/mp4",
 				"application/msword",
 				"application/pdf",
+				"application/rdf+xml",
 				"application/sparql-query",
 				"application/vnd.ms-excel",
 				"application/vnd.ms-powerpoint",
