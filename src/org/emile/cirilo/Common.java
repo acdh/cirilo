@@ -355,7 +355,7 @@ public class Common {
 	}
 	
 	
-	   public static void genQR (User user, String pid) {	
+    public static void genQR (User user, String pid) {	
 	    	try { 
 	    		List<String> cm = Repository.getContentModels(pid);
 	    		if (cm.contains("cm:OAIRecord")) return;
@@ -372,5 +372,51 @@ public class Common {
 	    		temp.delete();
 	    	} catch (Exception e) {    		
 	    	}
-	    }    
+    }
+    
+    public static String normalize (String s) {
+    	
+    	String pattern = "^([A-Za-z0-9]|-|\\.)+:(([A-Za-z0-9])|-|\\.|~|_|(%[0-9A-F]{2}))+$";
+    	String ns;
+    	String pid;
+    	
+    	if (s.isEmpty()) return s;
+    	
+        if (!s.matches(pattern)) {        	
+           int i = s.indexOf(":");
+           s = s.toLowerCase();
+           ns = ( i == -1 ? "o" : s.substring(0, i) ) + ":";
+           pid = ( i == -1 ? s : s.substring(i+1) );
+           if (!ns.startsWith("o:") && !ns.startsWith("context:") && !ns.startsWith("query:")) {
+        	 ns = "o:";
+          }
+		  pid = pid.replaceAll("[\\[({<>)}\\];#+~=%$§;,#&'´`]", "").replaceAll("ß","ss").replaceAll("ö","oe").replaceAll("ü","ue").replaceAll("ä","ae").replaceAll("[:\\/]",".");
+          s = ns + pid;
+        }
+    	return s;
+    }
+    
+    public static boolean exist(String pid) {
+    	try {
+    		for (int i=0; i < 20; i++) {
+    			if (Repository.exist(pid)) {
+    				return true;
+    			}
+				Common.sleep(1);    			
+    		}
+    		throw new Exception();
+    	} catch (Exception e) {
+    		log.info("Couldn't create object with PID "+pid);
+    	}	    
+    	return false;
+    }
+    
+   	public static void sleep(int s) {
+    	  try {
+    	       Thread.sleep(s * 500);
+    	  } catch (InterruptedException e) {
+    	       e.printStackTrace();
+    	  }
+   	 }
+    
 }

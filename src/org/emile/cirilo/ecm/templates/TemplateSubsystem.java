@@ -19,6 +19,7 @@
 
 package org.emile.cirilo.ecm.templates;
 
+import org.emile.cirilo.Common;
 import org.emile.cirilo.ecm.exceptions.FedoraConnectionException;
 import org.emile.cirilo.ecm.exceptions.FedoraIllegalContentException;
 import org.emile.cirilo.ecm.exceptions.ObjectIsWrongTypeException;
@@ -183,7 +184,9 @@ public class TemplateSubsystem {
     public void makeTemplate(String templatepid, String ownerid, String newPid, String dctitle, String cm) {
     	try {
     		cloneInternalTemplate(templatepid, ownerid, newPid, (String) null, false);
-			while (!Repository.exist(newPid.substring(1)));
+			if (!Common.exist(newPid.substring(1))) {
+				 throw new Exception();
+			}
     		markObjectAsTemplate(newPid.substring(1), cm);    		
     	} catch (Exception e) {log.error(e.getLocalizedMessage(),e);	}
     	
@@ -286,7 +289,9 @@ public class TemplateSubsystem {
 
 	
         try {
-        	while (!Repository.exist(newPid));
+        	if(!Common.exist(newPid)) {
+			 throw new Exception();
+			}
         	if (newPid.contains("TEI")) { 
         		setLocation(newPid, "STYLESHEET", "STYLESHEET", ownerid);
         		setLocation(newPid, "FO_STYLESHEET", "FO_STYLESHEET", ownerid);

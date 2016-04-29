@@ -234,7 +234,9 @@ public class NewObjectDialog extends CDialog {
 			
 			DCMI dc = new DCMI();
 			dc.save(moGA);
-			while (!Repository.exist(pid));
+			if(!Common.exist(pid)) {
+			    throw new Exception();
+			}
 			
 			Common.genQR(user, pid);
 			dc.write(pid, moGA, ((JCheckBox) getGuiComposite().getWidget("jcbOAIProvider")).isSelected());

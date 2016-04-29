@@ -398,10 +398,9 @@ public class HarvesterDialog extends CDefaultDialog {
 						String pid = "o:oai." + em.getChild("header", Common.xmlns_oai).getChild("identifier",	Common.xmlns_oai).getText()
 								.replaceAll("info:fedora/oai:", "")
 								.replaceAll("o:", "")
-								.replaceAll("hdl:", "")
-								.replaceAll("[\\[({<>)}\\];#+~]", "")
-								.replaceAll("[:/]", ".");
+								.replaceAll("hdl:", "");
 						
+						pid = Common.normalize(pid);
 						log.debug("Starting ingest of object "+i+" with PID "+pid);
 						
 						if (!Repository.exist(pid)) {

@@ -304,7 +304,13 @@ public class IngestObjectDialog extends CDialog {
 									if (!onlyValidate) {
 										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 										t.setPID(pid);
-										while (!Repository.exist(pid));
+										
+										if (!Common.exist(pid)) {
+											msgFmt = new MessageFormat(res.getString("createfail"));
+											Object[] args0 = {new java.util.Date(), pid}; 
+							  	  		    logger.write( msgFmt.format(args0)  ); 
+											continue;
+										}
 									} else {t.setPID("obj:generated");}
 									fi++;
 									msgFmt = new MessageFormat(res.getString("objing"));
@@ -315,7 +321,12 @@ public class IngestObjectDialog extends CDialog {
                                     if (!Repository.exist(t.getPID())) {
     									if (!onlyValidate) {
     										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ t.getPID(), res.getString("notitle"));
-    										while (!Repository.exist(t.getPID()));
+    										if (!Common.exist(t.getPID())) {
+    											msgFmt = new MessageFormat(res.getString("createfail"));
+    											Object[] args0 = {new java.util.Date(), t.getPID()}; 
+    							  	  		    logger.write( msgFmt.format(args0)  ); 
+    											continue;
+    										}
     									}
     									fi++;
     									msgFmt = new MessageFormat(res.getString("objing"));
@@ -370,7 +381,12 @@ public class IngestObjectDialog extends CDialog {
 									if (!onlyValidate) {
 										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 										m.setPID(pid);
-										while (!Repository.exist(pid));
+										if (!Common.exist(pid)) {
+											msgFmt = new MessageFormat(res.getString("createfail"));
+											Object[] args0 = {new java.util.Date(), pid}; 
+							  	  		    logger.write( msgFmt.format(args0)  ); 
+											continue;
+										}
 									} else {m.setPID("obj:generated");}
 									fi++;
 									msgFmt = new MessageFormat(res.getString("objing"));
@@ -381,7 +397,12 @@ public class IngestObjectDialog extends CDialog {
                                     if (!Repository.exist(m.getPID())) {
     									if (!onlyValidate) {
     										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
-    										while (!Repository.exist(m.getPID()));
+    										if (!Common.exist(m.getPID())) {
+    											msgFmt = new MessageFormat(res.getString("createfail"));
+    											Object[] args0 = {new java.util.Date(), m.getPID()}; 
+    							  	  		    logger.write( msgFmt.format(args0)  ); 
+    											continue;
+    										}
     									}
     									fi++;
     									msgFmt = new MessageFormat(res.getString("objing"));
@@ -436,7 +457,12 @@ public class IngestObjectDialog extends CDialog {
 									if (!onlyValidate) {
 										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 										m.setPID(pid);
-										while (!Repository.exist(pid));
+										if (!Common.exist(pid)) {
+											msgFmt = new MessageFormat(res.getString("createfail"));
+											Object[] args0 = {new java.util.Date(), pid}; 
+							  	  		    logger.write( msgFmt.format(args0)  ); 
+											continue;
+										}
 									} else {m.setPID("obj:generated");}
 									fi++;
 									msgFmt = new MessageFormat(res.getString("objing"));
@@ -447,7 +473,12 @@ public class IngestObjectDialog extends CDialog {
                                     if (!Repository.exist(m.getPID())) {
     									if (!onlyValidate) {
     										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
-    										while (!Repository.exist(m.getPID()));
+    										if (!Common.exist(m.getPID())) {
+    											msgFmt = new MessageFormat(res.getString("createfail"));
+    											Object[] args0 = {new java.util.Date(), m.getPID()}; 
+    							  	  		    logger.write( msgFmt.format(args0)  ); 
+    											continue;
+    										}
     									}
     									fi++;
     									msgFmt = new MessageFormat(res.getString("objing"));
@@ -497,7 +528,12 @@ public class IngestObjectDialog extends CDialog {
 									if (!onlyValidate) {
 										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 										l.setPID(pid);
-										while (!Repository.exist(pid));
+										if (!Common.exist(pid)) {
+											msgFmt = new MessageFormat(res.getString("createfail"));
+											Object[] args0 = {new java.util.Date(), pid}; 
+							  	  		    logger.write( msgFmt.format(args0)  ); 
+											continue;
+										}
 									} else {l.setPID("obj:generated");}
 									fi++;
 									msgFmt = new MessageFormat(res.getString("objing"));
@@ -508,7 +544,12 @@ public class IngestObjectDialog extends CDialog {
                                     if (!Repository.exist(l.getPID())) {
     									if (!onlyValidate) {
     										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ l.getPID(), res.getString("notitle"));
-    										while (!Repository.exist(l.getPID()));
+    										if (!Common.exist(l.getPID())) {
+    											msgFmt = new MessageFormat(res.getString("createfail"));
+    											Object[] args0 = {new java.util.Date(), l.getPID()}; 
+    							  	  		    logger.write( msgFmt.format(args0)  ); 
+    											continue;
+    										}
     									}
     									fi++;
     									msgFmt = new MessageFormat(res.getString("objing"));
@@ -564,7 +605,12 @@ public class IngestObjectDialog extends CDialog {
  	 					           	Split pcm = new Split(model);
 									if (!Repository.exist(pid)) {
 										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), (pids.size()>0 ? "$":"")+pid.trim(), res.getString("notitle"));
-										while (!Repository.exist(pid));
+										if (!Common.exist(pid)) {
+											msgFmt = new MessageFormat(res.getString("createfail"));
+											Object[] args0 = {new java.util.Date(), pid}; 
+							  	  		    logger.write( msgFmt.format(args0)  ); 
+											continue;
+										}
 										fi++;
  										msgFmt = new MessageFormat(res.getString("objing"));
  										Object[] args6 = {new java.util.Date(), pid, (pids.size()>0 ? pids.get(i) : files.get(i)) };
@@ -747,7 +793,12 @@ public class IngestObjectDialog extends CDialog {
 										if (!onlyValidate) {
 											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											t.setPID(pid);
-											while (!Repository.exist(pid));
+											if (!Common.exist(pid)) {
+												msgFmt = new MessageFormat(res.getString("createfail"));
+												Object[] args0 = {new java.util.Date(), pid}; 
+								  	  		    logger.write( msgFmt.format(args0)  ); 
+												continue;
+											}
 										} else {t.setPID("obj:generated");}
 										fi++;
 										msgFmt = new MessageFormat(res.getString("objing"));
@@ -758,7 +809,12 @@ public class IngestObjectDialog extends CDialog {
 	                                    if (!Repository.exist(t.getPID())) {
 	    									if (!onlyValidate) {
 	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ t.getPID(), res.getString("notitle"));
-	    										while (!Repository.exist(t.getPID()));
+	    										if (!Common.exist(t.getPID())) {
+	    											msgFmt = new MessageFormat(res.getString("createfail"));
+	    											Object[] args0 = {new java.util.Date(), t.getPID()}; 
+	    							  	  		    logger.write( msgFmt.format(args0)  ); 
+	    											continue;
+	    										}
 	    									}
 	    									fi++;
 	    									
@@ -815,7 +871,12 @@ public class IngestObjectDialog extends CDialog {
 										if (!onlyValidate) {
 											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											m.setPID(pid);
-											while (!Repository.exist(pid));
+											if (!Common.exist(pid)) {
+												msgFmt = new MessageFormat(res.getString("createfail"));
+												Object[] args0 = {new java.util.Date(), pid}; 
+								  	  		    logger.write( msgFmt.format(args0)  ); 
+												continue;
+											}
 										} else {m.setPID("obj:generated");}
 										fi++;
 										msgFmt = new MessageFormat(res.getString("objing"));
@@ -826,7 +887,12 @@ public class IngestObjectDialog extends CDialog {
 	                                    if (!Repository.exist(m.getPID())) {
 	    									if (!onlyValidate) {
 	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
-	    										while (!Repository.exist(m.getPID()));
+												if (!Common.exist(m.getPID())) {
+													msgFmt = new MessageFormat(res.getString("createfail"));
+													Object[] args0 = {new java.util.Date(), m.getPID()}; 
+									  	  		    logger.write( msgFmt.format(args0)  ); 
+													continue;
+												}
 	    									}
 	    									fi++;
 	    									
@@ -884,7 +950,12 @@ public class IngestObjectDialog extends CDialog {
 										if (!onlyValidate) {
 											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											m.setPID(pid);
-											while (!Repository.exist(pid));
+											if (!Common.exist(pid)) {
+												msgFmt = new MessageFormat(res.getString("createfail"));
+												Object[] args0 = {new java.util.Date(), pid}; 
+								  	  		    logger.write( msgFmt.format(args0)  ); 
+												continue;
+											}
 										} else {m.setPID("obj:generated");}
 										fi++;
 										msgFmt = new MessageFormat(res.getString("objing"));
@@ -895,7 +966,12 @@ public class IngestObjectDialog extends CDialog {
 										if (!Repository.exist(m.getPID())) {
 											if (!onlyValidate) {
 												pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
-												while (!Repository.exist(m.getPID()));
+												if (!Common.exist(m.getPID())) {
+													msgFmt = new MessageFormat(res.getString("createfail"));
+													Object[] args0 = {new java.util.Date(), m.getPID()}; 
+									  	  		    logger.write( msgFmt.format(args0)  ); 
+													continue;
+												}
 											}	
 											fi++;
 											msgFmt = new MessageFormat(res.getString("objing"));
@@ -942,7 +1018,12 @@ public class IngestObjectDialog extends CDialog {
 										if (!onlyValidate) {
 											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											l.setPID(pid);
-											while (!Repository.exist(pid));
+											if (!Common.exist(pid)) {
+												msgFmt = new MessageFormat(res.getString("createfail"));
+												Object[] args0 = {new java.util.Date(), pid}; 
+								  	  		    logger.write( msgFmt.format(args0)  ); 
+												continue;
+											}
 										} else {l.setPID("obj:generated");}
 										fi++;
 										msgFmt = new MessageFormat(res.getString("objing"));
@@ -953,7 +1034,12 @@ public class IngestObjectDialog extends CDialog {
 	                                    if (!Repository.exist(l.getPID())) {
 	    									if (!onlyValidate) {
 	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ l.getPID(), res.getString("notitle"));
-	    										while (!Repository.exist(l.getPID()));
+												if (!Common.exist(l.getPID())) {
+													msgFmt = new MessageFormat(res.getString("createfail"));
+													Object[] args0 = {new java.util.Date(), l.getPID()}; 
+									  	  		    logger.write( msgFmt.format(args0)  ); 
+													continue;
+												}
 	    									}
 	    									fi++;
 	    									
@@ -1117,7 +1203,12 @@ public class IngestObjectDialog extends CDialog {
 										if (!onlyValidate) {
 											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											t.setPID(pid);
-											while (!Repository.exist(pid));
+											if (!Common.exist(pid)) {
+												msgFmt = new MessageFormat(res.getString("createfail"));
+												Object[] args0 = {new java.util.Date(), pid}; 
+								  	  		    logger.write( msgFmt.format(args0)  ); 
+												continue;
+											}
 										} else {t.setPID("obj:generated");}
 										fi++;
 										msgFmt = new MessageFormat(res.getString("objingr"));
@@ -1128,7 +1219,12 @@ public class IngestObjectDialog extends CDialog {
 	                                    if (!Repository.exist(t.getPID())) {
 	    									if (!onlyValidate) {
 	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ t.getPID(), res.getString("notitle"));
-	    										while (!Repository.exist(t.getPID()));
+												if (!Common.exist( t.getPID())) {
+													msgFmt = new MessageFormat(res.getString("createfail"));
+													Object[] args0 = {new java.util.Date(),  t.getPID()}; 
+									  	  		    logger.write( msgFmt.format(args0)  ); 
+													continue;
+												}
 	    									}
 	    									fi++;
 	    									msgFmt = new MessageFormat(res.getString("objingr"));
@@ -1180,7 +1276,12 @@ public class IngestObjectDialog extends CDialog {
 										if (!onlyValidate) {
 											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											m.setPID(pid);
-											while (!Repository.exist(pid));
+											if (!Common.exist(pid)) {
+												msgFmt = new MessageFormat(res.getString("createfail"));
+												Object[] args0 = {new java.util.Date(), pid}; 
+								  	  		    logger.write( msgFmt.format(args0)  ); 
+												continue;
+											}
 										} else {m.setPID("obj:generated");}
 										fi++;
 										msgFmt = new MessageFormat(res.getString("objingr"));
@@ -1191,7 +1292,12 @@ public class IngestObjectDialog extends CDialog {
 	                                    if (!Repository.exist(m.getPID())) {
 	    									if (!onlyValidate) {
 	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ m.getPID(), res.getString("notitle"));
-	    										while (!Repository.exist(m.getPID()));
+												if (!Common.exist(m.getPID())) {
+													msgFmt = new MessageFormat(res.getString("createfail"));
+													Object[] args0 = {new java.util.Date(), m.getPID()}; 
+									  	  		    logger.write( msgFmt.format(args0)  ); 
+													continue;
+												}
 	    									}
 	    									fi++;
 	    									msgFmt = new MessageFormat(res.getString("objingr"));
@@ -1240,10 +1346,15 @@ public class IngestObjectDialog extends CDialog {
 									Split pcm = new Split(model);
 													
 									if (l.getPID().isEmpty()) {		
-										if (!onlyValidate) {
+									    if (!onlyValidate) {
 											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											l.setPID(pid);
-											while (!Repository.exist(pid));
+											if (!Common.exist(pid)) {
+												msgFmt = new MessageFormat(res.getString("createfail"));
+												Object[] args0 = {new java.util.Date(), pid}; 
+								  	  		    logger.write( msgFmt.format(args0)  ); 
+												continue;
+											}	
 										} else {l.setPID("obj:generated");}
 										fi++;
 										msgFmt = new MessageFormat(res.getString("objingr"));
@@ -1254,7 +1365,12 @@ public class IngestObjectDialog extends CDialog {
 	                                    if (!Repository.exist(l.getPID())) {
 	    									if (!onlyValidate) {
 	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ l.getPID(), res.getString("notitle"));
-	    										while (!Repository.exist(l.getPID()));
+												if (!Common.exist(l.getPID())) {
+													msgFmt = new MessageFormat(res.getString("createfail"));
+													Object[] args0 = {new java.util.Date(), l.getPID()}; 
+									  	  		    logger.write( msgFmt.format(args0)  ); 
+													continue;
+												}	
 	    									}
 	    									fi++;
 	    									msgFmt = new MessageFormat(res.getString("objingr"));
@@ -1306,7 +1422,12 @@ public class IngestObjectDialog extends CDialog {
 										if (!onlyValidate) {
 											pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), pid.trim(), res.getString("notitle"));
 											d.setPID(pid);
-											while (!Repository.exist(pid));
+											if (!Common.exist(pid)) {
+												msgFmt = new MessageFormat(res.getString("createfail"));
+												Object[] args0 = {new java.util.Date(), pid}; 
+								  	  		    logger.write( msgFmt.format(args0)  ); 
+												continue;
+											}	
 										} else {d.setPID("obj:generated");}
 										fi++;
 										msgFmt = new MessageFormat(res.getString("objingr"));
@@ -1317,7 +1438,12 @@ public class IngestObjectDialog extends CDialog {
 	                                    if (!Repository.exist(d.getPID())) {
 	    									if (!onlyValidate) {
 	    										pid = temps.cloneTemplate("info:fedora/"+ pcm.get(), (String)jcbUser.getSelectedItem(), "$"+ d.getPID(), res.getString("notitle"));
-	    										while (!Repository.exist(d.getPID()));
+												if (!Common.exist( d.getPID())) {
+													msgFmt = new MessageFormat(res.getString("createfail"));
+													Object[] args0 = {new java.util.Date(),  d.getPID()}; 
+									  	  		    logger.write( msgFmt.format(args0)  ); 
+													continue;
+												}	
 	    									}
 	    									fi++;
 	    									msgFmt = new MessageFormat(res.getString("objingr"));

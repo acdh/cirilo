@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 
 
 
+
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.*;
 import voodoosoft.jroots.core.gui.*;
@@ -172,7 +173,6 @@ class CiriloWindow extends JPanel {
 
 			try {
 				
-						
 			    PropertyConfigurator.configure(Cirilo.class.getResource("log4j.properties"));
 				
 			    log.info("Program started");
@@ -304,7 +304,6 @@ class CiriloWindow extends JPanel {
 	            CServiceProvider.addService(skosify, ServiceNames.SKOSIFY_SERVICE);
 	   			
 	 			User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
-
 	            
 			}
 			catch (Exception ex) {

@@ -388,8 +388,7 @@ public class METS {
 	      	 				    			ch.getParentElement().addContent(fcontent);
 	      	 				    		} catch (Exception q) {}
 				      					if (!onlyValidate) {
-				      						while(!Repository.exist(this.PID)) {}
-				      						if (Repository.exist(this.PID)) {
+				      						if (Common.exist(this.PID)) {
  	      									    if (!Repository.exists(this.PID, id)) {				      								
  	      									    	Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
 			      								} else {
@@ -520,8 +519,7 @@ public class METS {
 				      				}		      			
 				      				if (f != null && f.exists()){
 				      					if (!onlyValidate) {
-				      						while(!Repository.exist(this.PID)) {}
-				      						if (Repository.exist(this.PID)) {
+				      						if (Common.exist(this.PID)) {
 				      							i++;
 				      							File thumb = File.createTempFile( "temp", ".tmp" );
 				      							if (!Repository.exists(this.PID, id)) {	

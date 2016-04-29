@@ -160,6 +160,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "ofimport"          , " of import: "          },
            { "novalidrtei"          ,"\n{0}. Template does not generate valid TEI-markup for record {1}. "},
            { "novalidtei"          ,"\n{0}. File {1} does not contain valid TEI-markup. "},
+           { "createfail"          ,"\n{0}. Object {1} couldn't created. "},
            { "objing"          , "\n{0}. Object {1} based on file {2} has been created. "   },
            { "objingrefr"          , "\n{0}. Object {1} based on file {2} has been refreshed. "   },
            { "objingr"          , "\n{0}. Object {1} based on record {2} has been created. "   },

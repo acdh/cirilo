@@ -11,11 +11,14 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
-
 import org.emile.cirilo.ecm.repository.FedoraSoapImpl;
 import org.emile.cirilo.ecm.repository.FedoraUserToken;
 import org.emile.cirilo.ecm.repository.Repository;
-import org.emile.cirilo.ecm.templates.TemplateSubsystem;
+import org.emile.cirilo.business.UpgradeFactory;
+import org.jdom.Element;
+import org.jdom.input.DOMBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -26,8 +29,9 @@ public class CMIngester {
 
 	  private static Logger log = Logger.getLogger(CMIngester.class);	
 	  private ArrayList<String> files;
+      private Format format;
+      private XMLOutputter outputter;
 
-	  
 	  protected CMIngester()
 	  {
 	  }
@@ -49,23 +53,26 @@ public class CMIngester {
 	public void ingest(String dir, String server, String user, String passwd) {
 
         try {
-        	
-        	FedoraUserToken token = new FedoraUserToken("http://"+server+"/fedora", user, passwd);
-        	FedoraClient client = new FedoraClient("http://"+server+"/fedora", user, passwd);
-        	Repository.initialise(token,new FedoraSoapImpl());
-        	TemplateSubsystem temps = new TemplateSubsystem();
 
-			if (!Repository.exist("sdef:TEI")) {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				String format = FedoraClient.FOXML1_1.uri;
-				String fedora = "http://"+server+"/fedora";					
-				String host = fedora.substring(0,fedora.lastIndexOf("/"));
-				String cocoon = host+"/cocoon";
-		    	files = new ArrayList<String>();
-                File fp = new File (dir);
-		    	treeWalk(fp);
-				for (int i = 0; i<files.size(); i++) {
+
+        	FedoraUserToken token = new FedoraUserToken("http://"+server+"/fedora", user, passwd);
+        	Repository.initialise(token,new FedoraSoapImpl());
+
+        	format = Format.getRawFormat();
+    		format.setEncoding("UTF-8");
+    		outputter = new XMLOutputter(format);
+        	
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			String foxml = FedoraClient.FOXML1_1.uri;
+			String fedora = "http://"+server+"/fedora";					
+			String host = fedora.substring(0,fedora.lastIndexOf("/"));
+			String cocoon = host+"/cocoon";
+				
+	    	files = new ArrayList<String>();
+            File fp = new File (dir);
+	    	treeWalk(fp);
+			for (int i = 0; i<files.size(); i++) {
 				  try {
 			    	Document doc = builder.parse((String) files.get(i));
 					DOMSource domSource = new DOMSource(doc);
@@ -82,12 +89,44 @@ public class CMIngester {
 					.replaceAll(host+"#", "http://gams.uni-graz.at#")
 					.replaceAll(host+"/ontology#","http://gams.uni-graz.at/ontology#")));
 					doc = builder.parse(is);
-					Repository.ingestDocument(doc,  format, "Object ingested by Cirilo");
+					Repository.ingestDocument(doc,  foxml, "Object ingested by Cirilo");
+					System.out.print(".");
 				  } catch (Exception e) {
-					  log.error(e.getLocalizedMessage(),e);	
 				  }	
-				}		
 			}
+			
+			DOMBuilder db = new DOMBuilder();	
+			org.jdom.Document properties = db.build (Repository.getDatastream("cirilo:Backbone", "PROPERTIES"));
+		
+			int installed = new Integer(properties.getRootElement().getChild("ContentModels").getText());
+			int current = new Integer(Common.CM_VERSION);
+			
+			if (current != installed) {
+				UpgradeFactory uf = new UpgradeFactory(fedora, host);
+				uf.addDefaultDatastreams();
+				
+				ArrayList<String> entries = Repository.getPidList("");			
+				for (String s: entries) {
+
+					try {
+					    uf.updateDatastreams(s);	
+						System.out.print(".");
+					} catch (Exception e) {
+					}
+
+					try {
+						Thread.sleep(50); 
+					} catch (InterruptedException e) {
+					}
+				} 
+				
+				Element cm = properties.getRootElement().getChild("ContentModels");
+				cm.setText(Common.CM_VERSION);
+				Repository.modifyDatastreamByValue("cirilo:Backbone", "PROPERTIES", "text/xml", new String(outputter.outputString(properties).getBytes("UTF-8"),"UTF-8"));
+
+			}
+
+				
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage(),e);	
 		}
@@ -113,7 +152,7 @@ public class CMIngester {
 		CMIngester q = CMIngester.getInstance();
 	    System.out.println("CMIngester 1.0 (C) 2014 by JS");
     	q.ingest(args[0], args[1], args[2], args[3]);
-    	System.out.println("Ok");
+    	System.out.println(" Ok");
 	  }
 	
 }

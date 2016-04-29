@@ -157,6 +157,7 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "ofingest"          , " des Ingestvorganges: "          },
                 { "ofimport"          , " des Importvorganges: "          },
                 { "novalidtei"          ,"\n{0}. Datei {1} enthält kein valides TEI-Dokument. "},
+                { "createfail"          ,"\n{0}. Objekt {1} konnte nicht erstellt werden. "},
                 { "novalidrtei"          ,"\n{0}. Template produziert kein valides TEI-Dokument für Record {1}. "},
                 { "objingr"          , "\n{0}. Objekt {1} wurde basierend auf Record {2} erstellt. "   },
                 { "objingrrefr"          , "\n{0}. Objekt {1} wurde basierend auf Record {2} aktualisiert. "   },

@@ -322,9 +322,11 @@ public class TEI {
                 	this.PID =pid;
               }   
 			}
+			
 		} catch (Exception e) {
       		log.error(e.getLocalizedMessage(),e);				      					   			
 		}
+		this.PID =  Common.normalize(this.PID);
 		return this.PID;
 	}
 
@@ -343,16 +345,16 @@ public class TEI {
 				xpath.addNamespace( Common.xmlns_tei_p5 );
 				Element anchor = (Element) xpath.selectSingleNode( tei );
 				Element child = new Element ("idno", Common.xmlns_ntei_p5 );
-				child.setText(pid);
+				child.setText(Common.normalize(pid));
 				child.setAttribute("type", "PID");
 				anchor.addContent(child);								
 				this.raw = outputter.outputString(this.tei);
 			} else {
 				if (this.mode) { 
-					idno.setText(pid);
+					idno.setText(Common.normalize(pid));
 				}
 			}
-			this.PID = pid;
+			this.PID = Common.normalize(pid);
 
 		} catch (Exception e) {
       		log.error(e.getLocalizedMessage(),e);				      					   			
@@ -686,8 +688,7 @@ public class TEI {
 			      					else
 			      						mimetype ="image/jpeg"; 
 			      				}      								      							      						      					
-		      					while(!Repository.exist(this.PID)) {}
-		      					if (Repository.exist(this.PID)) {
+		      					if (Common.exist(this.PID)) {
 									if (!Repository.exists(this.PID, id)) {				      								
    										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
    									} else {
@@ -772,8 +773,7 @@ public class TEI {
 		      			}		      			
 		      			if (f != null && f.exists()){
 		      				if (!onlyValidate) {
-		      					while(!Repository.exist(this.PID)) {}
-		      					if (Repository.exist(this.PID)) {
+		      					if (Common.exist(this.PID)) {
 										if (!Repository.exists(this.PID, id)) {			      								
       										Repository.addDatastream(this.PID, id, e.getChildText("name", Common.xmlns_tei_p5), "M", mimetype, f);
       									} else {
@@ -1673,6 +1673,5 @@ public class TEI {
 	          log.error(e.getLocalizedMessage(),e);
 		}	    
 	 }	
-
 	 	 
 }

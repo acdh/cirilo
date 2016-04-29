@@ -171,6 +171,7 @@ public class LIDO {
 		  	log.error(e.getLocalizedMessage(),e);		  
 		  	return "";
 		}
+		this.PID =  Common.normalize(this.PID);
 		return this.PID;
 	}
 	
@@ -184,16 +185,16 @@ public class LIDO {
 				Element root = this.lido.getRootElement();
 				if (!pid.startsWith("o:")) pid= "o:"+pid;
 				Element child = new Element ("lidoRecID", Common.xmlns_lido);
-				child.setText(pid);
+				child.setText(Common.normalize(pid));
 				child.setAttribute("type", "PID");
 				root.addContent(0,child);								
 			} else {
 				if (this.mode) { 
-					idno.setText(pid);
+					idno.setText(Common.normalize(pid));
 				}
 			}
 			this.raw = outputter.outputString(this.lido);
-			this.PID = pid;
+			this.PID = Common.normalize(pid);
 			
 		} catch (Exception e) {
 		  	log.error(e.getLocalizedMessage(),e);		  
@@ -315,8 +316,7 @@ public class LIDO {
 					      					else
 					      						mimetype ="image/jpeg"; 
 					      				}      								      							      						      					
-				      					while(!Repository.exist(this.PID)) {}
-				      					if (Repository.exist(this.PID)) {
+				      					if (Common.exist(this.PID)) {
       										if (!Repository.exists(this.PID, id)) {				      								
 	      										Repository.addDatastream(this.PID, id,  "Facsimile", "M", mimetype, f);
 	      									} else {
