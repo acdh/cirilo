@@ -169,7 +169,7 @@ public class Common {
 	
 	public final static Namespace xmlns_nmei = Namespace.getNamespace( "", "http://www.music-encoding.org/ns/mei");
 	
-	public final static String TEIP5SCHEMA ="/tei/schema/P5/tei.xsd";  
+	public final static String TEIP5SCHEMA ="/tei/schema/P5/tei_all.xsd";  
 
 	public final static String MEISCHEMA ="/mei/schema/2015/mei.xsd";  
       	

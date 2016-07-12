@@ -39,6 +39,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Attribute; 
 import org.jdom.Namespace;
+import org.jdom.ProcessingInstruction;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -287,8 +288,15 @@ public class TEI {
 	}
     
  	public String toString() {
- 		   // removeEmpty();
-	    	return this.outputter.outputString(this.tei); 
+        // removeEmpty();
+ 		/*
+ 		ProcessingInstruction pi =new ProcessingInstruction("cocoon-process", "type=\"xslt\"");
+ 		try {
+ 			this.tei.removeContent(pi);
+		} catch (Exception e) {}		
+ 		this.tei.addContent(0, pi);
+ 		*/
+	    return this.outputter.outputString(this.tei); 
 	}
 	
 	public String getName() { 
@@ -888,7 +896,7 @@ public class TEI {
             s = s.isEmpty() ? "[not(@type) or @type != 'cirilo:ignore']" : s;
  		    
  		    Element place;
-	 	    List places = getChildren("//t:text//t:placeName"+s+"|//t:sourceDesc//t:placeName"+s);
+	 	    List places = getChildren("//t:text//t:placeName"+s+"|//t:sourceDesc//t:placeName"+s+"|//t:correspDesc//t:placeName"+s);
 	 	    WebService.setUserName(account);
 	 	    cc = 0;
 	 	    ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
@@ -1412,7 +1420,12 @@ public class TEI {
         	pid = leaf.getAttributeValue("id", Common.xmlns_xml).replaceFirst("_", ":");
         	name = leaf.getChildText("catDesc", Common.xmlns_tei_p5);
         	if (!Repository.exist("info:fedora/"+pid)) {
-        		temps.cloneTemplate("info:fedora/cirilo:Context", xuser, pid, name);
+        		
+    			if (Repository.exist("cirilo:Context."+xuser)) {
+    				temps.cloneTemplate("info:fedora/cirilo:Context."+xuser, xuser, pid, name);	        				
+    			} else {	        			
+    				temps.cloneTemplate("info:fedora/cirilo:Context", xuser, pid, name);
+    			}	
         	} 
         } catch (Exception e) {
     		log.error(e.getLocalizedMessage(),e);				      					             								     	

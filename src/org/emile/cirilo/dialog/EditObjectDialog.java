@@ -340,9 +340,20 @@ public class EditObjectDialog extends CDialog {
 				    				  if (p.substring(1,2).equals(Common.ADD)){			
 				    				      if (p.contains("r2d2")) {
 				    				    	  try {
-				    				    		Repository.purgeDatastream(pid, "KML_TEMPLATE")  ;
 				    				    		  
-    			    					  // 	   Repository.modifyDatastream (pid, "", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
+									    		  doc = db.build (Repository.getDatastream(pid, "RELS-EXT"));
+					                              List list = doc.getRootElement().getChild("Description",Common.xmlns_rdf).getChildren("isMemberOf", Common.xmlns_rel);
+					                              for (Iterator iter = list.iterator(); iter.hasNext();) {
+					            					  Element em = (Element) iter.next();
+		                                              String context = em.getAttributeValue("resource", Common.xmlns_rdf);
+					                                  if (context.startsWith("info:fedora/context:vase") && !context.startsWith("info:fedora/context:vase.ocm.")  && !context.startsWith("info:fedora/context:vase.pn.")  && !context.startsWith("info:fedora/context:vase.gn.")) {
+							    						  Repository.addRelation("info:fedora/"+pid,Common.isMemberOf,"info:fedora/context:vase.ocm."+context.substring(25));
+					                                  }	  
+					                              }
+				    				    		  
+				    				      //	  Repository.purgeDatastream(pid, "KML_TEMPLATE")  ;
+				    				    		  
+    			    					  // 	  Repository.modifyDatastream (pid, "", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
 				    				    	  } catch (Exception q) {				    				    		  
 				    				    	  }
 				    				      } else {

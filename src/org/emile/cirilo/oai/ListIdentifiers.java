@@ -25,6 +25,7 @@ import java.net.URLEncoder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
+import org.apache.xerces.impl.dv.util.Base64;
 
 /**
  * This class represents an ListIdentifiers response on either the server or
@@ -115,7 +116,7 @@ public class ListIdentifiers extends HarvesterVerb {
             String resumptionToken) {
         StringBuffer requestURL =  new StringBuffer(baseURL);
         requestURL.append("?verb=ListIdentifiers");
-        requestURL.append("&resumptionToken=").append(URLEncoder.encode(resumptionToken));
+        requestURL.append("&resumptionToken=").append(Base64.encode(resumptionToken.getBytes()));
         return requestURL.toString();
     }
 }

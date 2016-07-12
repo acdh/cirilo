@@ -233,7 +233,6 @@ public class UpgradeDialog extends CDialog {
 										Repository.ingestDocument(domoutputter.output(doc),  format, "Object ingested by Cirilo");
 										
 									  } catch (Exception e) {
-											fin = false;									
 									  }	
 									  
 									  try {

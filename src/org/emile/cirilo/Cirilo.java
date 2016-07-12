@@ -165,15 +165,14 @@ class CiriloWindow extends JPanel {
 			setApp(this);
 		}
 
-
 		/**
 		 * Description of the Method
 		 */
 		public void begin() {
 
 			try {
-				
-			    PropertyConfigurator.configure(Cirilo.class.getResource("log4j.properties"));
+						        
+		        PropertyConfigurator.configure(Cirilo.class.getResource("log4j.properties"));
 				
 			    log.info("Program started");
 			    			    

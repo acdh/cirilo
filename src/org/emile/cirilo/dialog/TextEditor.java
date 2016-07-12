@@ -107,10 +107,8 @@ public class TextEditor extends CDialog {
 				  	URL url = new URL (location);
 			    	jebEditorPane.setPage(url);
 			    } else {
-			    	DOMBuilder db = new DOMBuilder();	
-			    	Document doc = db.build (Repository.getDatastream(pid, dsid));
-			    	XMLOutputter outputter = new XMLOutputter();
-			    	jebEditorPane.setText(new String(outputter.outputString(doc).getBytes("UTF-8"),"UTF-8"));
+			    	jebEditorPane.setText(new String(Repository.getDatastream(pid, dsid,""),"UTF-8"));
+			    	
 			    }
 		   } else if (Common.TEXT_MIMETYPES.contains(mimetype)) {
 			  	byte[] buf = Repository.getDatastream(pid, dsid, "");

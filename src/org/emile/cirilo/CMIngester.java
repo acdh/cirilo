@@ -54,7 +54,6 @@ public class CMIngester {
 
         try {
 
-
         	FedoraUserToken token = new FedoraUserToken("http://"+server+"/fedora", user, passwd);
         	Repository.initialise(token,new FedoraSoapImpl());
 
@@ -68,7 +67,7 @@ public class CMIngester {
 			String fedora = "http://"+server+"/fedora";					
 			String host = fedora.substring(0,fedora.lastIndexOf("/"));
 			String cocoon = host+"/cocoon";
-				
+			
 	    	files = new ArrayList<String>();
             File fp = new File (dir);
 	    	treeWalk(fp);
@@ -92,8 +91,11 @@ public class CMIngester {
 					Repository.ingestDocument(doc,  foxml, "Object ingested by Cirilo");
 					System.out.print(".");
 				  } catch (Exception e) {
+					 e.printStackTrace();
 				  }	
 			}
+			
+			Thread.sleep(10000);
 			
 			DOMBuilder db = new DOMBuilder();	
 			org.jdom.Document properties = db.build (Repository.getDatastream("cirilo:Backbone", "PROPERTIES"));
@@ -112,6 +114,7 @@ public class CMIngester {
 					    uf.updateDatastreams(s);	
 						System.out.print(".");
 					} catch (Exception e) {
+						e.printStackTrace();
 					}
 
 					try {
@@ -128,7 +131,7 @@ public class CMIngester {
 
 				
 		} catch (Exception e) {
-			log.error(e.getLocalizedMessage(),e);	
+			e.printStackTrace();
 		}
 		
 		

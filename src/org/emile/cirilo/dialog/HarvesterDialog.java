@@ -189,6 +189,15 @@ public class HarvesterDialog extends CDefaultDialog {
 				   		    			}	
 				   		    			if (exit) break;
 				   		    		}	
+				   		    		if (baseURL.startsWith("phaidra:///")) {
+				   		    			if (collectfromPhaidra (metadataPrefix, baseURL, null, null)) {
+				   		    				if(!addItems( ((HarvesterTableModel) tb.getModel()).getRow(x))) {
+				   		    					exit = true;
+				   		    					break;
+				   		    				}
+				   		    			}	
+				   		    			if (exit) break;
+				   		    		}	
 				   		    		
 				   		    	} catch (Exception ex) {	
 									log.error(ex.getLocalizedMessage(),ex);					   		    		
@@ -226,6 +235,23 @@ public class HarvesterDialog extends CDefaultDialog {
 
 	}
 
+	public boolean collectfromPhaidra(String metadataPrefix, String baseURL, String from, String until)  {
+		try {
+			log.debug("REST request to "+baseURL.substring(11));
+			
+			URLConnection con = new URL(baseURL.substring(11)).openConnection();
+			con.setUseCaches(false);
+			metadata = parser.build(con.getInputStream());
+			con = null;
+			return true;
+		} catch (Exception e) {
+			try {
+				logger.write("\n" + new java.util.Date() + e.getLocalizedMessage() );
+			} catch (Exception q) {} 	
+			return false;
+		}	
+	}
+	
 	public boolean collect(String metadataPrefix, String baseURL, String from, String until)  {
 		try {
 			metadata = parser.build(new File(baseURL.substring(8)));	
@@ -324,7 +350,17 @@ public class HarvesterDialog extends CDefaultDialog {
 			String icon = par[7];
 			String owner = par[8];
 			
-			XPath xpath = XPath.newInstance("//oai:record");
+			String phaidra = null;
+			
+			XPath xpath = null;
+			if (serviceprovider.contains("phaidra:///")) {
+				xpath = XPath.newInstance("//rel:hasCollectionMember");
+				serviceprovider = serviceprovider.substring(11);
+			    int i = serviceprovider.indexOf("/o:");	
+				phaidra = serviceprovider.substring(0, i);
+			} else { 
+				xpath = XPath.newInstance("//oai:record");
+			}	
 			xpath.addNamespace(Common.xmlns_dc);
 			xpath.addNamespace(Common.xmlns_oai);
 			xpath.addNamespace(Common.xmlns_edm);
@@ -338,7 +374,8 @@ public class HarvesterDialog extends CDefaultDialog {
 			xpath.addNamespace(Common.xmlns_owl);
 			xpath.addNamespace(Common.xmlns_rdaGr2);
 			xpath.addNamespace(Common.xmlns_wgs84_pos);
-								
+			xpath.addNamespace(Common.xmlns_rel);						
+			
 			byte[] stylesheet = null;
         	try {
 	        	stylesheet =  Repository.getDatastream("cirilo:"+owner, "RECORDtoEDM" , "");
@@ -395,10 +432,22 @@ public class HarvesterDialog extends CDefaultDialog {
 		    		}
 
 					try {
-						String pid = "o:oai." + em.getChild("header", Common.xmlns_oai).getChild("identifier",	Common.xmlns_oai).getText()
-								.replaceAll("info:fedora/oai:", "")
-								.replaceAll("o:", "")
-								.replaceAll("hdl:", "");
+						Object object = null;
+						String iconref = null;
+						String uwmetadata = null;
+						
+						String pid = "o:oai."; 
+						String oid = null;
+						
+						if (phaidra != null) {
+							oid = em.getAttributeValue("resource",Common.xmlns_rdf).replaceAll("info:fedora/", "");
+							pid +=  owner+"."+oid.replaceAll("o:", "");
+						} else {						
+							pid +=  em.getChild("header", Common.xmlns_oai).getChild("identifier",	Common.xmlns_oai).getText()
+								    .replaceAll("info:fedora/oai:", "")
+									.replaceAll("o:", "")
+									.replaceAll("hdl:", "");
+						}
 						
 						pid = Common.normalize(pid);
 						log.debug("Starting ingest of object "+i+" with PID "+pid);
@@ -412,46 +461,56 @@ public class HarvesterDialog extends CDefaultDialog {
 							log.debug("Updating the object "+pid+ " was successful" );
 						}
 
-						xpath = XPath.newInstance(url);
-						xpath.addNamespace(Common.xmlns_dc);
-						xpath.addNamespace(Common.xmlns_oai);
-						xpath.addNamespace(Common.xmlns_edm);
-						xpath.addNamespace(Common.xmlns_europeana);
-						xpath.addNamespace(Common.xmlns_tei_p5);
-						xpath.addNamespace(Common.xmlns_dcterms);
-						xpath.addNamespace(Common.xmlns_lido);
-						xpath.addNamespace(Common.xmlns_skos);
-						xpath.addNamespace(Common.xmlns_rdf);
-						xpath.addNamespace(Common.xmlns_ore);
-						xpath.addNamespace(Common.xmlns_owl);
-						xpath.addNamespace(Common.xmlns_rdaGr2);
-						xpath.addNamespace(Common.xmlns_wgs84_pos);
+						Object path = null;
 						
-						Object path =  xpath.selectSingleNode(em);
+						https://phaidra.kug.ac.at/preview/o:64/Document/preview
 						
-						if (path != null) {							
-							Object object = null;
-							String iconref = null;
+						if (phaidra != null)  {
+							iconref = icon.replaceAll("[$]self", oid);
+							log.debug(iconref);
+							uwmetadata =  phaidra+"/"+oid+"/bdef:Asset/getUWMETADATA";
+							log.debug(uwmetadata);
+						} else {						
+							xpath = XPath.newInstance(url);
+							xpath.addNamespace(Common.xmlns_dc);
+							xpath.addNamespace(Common.xmlns_oai);
+							xpath.addNamespace(Common.xmlns_edm);
+							xpath.addNamespace(Common.xmlns_europeana);
+							xpath.addNamespace(Common.xmlns_tei_p5);
+							xpath.addNamespace(Common.xmlns_dcterms);
+							xpath.addNamespace(Common.xmlns_lido);
+							xpath.addNamespace(Common.xmlns_skos);
+							xpath.addNamespace(Common.xmlns_rdf);
+							xpath.addNamespace(Common.xmlns_ore);
+							xpath.addNamespace(Common.xmlns_owl);
+							xpath.addNamespace(Common.xmlns_rdaGr2);
+							xpath.addNamespace(Common.xmlns_wgs84_pos);
+							path =  xpath.selectSingleNode(em);
+						}
+						
+						
+						if (path != null || phaidra != null) {							
+							if (phaidra == null) {
+								if (icon.startsWith("$")) {
+									iconref = icon.substring(1);								
+								} else {
+									XPath vpath = XPath.newInstance(icon);
+									vpath.addNamespace(Common.xmlns_dc);
+									vpath.addNamespace(Common.xmlns_oai);
+									vpath.addNamespace(Common.xmlns_edm);
+									vpath.addNamespace(Common.xmlns_europeana);
+									vpath.addNamespace(Common.xmlns_tei_p5);
+									vpath.addNamespace(Common.xmlns_dcterms);
+									vpath.addNamespace(Common.xmlns_lido);
+									vpath.addNamespace(Common.xmlns_skos);
+									vpath.addNamespace(Common.xmlns_rdf);
+									vpath.addNamespace(Common.xmlns_ore);
+									vpath.addNamespace(Common.xmlns_owl);
+									vpath.addNamespace(Common.xmlns_rdaGr2);
+									vpath.addNamespace(Common.xmlns_wgs84_pos);
 							
-							if (icon.startsWith("$")) {
-								iconref = icon.substring(1);								
-							} else {							
-								XPath vpath = XPath.newInstance(icon);
-								vpath.addNamespace(Common.xmlns_dc);
-								vpath.addNamespace(Common.xmlns_oai);
-								vpath.addNamespace(Common.xmlns_edm);
-								vpath.addNamespace(Common.xmlns_europeana);
-								vpath.addNamespace(Common.xmlns_tei_p5);
-								vpath.addNamespace(Common.xmlns_dcterms);
-								vpath.addNamespace(Common.xmlns_lido);
-								vpath.addNamespace(Common.xmlns_skos);
-								vpath.addNamespace(Common.xmlns_rdf);
-								vpath.addNamespace(Common.xmlns_ore);
-								vpath.addNamespace(Common.xmlns_owl);
-								vpath.addNamespace(Common.xmlns_rdaGr2);
-								vpath.addNamespace(Common.xmlns_wgs84_pos);
-							
-								object =  vpath.selectSingleNode(em);
+									object =  vpath.selectSingleNode(em);
+								}
 							}	
 
 							if (object != null || iconref != null) {
@@ -464,44 +523,27 @@ public class HarvesterDialog extends CDefaultDialog {
                                 		iconref = ((Attribute) object).getValue();
                                 	}
                                 }
-								
-								String uwmetadata = null;
-								
-                                String server;
-                                String oid;
-                                
-								if(iconref.contains("phaidra")) {
-								   int ipos = iconref.indexOf("/o:");	
-								   int jpos = iconref.indexOf("//");
-								   server =  "https://"+iconref.substring(jpos+2,ipos).replaceAll("phaidra", "fedora");
-								   oid = iconref.substring(ipos+1);
-								   iconref = server+"/fedora/objects/"+oid+"/methods/bdef:Document/preview?box=520";
-								   uwmetadata =  (server+"/fedora/get/"+oid+"/bdef:Asset/getUWMETADATA");
-								}
-								
-								try {
-									if(uwmetadata != null) {
-								        InputStream is = new URL(uwmetadata).openStream();
-								        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-								        
-								        StringBuilder response = new StringBuilder();								        
-								        String line;
-								        
-								        while ( (line = br.readLine()) != null) {
-								        	response.append(line);
-								        }
-										Document uwm = parser.build(new StringReader(response.toString()));									
+											
+                                String buf = null;
+                                Document uwm = null;
+								String objref = null;
 
-										XPath upath = XPath.newInstance("./oai:metadata");
-										upath.addNamespace(Common.xmlns_oai);
-										em.addNamespaceDeclaration(Common.xmlns_ns0);
-										Element metadata = (Element) upath.selectSingleNode(em);																				
-								        metadata.removeChild("dc", Common.xmlns_oai_dc);
-										metadata.addContent(uwm.cloneContent());																				
+								try {
+									if(uwmetadata != null) {										
+										con = new URL(uwmetadata.replaceAll("objects","get")).openConnection();
+										con.setUseCaches(false);
+										uwm = parser.build(con.getInputStream());
+										buf =  outputter.outputString(uwm);										
+										con = null;
+										
+										XPath upath = XPath.newInstance(url);
+										upath.addNamespace(Common.xmlns_ns1);
+										Element location = (Element) upath.selectSingleNode(uwm);																				
+                                        objref = location.getText(); 
+									} else {
+										buf =  outputter.outputString(em);										
 									}
-									String buf =  outputter.outputString(em);
 									
-									String objref = null;
 									if (path instanceof Element) {
 										objref = ((Element) path).getText();
 									}
@@ -510,7 +552,7 @@ public class HarvesterDialog extends CDefaultDialog {
 									}									
 									Repository.modifyDatastream(pid, "URL", null, "R", objref);							
 									
-									JDOMSource in = new JDOMSource(em);
+									JDOMSource in = new JDOMSource(phaidra == null ? em : uwm.getRootElement() );
 		    		        		JDOMResult out = new JDOMResult();
 									
 			    		        	try {
@@ -677,11 +719,13 @@ public class HarvesterDialog extends CDefaultDialog {
 
 			List nodes = (List) xpath.selectNodes( edm.get() );
 
+			log.debug("Revolving places against geonames.org"); 
 			if (nodes.size() > 0) {
 				for (Iterator iter = nodes.iterator(); iter.hasNext();) {
 					try {
 						Element e = (Element) iter.next();
 						String id = e.getAttributeValue("about",Common.xmlns_rdf).replaceAll("www\\.","") ;
+						log.debug("Revolving "+id+" against geonames.org"); 
 						XPath qpath = XPath.newInstance("//place[@xml:id='"+id+"']");
 						qpath.addNamespace(Common.xmlns_xml);
 						Element place = (Element) qpath.selectSingleNode( places );
@@ -713,9 +757,11 @@ public class HarvesterDialog extends CDefaultDialog {
     					Toponym toponym = WebService.get(new Integer(id.substring(id.indexOf("org/") + 4)).intValue(), null, null);
     					e.getChild("lat",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLatitude()).toString());
     					e.getChild("long",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLongitude()).toString());
+    					log.debug("lat: "+new Double(toponym.getLatitude()).toString()+" long: "+new Double(toponym.getLongitude()).toString());
  
                     	
 					} catch (Exception q) {
+						log.error(q.getMessage());
 					}
 				}
 			}	
@@ -760,8 +806,7 @@ public class HarvesterDialog extends CDefaultDialog {
 	    	 if (repositories != null) {
     		
 	    		 for (Iterator iter = repositories.iterator(); iter.hasNext();) {
-	    			 try {
-	    				 Element e = (Element) iter.next();
+	    			 try {	    				 Element e = (Element) iter.next();
 	    				 String[] row = new String[9]; 
 	    				 row[0] = e.getAttributeValue("name");
 	    				 row[1] = e.getChild("updated").getText();

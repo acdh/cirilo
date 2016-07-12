@@ -334,7 +334,7 @@ public class IngestObjectDialog extends CDialog {
     									
     									logger.write(msgFmt.format(args2));									                                    	
                                     } else {
-                                    	if (t.getPID().contains(":"+(String)jcbUser.getSelectedItem()+".") || groups.contains("administrator")) {
+                                    	if (t.getPID().contains(":"+(String)jcbUser.getSelectedItem()) || groups.contains("administrator")) {
                                     		
                                     		msgFmt = new MessageFormat(res.getString("objingrefr"));
         									Object[] args3 = {new java.util.Date(), t.getPID(), t.getName() };
