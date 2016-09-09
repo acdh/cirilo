@@ -171,7 +171,7 @@ public class IngestObjectDialog extends CDialog {
 	public void handleShowLogfileButton(ActionEvent e) 
 	throws Exception {
 		TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-		dlg.set(logfile, null, "text/log", "R", null, null);
+		dlg.set(logfile, null, "text/log", "R", null, null, null);
 		dlg.open();
 	}	
 

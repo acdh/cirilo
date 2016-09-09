@@ -29,9 +29,7 @@ import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
 import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.business.*;
-import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
 import org.jdom.Document;
 import org.apache.log4j.Logger;
 
@@ -56,19 +54,27 @@ public class TextEditor extends CDialog {
  
 	private static Logger log = Logger.getLogger(TextEditor.class);
 
+	private String dsid;
+	private String mimetype;
+	private String group;
+	private String location;
+	private String model;
+	private String owner;
+	
 	/**
 	 *  Constructor for the TextEditor object
 	 */
 
 	public TextEditor() {}
 
-	public void set (String pid, String dsid, String mimetype, String group, String location, String model) {
+	public void set (String pid, String dsid, String mimetype, String group, String location, String model, String owner) {
 		this.pid = pid;
 		this.dsid = dsid;
 		this.mimetype = mimetype;
 		this.group = group;
 		this.location = location;
 		this.model = model;
+		this.owner = owner;
 	}
 
 	/**
@@ -80,7 +86,6 @@ public class TextEditor extends CDialog {
 		org.emile.cirilo.dialog.CBoundSerializer.save(this.getCoreDialog(), se.getTextEditorProperties(), (JTable) null);   
 		close();
 	}
-
 
 	
 	public void handlerRemoved(CEventListener aoHandler) {
@@ -158,6 +163,7 @@ public class TextEditor extends CDialog {
 	    	              try  {		
 	    	            	   if (dsid.equals("TEI_SOURCE") && !pid.startsWith("cirilo:")) {
 	    	            		   TEI t = new TEI(null,false,false);
+	    	            		   t.setUser(owner != null ? owner : user.getUser());
 	    	            		   t.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
 	    	            		   t.setPID(pid);
 	    	            		   
@@ -180,6 +186,7 @@ public class TextEditor extends CDialog {
 	    	            	   } else if (dsid.equals("MEI_SOURCE") && !pid.startsWith("cirilo:")) {
 		    	            		   MEI m = new MEI(null,false,false);
 		    	            		   m.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
+		    	            		   m.setUser(owner != null ? owner : user.getUser());
 		    	            		   m.setPID(pid);
 		    	            		   
 		    	            		   if (m.isValid()) {
@@ -200,6 +207,7 @@ public class TextEditor extends CDialog {
 		    	            		   }		
 	    	            	   } else if (dsid.equals("STORY") && !pid.startsWith("cirilo:")) {
 		    	            		   STORY s = new STORY(null,false,false);
+		    	            		   s.setUser(owner != null ? owner : user.getUser());
 		    	            		   s.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));    	            		   
 		    	            		   if (s.isValid()) {
 		    	            			   s.validate(null, null);
@@ -218,6 +226,7 @@ public class TextEditor extends CDialog {
 	    	            		   
 	    	            	   } else if (dsid.equals("LIDO_SOURCE") && !pid.startsWith("cirilo:")) {
 		    	            		   LIDO l = new LIDO(null,false,false);
+		    	            		   l.setUser(owner != null ? owner : user.getUser());
 		    	            		   l.set(new String(jebEditorPane.getText().getBytes("UTF-8"),"UTF-8"));
 		    	            		   l.setPID(pid);
 		    	            		   
@@ -238,8 +247,9 @@ public class TextEditor extends CDialog {
 		    	    		    			JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 		    	            		   }
 	    	             	   } else if (dsid.equals("EDM_STREAM") && !pid.startsWith("cirilo:")) {
-	    	             		    EDM edm = new EDM (jebEditorPane.getText());
-	    	    		  		    jebEditorPane.setText(edm.toString());	  	   
+	    	             		    EDM edm = new EDM (user, jebEditorPane.getText());
+	    	    		  		    jebEditorPane.setText(edm.toString());	  	
+	    	    		  		    edm.save();
   	    				  		    try {
   	    				  		   	   Repository.modifyDatastreamByValue(pid, dsid, mimetype, edm.toString());
   	    				  		   	} catch (Exception ex) {
@@ -349,10 +359,6 @@ public class TextEditor extends CDialog {
 	private ResourceBundle res;
 	private Session se;
 	private String pid;
-	private String dsid;
-	private String mimetype;
-	private String group;
-	private String location;
-	private String model;
+
 }
 

@@ -82,7 +82,7 @@ public class EditDCDialog extends CDialog {
 	public void handleEditButton(ActionEvent e) {
 		try {
 	        TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-	        dlg.set(pid, "DC", "text/xml", "X", null, null);
+	        dlg.set(pid, "DC", "text/xml", "X", null, null, null);
 	        dlg.open();
 		} catch (Exception ex) {			
 		}

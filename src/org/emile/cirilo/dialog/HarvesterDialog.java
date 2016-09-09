@@ -29,8 +29,9 @@ import org.emile.cirilo.ecm.repository.*;
 import org.emile.cirilo.gui.jtable.HarvesterTableModel;
 import org.emile.cirilo.oai.*;
 import org.emile.cirilo.utils.ImageTools;
-import org.geonames.Toponym;
 import org.geonames.WebService;
+
+import org.apache.log4j.Logger;
 
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.CPropertyService;
@@ -41,28 +42,23 @@ import voodoosoft.jroots.exception.CException;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.ArrayList;
 import java.net.URL;
 import java.net.URLConnection;
 import java.io.*;
 
-import org.json.JSONObject;
-import org.json.XML;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-
-import org.apache.log4j.Logger;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
@@ -70,7 +66,6 @@ import javax.xml.transform.Transformer;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -80,8 +75,6 @@ import org.jdom.xpath.XPath;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Attribute;
-import org.json.JSONObject;
-import org.json.XML;
 
 import com.asprise.util.ui.progress.ProgressDialog;
 
@@ -137,7 +130,7 @@ public class HarvesterDialog extends CDefaultDialog {
 						JTable tb = (JTable) getGuiComposite().getWidget("jtRepositories");
 			  		  	int[] selected = tb.getSelectedRows();
 
-			  		  	edm = new EDM();
+			  		  	edm = new EDM(user);
 			  		  	
 						MessageFormat msgFmt = new MessageFormat(res.getString("askharv"));
 						Object[] args = {new Integer(selected.length).toString()};
@@ -210,8 +203,7 @@ public class HarvesterDialog extends CDefaultDialog {
 				   		    }
 
 				   		    Repository.modifyDatastreamByValue("cirilo:Backbone", "DATAPROVIDERS", "text/xml", outputter.outputString(doc));
-				            if (persons != null) Repository.modifyDatastreamByValue("cirilo:Backbone", "PERSONS", "text/xml", outputter.outputString(persons));
-				            if (places != null) Repository.modifyDatastreamByValue("cirilo:Backbone", "PLACES", "text/xml", outputter.outputString(places));
+				   		    edm.save();
 
 
 				   		    JOptionPane.showMessageDialog(  getCoreDialog(), res.getString("details")+logfile , Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
@@ -242,6 +234,40 @@ public class HarvesterDialog extends CDefaultDialog {
 			URLConnection con = new URL(baseURL.substring(11)).openConnection();
 			con.setUseCaches(false);
 			metadata = parser.build(con.getInputStream());
+			
+			XPath xpath = XPath.newInstance("//rel:hasCollectionMember");
+			xpath.addNamespace(Common.xmlns_rel);						
+			List nodes = (List) xpath.selectNodes(metadata);
+			
+            ArrayList<String> members = new ArrayList<String>();
+            
+			if (nodes.size() > 0) {
+				for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+					Element em = (Element) iter.next();
+					String pid = em.getAttributeValue("resource",Common.xmlns_rdf).substring(12);
+					try {
+						con = new URL(baseURL.substring(11).replaceAll("o:[0-9]*", pid)).openConnection();
+						con.setUseCaches(false);
+						Document collection = parser.build(con.getInputStream());
+						List list = (List) xpath.selectNodes(collection);
+						em.setAttribute("resource","#del",Common.xmlns_rdf);
+						for (Iterator jter = list.iterator(); jter.hasNext();) {
+							Element el = (Element) jter.next();
+							members.add(el.getAttributeValue("resource",Common.xmlns_rdf));
+						}
+					} catch (Exception q) {}	
+				}
+			}	
+			
+			if (members.size() > 0) {
+				Element rdf = metadata.getRootElement().getChild("Description",Common.xmlns_rdf);
+				for (int i=0; i< members.size(); i++) {
+					Element rel = new Element("hasCollectionMember", Common.xmlns_rel).setAttribute("resource",members.get(i),Common.xmlns_rdf);
+					rdf.addContent(rel);
+					log.debug("Add collection member "+members.get(i));
+				}
+			}
+	
 			con = null;
 			return true;
 		} catch (Exception e) {
@@ -354,7 +380,7 @@ public class HarvesterDialog extends CDefaultDialog {
 			
 			XPath xpath = null;
 			if (serviceprovider.contains("phaidra:///")) {
-				xpath = XPath.newInstance("//rel:hasCollectionMember");
+				xpath = XPath.newInstance("//rel:hasCollectionMember[@rdf:resource != '#del']");
 				serviceprovider = serviceprovider.substring(11);
 			    int i = serviceprovider.indexOf("/o:");	
 				phaidra = serviceprovider.substring(0, i);
@@ -462,13 +488,11 @@ public class HarvesterDialog extends CDefaultDialog {
 						}
 
 						Object path = null;
-						
-						https://phaidra.kug.ac.at/preview/o:64/Document/preview
-						
+												
 						if (phaidra != null)  {
 							iconref = icon.replaceAll("[$]self", oid);
 							log.debug(iconref);
-							uwmetadata =  phaidra+"/"+oid+"/bdef:Asset/getUWMETADATA";
+							uwmetadata =  phaidra+"/"+oid+"/methods/bdef:Asset/getUWMETADATA";
 							log.debug(uwmetadata);
 						} else {						
 							xpath = XPath.newInstance(url);
@@ -530,16 +554,16 @@ public class HarvesterDialog extends CDefaultDialog {
 
 								try {
 									if(uwmetadata != null) {										
-										con = new URL(uwmetadata.replaceAll("objects","get")).openConnection();
+										con = new URL(uwmetadata).openConnection();
 										con.setUseCaches(false);
 										uwm = parser.build(con.getInputStream());
+										Element collection = new Element("collection").setText(serviceprovider);									
+										uwm.getRootElement().addContent(collection);
+										
 										buf =  outputter.outputString(uwm);										
 										con = null;
 										
-										XPath upath = XPath.newInstance(url);
-										upath.addNamespace(Common.xmlns_ns1);
-										Element location = (Element) upath.selectSingleNode(uwm);																				
-                                        objref = location.getText(); 
+                                        objref = uwmetadata.replaceAll("getUWMETADATA", "view");
 									} else {
 										buf =  outputter.outputString(em);										
 									}
@@ -550,6 +574,8 @@ public class HarvesterDialog extends CDefaultDialog {
 									if (path instanceof Attribute) {
 										objref = ((Attribute) path).getValue();
 									}									
+									
+									log.debug(objref);
 									Repository.modifyDatastream(pid, "URL", null, "R", objref);							
 									
 									JDOMSource in = new JDOMSource(phaidra == null ? em : uwm.getRootElement() );
@@ -566,8 +592,6 @@ public class HarvesterDialog extends CDefaultDialog {
 			    		        	try {
 			    		        		Repository.modifyDatastreamByValue(pid, "RECORD", "text/xml", buf);
 			    		        		edm.set(out.getDocument());
-			    		        		normalizePersons();
-			    		        		normalizePlaces();
 			    		    			Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm.toString());
 										log.debug("Updating metadata of object "+pid+ " was successful" );
 			    		        	} catch (Exception e) {
@@ -603,10 +627,16 @@ public class HarvesterDialog extends CDefaultDialog {
 									}
 									is.close();
 									os.close();									
+							
+									if (phaidra != null) {
+									    BufferedImage bufferedImage = ImageIO.read(image);
+									    BufferedImage im = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+									    im.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+									    ImageIO.write(im, "jpg", image);
+									}		
 									
-							    	ImageTools.createThumbnail( image, thumbnail, 300, 240, Color.lightGray );
-									
-									Repository.modifyDatastream(pid, "THUMBNAIL","image/jpeg", "M", thumbnail);
+						    		ImageTools.createThumbnail( image, thumbnail, 300, 240, Color.lightGray );									
+						    		Repository.modifyDatastream(pid, "THUMBNAIL","image/jpeg", "M", thumbnail);
 
 									thumbnail.delete();	
 									image.delete();
@@ -642,139 +672,11 @@ public class HarvesterDialog extends CDefaultDialog {
 		return true;
 	}
 
-	private void normalizePersons() {
-		
-		String stream = null;
-		
-		if (persons == null) return;
-		
-		try {
-			XPath xpath = XPath.newInstance("//edm:Agent[contains(@rdf:about,'/gnd/')]");
-			xpath.addNamespace(Common.xmlns_edm);
-			xpath.addNamespace(Common.xmlns_skos);
-			xpath.addNamespace(Common.xmlns_rdf);
-			xpath.addNamespace(Common.xmlns_rdaGr2);
-			
-			List nodes = (List) xpath.selectNodes( edm.get() );
-
-			if (nodes.size() > 0) {
-				for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-					try {
-						Element e = (Element) iter.next();
-						String preferredName = null;
-						String id = e.getAttributeValue("about",Common.xmlns_rdf);
-						XPath qpath = XPath.newInstance("//person[@xml:id='"+id+"']");
-						qpath.addNamespace(Common.xmlns_xml);
-	    				Element person = (Element) qpath.selectSingleNode( persons );
-                        if (person == null) {
-        		    		char[] buff = new char[1024];
-                        	int n;
-        		    		StringWriter sw = new StringWriter();
-        		    		
-        		    		URL url = new URL("http://hub.culturegraph.org/entityfacts/"+id.substring(id.indexOf("gnd/")+4));
-        		    		try {
-        		    			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-        		    			try {
-        		    				while ((n = br.read(buff)) != -1) { sw.write(buff, 0, n); }
-        		    				stream = sw.toString();
-        		    			} catch (Exception io) {}
-        		    			finally {
-        		    				sw.close();
-        		    				br.close();
-        		    			}
-                                JSONObject json = new JSONObject(stream);
-                                preferredName = json.getString("preferredName");
-                                                         
-        		    		} catch (Exception p) {}        		    		
-                        	person = new Element ("person");                            
-                        	person.setAttribute("id", id, Common.xmlns_xml);
-                        	Element name = new Element ("name");
-                        	name.setAttribute("lang","de",Common.xmlns_xml);
-                        	name.setText(preferredName);
-                        	person.addContent(name);
-                        	persons.getRootElement().addContent(person);                        	
-                        } else {
-                        	preferredName = person.getChildText("name");	
-                        }
-                        e.getChild("prefLabel", Common.xmlns_skos).setText(preferredName);
-                        
-					} catch (Exception q) {log.debug(q.getLocalizedMessage(),q);}
-				}
-			}	
-			
-		} catch (Exception e) {}	
-		
-	}
-
-	private void normalizePlaces() {
-
-		if (places == null) return;
-		
-		try {
-			XPath xpath = XPath.newInstance("//edm:Place[contains(@rdf:about,'geonames.org')]");
-			xpath.addNamespace(Common.xmlns_edm);
-			xpath.addNamespace(Common.xmlns_skos);
-			xpath.addNamespace(Common.xmlns_rdf);
-			xpath.addNamespace(Common.xmlns_wgs84_pos);
-
-			List nodes = (List) xpath.selectNodes( edm.get() );
-
-			log.debug("Revolving places against geonames.org"); 
-			if (nodes.size() > 0) {
-				for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-					try {
-						Element e = (Element) iter.next();
-						String id = e.getAttributeValue("about",Common.xmlns_rdf).replaceAll("www\\.","") ;
-						log.debug("Revolving "+id+" against geonames.org"); 
-						XPath qpath = XPath.newInstance("//place[@xml:id='"+id+"']");
-						qpath.addNamespace(Common.xmlns_xml);
-						Element place = (Element) qpath.selectSingleNode( places );
-						if (place == null) {
-                        	place = new Element ("place");
-                        	place.setAttribute("id", id, Common.xmlns_xml);
-                        	Element name = new Element ("name");
-        					Document toponym  = parser.build(id+"/about.rdf");
-    						XPath tpath = XPath.newInstance("//gn:*[@xml:lang='de']");
-    						tpath.addNamespace(Common.xmlns_gn);
-    						Element alt = (Element) tpath.selectSingleNode( toponym );
-    						if (alt == null) {
-    							tpath = XPath.newInstance("//gn:name");
-        						tpath.addNamespace(Common.xmlns_gn);
-        						alt = (Element) tpath.selectSingleNode( toponym );
-    						} else {
-    							name.setAttribute("lang","de",Common.xmlns_xml);
-    						}
-    						if (alt != null) {
-    							name.setText(alt.getTextNormalize());    							
-    						} else {
-    							name.setText(e.getChildText("prefLabel",Common.xmlns_skos));
-    						}    						
-                        	place.addContent(name);
-                        	places.getRootElement().addContent(place);
-						} 
-                    	e.getChild("prefLabel", Common.xmlns_skos).setText(place.getChild("name").getText());
-                    	
-    					Toponym toponym = WebService.get(new Integer(id.substring(id.indexOf("org/") + 4)).intValue(), null, null);
-    					e.getChild("lat",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLatitude()).toString());
-    					e.getChild("long",Common.xmlns_wgs84_pos).setText(new Double(toponym.getLongitude()).toString());
-    					log.debug("lat: "+new Double(toponym.getLatitude()).toString()+" long: "+new Double(toponym.getLongitude()).toString());
- 
-                    	
-					} catch (Exception q) {
-						log.error(q.getMessage());
-					}
-				}
-			}	
-
-		
-		} catch (Exception e) {}	
-		
-	}
 		
 	public void handleShowLogfileButton(ActionEvent e) 
 	throws Exception {
 		TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-		dlg.set(logfile, null, "text/log", "R", null, null);
+		dlg.set(logfile, null, "text/log", "R", null, null,null);
 		dlg.open();
 	}	
 
@@ -866,9 +768,6 @@ public class HarvesterDialog extends CDefaultDialog {
 
 		try {
 			
-	        persons = null;
-            places = null;	             
-
 			parser = new SAXBuilder();
 
 			user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
@@ -877,11 +776,6 @@ public class HarvesterDialog extends CDefaultDialog {
 			props = (CPropertyService) CServiceProvider.getService(ServiceNames.PROPERTIES);
 
 			WebService.setUserName(props.getProperty("user","TEI.LoginName"));
-
-			
-      	    try {persons = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/PERSONS/content");} catch (Exception q) {}
-	    	try {places = parser.build(user.getUrl()+"/objects/cirilo%3ABackbone/datastreams/PLACES/content");} catch (Exception q) {}
-			
 			
    		    Format format = Format.getRawFormat();
    		    format.setEncoding("UTF-8");
@@ -904,8 +798,6 @@ public class HarvesterDialog extends CDefaultDialog {
 	private CPropertyService props;
 	private Document doc;
 	private Document metadata;
-	private Document places;
-	private Document persons;
 	private Element root;
 	private SAXBuilder parser;
 	private XMLOutputter outputter;

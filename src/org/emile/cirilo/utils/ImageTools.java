@@ -25,6 +25,7 @@ import ij.io.*;
 import ij.process.*;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 import javax.imageio.*;
@@ -55,7 +56,7 @@ public class ImageTools {
 			 throws OutOfMemoryException {
 		try {
 			ImagePlus imp0;
-
+			
 			imp0 = new Opener().openImage(in.getCanonicalPath());
 			if (imp0 == null) {
 				return;

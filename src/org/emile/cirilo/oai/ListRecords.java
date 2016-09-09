@@ -116,9 +116,12 @@ public class ListRecords extends HarvesterVerb {
      */
     private static String getRequestURL(String baseURL,
             String resumptionToken) {
+  	
         StringBuffer requestURL =  new StringBuffer(baseURL);
         requestURL.append("?verb=ListRecords");
-        requestURL.append("&resumptionToken=").append(Base64.encode(resumptionToken.getBytes()));
+        try {
+        	requestURL.append("&resumptionToken=").append(URLEncoder.encode(resumptionToken, "UTF-8"));
+        } catch (Exception e) {}
         return requestURL.toString();
     }
 }

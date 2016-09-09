@@ -122,6 +122,8 @@ public class EditObjectDialog extends CDialog {
 					  format.setEncoding("UTF-8");
  					  XMLOutputter outputter = new XMLOutputter(format);		   			   														
 
+ 					  EDM edm = new EDM(user);
+ 					  
   					  SAXBuilder builder = new SAXBuilder(); 						 						
 					  builder = new SAXBuilder();				    						
 
@@ -204,8 +206,9 @@ public class EditObjectDialog extends CDialog {
 							    		        		Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(new String(stylesheet))));
 							    		        		transformer.transform(in, out);
 							    		        		System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
-							    		        		String edm = outputter.outputString(out.getResult());
-							    		        		Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm);
+							    		        		edm.set(outputter.outputString(out.getResult()));
+							    		        		Repository.modifyDatastreamByValue(pid, "EDM_STREAM", "text/xml", edm.toString());
+							    		        		edm.refresh(pid);
 							    		        	} catch (Exception e) {
 							    		        		log.error(e.getLocalizedMessage(),e);	
 							    		        		continue;
@@ -507,6 +510,8 @@ public class EditObjectDialog extends CDialog {
 		 					JOptionPane.showMessageDialog(  getCoreDialog(), msgFmt.format(args0), Common.WINDOW_HEADER, JOptionPane.INFORMATION_MESSAGE);
 						
 					}
+
+				    edm.save();
 
  					
 				} catch (Exception ex) {

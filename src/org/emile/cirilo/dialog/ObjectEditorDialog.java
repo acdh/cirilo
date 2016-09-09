@@ -331,7 +331,7 @@ public class ObjectEditorDialog extends CDialog {
 				dlg.open();
 			}  else  if (isText(mimetype)) {
 	        	TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-	        	dlg.set(pid, dsid, mimetype, group, location, null);
+	        	dlg.set(pid, dsid, mimetype, group, location, null, this.owner);
 	        	dlg.open();
 			}  else if (isImage(mimetype)) {
 		        try {
@@ -385,7 +385,7 @@ public class ObjectEditorDialog extends CDialog {
 				dlg.open();			
 			}  else if  (isText(mimetype)) {
 	        	TextEditor dlg = (TextEditor) CServiceProvider.getService(DialogNames.TEXTEDITOR);
-	        	dlg.set(pid, dsid, mimetype, group, location, model);
+	        	dlg.set(pid, dsid, mimetype, group, location, model, this.owner);
 	        	dlg.open();
 			}  else if (isImage(mimetype)) {
 		        try {
