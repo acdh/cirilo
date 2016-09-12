@@ -88,7 +88,7 @@ public class METS {
     		SAXBuilder builder = new SAXBuilder();
 			this.PID = "";
     		this.viewer = null;
- 		if (!eXist) {
+ 		    if (!eXist) {
     			this.file = new File (file);
     			this.collection="";
     			if (this.file.exists()) { 
