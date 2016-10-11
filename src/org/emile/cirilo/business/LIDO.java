@@ -279,7 +279,7 @@ public class LIDO {
 					      		}	
 					      		id = id == null ? "IMAGE."+new Integer(i).toString() : id;
 				      			resourceID.setText(id);
-				      			e.setText(user.getUrl()+"/"+this.PID+"/"+id);
+				      			e.setText(user.getServer()+"/"+this.PID+"/"+id);
 					      		String mimetype = e.getAttributeValue("mimeType");
 			      				File f = null;
 			      				if (this.collection.isEmpty()) {

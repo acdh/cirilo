@@ -19,19 +19,22 @@
 
 package org.emile.cirilo;
 
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
 import org.emile.cirilo.gui.*;
 import org.emile.cirilo.dialog.*;
 import org.emile.cirilo.business.Session;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.business.*;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+import org.jdom.xpath.XPath;
 
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.ResourceBundle;
-
-
-
-
 
 import voodoosoft.jroots.application.*;
 import voodoosoft.jroots.core.*;
@@ -171,7 +174,7 @@ class CiriloWindow extends JPanel {
 		public void begin() {
 
 			try {
-						        
+				
 		        PropertyConfigurator.configure(Cirilo.class.getResource("log4j.properties"));
 				
 			    log.info("Program started");
@@ -303,6 +306,7 @@ class CiriloWindow extends JPanel {
 	            CServiceProvider.addService(skosify, ServiceNames.SKOSIFY_SERVICE);
 	   			
 	 			User user = (User) CServiceProvider.getService(ServiceNames.CURRENT_USER);
+
 	            
 			}
 			catch (Exception ex) {

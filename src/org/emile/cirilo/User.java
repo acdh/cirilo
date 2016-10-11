@@ -91,6 +91,10 @@ public class User {
 	public String getRootPasswd() {
 		return RootPasswd.trim();
 	}
+	public String getServer() {
+		int i = FedoraUrl.lastIndexOf("/");
+		return FedoraUrl.substring(0, i);
+	}
 
 	public boolean viaLDAP() {
 		return mode;

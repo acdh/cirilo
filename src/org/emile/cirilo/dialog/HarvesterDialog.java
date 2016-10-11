@@ -249,17 +249,19 @@ public class HarvesterDialog extends CDefaultDialog {
 						con = new URL(baseURL.substring(11).replaceAll("o:[0-9]*", pid)).openConnection();
 						con.setUseCaches(false);
 						Document collection = parser.build(con.getInputStream());
-						List list = (List) xpath.selectNodes(collection);
-						em.setAttribute("resource","#del",Common.xmlns_rdf);
-						for (Iterator jter = list.iterator(); jter.hasNext();) {
-							Element el = (Element) jter.next();
-							members.add(el.getAttributeValue("resource",Common.xmlns_rdf));
-						}
+						try {
+							URLConnection view = new URL(baseURL.substring(11).replaceAll("o:[0-9]*", pid).replaceAll("Collection/get","Book/view")).openConnection();
+							view.setUseCaches(false);
+							view.getInputStream();
+							view = null;
+						} catch (Exception p) {
+							em.setAttribute("resource","#del",Common.xmlns_rdf);
+						}	
 					} catch (Exception q) {}	
 				}
 			}	
 			
-			if (members.size() > 0) {
+/*			if (members.size() > 0) {
 				Element rdf = metadata.getRootElement().getChild("Description",Common.xmlns_rdf);
 				for (int i=0; i< members.size(); i++) {
 					Element rel = new Element("hasCollectionMember", Common.xmlns_rel).setAttribute("resource",members.get(i),Common.xmlns_rdf);
@@ -267,7 +269,7 @@ public class HarvesterDialog extends CDefaultDialog {
 					log.debug("Add collection member "+members.get(i));
 				}
 			}
-	
+*/	
 			con = null;
 			return true;
 		} catch (Exception e) {

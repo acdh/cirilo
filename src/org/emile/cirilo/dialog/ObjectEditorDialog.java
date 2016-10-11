@@ -26,6 +26,9 @@ import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
 import org.emile.cirilo.utils.ImagePreviewPanel;
 import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.Common;
@@ -475,19 +478,19 @@ public class ObjectEditorDialog extends CDialog {
 				chooser = new JFileChooser(props.getProperty("user", "import.path"));
 				chooser.setDialogTitle(res.getString("choosefile"));
 			
-				if (mimetype.toLowerCase().contains("xml")) chooser.addChoosableFileFilter(new FileFilter(".xml"));
-				if (dsid.toLowerCase().contains("ontology")) chooser.addChoosableFileFilter(new FileFilter(".rdf"));
+				if (mimetype.toLowerCase().contains("xml")) chooser.addChoosableFileFilter(new FileFilter(new String[]{".xml"}));
+				if (dsid.toLowerCase().contains("ontology")) chooser.addChoosableFileFilter(new FileFilter(new String[]{".rdf",".ttl"}));
 				if (mimetype.toLowerCase().contains("jpeg") || mimetype.toLowerCase().contains("tiff")) {
 			   		IIIFFactory i3f = (IIIFFactory) CServiceProvider.getService(ServiceNames.I3F_SERVICE);
 					i3f.delete(pid,dsid);
 					ImagePreviewPanel preview = new ImagePreviewPanel();
 					chooser.setAccessory(preview);
 					chooser.addPropertyChangeListener(preview);
-					chooser.addChoosableFileFilter(new FileFilter(mimetype.toLowerCase().contains("tiff") ?".tif" :".jpg"));
+					chooser.addChoosableFileFilter(new FileFilter(mimetype.toLowerCase().contains("tiff") ?new String[]{".tif"}:new String[]{".jpg"}));
 				}
 
-				if (mimetype.toLowerCase().contains("plain")) chooser.addChoosableFileFilter(new FileFilter(".txt"));
-				if (mimetype.toLowerCase().contains("pdf")) chooser.addChoosableFileFilter(new FileFilter(".pdf"));
+				if (mimetype.toLowerCase().contains("plain")) chooser.addChoosableFileFilter(new FileFilter(new String[]{".txt"}));
+				if (mimetype.toLowerCase().contains("pdf")) chooser.addChoosableFileFilter(new FileFilter(new String[]{".pdf"}));
 
 				if (chooser.showDialog(getCoreDialog(), res.getString("choose")) != JFileChooser.APPROVE_OPTION) {
 					return;
@@ -594,6 +597,21 @@ public class ObjectEditorDialog extends CDialog {
 				    			if (temp == null) {
 	     				    		temp = selected;
 				    			}	
+                            } else {
+                            	if (selected.getCanonicalPath().contains(".ttl")) {
+                            	  try {	
+                            		temp = File.createTempFile("temp", "tmp"); 
+                    			    InputStream is = new java.io.FileInputStream(selected.getCanonicalPath());
+                    				FileOutputStream os = new FileOutputStream(temp);
+                    			    RDFParser parser = Rio.createParser(org.eclipse.rdf4j.rio.RDFFormat.TURTLE);
+                    			    RDFWriter writer = Rio.createWriter(org.eclipse.rdf4j.rio.RDFFormat.RDFXML, os);
+                    			    parser.setRDFHandler(writer);
+                    			    parser.parse(is,  "http://gams.uni-graz.at");
+                    			    os.close();
+                    			    is.close();
+                            	  } catch (Exception tz) {}  
+                    			    
+                            	}
                             }
 
                             Repository.modifyDatastream(pid, dsid, mimetype, controlgroup, temp);
@@ -668,8 +686,8 @@ public class ObjectEditorDialog extends CDialog {
 	}
 	
 	class FileFilter extends javax.swing.filechooser.FileFilter {
-		  private String filter;
-		  public FileFilter(String f) {
+		  private String[] filter;
+		  public FileFilter(String[] f) {
 			  this.filter = f;
 		  }
 		  public boolean accept(File file) {
@@ -677,10 +695,21 @@ public class ObjectEditorDialog extends CDialog {
 			    	return true;
 			        }
 		    String filename = file.getName();
-		    return filename.endsWith(this.filter);
+		    boolean found=false;
+		    for (int i = 0; i<this.filter.length;i++) {
+		    	if (filename.endsWith(this.filter[i])) {
+		    		found=true;
+		    		break;
+		    	};
+		    }
+		    return found;
 		  }
 		  public String getDescription() {
-			    return "*"+this.filter;
+			    String s="";
+			    for (int i = 0; i<this.filter.length;i++) {
+			    	s="*"+this.filter[i]+";";
+			    };
+			    return s;
 		  }
 	}      
 	
