@@ -10,5 +10,5 @@ semantically enriching resources in the digital archive. Various dissemination o
 Cirilo is a contribution to the DARIAH-EU task “Reference Software Packages.
 The source code of the client can be found at https://github.com/acdh/cirilo, the documentation is available at 
 http://gams.uni-graz.at/doku. An „archive-in-a-box“-installation package (Client including a FEDORA 3.5 instance) for 
-Debian-based Linux-distributions can be downloaded from http://gams.uni-graz.at/download/cirilo-installer-2.5.tar.gz
+Debian-based Linux-distributions can be downloaded from http://gams.uni-graz.at/archive-framework
 
