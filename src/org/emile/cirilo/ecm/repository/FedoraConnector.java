@@ -223,6 +223,12 @@ public interface FedoraConnector {
                    ObjectNotFoundException,
                    FedoraConnectionException,
                    FedoraIllegalContentException;
+    
+    public String get2ObjectXml(String pid, String context) //Document
+            throws IllegalStateException,
+                   ObjectNotFoundException,
+                   FedoraConnectionException,
+                   FedoraIllegalContentException;
 
 
     /**

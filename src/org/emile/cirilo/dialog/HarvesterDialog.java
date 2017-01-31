@@ -316,20 +316,8 @@ public class HarvesterDialog extends CDefaultDialog {
 				
 				Document pass = parser.build(new StringReader(new String(listRecords.toString().getBytes(),"UTF-8")));
 				XPath xpath = XPath.newInstance("//oai:record"+(!constraints.isEmpty() ? "["+constraints+"]" : ""));
-				xpath.addNamespace(Common.xmlns_dc);
-				xpath.addNamespace(Common.xmlns_oai);
-				xpath.addNamespace(Common.xmlns_edm);
-				xpath.addNamespace(Common.xmlns_europeana);
-				xpath.addNamespace(Common.xmlns_tei_p5);
-				xpath.addNamespace(Common.xmlns_dcterms);
-				xpath.addNamespace(Common.xmlns_lido);
-				xpath.addNamespace(Common.xmlns_skos);
-				xpath.addNamespace(Common.xmlns_rdf);
-				xpath.addNamespace(Common.xmlns_ore);
-				xpath.addNamespace(Common.xmlns_owl);
-				xpath.addNamespace(Common.xmlns_rdaGr2);
-				xpath.addNamespace(Common.xmlns_wgs84_pos);
-
+				xpath = addNamespaces(xpath);
+	
 				List records = (List) xpath.selectNodes(pass);
 							
 				if (records.size() > 0) {
@@ -389,21 +377,8 @@ public class HarvesterDialog extends CDefaultDialog {
 			} else { 
 				xpath = XPath.newInstance("//oai:record");
 			}	
-			xpath.addNamespace(Common.xmlns_dc);
-			xpath.addNamespace(Common.xmlns_oai);
-			xpath.addNamespace(Common.xmlns_edm);
-			xpath.addNamespace(Common.xmlns_europeana);
-			xpath.addNamespace(Common.xmlns_tei_p5);
-			xpath.addNamespace(Common.xmlns_dcterms);
-			xpath.addNamespace(Common.xmlns_lido);
-			xpath.addNamespace(Common.xmlns_skos);
-			xpath.addNamespace(Common.xmlns_rdf);
-			xpath.addNamespace(Common.xmlns_ore);
-			xpath.addNamespace(Common.xmlns_owl);
-			xpath.addNamespace(Common.xmlns_rdaGr2);
-			xpath.addNamespace(Common.xmlns_wgs84_pos);
-			xpath.addNamespace(Common.xmlns_rel);						
-			
+			xpath = addNamespaces(xpath);
+					
 			byte[] stylesheet = null;
         	try {
 	        	stylesheet =  Repository.getDatastream("cirilo:"+owner, "RECORDtoEDM" , "");
@@ -477,7 +452,8 @@ public class HarvesterDialog extends CDefaultDialog {
 									.replaceAll("hdl:", "");
 						}
 						
-						pid = Common.normalize(pid);
+						pid = Common.normalize(pid).replaceAll("oai\\.oai", "oai");
+
 						log.debug("Starting ingest of object "+i+" with PID "+pid);
 						
 						if (!Repository.exist(pid)) {
@@ -498,19 +474,7 @@ public class HarvesterDialog extends CDefaultDialog {
 							log.debug(uwmetadata);
 						} else {						
 							xpath = XPath.newInstance(url);
-							xpath.addNamespace(Common.xmlns_dc);
-							xpath.addNamespace(Common.xmlns_oai);
-							xpath.addNamespace(Common.xmlns_edm);
-							xpath.addNamespace(Common.xmlns_europeana);
-							xpath.addNamespace(Common.xmlns_tei_p5);
-							xpath.addNamespace(Common.xmlns_dcterms);
-							xpath.addNamespace(Common.xmlns_lido);
-							xpath.addNamespace(Common.xmlns_skos);
-							xpath.addNamespace(Common.xmlns_rdf);
-							xpath.addNamespace(Common.xmlns_ore);
-							xpath.addNamespace(Common.xmlns_owl);
-							xpath.addNamespace(Common.xmlns_rdaGr2);
-							xpath.addNamespace(Common.xmlns_wgs84_pos);
+							xpath = addNamespaces(xpath);
 							path =  xpath.selectSingleNode(em);
 						}
 						
@@ -521,20 +485,8 @@ public class HarvesterDialog extends CDefaultDialog {
 									iconref = icon.substring(1);								
 								} else {
 									XPath vpath = XPath.newInstance(icon);
-									vpath.addNamespace(Common.xmlns_dc);
-									vpath.addNamespace(Common.xmlns_oai);
-									vpath.addNamespace(Common.xmlns_edm);
-									vpath.addNamespace(Common.xmlns_europeana);
-									vpath.addNamespace(Common.xmlns_tei_p5);
-									vpath.addNamespace(Common.xmlns_dcterms);
-									vpath.addNamespace(Common.xmlns_lido);
-									vpath.addNamespace(Common.xmlns_skos);
-									vpath.addNamespace(Common.xmlns_rdf);
-									vpath.addNamespace(Common.xmlns_ore);
-									vpath.addNamespace(Common.xmlns_owl);
-									vpath.addNamespace(Common.xmlns_rdaGr2);
-									vpath.addNamespace(Common.xmlns_wgs84_pos);
-							
+									vpath = addNamespaces(vpath);
+						
 									object =  vpath.selectSingleNode(em);
 								}
 							}	
@@ -645,6 +597,7 @@ public class HarvesterDialog extends CDefaultDialog {
 									
 									log.debug("Updating thumbnail of object "+pid+ " was successful" );
 								} catch (Exception eq) {
+									log.error(eq.getLocalizedMessage(),eq);	
 								}
 							}
 							
@@ -794,6 +747,27 @@ public class HarvesterDialog extends CDefaultDialog {
 		}
 	}
 
+	private XPath addNamespaces(XPath xpath) {
+		xpath.addNamespace(Common.xmlns_dc);
+		xpath.addNamespace(Common.xmlns_oai);
+		xpath.addNamespace(Common.xmlns_edm);
+		xpath.addNamespace(Common.xmlns_europeana);
+		xpath.addNamespace(Common.xmlns_tei_p5);
+		xpath.addNamespace(Common.xmlns_dcterms);
+		xpath.addNamespace(Common.xmlns_lido);
+		xpath.addNamespace(Common.xmlns_skos);
+		xpath.addNamespace(Common.xmlns_rdf);
+		xpath.addNamespace(Common.xmlns_ore);
+		xpath.addNamespace(Common.xmlns_owl);
+		xpath.addNamespace(Common.xmlns_rdaGr2);
+		xpath.addNamespace(Common.xmlns_wgs84_pos);
+		xpath.addNamespace(Common.xmlns_mets);
+		xpath.addNamespace(Common.xmlns_mods);
+		xpath.addNamespace(Common.xmlns_xlink);
+		xpath.addNamespace(Common.xmlns_rel);
+		return xpath;
+	}
+	
 
 	private ResourceBundle res; 
 	private TemplateSubsystem  temps;

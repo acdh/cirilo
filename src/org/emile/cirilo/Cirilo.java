@@ -19,18 +19,12 @@
 
 package org.emile.cirilo;
 
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.rio.RDFParser;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
+
 import org.emile.cirilo.gui.*;
 import org.emile.cirilo.dialog.*;
 import org.emile.cirilo.business.Session;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.business.*;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
 
 import java.util.ArrayList;
 import java.util.Properties;

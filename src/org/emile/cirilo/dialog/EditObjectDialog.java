@@ -1,6 +1,6 @@
 /*
  *  -------------------------------------------------------------------------
- *  Copyright 2014 
+     *  Copyright 2014 
  *  Centre for Information Modeling - Austrian Centre for Digital Humanities
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -266,13 +266,12 @@ public class EditObjectDialog extends CDialog {
 				    				  if (p.substring(1,2).equals(Common.REPLACE)) {
 							    		  doc = db.build (Repository.getDatastream(pid, "RELS-EXT"));
 			                              Element rdf = doc.getRootElement().getChild("Description", Common.xmlns_rdf);
-				    					  rdf.removeContent(new ElementFilter("itemID"));			                              
-				    					  if(p.substring(2).equals("true")) {
+				    					  if(rdf.getChild("itemID", Common.xmlns_oai) == null && p.substring(2).equals("true")) {
 				    						  Element oai = new Element("itemID", Common.xmlns_oai);
 				    						  oai.addContent(Common.OAIPHM()+pid);
 				    						  rdf.addContent(oai);
+								    		  Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(doc));
 				    					  }
-							    		  Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(doc));
 				    				  }	  
 				    			  }
 				    		  }
@@ -340,11 +339,62 @@ public class EditObjectDialog extends CDialog {
 				    		  for (int j = 0; j < substitutions.size(); j++) {
 				    			  String p = (String) substitutions.get(j);
 				    			  if (p.substring(0,1).equals(Common.XSLT)) {
-				    				  if (p.substring(1,2).equals(Common.ADD)){			
-				    				      if (p.contains("r2d2")) {
+				    				  if (p.substring(1,2).equals(Common.ADD)){	
+				    				      if (p.contains("system:add.latex")) {
+					    				    	 try { 
+					    						  Repository.addDatastream(pid, "LATEX_STYLESHEET",  "Reference to TEI2LaTeX Stylesheet", "text/xml", "http://gams.uni-graz.at/tei/latex/latex.xsl");
+					    			  			  } catch (Exception ex) {}
+									    				  
+				    				      } else if (p.contains("system:add.source")) {
+							    				    	 try { 
+							    						  Repository.addDatastream(pid, "SOURCE_REF",  "", "text/xml", "http://gams.uni-graz.at/archive/get/"+pid+"/LIDO_SOURCE");
+							    			  			  } catch (Exception ex) {}
+											    				  
+				    					  } else if (p.contains("system:add.handles")) {
 				    				    	  try {
 				    				    		  
-									    		  doc = db.build (Repository.getDatastream(pid, "RELS-EXT"));
+				    				    		  Document lido = db.build (Repository.getDatastream(pid, "LIDO_SOURCE"));
+				    				    		  XPath xpath = XPath.newInstance("//lido:recordID[@lido:type='HANDLE']");
+				    				    		  xpath.addNamespace(Common.xmlns_lido);
+				    				    		  Element handle = (Element) xpath.selectSingleNode( lido );
+				    				    		  if (handle != null) {
+   			    				    			  try {
+				    				    		
+				    		 		    		      Handles hdl = (Handles) CServiceProvider.getService( ServiceNames.HANDLESCLASS );
+				    								  byte buf[] = new byte[256];
+				    								  buf = hdl.getHandleKey();
+				    								  
+				    								  Resolver resolver = new Resolver();
+				    								  AuthenticationInfo   auth = new PublicKeyAuthenticationInfo(Util.encodeString(Common.HANDLE_PREFIX+"11471"), 300, Util.getPrivateKeyFromBytes(buf, 0));					
+
+				    								  if (resolver.checkAuthentication(auth)) {			    			  
+				    									  HandleValue object   =  new HandleValue(1  , Util.encodeString("URL"), Util.encodeString("http://gams.uni-graz.at/"+pid));
+				    									  HandleValue dc       =  new HandleValue(2  , Util.encodeString("URL.METADATA"), Util.encodeString("http://gams.uni-graz.at/"+pid+"/DC"));
+				    									  AdminRecord admin =	new AdminRecord(Util.encodeString(Common.HANDLE_PREFIX+"11471"), 200,
+				    				                           false, true, false, false, true, true,			                      
+				    				                           true, true, true, true, true, false);
+				    									  HandleValue hs_admin =  new HandleValue(100, Util.encodeString("HS_ADMIN"), Encoder.encodeAdminRecord(admin));
+				    									  HandleValue[] values = { object, hs_admin, dc };
+				    									  AbstractRequest request = new CreateHandleRequest(Util.encodeString(handle.getText().substring(4)), values, auth);
+				    									  AbstractResponse response = resolver.getResolver().processRequest(request);
+				    									 
+				    									  
+				    							          if (response.responseCode == AbstractMessage.RC_SUCCESS) { 
+				    										  Document rdf = db.build (Repository.getDatastream(pid, "RELS-EXT"));
+				    										  Element desc = rdf.getRootElement().getChild("Description", Common.xmlns_rdf);
+				    										  Element oai =desc.getChild("itemID", Common.xmlns_oai);
+				    										  oai.setText(handle.getText());
+				    										  desc.addContent(oai);
+				    										  Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(rdf));
+				    									  }
+				    					     	     }
+				    				    			  } catch (Exception ex) {
+				    				    				  ex.printStackTrace();
+				    				    			  }
+				    				    	  }
+				    				    		  
+				    				    		  
+/*									    		  doc = db.build (Repository.getDatastream(pid, "RELS-EXT"));
 					                              List list = doc.getRootElement().getChild("Description",Common.xmlns_rdf).getChildren("isMemberOf", Common.xmlns_rel);
 					                              for (Iterator iter = list.iterator(); iter.hasNext();) {
 					            					  Element em = (Element) iter.next();
@@ -353,10 +403,11 @@ public class EditObjectDialog extends CDialog {
 							    						  Repository.addRelation("info:fedora/"+pid,Common.isMemberOf,"info:fedora/context:vase.ocm."+context.substring(25));
 					                                  }	  
 					                              }
+				    				    	 	  
+				    				              Repository.purgeDatastream(pid, "KML_TEMPLATE")  ;			    				    		  
+    			    					     	  Repository.modifyDatastream (pid, "", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
+	*/			
 				    				    		  
-				    				      //	  Repository.purgeDatastream(pid, "KML_TEMPLATE")  ;
-				    				    		  
-    			    					  // 	  Repository.modifyDatastream (pid, "", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
 				    				    	  } catch (Exception q) {				    				    		  
 				    				    	  }
 				    				      } else {
@@ -895,8 +946,9 @@ public class EditObjectDialog extends CDialog {
 			    		  try {
 			    	          FileOutputStream fos = new FileOutputStream(fp.getAbsolutePath()+System.getProperty( "file.separator" )+pid.replace(":",".")+".xml" );
 							  BufferedWriter out = new BufferedWriter(new OutputStreamWriter( fos, "UTF-8" ) );
-
-  				    	      Document foxml = builder.build(new StringReader(new String(Repository.get2ObjectXml(pid))));
+							  String ec =  props.getProperty("user", "General.ExportContext");
+							  ec = (ec == null || ec.isEmpty() ? "Archive" : ec); 
+  				    	      Document foxml = builder.build(new StringReader(new String(Repository.get2ObjectXml(pid,ec))));
 							  
 			  	    		  try {				  	    			
 			  	    			  	List datastreams;									

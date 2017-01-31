@@ -64,6 +64,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 	protected JCheckBox jcbMETSRefreshSource;
 	protected JCheckBox jcbSKOSIFY;
 	protected JComboBox jcbGeneralDefaultCM;
+	protected JComboBox jcbExportContext;
 
 	protected JCheckBox jcbMEIDCMapping;
 	protected JCheckBox jcbMEISEMExtraction;
@@ -129,6 +130,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		setWidgetName(jcbLIDORefreshSource, "jcbLIDORefreshSource" );
 		setWidgetName(jcbLIDOOnlyGeonameID, "jcbLIDOOnlyGeonameID" );
 		setWidgetName(jcbSKOSIFY, "jcbSKOSIFY" );
+		setWidgetName(jcbExportContext, "jcbExportContext" );
 
 		setWidgetName(jcbMEIDCMapping, "jcbMEIDCMapping");
 		setWidgetName(jcbMEISEMExtraction, "jcbMEISEMExtraction");
@@ -165,6 +167,7 @@ public class GuiOptionsDialog extends CGuiComposite {
 		jcbTEICustomization = new JCheckBox(res.getString("customization"), false);
 		jcbTEItoMETS = new JCheckBox(res.getString("tei2mets"), false);
 		jcbGeneralDefaultCM = new JComboBox();
+		jcbExportContext = new JComboBox();
 		jcbMETSRefreshSource = new JCheckBox(res.getString("refreshsource"), false);
 		jcbTEIOnlyGeonameID = new JCheckBox(res.getString("onlygeonameids"), false);
 		jcbLIDOOnlyGeonameID = new JCheckBox(res.getString("onlygeonameids"), false);
@@ -205,6 +208,10 @@ public class GuiOptionsDialog extends CGuiComposite {
 		c2.add( new JLabel(res.getString("geonameslogin")+": "));
 		c2.add( jtfTEILoginName );
 		t0.add( c2, "wrap 5" );
+		Box c3  = Box.createHorizontalBox();
+		c3.add( new JLabel(res.getString("exportcontext")+": "));
+		c3.add( jcbExportContext );
+		t0.add( c3, "wrap 5" );
 
 		Container t1 = new Container();
 		t1.setLayout(new net.miginfocom.swing.MigLayout("","[grow]",""));
@@ -255,11 +262,11 @@ public class GuiOptionsDialog extends CGuiComposite {
 		tp.addTab(res.getString("skosupload"), t4);
 		
 		container.add(tp, "grow, wrap 10");
-		Box c3  = Box.createHorizontalBox();
-		c3.add( jbSave );
-		c3.add( new JLabel (" "));
-		c3.add( jbClose );
-		container.add( c3, "gapleft push, wrap 10" );
+		Box c4  = Box.createHorizontalBox();
+		c4.add( jbSave );
+		c4.add( new JLabel (" "));
+		c4.add( jbClose );
+		container.add( c4, "gapleft push, wrap 10" );
 	}
 
 }

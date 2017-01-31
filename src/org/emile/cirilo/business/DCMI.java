@@ -187,13 +187,14 @@ public class DCMI {
 			DOMBuilder builder = new DOMBuilder();
 			doc = builder.build (Repository.getDatastream(pid, "RELS-EXT"));
 	        Element rdf = doc.getRootElement().getChild("Description", Common.xmlns_rdf);
-	        rdf.removeContent(new ElementFilter("itemID"));			                              
-			if (isOAI_PMH) {
-	        	oai = new Element("itemID", Common.xmlns_oai);
-	        	oai.addContent(Common.OAIPHM()+pid);
-	        	rdf.addContent(oai);
+	        if (rdf.getChild("itemID", Common.xmlns_oai) == null) {
+	        	if (isOAI_PMH) {
+	        		oai = new Element("itemID", Common.xmlns_oai);
+	        		oai.addContent(Common.OAIPHM()+pid);
+	        		rdf.addContent(oai);
+				    Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(doc));
+	        	}	
 		     }
-		     Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(doc));
 
 /*
  *

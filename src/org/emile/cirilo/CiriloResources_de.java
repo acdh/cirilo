@@ -219,6 +219,7 @@ public class CiriloResources_de extends java.util.ListResourceBundle {
                 { "ingestof",       "Ingest von Datei "},
                 { "tei2mets",       "METS Datenstrom erzeugen"},
                 { "nologdir",       "Log Verzeichnis {0} konnte nicht gefunden werden."},
+                { "exportcontext",   "Export Kontext"},
 
                 { "novalidkey", "Datei {0} enthält keinen gültigen Handle-Schlüssel."},			  
                 { "keyok" , "Schüssel aus Datei {0} steht für Authentifizierung am Handle Server dauerhaft zur Verfügung."},			  

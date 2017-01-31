@@ -26,9 +26,9 @@ import voodoosoft.jroots.core.gui.CEventListener;
 import voodoosoft.jroots.core.gui.CMouseListener;
 import voodoosoft.jroots.dialog.*;
 
-import org.eclipse.rdf4j.rio.RDFParser;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
+import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
 import org.emile.cirilo.utils.ImagePreviewPanel;
 import org.emile.cirilo.utils.ImageTools;
 import org.emile.cirilo.Common;
@@ -603,8 +603,8 @@ public class ObjectEditorDialog extends CDialog {
                             		temp = File.createTempFile("temp", "tmp"); 
                     			    InputStream is = new java.io.FileInputStream(selected.getCanonicalPath());
                     				FileOutputStream os = new FileOutputStream(temp);
-                    			    RDFParser parser = Rio.createParser(org.eclipse.rdf4j.rio.RDFFormat.TURTLE);
-                    			    RDFWriter writer = Rio.createWriter(org.eclipse.rdf4j.rio.RDFFormat.RDFXML, os);
+                    			    RDFParser parser = Rio.createParser(org.openrdf.rio.RDFFormat.TURTLE);
+                    			    RDFWriter writer = Rio.createWriter(org.openrdf.rio.RDFFormat.RDFXML, os);
                     			    parser.setRDFHandler(writer);
                     			    parser.parse(is,  "http://gams.uni-graz.at");
                     			    os.close();

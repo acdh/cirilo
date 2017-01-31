@@ -44,6 +44,9 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.awt.Color;
 
+import org.jdom.input.DOMBuilder;
+import org.jdom.output.XMLOutputter;
+import org.jdom.*;
 
 
 /**
@@ -238,6 +241,12 @@ public class NewObjectDialog extends CDialog {
 			    throw new Exception();
 			}
 			
+			if (pcm.get().contains("Story")) {
+				Document doc =  new DOMBuilder().build (Repository.getDatastream(pid, "STORY"));
+				doc.getRootElement().getChild("pid").setText(pid);
+				Repository.modifyDatastreamByValue(pid, "STORY", "text/xml", new XMLOutputter().outputString(doc));
+			}			
+			
 			Common.genQR(user, pid);
 			dc.write(pid, moGA, ((JCheckBox) getGuiComposite().getWidget("jcbOAIProvider")).isSelected());
 
@@ -297,9 +306,6 @@ public class NewObjectDialog extends CDialog {
 		try {
 			se = (Session) CServiceProvider.getService( ServiceNames.SESSIONCLASS );						
 			org.emile.cirilo.dialog.CBoundSerializer.load(this.getCoreDialog(), se.getNewDialogProperties(), (JTable) null);
-//          DCMI x = new DCMI("/Users/yoda/xo/quetzal/src/org/emile/quetzal/ruleset.xml");
-//			SAXBuilder builder = new SAXBuilder();
-//			x.map(builder.build("/Users/yoda/xo/quetzal/src/org/emile/quetzal/tei.xml"));
 		} catch (Exception e) {		
 		}
 	}

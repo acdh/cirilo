@@ -107,6 +107,26 @@ public class TEI {
 		}
 	}
 
+	public TEI() {		
+		try {
+			temps = null;
+			props = null;
+			user = null;
+			format = Format.getRawFormat();
+			format.setEncoding("UTF-8");
+			outputter = new XMLOutputter(format);
+			this.logger = null;
+			this.onlyValidate = false;
+			this.mode = false;
+			this.builder = new SAXBuilder();
+			this.raw = null;
+			this.intermedidate = null;
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage(),e);				      					   		
+		}
+	}
+		
+		
 	public void setUser (String u) {this.xuser = u;}
 
     public boolean set (String file, boolean eXist) {
@@ -1301,7 +1321,7 @@ public class TEI {
 					Namespace n = (Namespace) ins.next();
 					String pre = n.getPrefix();
 					String uri = n.getURI();
-					List attr = getChildren("//t:body//@*[contains(.,'"+pre.toUpperCase()+".')]");
+					List attr = getChildren("//t:text//@*[contains(.,'"+pre.toUpperCase()+".')]|//t:fileDesc//@*[contains(.,'"+pre.toUpperCase()+".')]");
 					for (Iterator jter = attr.iterator(); jter.hasNext();) {
 						try {
 							Attribute at = (Attribute) jter.next();
@@ -1310,7 +1330,7 @@ public class TEI {
 			        		log.error(q.getLocalizedMessage(),q);				      					             								
 						}
 					}
-					attr = getChildren("//t:body//@*[contains(.,'"+pre+":')]");
+					attr = getChildren("//t:text//@*[contains(.,'"+pre+":')]|//t:fileDesc//@*[contains(.,'"+pre+":')]");
 	      	    	o.removeChildren("term", Common.xmlns_ntei_p5);
 
 	      	        for (Iterator iter = attr.iterator(); iter.hasNext();) {

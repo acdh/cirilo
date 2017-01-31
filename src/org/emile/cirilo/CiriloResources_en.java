@@ -210,7 +210,7 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
            { "creatingobject",            " Creating object " },
            { "objectnotfound",            "Couldn't found object {0}." },
            { "imagenotfound",            "Couldn't found image datastream {0} for object {1}." },                
-          { "updatingobject",            " Updating object " },
+           { "updatingobject",            " Updating object " },
            { "excelformat",            " File format of file {0} not supported, please use  [Excel OOXML]." },
            { "xmlformat", 		"No valid XML document. Datastream could not be saved." },
            { "selectformat", 		"Cirilo supports import of FEDORA object files in the following formats:" },
@@ -227,7 +227,8 @@ public class CiriloResources_en extends java.util.ListResourceBundle {
 		   { "selectkey", "Select key file"},
            
 		   { "oaiok"         ,  "For {0} of total {1} entries from OAI-PMH source {2} harvesting objects could be created."},
-  
+           { "exportcontext",   "Export context"},
+
 
            
            /* cirilo */

@@ -138,6 +138,13 @@ public class Repository {
                    ObjectNotFoundException {
         return connector.get2ObjectXml(pid);
     }
+    
+    public static String get2ObjectXml(String pid, String context)
+            throws FedoraConnectionException,
+                   FedoraIllegalContentException,
+                   ObjectNotFoundException {
+        return connector.get2ObjectXml(pid, context);
+    }
 
     public static String ingestDocument(
             Document newobject,

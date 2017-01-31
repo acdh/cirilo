@@ -130,6 +130,11 @@ public class OptionsDialog extends CDialog {
 				JComboBox jcbCM = ((JComboBox) getGuiComposite().getWidget("jcbGeneralDefaultCM"));
 				props.setProperty("user", "General.DefaultContentModel", (String) jcbCM.getSelectedItem());
 			} catch (Exception ex) {}
+			
+			try {
+				JComboBox jcbCM = ((JComboBox) getGuiComposite().getWidget("jcbExportContext"));
+				props.setProperty("user", "General.ExportContext", (String) jcbCM.getSelectedItem());
+			} catch (Exception ex) {}
 	        
 	        props.saveProperties("user");
 			
@@ -245,6 +250,18 @@ public class OptionsDialog extends CDialog {
 				String cm =  props.getProperty("user", "General.DefaultContentModel");
 				if (cm != null) jcbCM.setSelectedItem(cm); 
 			} catch (Exception e) {}
+			
+			try {
+				JComboBox jcbCM = ((JComboBox) getGuiComposite().getWidget("jcbExportContext"));
+				jcbCM.addItem("Archive");
+				jcbCM.addItem("Public");
+				jcbCM.addItem("Migrate");
+	 
+				String cm =  props.getProperty("user", "General.ExportContext");
+				if (cm != null) jcbCM.setSelectedItem(cm); else jcbCM.setSelectedItem("Archive");
+			} catch (Exception e) {}
+
+		
 		}
 		catch (Exception ex) {
 			throw new CShowFailedException(ex);

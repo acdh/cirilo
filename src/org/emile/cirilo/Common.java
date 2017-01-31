@@ -402,7 +402,7 @@ public class Common {
     			if (Repository.exist(pid)) {
     				return true;
     			}
-				Common.sleep(1);    			
+				Common.sleep(2);    			
     		}
     		throw new Exception();
     	} catch (Exception e) {

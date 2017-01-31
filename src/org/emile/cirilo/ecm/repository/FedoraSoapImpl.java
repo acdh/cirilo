@@ -82,7 +82,7 @@ public class FedoraSoapImpl
 										  "LIDOtoDC_MAPPING|OAItoDC_MAPPING|LIDOtoHTML|LIDOtoFO|LIDOtoRDF|DATAPROVIDERS|MODStoDC_MAPPING|MODStoBIBTEX_MAPPING|PROPERTIES|"+
 										  "EDMtoHTML|EDMtoDC_MAPPING|RECORDtoEDM|STORYtoHTML|STORY2JSON|STORYtoDC_MAPPING|METS_REF|SOURCE_REF|KML_REF|PELAGIOS_STYLESHEET|"+
 										  "PELAGIOS_TEMPLATE|KML_TEMPLATE|CMIF_TEMPLATE|CMIF_STYLESHEET|MEItoDC_MAPPING|MEItoHTML|MEItoRDF|LATEX_STYLESHEET|KML_STYLESHEET|"+
-										  "MEItoFO|OAItoHTML|";
+										  "MEItoFO|OAItoHTML|SPARQL2JSON|R_STYLESHEET|CONTEXTtoMIRADORHTML|";
     private final String DISSEMINATOR = "|PID|METADATA|METHODS|";
 	
 
@@ -557,6 +557,35 @@ public class FedoraSoapImpl
         }
     }
 
+    
+    public String get2ObjectXml(String pid, String context)
+            throws FedoraConnectionException, FedoraIllegalContentException,
+                   ObjectNotFoundException {
+        pid = Repository.ensurePID(pid);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+    	try {
+        	fedora.client.utility.export.AutoExporter.export(getAPIA(),
+        			getAPIM(),
+                    pid,
+                    fedora.common.Constants.FOXML1_1.uri,
+                    context, os
+                   );
+        	            
+
+        } catch (Exception e) {
+            throw new FedoraConnectionException("Error getting XML for '" + pid + "' from Fedora",
+                                                e);
+        }
+
+        try {
+        	byte [] s = os.toByteArray();
+        	os.close();
+        	return new String (s, "UTF-8");
+        } catch (Exception e) {
+            throw new FedoraIllegalContentException("Error parsing XML for '" + pid + "' from Fedora",
+                                                    e);
+        }
+    }
    
     /**
      * Retrieve a datastream from Fedora, and parse it as document.
