@@ -63,6 +63,10 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 	/**
 	 *  Description of the Field
 	 */
+	protected JTextField jtfLocation;
+	/**
+	 *  Description of the Field
+	 */
 	protected JLabel versionable;
 	/**
 	 *  Description of the Field
@@ -76,6 +80,10 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 	 *  Description of the Field
 	 */
 	protected JComboBox jcbMimetype;
+	/**
+	 *  Description of the Field
+	 */
+	protected JComboBox jcbGroup;
 	/**
 	 *  Description of the Field
 	 */
@@ -120,6 +128,8 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 		setWidgetName(jtfID, "jtfID");
 		setWidgetName(jtfLabel, "jtfLabel");
 		setWidgetName(jcbMimetype, "jcbMimetype");
+		setWidgetName(jcbGroup, "jcbGroup");
+		setWidgetName(jtfLocation, "jtfLocation");
 	}
 
 
@@ -143,6 +153,7 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 				"text/xml",
 				"application/javascript",				
 				"application/mp4",
+				"application/json",
 				"application/msword",
 				"application/octet-stream",
 				"application/pdf",
@@ -172,6 +183,12 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 				"video/quicktime"								
 		};
 		
+		Object[] groups = {
+			"Inline XML (X)",
+			"Managed Content (M)",
+			"Redirect (R)"
+		};
+		
 		id = new JLabel(res.getString("id")+": ");
 		id.setHorizontalTextPosition(SwingConstants.LEADING);
 
@@ -185,6 +202,9 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 		jtfID.setPreferredSize(new Dimension(200, jtfID.getPreferredSize().height));
 		jtfID.addKeyListener( new IDKeyListener() );
 
+		jtfLocation = new JTextField();
+		jtfLocation.setPreferredSize(new Dimension(200, jtfLocation.getPreferredSize().height));
+		
 		jtfLabel = new JTextField();
 		jtfLabel.setPreferredSize(new Dimension(200, jtfLabel.getPreferredSize().height));
 		
@@ -193,6 +213,9 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
  
 		mimetype = new JLabel(res.getString("mimetype")+": ");
 		mimetype.setHorizontalTextPosition(SwingConstants.LEADING);
+
+		jcbGroup = new JComboBox(groups); 
+		jcbGroup.setPreferredSize(new Dimension(200, jcbGroup.getPreferredSize().height));
 
 		jcbMimetype = new JComboBox(mimetypes); 
 		jcbMimetype.setPreferredSize(new Dimension(200, jcbMimetype.getPreferredSize().height));
@@ -209,6 +232,10 @@ public class GuiCreateDatastreamDialog extends CGuiComposite {
 		container.add(jcbVersionable, "span, grow");				
 		container.add(mimetype);
 		container.add(jcbMimetype , "wrap, grow");
+		container.add(new JLabel("Control Group:"));
+		container.add(jcbGroup , "wrap, grow");
+		container.add(new JLabel("Location:"));
+		container.add(jtfLocation , "wrap, grow");
 		container.add(jbCreate);	
 		container.add(jbCancel);	
 		

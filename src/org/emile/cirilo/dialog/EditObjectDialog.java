@@ -41,6 +41,7 @@ import net.handle.hdllib.Util;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.emile.cirilo.Common;
 import org.emile.cirilo.ServiceNames;
 import org.emile.cirilo.User;
@@ -81,6 +82,8 @@ import javax.swing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
@@ -387,10 +390,26 @@ public class EditObjectDialog extends CDialog {
 				    										  desc.addContent(oai);
 				    										  Repository.modifyDatastreamByValue(pid, "RELS-EXT", "text/xml", outputter.outputString(rdf));
 				    									  }
-				    					     	     }
+				    					     	        }
 				    				    			  } catch (Exception ex) {
 				    				    				  ex.printStackTrace();
 				    				    			  }
+				    				    			 }
+				    				    	  	} catch (Exception q) {				    				    		  
+				    				    	  	}
+
+						    				  } else if (p.contains("system:export.images")) {
+						    					  						    					  
+						    					  DefaultSortTableModel dm = Repository.listDatastreams(pid,false);					    					  
+						    					  for (int k = 0 ; k < dm.getRowCount(); k++) {
+						    						  String ID = (String) dm.getValueAt(k, 0);
+						    						  String mimetype = (String) dm.getValueAt(k, 2);			
+						    						  if (mimetype.contains("image/jpeg") && !ID.equals("THUMBNAIL")) {
+						    							  byte [] datastream = Repository.getDatastream(pid, ID, "");
+						    							  FileOutputStream out = new FileOutputStream(new File(props.getProperty("user", "import.path")+File.separator+pid.replaceAll("o:","")+"_"+ID+".jpg"));
+						    							  IOUtils.write(datastream, out);
+						    						  }					    						  					    						  
+		  
 				    				    	  }
 				    				    		  
 				    				    		  
@@ -407,9 +426,33 @@ public class EditObjectDialog extends CDialog {
 				    				              Repository.purgeDatastream(pid, "KML_TEMPLATE")  ;			    				    		  
     			    					     	  Repository.modifyDatastream (pid, "", null, "R","http://gams.uni-graz.at/archive/objects/"+pid+"/methods/sdef:Object/getMetadata");
 	*/			
-				    				    		  
-				    				    	  } catch (Exception q) {				    				    		  
-				    				    	  }
+
+						    		      } else if (p.contains("system:fix.mws.bug")) {
+		  
+						    		    	  			byte[] _stream = Repository.getDatastream(pid,"TEI_SOURCE", "");	  
+				    				            		SAXBuilder _builder = new SAXBuilder(); 		
+						    				            Document tei = _builder.build(new ByteArrayInputStream(_stream));
+						    				
+						    				            XPath xpath = XPath.newInstance("//t:biblScope[@type]");
+						    				            xpath.addNamespace(Common.xmlns_tei_p5);
+						    				            
+						    				            List old = xpath.selectNodes(tei);
+						    				            
+						    				            if (!old.isEmpty()) {
+						    				            	try {
+						    				            		byte[] _map =  Repository.getDatastream("cirilo:mws", "DC_MAPPING_OLD" , "");
+						    								
+						    				            		Document _mapping = _builder.build(new ByteArrayInputStream(_map));
+						    				            		MDMapper _m = new MDMapper(pid,outputter.outputString(_mapping));
+						    									org.jdom.Document _dc = builder.build( new StringReader (_m.transform(tei) ) );							
+						    				            		Repository.modifyDatastreamByValue(pid, "DC", "text/xml", outputter.outputString(_dc));
+						    				            		log.info("mws bug fix: "+pid+" ... ok");
+						    				            	} catch (Exception q) {
+						    				            		log.info(q.getMessage());
+						    				            	}
+						    				            	
+						    				            }
+						    				            
 				    				      } else {
 				    					  
 				    				    	  try {

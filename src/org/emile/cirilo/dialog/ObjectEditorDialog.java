@@ -248,21 +248,28 @@ public class ObjectEditorDialog extends CDialog {
 			
 			loD = (CreateDatastreamDialog) CServiceProvider.getService(DialogNames.CREATEDATASTREAM_DIALOG);
 			loD.open();
-
+            String group = loD.getGroup();
+            if (group.contains("(R)")) group ="R"; else if (group.contains("(X)")) group ="X"; else if (group.contains("(M)")) group ="M";
+			String mimetype = loD.getGroup().contains("(X)") ? "text/xml" : loD.getMimetype();
+			
 			if (!loD.getID().isEmpty()) {
-				File fp =  File.createTempFile( "temp", ".tmp");
-				if (loD.getMimetype().equals("text/xml")) {
-		            FileOutputStream fop = new FileOutputStream(fp);  
-		            byte[] contentInBytes = "<content/>".getBytes("UTF-8");  
-		            fop.write(contentInBytes);  
-		            fop.flush();  
-		            fop.close();  
-				} 
-				Repository.addDatastream(pid, loD.getID(), loD.getLabel(), loD.getMimetype().equals("text/xml") ? "X" : "M", loD.getMimetype(), fp );
-				fp.delete();
-		    	JTable ds = (JTable) getGuiComposite().getWidget(jtDatastreams);
-		    	ds.setModel(Repository.listDatastreams(pid,false));
-		    	ds.setRowSelectionInterval(0,0);		
+				if (!group.equals("R")) {	
+					File fp =  File.createTempFile( "temp", ".tmp");
+					if (mimetype.equals("text/xml")) {
+						FileOutputStream fop = new FileOutputStream(fp);  
+						byte[] contentInBytes = "<content/>".getBytes("UTF-8");  
+						fop.write(contentInBytes);  
+						fop.flush();  
+						fop.close();  
+					}	 
+					Repository.addDatastream(pid, loD.getID(), loD.getLabel(), group, mimetype, fp );
+					fp.delete();
+				} else {
+					Repository.addDatastream(pid, loD.getID(), loD.getLabel(),  mimetype, loD.getLocation() );
+				}
+				JTable ds = (JTable) getGuiComposite().getWidget(jtDatastreams);
+				ds.setModel(Repository.listDatastreams(pid,false));
+				ds.setRowSelectionInterval(0,0);	
 			}
 
 		} catch (Exception ex) {

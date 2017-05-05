@@ -1,6 +1,6 @@
 /*
  *  -------------------------------------------------------------------------
- *  Copyright 2014 
+ *  Copyright 2017 
  *  Centre for Information Modeling - Austrian Centre for Digital Humanities
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -168,7 +168,7 @@ class CiriloWindow extends JPanel {
 		public void begin() {
 
 			try {
-				
+								
 		        PropertyConfigurator.configure(Cirilo.class.getResource("log4j.properties"));
 				
 			    log.info("Program started");

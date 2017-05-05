@@ -135,7 +135,13 @@ public class LDAPLoginDialog extends CDialog {
 			group = "";
 			bAuthentication = false;
 			bAuthorisation = false;
-
+           
+			if (repository.contains("gams.") && user.equals("guest")) {
+				handleNonValidLogin();
+				return;
+			}
+			
+			
 			if (!bAuthentication) {
 				try {
 					env = new Hashtable();

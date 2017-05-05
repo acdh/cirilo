@@ -206,9 +206,13 @@ public class TEI {
 	    				      out = new JDOMResult();
 	    				      transformer.transform(in, out);	    				      
 	    				      this.tei = builder.build( new StringReader(outputter.outputString(out.getResult())
-		    				    		.replaceAll(" </seg>","</seg> ").replaceAll("</seg> ,","</seg>,").replaceAll("</seg> \\.","</seg>.")
-		    			           		.replaceAll("</seg>([a-z])", "</seg> $1").replaceAll("<del></del>","").replaceAll("<del/>","")));
-	    				        		        
+		    				    		.replaceAll("</seg> ,","</seg>,").replaceAll("</seg> \\.","</seg>.")
+		    			           		.replaceAll("</seg>([a-z])", "</seg> $1")
+		    			            	.replaceAll("</seg><seg", "</seg> <seg")
+		    			           		.replaceAll("<del></del>","")
+		    			           		.replaceAll("<del/>","")));
+	
+	 				        		        
 	    		        	  System.setProperty("javax.xml.transform.TransformerFactory",  "org.apache.xalan.processor.TransformerFactoryImpl");	    					  
 	    				   }	  
 	    				}

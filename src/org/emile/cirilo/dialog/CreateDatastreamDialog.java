@@ -84,6 +84,12 @@ public class CreateDatastreamDialog extends CDialog {
 	public String getMimetype() {
 		return this.Mimetype;
 	}
+	public String getGroup() {
+		return this.Group;
+	}
+	public String getLocation() {
+		return this.Location;
+	}
 
 	//
 	/**
@@ -131,8 +137,10 @@ public class CreateDatastreamDialog extends CDialog {
 		try {		
 			ID =  (String) moGA.getInput("jtfID");
 			Label =  (String) moGA.getInput("jtfLabel");
+			Location =  (String) moGA.getInput("jtfLocation");
 			Versionable = (String) ((JComboBox) getGuiComposite().getWidget("jcbVersionable")).getSelectedItem();
 			Mimetype = (String) ((JComboBox) getGuiComposite().getWidget("jcbMimetype")).getSelectedItem();
+			Group = (String) ((JComboBox) getGuiComposite().getWidget("jcbGroup")).getSelectedItem();
 
 			if (Common.SYSTEM_DATASTREAMS.contains("|"+ID+"|")) {
 				MessageFormat msgFmt = new MessageFormat(res.getString("nonvalidid"));
@@ -204,6 +212,8 @@ public class CreateDatastreamDialog extends CDialog {
 	private String ID;
 	private String Label;
 	private String Versionable;
+	private String Group;
+	private String Location;
 	private String Mimetype;
 }
 
