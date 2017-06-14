@@ -479,7 +479,8 @@ public class CantusConverter {
 				     	.replaceAll("@", " ")
 				     	.replaceAll(" </metamark>(\\.|,)","</metamark>$1") 
 	    	 	        .replaceAll("Ä\\+","<note type=\"supplied\">").replaceAll("\\+Ä","</note>")
-	    	 			.replaceAll("[+]","<unclear />");
+	    	 			.replaceAll("[+]","<unclear />")
+	    	 			.replaceAll("¥E::(.*?)¥","<add>$1</add>");
 
 	    	
     	 		try {
